@@ -13,7 +13,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v3
       - run: npm install
-      - run: npm lint -- --output-file eslint_report.json --format json
+      - run: npm run lint -- --output-file eslint_report.json --format json
         continue-on-error: true
       - name: Annotate code linting results
         uses: ataylorme/eslint-annotate-action@v2
