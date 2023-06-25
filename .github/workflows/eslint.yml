@@ -1,0 +1,24 @@
+name: CI - Linting
+on:
+  push:
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  eslint:
+    name: eslint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup node
+        uses: actions/setup-node@v3
+      - run: npm install
+      - run: npm lint -- --output-file eslint_report.json --format json
+        continue-on-error: true
+      - name: Annotate code linting results
+        uses: ataylorme/eslint-annotate-action@v2
+        if: ${{ github.actor != 'dependabot[bot]' }} # dependabot doesn't have permissions
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          report-json: "eslint_report.json"
+          fail-on-warning: true
