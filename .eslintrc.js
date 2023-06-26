@@ -69,6 +69,7 @@ module.exports = {
         "jsdoc/require-returns-type": 0,
         "jsdoc/no-types": "error",
         "jsdoc/tag-lines": 0,
+        "vue/comment-directive": "off"
     },
     settings: {
         jsdoc: {
