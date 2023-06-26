@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    #app {
+        font-family: Avenir, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    *::-webkit-scrollbar {
+        @apply w-1 h-1 cursor-pointer;
+    }
+    *::-webkit-scrollbar-track {
+        @apply bg-scrollbar-backgorund rounded-full border-4;
+    }
+    *::-webkit-scrollbar-thumb {
+        @apply bg-scrollbar-thumb rounded-full border-2;
+    }
+}
