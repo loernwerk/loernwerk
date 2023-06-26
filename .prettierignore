@@ -1,2 +1,10 @@
 build
 .eslintrc.js
+README.md
+tsconfig.json
+tsconfig.node.json
+package.json
+package-lock.json
+.github
+.lintstagedrc.json
+.prettierrc.json

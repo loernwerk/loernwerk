@@ -21,6 +21,12 @@ module.exports = {
                 sourceType: "script",
             },
         },
+        {
+            files: ["frontend/**/*.{ts,vue,html}"],
+            rules: {
+                indent: ["error", 2]
+            }
+        }
     ],
     parserOptions: {
         ecmaVersion: "latest",
@@ -29,6 +35,7 @@ module.exports = {
     },
     plugins: ["@typescript-eslint", "vue", "jsdoc"],
     rules: {
+        "indent": ["error", 4],
         "no-duplicate-imports": "warn",
         "no-self-compare": "warn",
         "no-unmodified-loop-condition": "warn",
