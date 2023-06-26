@@ -1,8 +1,9 @@
 {
+  "singleQuote": true,
   "tabWidth": 4,
   "overrides": [
     {
-      "files": "frontend/*",
+      "files": "frontend/**/*.{ts,vue}",
       "options": {
         "tabWidth": 2
       }

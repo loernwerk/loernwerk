@@ -48,6 +48,7 @@ module.exports = {
         "no-trailing-spaces": ["warn", {"skipBlankLines": true, "ignoreComments": true}],
         "@typescript-eslint/explicit-function-return-type": "error",
         semi: ["warn", "always"],
+        quotes: ["error", "single"],
         "jsdoc/require-jsdoc": ["warn", { "require": {
             ArrowFunctionExpression: false,
             ClassDeclaration: true,
