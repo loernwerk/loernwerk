@@ -29,6 +29,6 @@ export class DBSlide extends BaseEntity implements ISlide {
     order: number;
 
     /** Unique identifier of this slide */
-    @PrimaryGeneratedColumn('auto-increment')
+    @PrimaryGeneratedColumn('increment')
     id: number;
 }

@@ -5,6 +5,7 @@ import {
     Column,
     CreateDateColumn,
     UpdateDateColumn,
+    PrimaryColumn,
 } from 'typeorm';
 
 /**

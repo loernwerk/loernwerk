@@ -32,6 +32,6 @@ export class DBUser extends BaseEntity implements IUser {
     sharedSequencesWriteAccess: string[];
 
     /** Unique identifier of this user */
-    @PrimaryGeneratedColumn('auto-increment')
+    @PrimaryGeneratedColumn('increment')
     id: number;
 }
