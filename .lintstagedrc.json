@@ -1,10 +1,10 @@
 {
   "*.ts": [
     "npx prettier --write",
-    "npx eslint"
+    "npx eslint --max-warnings 0"
   ],
   "*.vue": [
     "npx prettier --write",
-    "npx eslint"
+    "npx eslint --max-warnings 0"
   ]
 }
