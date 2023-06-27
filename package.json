@@ -4,7 +4,7 @@
     "version": "0.0.1dev",
     "scripts": {
         "dev": "concurrently -c \"auto\" \"npm:dev:backend\" \"npm:dev:frontend\"",
-        "dev:backend": "ts-node backend/loernwerkServer.ts",
+        "dev:backend": "ts-node --project tsconfig.node.json backend/loernwerkServer.ts",
         "dev:frontend": "vite dev frontend",
         "build": "npm run build:frontend && npm run build:backend",
         "build:backend": "tsc --project tsconfig.node.json",
@@ -19,10 +19,17 @@
         "@fortawesome/fontawesome-svg-core": "^6.4.0",
         "@fortawesome/free-solid-svg-icons": "^6.4.0",
         "@fortawesome/vue-fontawesome": "^3.0.3",
+        "cors": "^2.8.5",
+        "express": "^4.18.2",
+        "express-session": "^1.17.3",
         "vue": "^3.2.47",
         "vue-router": "^4.2.2"
     },
     "devDependencies": {
+        "@types/cors": "^2.8.13",
+        "@types/express": "^4.17.17",
+        "@types/express-session": "^1.17.7",
+        "@types/node": "^20.3.2",
         "@typescript-eslint/eslint-plugin": "^5.60.0",
         "@typescript-eslint/parser": "^5.60.0",
         "@vitejs/plugin-vue": "^4.1.0",

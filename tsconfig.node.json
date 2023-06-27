@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
-    "module": "ESNext",
+    "module": "commonjs",
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
-    "outDir": "build"
+    "esModuleInterop": true,
+    "outDir": "build",
   },
-  "include": ["backend/", "model/"]
+  "include": ["backend/", "model/"],
 }
