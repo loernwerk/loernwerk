@@ -10,17 +10,17 @@ export class Layout {
     public static getLayoutSlots(layout: LayoutType): LayoutSlot[] {
         switch (layout) {
             case LayoutType.TITLEPAGE:
-                return [LayoutSlot.TITLE];
+                return [LayoutSlot.HEADER];
 
             case LayoutType.SINGLE_COLUMN_WITH_HEADER:
-                return [LayoutSlot.TITLE, LayoutSlot.MAIN];
+                return [LayoutSlot.HEADER, LayoutSlot.MAIN];
 
             case LayoutType.SINGLE_COLUMN:
                 return [LayoutSlot.MAIN];
 
             case LayoutType.TWO_COLUMN_WITH_HEADER:
                 return [
-                    LayoutSlot.TITLE,
+                    LayoutSlot.HEADER,
                     LayoutSlot.MAIN,
                     LayoutSlot.SECONDARY,
                 ];
@@ -30,7 +30,7 @@ export class Layout {
 
             case LayoutType.GRID_WITH_HEADER:
                 return [
-                    LayoutSlot.TITLE,
+                    LayoutSlot.HEADER,
                     LayoutSlot.MAIN,
                     LayoutSlot.SECONDARY,
                     LayoutSlot.TERTIARY,
@@ -47,7 +47,7 @@ export class Layout {
 
             case LayoutType.SIDEBAR:
                 return [
-                    LayoutSlot.TITLE,
+                    LayoutSlot.HEADER,
                     LayoutSlot.MAIN,
                     LayoutSlot.SECONDARY,
                 ];
@@ -85,7 +85,7 @@ export enum LayoutType {
  */
 export enum LayoutSlot {
     /** Slot for title */
-    TITLE,
+    HEADER,
     /** Main slot for content */
     MAIN,
     /** Second slot for content */
