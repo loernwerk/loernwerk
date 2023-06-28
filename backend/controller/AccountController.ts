@@ -1,14 +1,15 @@
 import { DBUser } from '../../model/user/DBUser';
 import { IUser } from '../../model/user/IUser';
 import { UserClass } from '../../model/user/UserClass';
+import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 /**
- * The AccountController manages the Accountdata in the Database
+ * Manages account data in the database and handles requests for account requests regarding account data
  */
 export class AccountController {
     /**
-     * Creates a new Acount from given data, ignores given data except name, mail and password
-     * @param data the given data
+     * Creates a new account with given mail, name, password (ignoring the other values existing in the Partial<IUser>) in the database
+     * @param data A user object that contains the initial values to be saved
      * @returns the created Account
      */
     public static async createNewAccount(data: Partial<IUser>): Promise<IUser> {
@@ -31,7 +32,7 @@ export class AccountController {
         dbUser.type = UserClass.REGULAR;
         dbUser.name = data.name as string;
         dbUser.mail = data.mail as string;
-        dbUser.password = this.hashPW(data.password as string);
+        dbUser.password = await this.hashPW(data.password as string);
         dbUser.sharedSequencesReadAccess = [];
         dbUser.sharedSequencesWriteAccess = [];
         dbUser.save();
@@ -39,7 +40,7 @@ export class AccountController {
     }
 
     /**
-     * tries a login for a given account
+     * Try to find a user with corresponding username/e- mail and matching password in the database. Throws an error if no account was found
      * @param usernameOrEmail the username or email of the user
      * @param password the password
      * @returns the found user
@@ -48,30 +49,31 @@ export class AccountController {
         usernameOrEmail: string,
         password: string
     ): Promise<IUser> {
-        const hashedPW = this.hashPW(password);
         let users: DBUser[];
         if (usernameOrEmail.includes('@')) {
             users = await DBUser.findBy({
                 mail: usernameOrEmail,
-                password: hashedPW,
             });
         } else {
             users = await DBUser.findBy({
                 name: usernameOrEmail,
-                password: hashedPW,
             });
         }
         if (users.length > 1) {
             throw Error('ambiguous user deatails');
         } else if (users.length === 0) {
-            throw Error('no matching user details found');
+            throw Error('Mail/Name not matching an existing User');
         } else {
-            return users[0];
+            const founduser = users[0];
+            if (await this.validatePassword(password, founduser.password)) {
+                return founduser;
+            }
+            throw new Error('Incorrect Password');
         }
     }
 
     /**
-     * getting a account by the given id
+     * Searches for an Account with corresponding Id in the database and returns it. Throws an error if no account was found.
      * @param id the id of the account
      * @returns the found user
      */
@@ -83,15 +85,15 @@ export class AccountController {
         return user;
     }
     /**
-     * getting a reduced version of all accounts
-     * @returns all accounts (reduced)
+     * Returns all users of the database in an array in reduced form.
+     * @returns A reduced version of all accounts
      */
     public static async getAllAccounts(): Promise<Partial<IUser>[]> {
         return await DBUser.find({ select: { name: true, id: true } });
     }
 
     /**
-     * deletes an account by given id
+     * Deletes an account from the database. Throws an error if no account was found to delete was found
      * @param id the id of the account
      */
     public static async deleteAccount(id: number): Promise<void> {
@@ -103,7 +105,8 @@ export class AccountController {
     }
 
     /**
-     * creates an admin account if there doesnt exist one in the DB prints the password on the console
+     * Ensures that an admin exists and creates one if none exists. This function is called called by loernwerkServer.main at server startup.
+     * The Password is printed on the console
      */
     public static async ensureAdminAccount(): Promise<void> {
         const user = await DBUser.findOneBy({ type: UserClass.ADMIN });
@@ -116,13 +119,13 @@ export class AccountController {
                 'Admin account created, username: admin, mail: admin@loernwerk.de, password: ' +
                     pw
             );
-            adminUser.password = this.hashPW(pw);
+            adminUser.password = await this.hashPW(pw);
             this.createNewAccount(adminUser);
         }
     }
 
     /**
-     * saves an account, changes only name mail and password
+     * Saves the changes to an account in the database. Only changes name, mail or password. Other changes are discarded
      * @param data the new user
      */
     public static async saveAccount(data: IUser): Promise<void> {
@@ -132,7 +135,7 @@ export class AccountController {
         }
         dbuser.name = data.name;
         dbuser.mail = data.mail;
-        dbuser.password = this.hashPW(data.password);
+        dbuser.password = await this.hashPW(data.password);
         dbuser.save();
     }
 
@@ -141,7 +144,20 @@ export class AccountController {
      * @param pw the password
      * @returns the hashed password
      */
-    private static hashPW(pw: string): string {
-        return pw;
+    private static async hashPW(pw: string): Promise<string> {
+        return bcrypt.hash(pw, 13);
+    }
+
+    /**
+     * verifies a password for a hash
+     * @param pw the password
+     * @param hash the hash
+     * @returns true if the password matches the hash
+     */
+    private static async validatePassword(
+        pw: string,
+        hash: string
+    ): Promise<boolean> {
+        return bcrypt.compare(pw, hash);
     }
 }
