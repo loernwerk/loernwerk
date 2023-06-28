@@ -1,19 +1,22 @@
 <template>
   <InteractableComponent>
-    <FontAwesomeIcon
-      icon="search"
-      class="text-gray-500"
-      @click="$emit('search-clicked', searchText)"
-    />
-    <TextInputComponent
-      :placeHolder="placeHolder"
-      @input-changed="
-        (value) => {
-          searchText = value;
-          $emit('input-changed', value);
-        }
-      "
-    />
+    <div class="flex flex-row items-center space-x-2">
+      <FontAwesomeIcon
+        icon="search"
+        class="text-gray-500"
+        @click="$emit('search-clicked', searchText)"
+      />
+      <TextInputComponent
+        class="flex-1 !border-none !bg-transparent"
+        :placeHolder="placeHolder"
+        @input-changed="
+          (value) => {
+            searchText = value;
+            $emit('input-changed', value);
+          }
+        "
+      />
+    </div>
   </InteractableComponent>
 </template>
 
