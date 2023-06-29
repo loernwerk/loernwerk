@@ -1,4 +1,4 @@
-name: Frontend Build Test
+name: Backend Build Test
 
 on:
  workflow_dispatch:
@@ -32,4 +32,4 @@ jobs:
       - name: Install and Build 🔧
         run: |
           npm install
-          npm run build:frontend
+          npm run build:backend

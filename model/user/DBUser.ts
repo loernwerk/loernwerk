@@ -1,6 +1,5 @@
 import { BaseEntity, Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { IUser } from './IUser';
-import { UserClass } from './UserClass';
+import { IUser, UserClass } from './IUser';
 
 /**
  * Database object of an user.

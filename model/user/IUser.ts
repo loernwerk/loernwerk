@@ -1,5 +1,3 @@
-import { UserClass } from './UserClass';
-
 /**
  * Saves metadata for an user object.
  */
