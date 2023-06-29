@@ -1,5 +1,5 @@
-import * as express from 'express';
-import * as cors from 'cors';
+import express, { json, urlencoded } from 'express';
+import cors from 'cors';
 import { DatabaseServer } from './DatabaseServer';
 
 /**
@@ -25,8 +25,8 @@ class loernwerkServer {
         );
 
         // Setting up parsers to parse HTTP bodies
-        app.use(express.json());
-        app.use(express.urlencoded({ extended: true }));
+        app.use(json());
+        app.use(urlencoded({ extended: true }));
 
         // Setting up routers, TODO
         app.get('/', (req, res) => {

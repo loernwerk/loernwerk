@@ -1,3 +1,4 @@
+<!-- Component for inputing text -->
 <template>
   <InteractableComponent class="!cursor-default">
     <input
@@ -14,13 +15,23 @@ import { ref, watch } from 'vue';
 import InteractableComponent from './InteractableComponent.vue';
 
 defineProps({
+  /**
+   * The placeholder text for the input
+   */
   placeHolder: {
     type: String,
     required: false,
     default: '',
   },
 });
-const emit = defineEmits(['input-changed']);
+const emit = defineEmits([
+  /**
+   * Event for when the input was changed
+   *
+   * @param inputText The text in the input
+   */
+  'input-changed',
+]);
 
 const inputText = ref('');
 

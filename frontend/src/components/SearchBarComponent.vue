@@ -1,19 +1,23 @@
+<!-- Interactive search bar -->
 <template>
   <InteractableComponent>
-    <FontAwesomeIcon
-      icon="search"
-      class="text-gray-500"
-      @click="$emit('search-clicked', searchText)"
-    />
-    <TextInputComponent
-      :placeHolder="placeHolder"
-      @input-changed="
-        (value) => {
-          searchText = value;
-          $emit('input-changed', value);
-        }
-      "
-    />
+    <div class="flex flex-row items-center space-x-2">
+      <FontAwesomeIcon
+        icon="search"
+        class="text-gray-500"
+        @click="$emit('search-clicked', searchText)"
+      />
+      <TextInputComponent
+        class="flex-1 !border-none !bg-transparent"
+        :placeHolder="placeHolder"
+        @input-changed="
+          (value) => {
+            searchText = value;
+            $emit('input-changed', value);
+          }
+        "
+      />
+    </div>
   </InteractableComponent>
 </template>
 
@@ -28,6 +32,9 @@ import { ref } from 'vue';
 library.add(faMagnifyingGlass);
 
 defineProps({
+  /**
+   * The placeholder text for the search bar
+   */
   placeHolder: {
     type: String,
     required: false,
@@ -35,7 +42,20 @@ defineProps({
   },
 });
 
-defineEmits(['search-clicked', 'input-changed']);
+defineEmits([
+  /**
+   * Event for when the search button is clicked
+   *
+   * @param searchText The text in the search bar
+   */
+  'search-clicked',
+  /**
+   * Event for when the text in the search bar changes
+   *
+   * @param searchText The text in the search bar
+   */
+  'input-changed',
+]);
 
 const searchText = ref('');
 </script>

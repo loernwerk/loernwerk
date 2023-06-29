@@ -16,11 +16,6 @@ export interface TextOptions {
 
     /** Color of text */
     color: string;
-
-    /** Horizontal text alignement */
-    alignementHorizontal: 'left' | 'center' | 'right';
-    /** Vertical text alignment */
-    alignmentVertical: 'top' | 'center' | 'bottom';
 }
 
 /**
