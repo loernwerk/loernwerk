@@ -9,7 +9,7 @@
         "build": "npm run build:frontend && npm run build:backend",
         "build:backend": "tsc --project tsconfig.node.json",
         "build:frontend": "vue-tsc && vite build frontend",
-        "start": "node build/loernwerkServer.js",
+        "start": "node build/backend/loernwerkServer.js",
         "preview": "vite preview frontend",
         "lint": "eslint .",
         "prettier": "prettier --write .",
