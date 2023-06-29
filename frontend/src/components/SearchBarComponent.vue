@@ -1,3 +1,4 @@
+<!-- Interactive search bar -->
 <template>
   <InteractableComponent>
     <div class="flex flex-row items-center space-x-2">
@@ -31,6 +32,9 @@ import { ref } from 'vue';
 library.add(faMagnifyingGlass);
 
 defineProps({
+  /**
+   * The placeholder text for the search bar
+   */
   placeHolder: {
     type: String,
     required: false,
@@ -38,7 +42,20 @@ defineProps({
   },
 });
 
-defineEmits(['search-clicked', 'input-changed']);
+defineEmits([
+  /**
+   * Event for when the search button is clicked
+   *
+   * @param searchText The text in the search bar
+   */
+  'search-clicked',
+  /**
+   * Event for when the text in the search bar changes
+   *
+   * @param searchText The text in the search bar
+   */
+  'input-changed',
+]);
 
 const searchText = ref('');
 </script>

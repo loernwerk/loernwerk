@@ -32,7 +32,7 @@ export class DatabaseServer {
         if (DatabaseServer.instance === null) {
             this.instance = new DatabaseServer();
         }
-        return this.instance;
+        return this.instance as DatabaseServer;
     }
 
     /**

@@ -14,4 +14,4 @@ const router = createRouter({
 /**
  * Router to use for switching views.
  */
-export default router;
+export { router };
