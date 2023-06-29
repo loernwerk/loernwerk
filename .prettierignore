@@ -8,3 +8,5 @@ package-lock.json
 .github
 .lintstagedrc.json
 .prettierrc.json
+postcss.config.js
+tailwind.config.js
