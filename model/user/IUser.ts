@@ -25,3 +25,13 @@ export interface IUser {
     /** Unique identifier of this user */
     id: number;
 }
+
+/**
+ * Different user types/classes.
+ */
+export enum UserClass {
+    /** Administrator with all technical rights */
+    ADMIN,
+    /** Basic user without admin rights */
+    REGULAR,
+}

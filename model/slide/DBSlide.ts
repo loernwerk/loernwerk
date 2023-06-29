@@ -1,10 +1,4 @@
-import {
-    BaseEntity,
-    Entity,
-    Column,
-    PrimaryGeneratedColumn,
-    Index,
-} from 'typeorm';
+import { BaseEntity, Entity, Column, PrimaryColumn, Index } from 'typeorm';
 import { ISlide } from './ISlide';
 import { Content } from './content/Content';
 import { LayoutSlot, LayoutType } from './layout/Layout';
@@ -30,6 +24,6 @@ export class DBSlide extends BaseEntity implements ISlide {
     @Column()
     order: number;
 
-    @PrimaryGeneratedColumn('increment')
+    @PrimaryColumn()
     id: number;
 }
