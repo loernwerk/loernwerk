@@ -57,6 +57,7 @@ module.exports = {
         "@typescript-eslint/explicit-function-return-type": "error",
         semi: ["warn", "always"],
         quotes: ["error", "single"],
+        "no-restricted-exports": ['error', { 'restrictDefaultExports': { 'direct': true } }],
         "jsdoc/require-jsdoc": ["warn", { "require": {
             ArrowFunctionExpression: false,
             ClassDeclaration: true,
