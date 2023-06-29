@@ -133,10 +133,27 @@ export class AccountController {
         if (dbuser === null) {
             throw new Error('No such existing User');
         }
-        dbuser.name = data.name;
-        dbuser.mail = data.mail;
-        dbuser.password = await this.hashPW(data.password);
-        dbuser.save();
+        if (
+            data.type == null &&
+            data.name === null &&
+            data.mail === null &&
+            data.password === null
+        ) {
+            throw new Error('No Changes');
+        }
+        if (data.type != null) {
+            dbuser.type = data.type; //TODO: Check for Admin role if data.role === UserClass.ADMIN
+        }
+        if (data.name != null) {
+            dbuser.name = data.name;
+        }
+        if (data.mail != null) {
+            dbuser.mail = data.mail;
+        }
+        if (data.password != null) {
+            dbuser.password = await this.hashPW(data.password);
+            dbuser.save();
+        }
     }
 
     /**
