@@ -1,10 +1,11 @@
-import express, { json, urlencoded } from 'express';
+import express, { json, urlencoded, static as staticRouter } from 'express';
 import cors from 'cors';
 import { DatabaseServer } from './DatabaseServer';
 import session from 'express-session';
 import { randomBytes } from 'crypto';
 import MemoryStore from 'memorystore';
 import 'dotenv/config';
+import history from 'connect-history-api-fallback';
 
 /**
  * Main class and entrypoint of the backend server.
@@ -49,9 +50,10 @@ class loernwerkServer {
         );
 
         // Setting up routers, TODO
-        app.get('/', (req, res) => {
-            res.send('Yup, working');
-        });
+
+        // Serving built vue app
+        app.use(history());
+        app.use(staticRouter('build/dist'));
 
         // Graceful shutdown listener
         process.on('SIGINT', () => {
