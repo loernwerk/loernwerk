@@ -50,3 +50,20 @@ declare module 'express-session' {
         isAdmin?: boolean;
     }
 }
+
+/**
+ * Custom error class allowing to specify the error code in the constructor.
+ */
+export class LoernwerkError extends Error {
+    code: string;
+
+    /**
+     * Constructs a new error with the given message and error code.
+     * @param message Message of the error
+     * @param code Error code
+     */
+    constructor(message: string, code: string) {
+        super(message);
+        this.code = code;
+    }
+}
