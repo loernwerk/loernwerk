@@ -1,6 +1,9 @@
 import express, { json, urlencoded } from 'express';
 import cors from 'cors';
 import { DatabaseServer } from './DatabaseServer';
+import session from 'express-session';
+import { randomBytes } from 'crypto';
+import MemoryStore from 'memorystore';
 
 /**
  * Main class and entrypoint of the backend server.
@@ -27,6 +30,22 @@ class loernwerkServer {
         // Setting up parsers to parse HTTP bodies
         app.use(json());
         app.use(urlencoded({ extended: true }));
+
+        // Setting up cookies
+        app.use(
+            session({
+                name: 'loernwerk.session',
+                resave: false,
+                saveUninitialized: false,
+                secret: randomBytes(64).toString('hex'),
+                cookie: {
+                    maxAge: 1000 * 60 * 60 * 24,
+                },
+                store: new (MemoryStore(session))({
+                    checkPeriod: 1000 * 60 * 60,
+                }),
+            })
+        );
 
         // Setting up routers, TODO
         app.get('/', (req, res) => {
