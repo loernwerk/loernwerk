@@ -43,9 +43,11 @@ class loernwerkServer {
                 saveUninitialized: false,
                 secret: randomBytes(64).toString('hex'),
                 cookie: {
+                    // Cookies live 24h by default
                     maxAge: 1000 * 60 * 60 * 24,
                 },
                 store: new (MemoryStore(session))({
+                    // We purge expired sessions every hour
                     checkPeriod: 1000 * 60 * 60,
                 }),
             })
