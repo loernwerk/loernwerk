@@ -31,7 +31,8 @@ defineProps({
   maxLength: {
     type: Number,
     required: false,
-    default: -1,
+    // This is the default maxLength of an input element
+    default: 524288,
   },
 
   /**
