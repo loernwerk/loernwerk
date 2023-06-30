@@ -76,9 +76,11 @@ class loernwerkServer {
         const sslPort = parseInt(process.env.SSL_PORT) || 5443;
 
         // Starting the server
-        app.listen(port, hostname, () => {
-            console.log(`loernwerk running @ ${hostname}:${port}`);
-        });
+        if (process.env.DISABLE_HTTP === undefined) {
+            app.listen(port, hostname, () => {
+                console.log(`loernwerk running @ ${hostname}:${port}`);
+            });
+        }
 
         if (keyFile !== undefined && certFile !== undefined) {
             createServer(

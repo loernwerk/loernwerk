@@ -10,6 +10,7 @@ Documentation incoming. Soon :tm:
 - `SSL_CERTFILE`: File containing the certificate used for SSL encryption. If undefined, HTTPS server wont be started.
 - `SSL_PORT`: Port under which the HTTPS server should be started. Default: 5443.
 - `SSL_CAFILE`: CA File to be used for SSL encryption. Optional.
+- `DISABLE_HTTP`: If set, the HTTP server wont be started and therefore disabled.
 
 ## Command reference
 
