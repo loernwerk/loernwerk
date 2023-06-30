@@ -4,6 +4,7 @@ import { DatabaseServer } from './DatabaseServer';
 import session from 'express-session';
 import { randomBytes } from 'crypto';
 import MemoryStore from 'memorystore';
+import 'dotenv/config';
 
 /**
  * Main class and entrypoint of the backend server.
@@ -60,9 +61,12 @@ class loernwerkServer {
             process.exit(0);
         });
 
+        const port = parseInt(process.env.PORT) || 5000;
+        const hostname = process.env.HOSTNAME || 'localhost';
+
         // Starting the server
-        app.listen(5000, () => {
-            console.log('loernwerk running @ localhost:5000');
+        app.listen(port, hostname, () => {
+            console.log(`loernwerk running @ ${hostname}:${port}`);
         });
     }
 }

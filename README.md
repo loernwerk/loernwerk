@@ -2,6 +2,11 @@
 
 Documentation incoming. Soon :tm:
 
+## Environment variables
+- `PORT`: Port of the application. Default: 5000
+- `HOSTNAME`: Hostname of the application. Default: 'localhost'
+- `DATABASE_FILE`: Database file of the SQLite database. Default: 'dev.db'
+
 ## Command reference
 
 - `npm run dev`: Runs both backend and frontend dev server

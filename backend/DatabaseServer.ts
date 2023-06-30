@@ -3,6 +3,7 @@ import { DBSequence } from '../model/sequence/DBSequence';
 import { DBSlide } from '../model/slide/DBSlide';
 import { DBUser } from '../model/user/DBUser';
 import 'reflect-metadata';
+import 'dotenv/config';
 
 /**
  * Handles database connection for the backend server.
@@ -17,11 +18,15 @@ export class DatabaseServer {
      * @private
      */
     private constructor() {
+        const database = process.env.DATABASE_FILE || 'dev.db';
+
         this.db = new DataSource({
             type: 'better-sqlite3',
-            database: 'dev.db', // TODO
+            database: database,
             entities: [DBSlide, DBSequence, DBUser],
         });
+
+        console.log(`Loaded database file: ${database}`);
     }
 
     /**
