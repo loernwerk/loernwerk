@@ -1,9 +1,10 @@
+<!-- Visualizes a slide -->
 <template>
   <div
     class="aspect-video p-5 rounded-md"
     :style="{ backgroundColor: slide.backgroundColor }"
   >
-    <div class="grid grid-layout h-full">
+    <div class="grid grid-layout h-full" ref="wrapper">
       <ContenDisplayFactory
         v-for="slot in requiredSlots"
         :key="slot"
@@ -22,15 +23,20 @@ import {
   LayoutType,
 } from '../../../../model/slide/layout/Layout';
 import { ISlide } from '../../../../model/slide/ISlide';
-import { PropType } from 'vue';
+import { PropType, Ref, onMounted, provide, ref } from 'vue';
 import ContenDisplayFactory from './ContenDisplayFactory.vue';
 
 const props = defineProps({
+  /**
+   * The slide to display
+   */
   slide: {
     type: Object as PropType<ISlide>,
     required: true,
   },
-
+  /**
+   * Indicates whether student or teacher is viewing the slide
+   */
   editMode: {
     type: Boolean,
     required: true,
@@ -97,6 +103,25 @@ function getSlotStyle(slot: LayoutSlot): GridSlot {
 }
 
 const requiredSlots = Layout.getLayoutSlots(props.slide.layout);
+
+// responsive font size
+const wrapper: Ref<HTMLElement | null> = ref(null);
+const height = ref(0);
+/**
+ * Updates the global size of the current slide with the current height.
+ */
+function updateSizeProvide(): void {
+  if (wrapper.value) {
+    height.value = wrapper.value?.clientHeight;
+  }
+}
+onMounted(() => {
+  updateSizeProvide();
+});
+window.addEventListener('resize', () => {
+  updateSizeProvide();
+});
+provide('slideHeight', height);
 </script>
 
 <style scoped>

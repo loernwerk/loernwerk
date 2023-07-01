@@ -9,7 +9,9 @@
       <EmbedDisplay v-else :embed-content="(content as EmbedContent)" />
     </div>
 
-    <div v-if="content.type === ContentType.TEXT" class="h-full"></div>
+    <div v-if="content.type === ContentType.TEXT" class="h-full">
+      <TextDisplay :text-content="(content as TextContent)" />
+    </div>
 
     <div v-if="content.type === ContentType.IMAGE" class="h-full">
       <ImageEditDisplay
@@ -32,6 +34,8 @@ import { ImageContent } from '../../../../model/slide/content/ImageContent';
 import ImageDisplay from './ImageDisplay.vue';
 import EmbedEditDisplay from './EmbedEditDisplay.vue';
 import ImageEditDisplay from './ImageEditDisplay.vue';
+import TextDisplay from './TextDisplay.vue';
+import { TextContent } from '../../../../model/slide/content/TextContent';
 
 defineProps({
   /**
