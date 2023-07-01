@@ -21,7 +21,10 @@
       <ImageDisplay v-else :image-content="(content as ImageContent)" />
     </div>
 
-    <div v-if="content.type === ContentType.H5P" class="h-full"></div>
+    <div v-if="content.type === ContentType.H5P" class="h-full">
+      <H5PEditDisplay v-if="editMode" :h5p-content="(content as H5PContent)" />
+      <H5PDisplay v-else :h5p-content="(content as H5PContent)" />
+    </div>
   </div>
 </template>
 
@@ -36,6 +39,9 @@ import EmbedEditDisplay from './EmbedEditDisplay.vue';
 import ImageEditDisplay from './ImageEditDisplay.vue';
 import TextDisplay from './TextDisplay.vue';
 import { TextContent } from '../../../../model/slide/content/TextContent';
+import H5PDisplay from './H5PDisplay.vue';
+import { H5PContent } from '../../../../model/slide/content/H5pContent';
+import H5PEditDisplay from './H5PEditDisplay.vue';
 
 defineProps({
   /**

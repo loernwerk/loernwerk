@@ -19,6 +19,8 @@
         "@fortawesome/fontawesome-svg-core": "^6.4.0",
         "@fortawesome/free-solid-svg-icons": "^6.4.0",
         "@fortawesome/vue-fontawesome": "^3.0.3",
+        "@lumieducation/h5p-server": "^9.2.1",
+        "@lumieducation/h5p-webcomponents": "^9.2.2",
         "better-sqlite3": "^8.4.0",
         "cors": "^2.8.5",
         "express": "^4.18.2",
