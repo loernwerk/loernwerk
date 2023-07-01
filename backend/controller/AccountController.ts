@@ -2,8 +2,10 @@ import { DBUser } from '../../model/user/DBUser';
 import { IUser, UserClass } from '../../model/user/IUser';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
+import { LoernwerkError } from '../loernwerkUtilities';
 /**
  * Manages account data in the database and handles requests for account requests regarding account data
+ * TODO: Define Error-Codes
  */
 export class AccountController {
     /**
@@ -17,14 +19,14 @@ export class AccountController {
             data.name === null ||
             data.password === null
         ) {
-            throw new Error('Insufficent User Details');
+            throw new LoernwerkError('Insufficent User Details', '');
         }
 
         if ((await DBUser.findBy({ mail: data.mail as string })).length > 0) {
-            throw new Error('mail already exists');
+            throw new LoernwerkError('mail already exists', '');
         }
         if ((await DBUser.findBy({ name: data.name as string })).length > 0) {
-            throw new Error('username already exists');
+            throw new LoernwerkError('username already exists', '');
         }
 
         const dbUser: DBUser = new DBUser();
@@ -59,15 +61,18 @@ export class AccountController {
             });
         }
         if (users.length > 1) {
-            throw Error('ambiguous user deatails');
+            throw new LoernwerkError('ambiguous user deatails', '');
         } else if (users.length === 0) {
-            throw Error('Mail/Name not matching an existing User');
+            throw new LoernwerkError(
+                'Mail/Name not matching an existing User',
+                ''
+            );
         } else {
             const founduser = users[0];
             if (await this.validatePassword(password, founduser.password)) {
                 return founduser;
             }
-            throw new Error('Incorrect Password');
+            throw new LoernwerkError('Incorrect Password', '');
         }
     }
 
@@ -79,7 +84,7 @@ export class AccountController {
     public static async getAccountById(id: number): Promise<IUser> {
         const user = await DBUser.findOneBy({ id: id });
         if (user === null) {
-            throw new Error('No existing User with given ID');
+            throw new LoernwerkError('No existing User with given ID', '');
         }
         return user;
     }
@@ -98,7 +103,7 @@ export class AccountController {
     public static async deleteAccount(id: number): Promise<void> {
         const user = await DBUser.findOneBy({ id: id });
         if (user === null) {
-            throw new Error('No existing User with given ID');
+            throw new LoernwerkError('No existing User with given ID', '');
         }
         user.remove();
     }
@@ -130,7 +135,7 @@ export class AccountController {
     public static async saveAccount(data: IUser): Promise<void> {
         const dbuser = await DBUser.findOneBy({ id: data.id });
         if (dbuser === null) {
-            throw new Error('No such existing User');
+            throw new LoernwerkError('No such existing User', '');
         }
         if (
             data.type == null &&
@@ -138,7 +143,7 @@ export class AccountController {
             data.mail === null &&
             data.password === null
         ) {
-            throw new Error('No Changes');
+            throw new LoernwerkError('No Changes', '');
         }
         if (data.type != null) {
             dbuser.type = data.type; //TODO: Check for Admin role if data.role === UserClass.ADMIN
