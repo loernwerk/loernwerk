@@ -1,6 +1,13 @@
-import express, { json, urlencoded } from 'express';
+import express, { json, urlencoded, static as staticRouter } from 'express';
 import cors from 'cors';
 import { DatabaseServer } from './DatabaseServer';
+import session from 'express-session';
+import { randomBytes } from 'crypto';
+import MemoryStore from 'memorystore';
+import 'dotenv/config';
+import history from 'connect-history-api-fallback';
+import { readFile } from 'fs/promises';
+import { createServer } from 'https';
 
 /**
  * Main class and entrypoint of the backend server.
@@ -28,10 +35,29 @@ class loernwerkServer {
         app.use(json());
         app.use(urlencoded({ extended: true }));
 
+        // Setting up cookies
+        app.use(
+            session({
+                name: 'loernwerk.session',
+                resave: false,
+                saveUninitialized: false,
+                secret: randomBytes(64).toString('hex'),
+                cookie: {
+                    // Cookies live 24h by default
+                    maxAge: 1000 * 60 * 60 * 24,
+                },
+                store: new (MemoryStore(session))({
+                    // We purge expired sessions every hour
+                    checkPeriod: 1000 * 60 * 60,
+                }),
+            })
+        );
+
         // Setting up routers, TODO
-        app.get('/', (req, res) => {
-            res.send('Yup, working');
-        });
+
+        // Serving built vue app
+        app.use(history());
+        app.use(staticRouter('build/dist'));
 
         // Graceful shutdown listener
         process.on('SIGINT', () => {
@@ -41,10 +67,38 @@ class loernwerkServer {
             process.exit(0);
         });
 
+        const port = parseInt(process.env.PORT) || 5000;
+        const hostname = process.env.HOSTNAME || 'localhost';
+
+        const caFile = process.env.SSL_CAFILE;
+        const keyFile = process.env.SSL_KEYFILE;
+        const certFile = process.env.SSL_CERTFILE;
+        const sslPort = parseInt(process.env.SSL_PORT) || 5443;
+
         // Starting the server
-        app.listen(5000, () => {
-            console.log('loernwerk running @ localhost:5000');
-        });
+        if (process.env.DISABLE_HTTP === undefined) {
+            app.listen(port, hostname, () => {
+                console.log(`loernwerk running @ ${hostname}:${port}`);
+            });
+        }
+
+        if (keyFile !== undefined && certFile !== undefined) {
+            createServer(
+                {
+                    ca:
+                        caFile !== undefined
+                            ? await readFile(caFile)
+                            : undefined,
+                    key: await readFile(keyFile),
+                    cert: await readFile(certFile),
+                },
+                app
+            ).listen(sslPort, hostname, () => {
+                console.log(
+                    `loernwerk with ssl running @ ${hostname}:${sslPort}`
+                );
+            });
+        }
     }
 }
 
