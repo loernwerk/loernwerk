@@ -4,8 +4,7 @@ import { IUser } from '../../model/user/IUser';
 /**
  * Implements communication with the Server concerning all Account-requests
  */
-class AccountRestInterface extends BaseRestInterface {
-
+export class AccountRestInterface extends BaseRestInterface {
   /**
    * Sends Login-Data to backend and validates them
    * @param usernameOrEmail the username or email used to attempt to log in
@@ -34,6 +33,7 @@ class AccountRestInterface extends BaseRestInterface {
   /**
    * Sends a request to change specified Account-Data
    * @param account the account
+   * @returns confirmation
    */
   public static async updateAccount(account: Partial<IUser>): Promise<void> {
     return await BaseRestInterface.patch('/account/', account);
@@ -41,7 +41,8 @@ class AccountRestInterface extends BaseRestInterface {
 
   /**
    * Sends request to delete the given Account
-   * @param accountId
+   * @param accountId the id of the account
+   * @returns confirmation
    */
   public static async deleteAccount(accountId: number): Promise<void> {
     return await BaseRestInterface.delete('/account/', accountId);
@@ -57,7 +58,7 @@ class AccountRestInterface extends BaseRestInterface {
 
   /**
    * Sends request to backend to get Usernames to given Account-IDs
-   * @param accountId
+   * @param accountId the id of the accounts
    * @returns the names of the requested Accounts
    */
   public static async getAccounts(
@@ -70,6 +71,7 @@ class AccountRestInterface extends BaseRestInterface {
 
   /**
    * Sends request to backend to get all IDs and Names of all Accounts
+   * @returns confirmation
    */
   public static async getAccountMetaDataList(): Promise<Partial<IUser>[]> {
     return await BaseRestInterface.get<Partial<IUser[]>>('/account/list');
