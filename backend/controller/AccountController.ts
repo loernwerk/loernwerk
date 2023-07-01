@@ -1,6 +1,5 @@
 import { DBUser } from '../../model/user/DBUser';
-import { IUser } from '../../model/user/IUser';
-import { UserClass } from '../../model/user/UserClass';
+import { IUser, UserClass } from '../../model/user/IUser';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 /**
