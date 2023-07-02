@@ -5,19 +5,24 @@ import { IUser } from '../../model/user/IUser';
  * Implements communication with the Server concerning all Account-requests
  */
 export class AccountRestInterface extends BaseRestInterface {
+  private static account_path = '/account/';
+
   /**
    * Sends Login-Data to backend and validates them
    * @param usernameOrEmail the username or email used to attempt to log in
    * @param password the password used to attempt to log in
-   * @returns true if login was successfull
+   * @param stayLoggedIn the option to stay logged in
+   * @returns true if login was successful
    */
   public static async verifyLogin(
     usernameOrEmail: string,
-    password: string
+    password: string,
+    stayLoggedIn: boolean
   ): Promise<boolean> {
-    return await BaseRestInterface.post<boolean>('/account/login', {
+    return await BaseRestInterface.post<boolean>(`${this.account_path}login`, {
       usernameOrEmail,
       password,
+      stayLoggedIn,
     });
   }
 
@@ -27,7 +32,9 @@ export class AccountRestInterface extends BaseRestInterface {
    * @returns the id of the newly created user
    */
   public static async addAccount(account: Partial<IUser>): Promise<number> {
-    return await BaseRestInterface.put<number>('/account/', account);
+    return (
+      await BaseRestInterface.put<{ id: number }>(this.account_path, account)
+    ).id;
   }
 
   /**
@@ -36,7 +43,7 @@ export class AccountRestInterface extends BaseRestInterface {
    * @returns confirmation
    */
   public static async updateAccount(account: Partial<IUser>): Promise<void> {
-    return await BaseRestInterface.patch('/account/', account);
+    return await BaseRestInterface.patch(this.account_path, account);
   }
 
   /**
@@ -45,7 +52,7 @@ export class AccountRestInterface extends BaseRestInterface {
    * @returns confirmation
    */
   public static async deleteAccount(accountId: number): Promise<void> {
-    return await BaseRestInterface.delete('/account/', accountId);
+    return await BaseRestInterface.delete(this.account_path, { id: accountId });
   }
 
   /**
@@ -53,19 +60,20 @@ export class AccountRestInterface extends BaseRestInterface {
    * @returns the Account of currently logged-in user
    */
   public static async getOwnAccount(): Promise<Partial<IUser>> {
-    return await BaseRestInterface.get<Partial<IUser>>('/account/');
+    return await BaseRestInterface.get<Partial<IUser>>(this.account_path);
   }
 
   /**
    * Sends request to backend to get Usernames to given Account-IDs
-   * @param accountId the id of the accounts
+   * @param accountIds the id of the accounts
    * @returns the names of the requested Accounts
    */
   public static async getAccounts(
-    accountId: number[]
+    accountIds: number[]
   ): Promise<Record<number, string>> {
+    const accountList = accountIds.join(',');
     return await BaseRestInterface.get<Record<number, string>>(
-      `/account/${accountId}`
+      `${this.account_path}${accountList}`
     );
   }
 
@@ -74,6 +82,8 @@ export class AccountRestInterface extends BaseRestInterface {
    * @returns confirmation
    */
   public static async getAccountMetaDataList(): Promise<Partial<IUser>[]> {
-    return await BaseRestInterface.get<Partial<IUser[]>>('/account/list');
+    return await BaseRestInterface.get<Partial<IUser[]>>(
+      `${this.account_path}list`
+    );
   }
 }

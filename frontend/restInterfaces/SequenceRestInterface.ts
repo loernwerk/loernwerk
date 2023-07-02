@@ -7,13 +7,15 @@ import { ISequenceWithSlides } from '../../model/sequence/ISequenceWithSlides';
  * Implements communication with the Server concerning all Sequence-requests
  */
 export class SequenceRestInterface extends BaseRestInterface {
+  private static sequence_path = '/sequence/';
+
   /**
    * Sends a request to backend to add a new Sequence
    * @param title the title of the sequence the user is trying to add
    * @returns code of the sequence
    */
   public static async addSequence(title: string): Promise<string> {
-    return await BaseRestInterface.put<string>('/sequence/', title);
+    return await BaseRestInterface.put<string>(this.sequence_path, title);
   }
 
   /**
@@ -24,7 +26,7 @@ export class SequenceRestInterface extends BaseRestInterface {
   public static async updateSequence(
     sequence: Partial<ISequenceWithSlides>
   ): Promise<void> {
-    return await BaseRestInterface.patch('/sequence/', sequence);
+    return await BaseRestInterface.patch(this.sequence_path, sequence);
   }
 
   /**
@@ -33,7 +35,7 @@ export class SequenceRestInterface extends BaseRestInterface {
    * @returns confirmation
    */
   public static async deleteSequence(sequenceCode: string): Promise<void> {
-    return await BaseRestInterface.delete('/sequence/', sequenceCode);
+    return await BaseRestInterface.delete(this.sequence_path, sequenceCode);
   }
 
   /**
@@ -45,7 +47,7 @@ export class SequenceRestInterface extends BaseRestInterface {
     sequenceCode: string
   ): Promise<ISequenceWithSlides> {
     return BaseRestInterface.get<ISequenceWithSlides>(
-      `/sequence/${sequenceCode}/edit`
+      `${this.sequence_path}${sequenceCode}/edit`
     );
   }
 
@@ -54,7 +56,9 @@ export class SequenceRestInterface extends BaseRestInterface {
    * @returns requested sequences
    */
   public static async getOwnSequences(): Promise<ISequence[]> {
-    return await BaseRestInterface.get<ISequence[]>('/sequence/list');
+    return await BaseRestInterface.get<ISequence[]>(
+      `${this.sequence_path}list`
+    );
   }
 
   /**
@@ -63,23 +67,9 @@ export class SequenceRestInterface extends BaseRestInterface {
    * @returns requested sequences
    */
   public static async getSequenceByUser(userId: number): Promise<ISequence[]> {
-    return await BaseRestInterface.get<ISequence[]>(`/sequence/list/${userId}`);
-  }
-
-  /**
-   * Sends a request to backend to get all public Sequences
-   * @returns requested sequences
-   */
-  public static async getPublicSequences(): Promise<ISequence[]> {
-    return await BaseRestInterface.get<ISequence[]>('/sequence/list/public');
-  }
-
-  /**
-   * Sends a request to backend to get all reported Sequences
-   * @returns requested sequences
-   */
-  public static async getReportedSequences(): Promise<ISequence[]> {
-    return await BaseRestInterface.get<ISequence[]>('/sequence/list/reported');
+    return await BaseRestInterface.get<ISequence[]>(
+      `${this.sequence_path}list/${userId}`
+    );
   }
 
   /**
@@ -87,7 +77,9 @@ export class SequenceRestInterface extends BaseRestInterface {
    * @returns requested sequences
    */
   public static async getSequencesSharedWithYou(): Promise<ISequence[]> {
-    return BaseRestInterface.get<ISequence[]>('/sequence/list/shared');
+    return BaseRestInterface.get<ISequence[]>(
+      `${this.sequence_path}list/shared`
+    );
   }
 
   /**
@@ -99,7 +91,7 @@ export class SequenceRestInterface extends BaseRestInterface {
     sequenceCode: string
   ): Promise<Partial<ISequence>> {
     return await BaseRestInterface.get<Partial<ISequence>>(
-      `/sequence/${sequenceCode}/view`
+      `${this.sequence_path}${sequenceCode}/view`
     );
   }
 
@@ -114,16 +106,7 @@ export class SequenceRestInterface extends BaseRestInterface {
     slideIndex: number
   ): Promise<ISlide> {
     return await BaseRestInterface.get<ISlide>(
-      `/sequence/${sequenceCode}/view/${slideIndex}`
+      `${this.sequence_path}${sequenceCode}/view/${slideIndex}`
     );
-  }
-
-  /**
-   * Sends a request to backend to report a given Sequence
-   * @param sequenceCode the code of the sequence which the user tries to report
-   * @returns confirmation
-   */
-  public static async reportSequence(sequenceCode: string): Promise<void> {
-    return await BaseRestInterface.post('/sequence/report', sequenceCode);
   }
 }
