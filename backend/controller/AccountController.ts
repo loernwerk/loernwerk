@@ -184,7 +184,7 @@ export class AccountController {
     }
 
     /**
-     * hashes a password
+     * Hashes a password.
      * @param pw the password
      * @returns the hashed password
      */
@@ -193,7 +193,7 @@ export class AccountController {
     }
 
     /**
-     * verifies a password for a hash
+     * Verifies a password for a given hash.
      * @param pw the password
      * @param hash the hash
      * @returns true if the password matches the hash
