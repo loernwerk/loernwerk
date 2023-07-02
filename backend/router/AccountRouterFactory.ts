@@ -2,7 +2,12 @@ import { Router } from 'express';
 import { RouterFactory } from './RouterFactory';
 import { AccountController } from '../controller/AccountController';
 import { UserClass } from '../../model/user/IUser';
-import { requireAdmin, requireBody, requireLogin } from '../loernwerkUtilities';
+import {
+    LoernwerkErrorCodes,
+    requireAdmin,
+    requireBody,
+    requireLogin,
+} from '../loernwerkUtilities';
 
 /**
  * Builds router for request regarding Account management
@@ -79,7 +84,7 @@ export class AccountRouterFactory extends RouterFactory {
                     res.sendStatus(204);
                 } catch (error) {
                     switch (error.code) {
-                        case 'NOT_FOUND':
+                        case LoernwerkErrorCodes.NOT_FOUND:
                             res.sendStatus(404);
                             break;
                         default:
