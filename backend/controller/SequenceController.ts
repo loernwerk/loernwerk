@@ -224,14 +224,22 @@ export class SequenceController {
      * Searches a slide of the sequence with given code. Throws an error if no sequence or slide could be found.
      * @param code the code of the sequence
      * @param slideIndex the index of the searched slide
+     * @returns the matching slide
      */
     public static async getSequenceSlideByCode(
         code: string,
         slideIndex: number
     ): Promise<ISlide> {
-        void code;
-        void slideIndex;
-        throw new Error('Not implemented');
+        const slide = await DBSlide.findOne({
+            where: { sequenceCode: code, order: slideIndex },
+        });
+        if (slide === null) {
+            throw new LoernwerkError(
+                'No matching Slide found',
+                LoernwerkErrorCodes.NOT_FOUND
+            );
+        }
+        return slide;
     }
 
     /**
