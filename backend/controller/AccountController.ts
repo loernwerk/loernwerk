@@ -20,7 +20,7 @@ export class AccountController {
         ) {
             throw new LoernwerkError(
                 'Insufficent User Details',
-                LoernwerkErrorCodes.NEED_MORE_INFORMATION
+                LoernwerkErrorCodes.INSUFFICENT_INFORMATION
             );
         }
 
@@ -76,7 +76,7 @@ export class AccountController {
         } else if (users.length === 0) {
             throw new LoernwerkError(
                 'Mail/Name not matching an existing User',
-                LoernwerkErrorCodes.NOT_MATCHING
+                LoernwerkErrorCodes.NOT_FOUND
             );
         } else {
             const founduser = users[0];
@@ -85,7 +85,7 @@ export class AccountController {
             }
             throw new LoernwerkError(
                 'Incorrect Password',
-                LoernwerkErrorCodes.NOT_MATCHING
+                LoernwerkErrorCodes.NOT_FOUND
             );
         }
     }
@@ -100,7 +100,7 @@ export class AccountController {
         if (user === null) {
             throw new LoernwerkError(
                 'No existing User with given ID',
-                LoernwerkErrorCodes.NOT_MATCHING
+                LoernwerkErrorCodes.NOT_FOUND
             );
         }
         return user;
@@ -122,7 +122,7 @@ export class AccountController {
         if (user === null) {
             throw new LoernwerkError(
                 'No existing User with given ID',
-                LoernwerkErrorCodes.NOT_MATCHING
+                LoernwerkErrorCodes.NOT_FOUND
             );
         }
         await user.remove();
@@ -157,7 +157,7 @@ export class AccountController {
         if (dbuser === null) {
             throw new LoernwerkError(
                 'No such existing User',
-                LoernwerkErrorCodes.NOT_MATCHING
+                LoernwerkErrorCodes.NOT_FOUND
             );
         }
         if (
