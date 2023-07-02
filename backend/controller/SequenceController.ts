@@ -142,7 +142,7 @@ export class SequenceController {
                 'Sequence not Found',
                 LoernwerkErrorCodes.NOT_FOUND
             );
-        }
+        } //TODO: remove seq. from shared User array
         seq.remove();
     }
 
@@ -166,23 +166,58 @@ export class SequenceController {
     /**
      * Searches all sequences shared with the user.
      * @param userId the id of the User
+     * @returns the sequences shared with the user
      */
     public static async getSharedSequencesOfUser(
         userId: number
     ): Promise<ISequence[]> {
-        void userId;
-        throw new Error('Not implemented');
+        const user = await DBUser.findOneBy({ id: userId });
+        if (user === null) {
+            throw new LoernwerkError(
+                'User doesnt exists',
+                LoernwerkErrorCodes.NOT_FOUND
+            );
+        }
+        const seqlist: ISequence[] = [];
+        for (const x of user.sharedSequencesReadAccess.concat(
+            user.sharedSequencesWriteAccess
+        )) {
+            const seq = await DBSequence.findOneBy({ code: x });
+            if (seq === null) {
+                throw new LoernwerkError(
+                    'User has access to a non existing Sequence',
+                    LoernwerkErrorCodes.NOT_FOUND
+                );
+            }
+            seqlist.push(seq);
+        }
+        return seqlist;
     }
 
     /**
      * Searches a sequence with corresponding code and reduces it to the attributes 'name, authorId, slideCount, code'. Throws an error if no sequence could be found.
      * @param code the code of the sequence
+     * @returns the sequence (reduced)
      */
     public static async getSequenceForExecution(
         code: string
     ): Promise<Partial<ISequence>> {
-        void code;
-        throw new Error('Not implemented');
+        const seq = await DBSequence.findOne({
+            where: { code: code },
+            select: {
+                name: true,
+                authorId: true,
+                slideCount: true,
+                code: true,
+            },
+        });
+        if (seq === null) {
+            throw new LoernwerkError(
+                'no sequence found',
+                LoernwerkErrorCodes.NOT_FOUND
+            );
+        }
+        return seq;
     }
 
     /**
