@@ -142,6 +142,10 @@ export class AccountController {
             const i = seq.writeAccess.indexOf(id);
             seq.writeAccess.splice(i, 1);
         }
+        const sequences = await DBSequence.find({ where: { authorId: id } });
+        for (const x of sequences) {
+            x.remove();
+        }
         await user.remove();
     }
 
