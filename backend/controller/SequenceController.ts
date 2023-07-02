@@ -147,14 +147,20 @@ export class SequenceController {
     }
 
     /**
-     * Searches all Sequenes of the User
+     * Searches all sequenes of the User
      * @param userId the id of the User
+     * @returns the sequences of the user
      */
     public static async getSequencesOfUser(
         userId: number
     ): Promise<ISequence[]> {
-        void userId;
-        throw new Error('Not implemented');
+        if (!(await this.isValidUser(userId))) {
+            throw new LoernwerkError(
+                'User doesnt exists',
+                LoernwerkErrorCodes.NOT_FOUND
+            );
+        }
+        return await DBSequence.find({ where: { authorId: userId } });
     }
 
     /**
