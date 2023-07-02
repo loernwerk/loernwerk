@@ -35,7 +35,9 @@ export class SequenceRestInterface extends BaseRestInterface {
    * @returns confirmation
    */
   public static async deleteSequence(sequenceCode: string): Promise<void> {
-    return await BaseRestInterface.delete(this.sequence_path, sequenceCode);
+    return await BaseRestInterface.delete(this.sequence_path, {
+      code: sequenceCode,
+    });
   }
 
   /**
