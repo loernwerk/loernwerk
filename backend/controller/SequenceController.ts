@@ -247,8 +247,17 @@ export class SequenceController {
      * @param slides the slides to store
      */
     private static async saveSlides(slides: ISlide[]): Promise<void> {
-        void slides;
-        throw new Error('Not implemented');
+        for (const x of slides) {
+            let slide = await DBSlide.findOneBy({ id: x.id });
+            if (slide === null) {
+                slide = new DBSlide();
+            }
+            slide.backgroundColor = x.backgroundColor;
+            slide.content = x.content;
+            slide.layout = x.layout;
+            slide.order = x.order;
+            slide.save();
+        }
     }
 
     /**
