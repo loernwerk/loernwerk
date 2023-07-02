@@ -43,10 +43,28 @@ export function requireAdmin(
     next();
 }
 
+/**
+ * Express middleware for checking body attributes.
+ * Responds with a 400 statuscode if the attributes are undefined.
+ * @param data attributes to check
+ * @returns middleware for checking body attributes
+ */
+export function requireBody(...data: string[]) {
+    return function (req: Request, res: Response, next: NextFunction): void {
+        for (const field of data) {
+            if (req.body[field] === undefined) {
+                res.sendStatus(400);
+                return;
+            }
+        }
+        next();
+    };
+}
+
 // Declaring session information
 declare module 'express-session' {
     interface SessionData {
-        userId?: string;
+        userId?: number;
         isAdmin?: boolean;
     }
 }
@@ -66,4 +84,11 @@ export class LoernwerkError extends Error {
         super(message);
         this.code = code;
     }
+}
+
+export enum LoernwerkErrorCodes {
+    ALREADY_EXISTS = 'ALREADY_EXISTS',
+    INSUFFICENT_INFORMATION = 'INSUFFICENT_INFORMATION',
+    AMBIGUOUS_INFORMATION = 'AMBIGUOUS_INFORMATION',
+    NOT_FOUND = 'NOT_FOUND',
 }
