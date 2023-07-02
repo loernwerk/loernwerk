@@ -85,8 +85,50 @@ export class SequenceController {
     public static async saveSequence(
         sequence: Partial<ISequenceWithSlides>
     ): Promise<void> {
-        void sequence;
-        throw new Error('Not implemented');
+        if (sequence.code == undefined) {
+            throw new LoernwerkError(
+                'No Code provided',
+                LoernwerkErrorCodes.INSUFFICENT_INFORMATION
+            );
+        }
+        const seq = await DBSequence.findOneBy({ code: sequence.code });
+        if (seq === null) {
+            throw new LoernwerkError(
+                'No Sequence Found',
+                LoernwerkErrorCodes.NOT_FOUND
+            );
+        }
+
+        if (sequence.name !== undefined) {
+            seq.name = sequence.name;
+        }
+
+        if (sequence.readAccess !== undefined) {
+            if (!(await this.isValidUserList(sequence.readAccess))) {
+                throw new LoernwerkError(
+                    'A Read Access User, doesnt exist',
+                    LoernwerkErrorCodes.NOT_FOUND
+                );
+            }
+            seq.readAccess = sequence.readAccess;
+        }
+
+        if (sequence.writeAccess !== undefined) {
+            if (!(await this.isValidUserList(sequence.writeAccess))) {
+                throw new LoernwerkError(
+                    'A Write Access User, doesnt exist',
+                    LoernwerkErrorCodes.NOT_FOUND
+                );
+            }
+            seq.writeAccess = sequence.writeAccess;
+        }
+
+        if (sequence.slides !== undefined) {
+            seq.slideCount = sequence.slides.length;
+            this.saveSlides(sequence.slides);
+        }
+
+        seq.save();
     }
 
     /**
@@ -94,8 +136,14 @@ export class SequenceController {
      * @param code the code of the sequence
      */
     public static async deleteSequence(code: string): Promise<void> {
-        void code;
-        throw new Error('Not implemented');
+        const seq = await DBSequence.findOneBy({ code: code });
+        if (seq === null) {
+            throw new LoernwerkError(
+                'Sequence not Found',
+                LoernwerkErrorCodes.NOT_FOUND
+            );
+        }
+        seq.remove();
     }
 
     /**
@@ -146,6 +194,15 @@ export class SequenceController {
     }
 
     /**
+     * stores the slides in the database
+     * @param slides the slides to store
+     */
+    private static async saveSlides(slides: ISlide[]): Promise<void> {
+        void slides;
+        throw new Error('Not implemented');
+    }
+
+    /**
      * Generates a random Code for a Sequence.
      * @returns  the generated sequence
      */
@@ -159,5 +216,28 @@ export class SequenceController {
             );
         }
         return result;
+    }
+
+    /**
+     * Checks if the given user id matches an user in the db
+     * @param userId the id of the user
+     * @returns true if the user exists
+     */
+    private static async isValidUser(userId: number): Promise<boolean> {
+        return (await DBUser.findOneBy({ id: userId })) !== null;
+    }
+
+    /**
+     * Checks if a complete list consists of valid user
+     * @param userIds the user id list
+     * @returns true if all are in the db
+     */
+    private static async isValidUserList(userIds: number[]): Promise<boolean> {
+        for (const x of userIds) {
+            if (!(await this.isValidUser(x))) {
+                return false;
+            }
+        }
+        return true;
     }
 }
