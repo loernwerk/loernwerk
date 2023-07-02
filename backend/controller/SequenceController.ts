@@ -2,6 +2,7 @@ import { ISequence } from '../../model/sequence/ISequence';
 import { ISlide } from '../../model/slide/ISlide';
 import { ISequenceWithSlides } from '../../model/sequence/ISequenceWithSlides';
 import { DBSequence } from '../../model/sequence/DBSequence';
+import { DBSlide } from '../../model/slide/DBSlide';
 /**
  * Manages the sequence data in the database and handles inquiries requests regarding these
  */
@@ -36,21 +37,31 @@ export class SequenceController {
     /**
      * Searches the database for a sequence with corresponding access code. Throws an error if no sequence could be found.
      * @param code the code of the sequence
+     * @returns the sequence
      */
     public static async getSequenceByCode(code: string): Promise<ISequence> {
-        void code;
-        throw new Error('Not implemented');
+        const seq = await DBSequence.findBy({ code: code });
+        if (seq.length === 0) {
+            throw new Error('no matching sequence');
+        }
+        if (seq.length > 1) {
+            throw new Error('ambigious Code');
+        }
+        return seq[0];
     }
 
     /**
      * Searches the database for a sequence with corresponding access code, as well as its slides. Throws an error if no sequence could be found.
      * @param code the code of the sequence
+     * @returns the sequence with slides
      */
     public static async getSequenceWithSlide(
         code: string
     ): Promise<ISequenceWithSlides> {
-        void code;
-        throw new Error('Not implemented');
+        const seq = (await this.getSequenceByCode(code)) as ISequenceWithSlides;
+        seq.slides = await DBSlide.find({ where: { sequenceCode: code } });
+        seq.slideCount = seq.slides.length;
+        return seq;
     }
 
     /**
