@@ -14,8 +14,10 @@ export class SequenceRestInterface extends BaseRestInterface {
    * @param title the title of the sequence the user is trying to add
    * @returns code of the sequence
    */
-  public static async addSequence(title: string): Promise<string> {
-    return await BaseRestInterface.put<string>(this.sequence_path, title);
+  public static async addSequence(title: string): Promise<{ code: string }> {
+    return await BaseRestInterface.put<{ code: string }>(this.sequence_path, {
+      name: title,
+    });
   }
 
   /**

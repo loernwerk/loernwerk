@@ -89,7 +89,7 @@ export class AccountRestInterface extends BaseRestInterface {
    * @returns confirmation
    */
   public static async getAccountMetaDataList(): Promise<Partial<IUser>[]> {
-    return await BaseRestInterface.get<Partial<IUser[]>>(
+    return await BaseRestInterface.get<Partial<IUser>[]>(
       `${this.account_path}list`
     );
   }
