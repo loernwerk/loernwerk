@@ -1,22 +1,36 @@
 import { ISequence } from '../../model/sequence/ISequence';
 import { ISlide } from '../../model/slide/ISlide';
 import { ISequenceWithSlides } from '../../model/sequence/ISequenceWithSlides';
+import { DBSequence } from '../../model/sequence/DBSequence';
 /**
  * Manages the sequence data in the database and handles inquiries requests regarding these
  */
 export class SequenceController {
     /**
      * Creates a new sequence in the database with the given title and given user as owner.
-     * @param title the title of the sequence
+     * @param name the title of the sequence
      * @param userId the userid of the owner
+     * @returns the created Sequence
      */
     public static async createNewSequence(
-        title: string,
+        name: string,
         userId: number
     ): Promise<ISequence> {
-        void title;
-        void userId;
-        throw new Error('Not implemented');
+        const seq = new DBSequence();
+        seq.creationDate = new Date();
+        let gencode = this.genCode();
+        while ((await DBSequence.findBy({ code: gencode })).length > 0) {
+            gencode = this.genCode();
+        }
+        seq.code = gencode;
+        seq.authorId = userId;
+        seq.name = name;
+        seq.modificationDate = new Date();
+        seq.slideCount = 0;
+        seq.writeAccess = [];
+        seq.readAccess = [];
+        seq.save();
+        return seq;
     }
 
     /**
@@ -104,5 +118,21 @@ export class SequenceController {
         void code;
         void slideIndex;
         throw new Error('Not implemented');
+    }
+
+    /**
+     * Generates a random Code for a Sequence.
+     * @returns  the generated sequence
+     */
+    private static genCode(): string {
+        const codechar = 'abcdefghijklmnopqrstuvwxyz1234567890';
+        const charactersLength = codechar.length;
+        let result = '';
+        for (let i = 0; i < length; i++) {
+            result += codechar.charAt(
+                Math.floor(Math.random() * charactersLength)
+            );
+        }
+        return result;
     }
 }
