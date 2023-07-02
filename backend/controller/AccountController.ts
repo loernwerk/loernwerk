@@ -3,6 +3,7 @@ import { IUser, UserClass } from '../../model/user/IUser';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import { LoernwerkError, LoernwerkErrorCodes } from '../loernwerkUtilities';
+import { DBSequence } from '../../model/sequence/DBSequence';
 /**
  * Manages account data in the database and handles requests for account requests regarding account data
  */
@@ -124,7 +125,23 @@ export class AccountController {
                 'No existing User with given ID',
                 LoernwerkErrorCodes.NOT_FOUND
             );
-        } //TODO: remove from shared sequences
+        }
+        for (const x of user.sharedSequencesReadAccess) {
+            const seq = await DBSequence.findOneBy({ code: x });
+            if (seq === null) {
+                continue;
+            }
+            const i = seq.readAccess.indexOf(id);
+            seq.readAccess.splice(i, 1);
+        }
+        for (const x of user.sharedSequencesWriteAccess) {
+            const seq = await DBSequence.findOneBy({ code: x });
+            if (seq === null) {
+                continue;
+            }
+            const i = seq.writeAccess.indexOf(id);
+            seq.writeAccess.splice(i, 1);
+        }
         await user.remove();
     }
 
