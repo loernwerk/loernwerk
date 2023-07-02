@@ -5,7 +5,6 @@ import crypto from 'crypto';
 import { LoernwerkError, LoernwerkErrorCodes } from '../loernwerkUtilities';
 /**
  * Manages account data in the database and handles requests for account requests regarding account data
- * TODO: Define Error-Codes
  */
 export class AccountController {
     /**
@@ -170,7 +169,7 @@ export class AccountController {
             return;
         }
         if (data.type != null) {
-            dbuser.type = data.type; //TODO: Check for Admin role if data.role === UserClass.ADMIN
+            dbuser.type = data.type;
         }
         if (data.name != null) {
             dbuser.name = data.name;
