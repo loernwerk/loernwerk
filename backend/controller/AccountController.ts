@@ -2,7 +2,7 @@ import { DBUser } from '../../model/user/DBUser';
 import { IUser, UserClass } from '../../model/user/IUser';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
-import { LoernwerkError } from '../loernwerkUtilities';
+import { LoernwerkError, LoernwerkErrorCodes } from '../loernwerkUtilities';
 /**
  * Manages account data in the database and handles requests for account requests regarding account data
  * TODO: Define Error-Codes
@@ -19,14 +19,23 @@ export class AccountController {
             data.name === null ||
             data.password === null
         ) {
-            throw new LoernwerkError('Insufficent User Details', '');
+            throw new LoernwerkError(
+                'Insufficent User Details',
+                LoernwerkErrorCodes.NEED_MORE_INFORMATION
+            );
         }
 
         if ((await DBUser.findBy({ mail: data.mail as string })).length > 0) {
-            throw new LoernwerkError('mail already exists', '');
+            throw new LoernwerkError(
+                'mail already exists',
+                LoernwerkErrorCodes.ALREADY_EXISTS
+            );
         }
         if ((await DBUser.findBy({ name: data.name as string })).length > 0) {
-            throw new LoernwerkError('username already exists', '');
+            throw new LoernwerkError(
+                'username already exists',
+                LoernwerkErrorCodes.ALREADY_EXISTS
+            );
         }
 
         const dbUser: DBUser = new DBUser();
@@ -61,18 +70,24 @@ export class AccountController {
             });
         }
         if (users.length > 1) {
-            throw new LoernwerkError('ambiguous user deatails', '');
+            throw new LoernwerkError(
+                'ambiguous user deatails',
+                LoernwerkErrorCodes.AMBIGUOUS_INFORMATION
+            );
         } else if (users.length === 0) {
             throw new LoernwerkError(
                 'Mail/Name not matching an existing User',
-                ''
+                LoernwerkErrorCodes.NOT_MATCHING
             );
         } else {
             const founduser = users[0];
             if (await this.validatePassword(password, founduser.password)) {
                 return founduser;
             }
-            throw new LoernwerkError('Incorrect Password', '');
+            throw new LoernwerkError(
+                'Incorrect Password',
+                LoernwerkErrorCodes.NOT_MATCHING
+            );
         }
     }
 
@@ -84,7 +99,10 @@ export class AccountController {
     public static async getAccountById(id: number): Promise<IUser> {
         const user = await DBUser.findOneBy({ id: id });
         if (user === null) {
-            throw new LoernwerkError('No existing User with given ID', '');
+            throw new LoernwerkError(
+                'No existing User with given ID',
+                LoernwerkErrorCodes.NOT_MATCHING
+            );
         }
         return user;
     }
@@ -103,7 +121,10 @@ export class AccountController {
     public static async deleteAccount(id: number): Promise<void> {
         const user = await DBUser.findOneBy({ id: id });
         if (user === null) {
-            throw new LoernwerkError('No existing User with given ID', '');
+            throw new LoernwerkError(
+                'No existing User with given ID',
+                LoernwerkErrorCodes.NOT_MATCHING
+            );
         }
         user.remove();
     }
@@ -135,7 +156,10 @@ export class AccountController {
     public static async saveAccount(data: IUser): Promise<void> {
         const dbuser = await DBUser.findOneBy({ id: data.id });
         if (dbuser === null) {
-            throw new LoernwerkError('No such existing User', '');
+            throw new LoernwerkError(
+                'No such existing User',
+                LoernwerkErrorCodes.NOT_MATCHING
+            );
         }
         if (
             data.type == null &&
@@ -143,7 +167,7 @@ export class AccountController {
             data.mail === null &&
             data.password === null
         ) {
-            throw new LoernwerkError('No Changes', '');
+            return;
         }
         if (data.type != null) {
             dbuser.type = data.type; //TODO: Check for Admin role if data.role === UserClass.ADMIN

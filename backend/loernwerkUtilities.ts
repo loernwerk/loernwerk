@@ -85,3 +85,10 @@ export class LoernwerkError extends Error {
         this.code = code;
     }
 }
+
+export enum LoernwerkErrorCodes {
+    ALREADY_EXISTS = 'ALREADY_EXISTS',
+    NEED_MORE_INFORMATION = 'NEED_MORE_INFORMATION',
+    AMBIGUOUS_INFORMATION = 'AMBIGUOUS_INFORMATION',
+    NOT_MATCHING = 'NOT_MATCHING',
+}
