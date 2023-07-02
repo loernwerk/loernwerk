@@ -44,7 +44,7 @@ export class AccountController {
         dbUser.password = await this.hashPW(data.password as string);
         dbUser.sharedSequencesReadAccess = [];
         dbUser.sharedSequencesWriteAccess = [];
-        dbUser.save();
+        await dbUser.save();
         return dbUser;
     }
 
@@ -125,7 +125,7 @@ export class AccountController {
                 LoernwerkErrorCodes.NOT_MATCHING
             );
         }
-        user.remove();
+        await user.remove();
     }
 
     /**
@@ -143,7 +143,7 @@ export class AccountController {
                 'Admin account created, username: admin, mail: admin@loernwerk.de, password: ' +
                     pw
             );
-            adminUser.password = await this.hashPW(pw);
+            adminUser.password = pw;
             this.createNewAccount(adminUser);
         }
     }
@@ -179,8 +179,8 @@ export class AccountController {
         }
         if (data.password != null) {
             dbuser.password = await this.hashPW(data.password);
-            dbuser.save();
         }
+        await dbuser.save();
     }
 
     /**
