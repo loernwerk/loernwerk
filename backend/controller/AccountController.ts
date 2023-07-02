@@ -124,7 +124,7 @@ export class AccountController {
                 'No existing User with given ID',
                 LoernwerkErrorCodes.NOT_FOUND
             );
-        }
+        } //TODO: remove from shared sequences
         await user.remove();
     }
 

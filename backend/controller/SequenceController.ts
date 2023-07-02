@@ -13,7 +13,7 @@ export class SequenceController {
      * Creates a new sequence in the database with the given title and given user as owner.
      * @param name the title of the sequence
      * @param userId the userid of the owner
-     * @returns the created Sequence
+     * @returns the created sequence
      */
     public static async createNewSequence(
         name: string,
@@ -79,7 +79,7 @@ export class SequenceController {
     }
 
     /**
-     * Save the Sequence in the Database
+     * Save the sequence in the database
      * @param sequence the sequence
      */
     public static async saveSequence(
@@ -132,7 +132,7 @@ export class SequenceController {
     }
 
     /**
-     * Deletes the Sequence with the given Code
+     * Deletes the sequence with the given code
      * @param code the code of the sequence
      */
     public static async deleteSequence(code: string): Promise<void> {
@@ -147,8 +147,8 @@ export class SequenceController {
     }
 
     /**
-     * Searches all sequenes of the User
-     * @param userId the id of the User
+     * Searches all sequenes of the user
+     * @param userId the id of the user
      * @returns the sequences of the user
      */
     public static async getSequencesOfUser(
@@ -165,7 +165,7 @@ export class SequenceController {
 
     /**
      * Searches all sequences shared with the user.
-     * @param userId the id of the User
+     * @param userId the id of the user
      * @returns the sequences shared with the user
      */
     public static async getSharedSequencesOfUser(
@@ -244,7 +244,7 @@ export class SequenceController {
     }
 
     /**
-     * Generates a random Code for a Sequence.
+     * Generates a random code for a sequence.
      * @returns  the generated sequence
      */
     private static genCode(): string {
