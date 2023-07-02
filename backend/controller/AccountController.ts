@@ -70,7 +70,7 @@ export class AccountController {
         }
         if (users.length > 1) {
             throw new LoernwerkError(
-                'ambiguous user deatails',
+                'ambiguous user details',
                 LoernwerkErrorCodes.AMBIGUOUS_INFORMATION
             );
         } else if (users.length === 0) {
