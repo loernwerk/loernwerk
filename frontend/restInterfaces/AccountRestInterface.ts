@@ -19,11 +19,18 @@ export class AccountRestInterface extends BaseRestInterface {
     password: string,
     stayLoggedIn: boolean
   ): Promise<boolean> {
-    return await BaseRestInterface.post<boolean>(`${this.account_path}login`, {
-      usernameOrEmail,
-      password,
-      stayLoggedIn,
-    });
+    try {
+      return await BaseRestInterface.post<boolean>(
+        `${this.account_path}login`,
+        {
+          usernameOrEmail,
+          password,
+          stayLoggedIn,
+        }
+      );
+    } catch (e) {
+      return false;
+    }
   }
 
   /**

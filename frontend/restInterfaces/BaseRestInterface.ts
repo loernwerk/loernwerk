@@ -12,7 +12,7 @@ export abstract class BaseRestInterface {
    * @protected
    */
   protected static async get<T>(url: string): Promise<T> {
-    return await this.executeWithErrorHandling(axios.get<T>, url);
+    return await this.executeWithErrorHandling<T>(axios.get<T>, url);
   }
 
   /**
@@ -66,10 +66,10 @@ export abstract class BaseRestInterface {
    * @private
    * @returns the return value of the given method
    */
-  private static async executeWithErrorHandling(
+  private static async executeWithErrorHandling<T>(
     awaitable,
     ...params
-  ): Promise<unknown> {
+  ): Promise<T> {
     try {
       const { data } = await awaitable(...params);
       return data;
