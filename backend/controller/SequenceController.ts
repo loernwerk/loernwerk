@@ -3,6 +3,7 @@ import { ISlide } from '../../model/slide/ISlide';
 import { ISequenceWithSlides } from '../../model/sequence/ISequenceWithSlides';
 import { DBSequence } from '../../model/sequence/DBSequence';
 import { DBSlide } from '../../model/slide/DBSlide';
+import { LoernwerkError, LoernwerkErrorCodes } from '../loernwerkUtilities';
 /**
  * Manages the sequence data in the database and handles inquiries requests regarding these
  */
@@ -42,10 +43,16 @@ export class SequenceController {
     public static async getSequenceByCode(code: string): Promise<ISequence> {
         const seq = await DBSequence.findBy({ code: code });
         if (seq.length === 0) {
-            throw new Error('no matching sequence');
+            throw new LoernwerkError(
+                'no matching sequence',
+                LoernwerkErrorCodes.NOT_FOUND
+            );
         }
         if (seq.length > 1) {
-            throw new Error('ambigious Code');
+            throw new LoernwerkError(
+                'ambigious Code',
+                LoernwerkErrorCodes.AMBIGUOUS_INFORMATION
+            );
         }
         return seq[0];
     }
