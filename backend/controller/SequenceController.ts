@@ -112,6 +112,7 @@ export class SequenceController {
 
         if (sequence.readAccess !== undefined) {
             if (!(await this.isValidUserList(sequence.readAccess))) {
+                //may think about just bringing the db in a consistent state?
                 throw new LoernwerkError(
                     'A Read Access User, doesnt exist',
                     LoernwerkErrorCodes.NOT_FOUND
@@ -214,6 +215,7 @@ export class SequenceController {
         )) {
             const seq = await DBSequence.findOneBy({ code: x });
             if (seq === null) {
+                // May just bring it back to consistency?
                 throw new LoernwerkError(
                     'User has access to a non existing Sequence',
                     LoernwerkErrorCodes.NOT_FOUND
