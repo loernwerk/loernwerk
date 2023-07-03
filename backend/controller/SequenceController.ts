@@ -72,7 +72,14 @@ export class SequenceController {
     public static async getSequenceWithSlide(
         code: string
     ): Promise<ISequenceWithSlides> {
-        const seq = (await this.getSequenceByCode(code)) as ISequenceWithSlides;
+        const seqWithoutSlide = await this.getSequenceByCode(code);
+        if (seqWithoutSlide === null) {
+            throw new LoernwerkError(
+                'No sequence found',
+                LoernwerkErrorCodes.NOT_FOUND
+            );
+        }
+        const seq = seqWithoutSlide as ISequenceWithSlides;
         seq.slides = await DBSlide.find({ where: { sequenceCode: code } });
         seq.slideCount = seq.slides.length;
         return seq;
