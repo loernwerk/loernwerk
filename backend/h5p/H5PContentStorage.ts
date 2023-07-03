@@ -190,17 +190,16 @@ export class H5PContentStorage implements IContentStorage {
             owner: contentId,
             filename: filename,
         });
-        const read = new Readable();
+        let read: Readable;
         if (rangeStart !== undefined && rangeEnd !== undefined) {
-            read.push(file.content.substring(rangeStart, rangeEnd));
+            read = Readable.from(file.content.substring(rangeStart, rangeEnd));
         } else if (rangeStart !== undefined) {
-            read.push(file.content.substring(rangeStart));
+            read = Readable.from(file.content.substring(rangeStart));
         } else if (rangeEnd !== undefined) {
-            read.push(file.content.substring(0, rangeEnd));
+            read = Readable.from(file.content.substring(0, rangeEnd));
         } else {
-            read.push(file.content);
+            read = Readable.from(file.content);
         }
-        read.push(null);
         return read;
     }
 

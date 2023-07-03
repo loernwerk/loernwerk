@@ -129,10 +129,11 @@ export class DBH5PLibrary extends BaseEntity implements IInstalledLibrary {
     }
 
     /**
-     * Formats the identifier of this library as a single string containing machineName, major and minor version
+     * Formats the identifier of a library as a single string containing machineName, major and minor version
+     * @param library Library name to format
      * @returns Identifier of this library
      */
-    getNameAsString(): string {
-        return `${this.machineName};${this.majorVersion};${this.minorVersion}`;
+    static formatNameAsString(library: ILibraryName): string {
+        return `${library.machineName};${library.majorVersion};${library.minorVersion}`;
     }
 }
