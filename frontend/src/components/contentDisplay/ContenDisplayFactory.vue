@@ -1,30 +1,30 @@
 <!-- Visualizes a content object. -->
 <template>
   <div class="h-full p-3">
-    <div v-if="content.type === ContentType.EMBED" class="h-full">
-      <EmbedEditDisplay
-        v-if="editMode"
-        :embed-content="(content as EmbedContent)"
-      />
-      <EmbedDisplay v-else :embed-content="(content as EmbedContent)" />
-    </div>
-
-    <div v-if="content.type === ContentType.TEXT" class="h-full">
-      <TextDisplay :text-content="(content as TextContent)" />
-    </div>
-
-    <div v-if="content.type === ContentType.IMAGE" class="h-full">
-      <ImageEditDisplay
-        v-if="editMode"
-        :image-content="(content as ImageContent)"
-      />
-      <ImageDisplay v-else :image-content="(content as ImageContent)" />
-    </div>
-
-    <div v-if="content.type === ContentType.H5P" class="h-full">
-      <H5PEditDisplay v-if="editMode" :h5p-content="(content as H5PContent)" />
-      <H5PDisplay v-else :h5p-content="(content as H5PContent)" />
-    </div>
+    <EmbedDisplay
+      v-if="content.type === ContentType.EMBED"
+      :embed-content="(content as EmbedContent)"
+      :edit-mode="editMode"
+      class="h-full"
+    />
+    <TextDisplay
+      v-else-if="content.type === ContentType.TEXT"
+      :text-content="(content as TextContent)"
+      :edit-mode="editMode"
+      class="h-full"
+    />
+    <ImageDisplay
+      v-else-if="content.type === ContentType.IMAGE"
+      :image-content="(content as ImageContent)"
+      :edit-mode="editMode"
+      class="h-full"
+    />
+    <H5PDisplay
+      v-else-if="content.type === ContentType.H5P"
+      :h5p-content="(content as H5PContent)"
+      :edit-mode="editMode"
+      class="h-full"
+    />
   </div>
 </template>
 
@@ -35,13 +35,10 @@ import EmbedDisplay from './EmbedDisplay.vue';
 import { EmbedContent } from '../../../../model/slide/content/EmbedContent';
 import { ImageContent } from '../../../../model/slide/content/ImageContent';
 import ImageDisplay from './ImageDisplay.vue';
-import EmbedEditDisplay from './EmbedEditDisplay.vue';
-import ImageEditDisplay from './ImageEditDisplay.vue';
 import TextDisplay from './TextDisplay.vue';
 import { TextContent } from '../../../../model/slide/content/TextContent';
 import H5PDisplay from './H5PDisplay.vue';
 import { H5PContent } from '../../../../model/slide/content/H5pContent';
-import H5PEditDisplay from './H5PEditDisplay.vue';
 
 defineProps({
   /**

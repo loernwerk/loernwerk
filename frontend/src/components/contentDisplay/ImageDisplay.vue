@@ -8,6 +8,8 @@
         maxHeight: `${imageContent.scale * 100}%`,
         maxWidth: `${imageContent.scale * 100}%`,
       }"
+      :class="{ 'cursor-pointer': editMode }"
+      @click="$emit('editing')"
     />
   </div>
 </template>
@@ -22,6 +24,13 @@ defineProps({
      * The image content to display
      */
     type: Object as PropType<ImageContent>,
+    required: true,
+  },
+  /**
+   * Indicates whether student or teacher is viewing the slide
+   */
+  editMode: {
+    type: Boolean,
     required: true,
   },
 });
