@@ -80,4 +80,7 @@ export class DBH5PContent extends BaseEntity implements IContentMetadata {
 
     @PrimaryGeneratedColumn('increment')
     h5pContentId: string;
+
+    @Column({ type: 'simple-json' })
+    content: unknown;
 }
