@@ -142,7 +142,30 @@ export class SequenceController {
                 'Sequence not Found',
                 LoernwerkErrorCodes.NOT_FOUND
             );
-        } //TODO: remove seq. from shared User array
+        }
+        const slides = await DBSlide.findBy({ sequenceCode: code });
+        for (const x of slides) {
+            x.remove();
+        }
+        // TODO: Remove H5P Content
+        for (const x of seq.readAccess) {
+            const user = await DBUser.findOneBy({ id: x });
+            if (user == null) {
+                continue;
+            }
+            const i = user.sharedSequencesReadAccess.indexOf(code);
+            user.sharedSequencesReadAccess.splice(i, 1);
+            user.save();
+        }
+        for (const x of seq.writeAccess) {
+            const user = await DBUser.findOneBy({ id: x });
+            if (user == null) {
+                continue;
+            }
+            const i = user.sharedSequencesWriteAccess.indexOf(code);
+            user.sharedSequencesWriteAccess.splice(i, 1);
+            user.save();
+        }
         seq.remove();
     }
 
