@@ -25,21 +25,19 @@ export class SequenceRestInterface extends BaseRestInterface {
   /**
    * Sends a request to backend to apply given changes to a sequence
    * @param sequence the sequence object
-   * @returns confirmation
    */
   public static async updateSequence(
     sequence: Partial<ISequenceWithSlides>
   ): Promise<void> {
-    return await BaseRestInterface.patch(this.sequence_path, sequence);
+    await BaseRestInterface.patch(this.sequence_path, sequence);
   }
 
   /**
    * Sends a request to backend to delete the given Sequence
    * @param sequenceCode the code of the sequence
-   * @returns confirmation
    */
   public static async deleteSequence(sequenceCode: string): Promise<void> {
-    return await BaseRestInterface.delete(this.sequence_path, {
+    await BaseRestInterface.delete(this.sequence_path, {
       code: sequenceCode,
     });
   }
@@ -51,7 +49,7 @@ export class SequenceRestInterface extends BaseRestInterface {
    */
   public static async getSequence(
     sequenceCode: string
-  ): Promise<ISequenceWithSlides | undefined> {
+  ): Promise<ISequenceWithSlides> {
     //TODO check on implementing needed factories
     return BaseRestInterface.get<ISequenceWithSlides>(
       `${this.sequence_path}${sequenceCode}/edit`
@@ -73,9 +71,7 @@ export class SequenceRestInterface extends BaseRestInterface {
    * @param userId the userId
    * @returns requested sequences
    */
-  public static async getSequenceByUser(
-    userId: number
-  ): Promise<ISequence[] | undefined> {
+  public static async getSequenceByUser(userId: number): Promise<ISequence[]> {
     return await BaseRestInterface.get<ISequence[]>(
       `${this.sequence_path}list/${userId}`
     );
@@ -85,9 +81,7 @@ export class SequenceRestInterface extends BaseRestInterface {
    * Sends a request to backend to get all Sequences which were shared with the currently logged in Account
    * @returns requested sequences
    */
-  public static async getSequencesSharedWithYou(): Promise<
-    ISequence[]
-  > {
+  public static async getSequencesSharedWithYou(): Promise<ISequence[]> {
     return BaseRestInterface.get<ISequence[]>(
       `${this.sequence_path}list/shared`
     );

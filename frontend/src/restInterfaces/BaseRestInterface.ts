@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import {
   LoernwerkError,
   LoernwerkErrorCodes,
@@ -69,30 +69,30 @@ export abstract class BaseRestInterface {
 
   /**
    * Implements the error handling for the BaseRestInterface methods
-   * @param awaitable the method to check for errors
-   * @param params the parameters of the given method
+   * @param awaitable the axios method to check for errors
+   * @param url URL to query
+   * @param body Body to send with the request
    * @private
    * @returns the return value of the given method
    */
   private static async executeWithErrorHandling<T>(
-    awaitable: unknown,
-    ...params: unknown[]
-  ): Promise<T | undefined> {
+    // prettier-ignore
+    awaitable: ((url: string, body?: unknown, config?: AxiosRequestConfig) => Promise<{ data: T }>) | ((url: string, config?: AxiosRequestConfig) => Promise<{ data: T }>),
+    url: string,
+    body?: unknown
+  ): Promise<T> {
     try {
       const backendHost =
         window.location.hostname.includes('localhost') ||
         window.location.hostname.includes('127.0.0.1')
           ? 'http://localhost:5000'
           : window.location.origin;
-      if (params) {
-        params[0] = `${backendHost}${params[0]}`;
-      }
 
-      if (typeof awaitable === 'function') {
-        const { data } = await awaitable(...params);
-        return data;
-      }
-      return undefined;
+      const { data } = await awaitable(`${backendHost}${url}/api`, {
+        data: body,
+        withCredentials: true,
+      });
+      return data;
     } catch (e) {
       let message;
       let statusCode = 500;

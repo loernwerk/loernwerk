@@ -45,19 +45,17 @@ export class AccountRestInterface extends BaseRestInterface {
   /**
    * Sends a request to change specified Account-Data
    * @param account the account
-   * @returns confirmation
    */
   public static async updateAccount(account: Partial<IUser>): Promise<void> {
-    return await BaseRestInterface.patch(this.account_path, account);
+    await BaseRestInterface.patch(this.account_path, account);
   }
 
   /**
    * Sends request to delete the given Account
    * @param accountId the id of the account
-   * @returns confirmation
    */
   public static async deleteAccount(accountId: number): Promise<void> {
-    return await BaseRestInterface.delete(this.account_path, { id: accountId });
+    await BaseRestInterface.delete(this.account_path, { id: accountId });
   }
 
   /**
@@ -75,7 +73,7 @@ export class AccountRestInterface extends BaseRestInterface {
    */
   public static async getAccounts(
     accountIds: number[]
-  ): Promise<Record<number, string> | undefined> {
+  ): Promise<Record<number, string>> {
     const accountList = accountIds.join(',');
     return await BaseRestInterface.get<Record<number, string>>(
       `${this.account_path}${accountList}`
@@ -86,9 +84,7 @@ export class AccountRestInterface extends BaseRestInterface {
    * Sends request to backend to get all IDs and Names of all Accounts
    * @returns confirmation
    */
-  public static async getAccountMetaDataList(): Promise<
-    Partial<IUser>[] | undefined
-  > {
+  public static async getAccountMetaDataList(): Promise<Partial<IUser>[]> {
     return await BaseRestInterface.get<Partial<IUser>[]>(
       `${this.account_path}list`
     );
