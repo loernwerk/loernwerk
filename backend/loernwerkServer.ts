@@ -9,6 +9,7 @@ import history from 'connect-history-api-fallback';
 import { readFile } from 'fs/promises';
 import { createServer } from 'https';
 import { AccountRouterFactory } from './router/AccountRouterFactory';
+import { AccountController } from './controller/AccountController';
 
 /**
  * Main class and entrypoint of the backend server.
@@ -23,6 +24,7 @@ class loernwerkServer {
         // Setting up webserver, database server
         const app = express();
         await DatabaseServer.getInstance().initialize();
+        await AccountController.ensureAdminAccount();
 
         // Setting up Cross-Origin-Resource-Sharing for dev environment
         app.use(
