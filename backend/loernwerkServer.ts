@@ -9,6 +9,7 @@ import history from 'connect-history-api-fallback';
 import { readFile } from 'fs/promises';
 import { createServer } from 'https';
 import { AccountRouterFactory } from './router/AccountRouterFactory';
+import { H5PServer } from './h5p/H5PServer';
 
 /**
  * Main class and entrypoint of the backend server.
@@ -20,9 +21,11 @@ class loernwerkServer {
     public static async main(): Promise<void> {
         console.log('loernwerk booting up.');
 
-        // Setting up webserver, database server
+        // Setting up webserver, database server, H5P server
         const app = express();
         await DatabaseServer.getInstance().initialize();
+        await H5PServer.getInstance().downloadServerFiles();
+        await H5PServer.getInstance().initialize();
 
         // Setting up Cross-Origin-Resource-Sharing for dev environment
         app.use(

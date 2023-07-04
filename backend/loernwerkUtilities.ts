@@ -95,4 +95,5 @@ export enum LoernwerkErrorCodes {
     UNAUTHORIZED = 'UNAUTHORIZED',
     FORBIDDEN = 'FORBIDDEN',
     UNKNOWN = 'UNKNOWN',
+    UNINITIALIZED = 'UNINITIALIZED',
 }
