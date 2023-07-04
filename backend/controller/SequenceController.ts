@@ -111,22 +111,33 @@ export class SequenceController {
         }
 
         if (sequence.readAccess !== undefined) {
-            if (!(await this.isValidUserList(sequence.readAccess))) {
-                //may think about just bringing the db in a consistent state?
-                throw new LoernwerkError(
-                    'A Read Access User, doesnt exist',
-                    LoernwerkErrorCodes.NOT_FOUND
-                );
+            for (const x of sequence.readAccess) {
+                const user = await DBUser.findOneBy({ id: x });
+                if (user === null) {
+                    throw new LoernwerkError(
+                        'A read access user, does not exist',
+                        LoernwerkErrorCodes.NOT_FOUND
+                    );
+                }
+                if (!user.sharedSequencesReadAccess.includes(seq.code)) {
+                    user.sharedSequencesReadAccess.push(seq.code);
+                }
             }
             seq.readAccess = sequence.readAccess;
         }
 
         if (sequence.writeAccess !== undefined) {
-            if (!(await this.isValidUserList(sequence.writeAccess))) {
-                throw new LoernwerkError(
-                    'A Write Access User, doesnt exist',
-                    LoernwerkErrorCodes.NOT_FOUND
-                );
+            for (const x of sequence.writeAccess) {
+                const user = await DBUser.findOneBy({ id: x });
+                if (user === null) {
+                    throw new LoernwerkError(
+                        'A read access user, does not exist',
+                        LoernwerkErrorCodes.NOT_FOUND
+                    );
+                }
+                if (!user.sharedSequencesWriteAccess.includes(seq.code)) {
+                    user.sharedSequencesWriteAccess.push(seq.code);
+                }
             }
             seq.writeAccess = sequence.writeAccess;
         }
@@ -315,19 +326,5 @@ export class SequenceController {
      */
     private static async isValidUser(userId: number): Promise<boolean> {
         return (await DBUser.findOneBy({ id: userId })) !== null;
-    }
-
-    /**
-     * Checks if a complete list consists of valid user
-     * @param userIds the user id list
-     * @returns true if all are in the db
-     */
-    private static async isValidUserList(userIds: number[]): Promise<boolean> {
-        for (const x of userIds) {
-            if (!(await this.isValidUser(x))) {
-                return false;
-            }
-        }
-        return true;
     }
 }
