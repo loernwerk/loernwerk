@@ -149,12 +149,12 @@ export class SequenceController {
             );
         }
         const slides = await DBSlide.findBy({ sequenceCode: code });
-        for (const x of slides) {
-            x.remove();
+        for (const s of slides) {
+            s.remove();
         }
         // TODO: Remove H5P Content
-        for (const x of seq.readAccess) {
-            const user = await DBUser.findOneBy({ id: x });
+        for (const uId of seq.readAccess) {
+            const user = await DBUser.findOneBy({ id: uId });
             if (user == null) {
                 continue;
             }
@@ -164,8 +164,8 @@ export class SequenceController {
             );
             user.save();
         }
-        for (const x of seq.writeAccess) {
-            const user = await DBUser.findOneBy({ id: x });
+        for (const uId of seq.writeAccess) {
+            const user = await DBUser.findOneBy({ id: uId });
             if (user == null) {
                 continue;
             }
