@@ -280,7 +280,7 @@ export class SequenceController {
             slide.content = s.content;
             slide.layout = s.layout;
             slide.order = s.order;
-            slide.save();
+            await slide.save();
         }
     }
 
@@ -288,8 +288,8 @@ export class SequenceController {
      * Generates a random code for a sequence.
      * @returns  the generated sequence
      */
-    private static genCode(): string {
-        const codechar = 'abcdefghijklmnopqrstuvwxyz1234567890';
+    private static generateCode(): string {
+        const codechar = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
         const charactersLength = codechar.length;
         let result = '';
         for (let i = 0; i < length; i++) {
