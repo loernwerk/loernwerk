@@ -26,17 +26,17 @@ export class SequenceController {
             );
         }
         const seq = new DBSequence();
-        let gencode = this.genCode();
-        while ((await DBSequence.findBy({ code: gencode })).length > 0) {
-            gencode = this.genCode();
+        let newCode = this.genCode();
+        while ((await DBSequence.findBy({ code: newCode })).length > 0) {
+            newCode = this.genCode();
         }
-        seq.code = gencode;
+        seq.code = newCode;
         seq.authorId = userId;
         seq.name = name;
         seq.slideCount = 0;
         seq.writeAccess = [];
         seq.readAccess = [];
-        seq.save();
+        await seq.save();
         return seq;
     }
 
