@@ -103,7 +103,7 @@ export class SequenceController {
         }
 
         if (sequence.readAccess !== undefined) {
-            this.updateSharedList(
+            await this.updateSharedList(
                 seq.readAccess,
                 sequence.readAccess,
                 seq.code
@@ -112,7 +112,7 @@ export class SequenceController {
         }
 
         if (sequence.writeAccess !== undefined) {
-            this.updateSharedList(
+            await this.updateSharedList(
                 seq.writeAccess,
                 sequence.writeAccess,
                 seq.code
@@ -122,9 +122,9 @@ export class SequenceController {
 
         if (sequence.slides !== undefined) {
             seq.slideCount = sequence.slides.length;
-            this.saveSlides(sequence.slides);
+            await this.saveSlides(sequence.slides);
         }
-        seq.save();
+        await seq.save();
     }
 
     /**
@@ -153,7 +153,7 @@ export class SequenceController {
                 user.sharedSequencesReadAccess,
                 code
             );
-            user.save();
+            await user.save();
         }
         for (const uId of seq.writeAccess) {
             const user = await DBUser.findOneBy({ id: uId });
@@ -164,9 +164,9 @@ export class SequenceController {
                 user.sharedSequencesWriteAccess,
                 code
             );
-            user.save();
+            await user.save();
         }
-        seq.remove();
+        await seq.remove();
     }
 
     /**
@@ -271,15 +271,15 @@ export class SequenceController {
      * @param slides the slides to store
      */
     private static async saveSlides(slides: ISlide[]): Promise<void> {
-        for (const x of slides) {
+        for (const s of slides) {
             let slide = await DBSlide.findOneBy({ id: x.id });
             if (slide === null) {
                 slide = new DBSlide();
             }
-            slide.backgroundColor = x.backgroundColor;
-            slide.content = x.content;
-            slide.layout = x.layout;
-            slide.order = x.order;
+            slide.backgroundColor = s.backgroundColor;
+            slide.content = s.content;
+            slide.layout = s.layout;
+            slide.order = s.order;
             slide.save();
         }
     }
