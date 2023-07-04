@@ -140,14 +140,18 @@ export class AccountController {
             adminUser.name = 'admin';
             adminUser.mail = 'admin@loernwerk.de';
             const pw = crypto.randomBytes(16).toString('hex');
-            console.log(
-                'Admin account created, username: admin, mail: admin@loernwerk.de, password: ' +
-                    pw
-            );
             adminUser.password = await this.hashPW(pw);
             adminUser.sharedSequencesReadAccess = [];
             adminUser.sharedSequencesWriteAccess = [];
             await adminUser.save();
+            console.log(
+                'Admin account created, username:' +
+                    adminUser.name +
+                    ', mail:' +
+                    adminUser.mail +
+                    ', password: ' +
+                    pw
+            );
         }
     }
 
