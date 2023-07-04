@@ -140,7 +140,7 @@ export class AccountController {
             }
             const index = seq.readAccess.indexOf(id);
             seq.readAccess.splice(index, 1);
-            seq.save();
+            await seq.save();
         }
         for (const code of user.sharedSequencesWriteAccess) {
             const seq = await DBSequence.findOneBy({ code: code });
@@ -149,7 +149,7 @@ export class AccountController {
             }
             const index = seq.writeAccess.indexOf(id);
             seq.writeAccess.splice(index, 1);
-            seq.save();
+            await seq.save();
         }
         await user.remove();
     }
