@@ -26,7 +26,6 @@ export class SequenceController {
             );
         }
         const seq = new DBSequence();
-        seq.creationDate = new Date();
         let gencode = this.genCode();
         while ((await DBSequence.findBy({ code: gencode })).length > 0) {
             gencode = this.genCode();
@@ -34,7 +33,6 @@ export class SequenceController {
         seq.code = gencode;
         seq.authorId = userId;
         seq.name = name;
-        seq.modificationDate = new Date();
         seq.slideCount = 0;
         seq.writeAccess = [];
         seq.readAccess = [];
@@ -132,7 +130,6 @@ export class SequenceController {
             seq.slideCount = sequence.slides.length;
             this.saveSlides(sequence.slides);
         }
-        seq.modificationDate = new Date();
         seq.save();
     }
 
