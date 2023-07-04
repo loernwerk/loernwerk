@@ -36,16 +36,10 @@ export class AccountRestInterface extends BaseRestInterface {
    * @param account the account
    * @returns the id of the newly created user
    */
-  public static async addAccount(
-    account: Partial<IUser>
-  ): Promise<number | undefined> {
-    const value = await BaseRestInterface.put<{ id: number }>(
-      this.account_path,
-      account
-    );
-    if (value !== undefined) {
-      return value.id;
-    }
+  public static async addAccount(account: Partial<IUser>): Promise<number> {
+    return (
+      await BaseRestInterface.put<{ id: number }>(this.account_path, account)
+    ).id;
   }
 
   /**
@@ -70,7 +64,7 @@ export class AccountRestInterface extends BaseRestInterface {
    * Sends request to backend to get Account of currently logged-in User
    * @returns the Account of currently logged-in user
    */
-  public static async getOwnAccount(): Promise<Partial<IUser> | undefined> {
+  public static async getOwnAccount(): Promise<Partial<IUser>> {
     return await BaseRestInterface.get<Partial<IUser>>(this.account_path);
   }
 
@@ -92,7 +86,9 @@ export class AccountRestInterface extends BaseRestInterface {
    * Sends request to backend to get all IDs and Names of all Accounts
    * @returns confirmation
    */
-  public static async getAccountMetaDataList(): Promise<Partial<IUser>[] | undefined> {
+  public static async getAccountMetaDataList(): Promise<
+    Partial<IUser>[] | undefined
+  > {
     return await BaseRestInterface.get<Partial<IUser>[]>(
       `${this.account_path}list`
     );

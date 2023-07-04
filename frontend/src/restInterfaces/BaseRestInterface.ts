@@ -15,8 +15,8 @@ export abstract class BaseRestInterface {
    * @returns server response
    * @protected
    */
-  protected static async get<T>(url: string): Promise<T | undefined> {
-    return await this.executeWithErrorHandling<T>(axios.get<T>, url);
+  protected static async get<T>(url: string): Promise<T> {
+    return (await this.executeWithErrorHandling<T>(axios.get<T>, url)) as T;
   }
 
   /**
@@ -27,11 +27,8 @@ export abstract class BaseRestInterface {
    * @returns server response
    * @protected
    */
-  protected static async post<T>(
-    url: string,
-    body: unknown
-  ): Promise<T | undefined> {
-    return await this.executeWithErrorHandling(axios.post<T>, url, body);
+  protected static async post<T>(url: string, body: unknown): Promise<T> {
+    return (await this.executeWithErrorHandling(axios.post<T>, url, body)) as T;
   }
 
   /**
@@ -42,11 +39,8 @@ export abstract class BaseRestInterface {
    * @returns server response
    * @protected
    */
-  protected static async put<T>(
-    url: string,
-    body: unknown
-  ): Promise<T | undefined> {
-    return await this.executeWithErrorHandling(axios.put<T>, url, body);
+  protected static async put<T>(url: string, body: unknown): Promise<T> {
+    return (await this.executeWithErrorHandling(axios.put<T>, url, body)) as T;
   }
 
   /**

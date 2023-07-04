@@ -14,16 +14,12 @@ export class SequenceRestInterface extends BaseRestInterface {
    * @param title the title of the sequence the user is trying to add
    * @returns code of the sequence
    */
-  public static async addSequence(title: string): Promise<string | undefined> {
-    const value = await BaseRestInterface.put<{ code: string }>(
-      this.sequence_path,
-      {
+  public static async addSequence(title: string): Promise<string> {
+    return (
+      await BaseRestInterface.put<{ code: string }>(this.sequence_path, {
         name: title,
-      }
-    );
-    if (value !== undefined) {
-      return value.code;
-    }
+      })
+    ).code;
   }
 
   /**
@@ -66,7 +62,7 @@ export class SequenceRestInterface extends BaseRestInterface {
    * Sends a request to backend to get all Sequences of the currently logged-in User
    * @returns requested sequences
    */
-  public static async getOwnSequences(): Promise<ISequence[] | undefined> {
+  public static async getOwnSequences(): Promise<ISequence[]> {
     return await BaseRestInterface.get<ISequence[]>(
       `${this.sequence_path}list`
     );
@@ -89,7 +85,9 @@ export class SequenceRestInterface extends BaseRestInterface {
    * Sends a request to backend to get all Sequences which were shared with the currently logged in Account
    * @returns requested sequences
    */
-  public static async getSequencesSharedWithYou(): Promise<ISequence[] | undefined> {
+  public static async getSequencesSharedWithYou(): Promise<
+    ISequence[]
+  > {
     return BaseRestInterface.get<ISequence[]>(
       `${this.sequence_path}list/shared`
     );
@@ -102,7 +100,7 @@ export class SequenceRestInterface extends BaseRestInterface {
    */
   public static async getMetadataForStudent(
     sequenceCode: string
-  ): Promise<Partial<ISequence> | undefined> {
+  ): Promise<Partial<ISequence>> {
     return await BaseRestInterface.get<Partial<ISequence>>(
       `${this.sequence_path}${sequenceCode}/view`
     );
@@ -117,7 +115,7 @@ export class SequenceRestInterface extends BaseRestInterface {
   public static async getSlide(
     sequenceCode: string,
     slideIndex: number
-  ): Promise<ISlide | undefined> {
+  ): Promise<ISlide> {
     return await BaseRestInterface.get<ISlide>(
       `${this.sequence_path}${sequenceCode}/view/${slideIndex}`
     );
