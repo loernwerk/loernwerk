@@ -38,7 +38,7 @@ import ImageDisplay from './ImageDisplay.vue';
 import TextDisplay from './TextDisplay.vue';
 import { TextContent } from '../../../../model/slide/content/TextContent';
 import H5PDisplay from './H5PDisplay.vue';
-import { H5PContent } from '../../../../model/slide/content/H5pContent';
+import { H5PContent } from '../../../../model/slide/content/H5PContent';
 
 defineProps({
   /**

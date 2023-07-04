@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 import { PropType, ref } from 'vue';
-import { H5PContent } from '../../../../model/slide/content/H5pContent';
+import { H5PContent } from '../../../../model/slide/content/H5PContent';
 import H5PEditor from './H5PEditor.vue';
 import H5PPlayer from './H5PPlayer.vue';
 
