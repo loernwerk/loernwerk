@@ -25,19 +25,19 @@ export class SequenceController {
                 LoernwerkErrorCodes.NOT_FOUND
             );
         }
-        const seq = new DBSequence();
-        let newCode = this.genCode();
+        const dbSequence = new DBSequence();
+        let newCode = this.generateCode();
         while ((await DBSequence.findBy({ code: newCode })).length > 0) {
-            newCode = this.genCode();
+            newCode = this.generateCode();
         }
-        seq.code = newCode;
-        seq.authorId = userId;
-        seq.name = name;
-        seq.slideCount = 0;
-        seq.writeAccess = [];
-        seq.readAccess = [];
-        await seq.save();
-        return seq;
+        dbSequence.code = newCode;
+        dbSequence.authorId = userId;
+        dbSequence.name = name;
+        dbSequence.slideCount = 0;
+        dbSequence.writeAccess = [];
+        dbSequence.readAccess = [];
+        await dbSequence.save();
+        return dbSequence;
     }
 
     /**
@@ -46,14 +46,14 @@ export class SequenceController {
      * @returns the sequence
      */
     public static async getSequenceByCode(code: string): Promise<ISequence> {
-        const seq = await DBSequence.findOneBy({ code: code });
-        if (seq === null) {
+        const dbSequence = await DBSequence.findOneBy({ code: code });
+        if (dbSequence === null) {
             throw new LoernwerkError(
                 'no matching sequence',
                 LoernwerkErrorCodes.NOT_FOUND
             );
         }
-        return seq;
+        return dbSequence;
     }
 
     /**
@@ -71,10 +71,12 @@ export class SequenceController {
                 LoernwerkErrorCodes.NOT_FOUND
             );
         }
-        const seq = sequenceWithoutSlide as ISequenceWithSlides;
-        seq.slides = await DBSlide.find({ where: { sequenceCode: code } });
-        seq.slideCount = seq.slides.length;
-        return seq;
+        const sequenceWithSlide = sequenceWithoutSlide as ISequenceWithSlides;
+        sequenceWithSlide.slides = await DBSlide.find({
+            where: { sequenceCode: code },
+        });
+        sequenceWithSlide.slideCount = sequenceWithSlide.slides.length;
+        return sequenceWithSlide;
     }
 
     /**
@@ -90,8 +92,8 @@ export class SequenceController {
                 LoernwerkErrorCodes.INSUFFICENT_INFORMATION
             );
         }
-        const seq = await DBSequence.findOneBy({ code: sequence.code });
-        if (seq === null) {
+        const dbSequence = await DBSequence.findOneBy({ code: sequence.code });
+        if (dbSequence === null) {
             throw new LoernwerkError(
                 'No Sequence Found',
                 LoernwerkErrorCodes.NOT_FOUND
@@ -99,32 +101,32 @@ export class SequenceController {
         }
 
         if (sequence.name !== undefined) {
-            seq.name = sequence.name;
+            dbSequence.name = sequence.name;
         }
 
         if (sequence.readAccess !== undefined) {
             await this.updateSharedList(
-                seq.readAccess,
+                dbSequence.readAccess,
                 sequence.readAccess,
-                seq.code
+                dbSequence.code
             );
-            seq.readAccess = sequence.readAccess;
+            dbSequence.readAccess = sequence.readAccess;
         }
 
         if (sequence.writeAccess !== undefined) {
             await this.updateSharedList(
-                seq.writeAccess,
+                dbSequence.writeAccess,
                 sequence.writeAccess,
-                seq.code
+                dbSequence.code
             );
-            seq.writeAccess = sequence.writeAccess;
+            dbSequence.writeAccess = sequence.writeAccess;
         }
 
         if (sequence.slides !== undefined) {
-            seq.slideCount = sequence.slides.length;
+            dbSequence.slideCount = sequence.slides.length;
             await this.saveSlides(sequence.slides);
         }
-        await seq.save();
+        await dbSequence.save();
     }
 
     /**
@@ -132,8 +134,8 @@ export class SequenceController {
      * @param code the code of the sequence
      */
     public static async deleteSequence(code: string): Promise<void> {
-        const seq = await DBSequence.findOneBy({ code: code });
-        if (seq === null) {
+        const dbSequence = await DBSequence.findOneBy({ code: code });
+        if (dbSequence === null) {
             throw new LoernwerkError(
                 'Sequence not Found',
                 LoernwerkErrorCodes.NOT_FOUND
@@ -144,7 +146,7 @@ export class SequenceController {
             s.remove();
         }
         // TODO: Remove H5P Content
-        for (const uId of seq.readAccess) {
+        for (const uId of dbSequence.readAccess) {
             const user = await DBUser.findOneBy({ id: uId });
             if (user == null) {
                 continue;
@@ -155,7 +157,7 @@ export class SequenceController {
             );
             await user.save();
         }
-        for (const uId of seq.writeAccess) {
+        for (const uId of dbSequence.writeAccess) {
             const user = await DBUser.findOneBy({ id: uId });
             if (user == null) {
                 continue;
@@ -166,7 +168,7 @@ export class SequenceController {
             );
             await user.save();
         }
-        await seq.remove();
+        await dbSequence.remove();
     }
 
     /**
@@ -205,15 +207,15 @@ export class SequenceController {
         for (const x of user.sharedSequencesReadAccess.concat(
             user.sharedSequencesWriteAccess
         )) {
-            const seq = await DBSequence.findOneBy({ code: x });
-            if (seq === null) {
+            const dbSequence = await DBSequence.findOneBy({ code: x });
+            if (dbSequence === null) {
                 // May just bring it back to consistency?
                 throw new LoernwerkError(
                     'User has access to a non existing Sequence',
                     LoernwerkErrorCodes.NOT_FOUND
                 );
             }
-            seqlist.push(seq);
+            seqlist.push(dbSequence);
         }
         return seqlist;
     }
@@ -226,7 +228,7 @@ export class SequenceController {
     public static async getSequenceForExecution(
         code: string
     ): Promise<Partial<ISequence>> {
-        const seq = await DBSequence.findOne({
+        const dbSequence = await DBSequence.findOne({
             where: { code: code },
             select: {
                 name: true,
@@ -235,13 +237,13 @@ export class SequenceController {
                 code: true,
             },
         });
-        if (seq === null) {
+        if (dbSequence === null) {
             throw new LoernwerkError(
                 'no sequence found',
                 LoernwerkErrorCodes.NOT_FOUND
             );
         }
-        return seq;
+        return dbSequence;
     }
 
     /**
