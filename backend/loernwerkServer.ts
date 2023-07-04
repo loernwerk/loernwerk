@@ -8,6 +8,7 @@ import 'dotenv/config';
 import history from 'connect-history-api-fallback';
 import { readFile } from 'fs/promises';
 import { createServer } from 'https';
+import { AccountRouterFactory } from './router/AccountRouterFactory';
 
 /**
  * Main class and entrypoint of the backend server.
@@ -54,6 +55,7 @@ class loernwerkServer {
         );
 
         // Setting up routers, TODO
+        app.use('/api/account', new AccountRouterFactory().buildRouter());
 
         // Serving built vue app
         app.use(history());
