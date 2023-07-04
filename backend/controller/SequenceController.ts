@@ -19,7 +19,7 @@ export class SequenceController {
         name: string,
         userId: number
     ): Promise<ISequence> {
-        if ((await DBUser.findBy({ id: userId })).length !== 1) {
+        if (!this.isValidUser(userId)) {
             throw new LoernwerkError(
                 'user not found',
                 LoernwerkErrorCodes.NOT_FOUND
@@ -132,7 +132,7 @@ export class SequenceController {
             seq.slideCount = sequence.slides.length;
             this.saveSlides(sequence.slides);
         }
-
+        seq.modificationDate = new Date();
         seq.save();
     }
 
