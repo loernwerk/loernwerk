@@ -135,7 +135,8 @@ export class AccountController {
     public static async ensureAdminAccount(): Promise<void> {
         const user = await DBUser.findOneBy({ type: UserClass.ADMIN });
         if (user === null) {
-            const adminUser: Partial<IUser> = {};
+            const adminUser = new DBUser();
+            adminUser.type = UserClass.ADMIN;
             adminUser.name = 'admin';
             adminUser.mail = 'admin@loernwerk.de';
             const pw = crypto.randomBytes(16).toString('hex');
@@ -143,8 +144,10 @@ export class AccountController {
                 'Admin account created, username: admin, mail: admin@loernwerk.de, password: ' +
                     pw
             );
-            adminUser.password = pw;
-            this.createNewAccount(adminUser);
+            adminUser.password = await this.hashPW(pw);
+            adminUser.sharedSequencesReadAccess = [];
+            adminUser.sharedSequencesWriteAccess = [];
+            await adminUser.save();
         }
     }
 
