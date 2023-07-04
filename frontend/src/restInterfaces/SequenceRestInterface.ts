@@ -1,7 +1,7 @@
 import { BaseRestInterface } from './BaseRestInterface';
-import { ISlide } from '../../model/slide/ISlide';
-import { ISequence } from '../../model/sequence/ISequence';
-import { ISequenceWithSlides } from '../../model/sequence/ISequenceWithSlides';
+import { ISlide } from '../../../model/slide/ISlide';
+import { ISequence } from '../../../model/sequence/ISequence';
+import { ISequenceWithSlides } from '../../../model/sequence/ISequenceWithSlides';
 
 /**
  * Implements communication with the Server concerning all Sequence-requests
@@ -14,12 +14,16 @@ export class SequenceRestInterface extends BaseRestInterface {
    * @param title the title of the sequence the user is trying to add
    * @returns code of the sequence
    */
-  public static async addSequence(title: string): Promise<string> {
-    return (
-      await BaseRestInterface.put<{ code: string }>(this.sequence_path, {
+  public static async addSequence(title: string): Promise<string | undefined> {
+    const value = await BaseRestInterface.put<{ code: string }>(
+      this.sequence_path,
+      {
         name: title,
-      })
-    ).code;
+      }
+    );
+    if (value !== undefined) {
+      return value.code;
+    }
   }
 
   /**
@@ -51,7 +55,8 @@ export class SequenceRestInterface extends BaseRestInterface {
    */
   public static async getSequence(
     sequenceCode: string
-  ): Promise<ISequenceWithSlides> {
+  ): Promise<ISequenceWithSlides | undefined> {
+    //TODO check on implementing needed factories
     return BaseRestInterface.get<ISequenceWithSlides>(
       `${this.sequence_path}${sequenceCode}/edit`
     );
@@ -61,7 +66,7 @@ export class SequenceRestInterface extends BaseRestInterface {
    * Sends a request to backend to get all Sequences of the currently logged-in User
    * @returns requested sequences
    */
-  public static async getOwnSequences(): Promise<ISequence[]> {
+  public static async getOwnSequences(): Promise<ISequence[] | undefined> {
     return await BaseRestInterface.get<ISequence[]>(
       `${this.sequence_path}list`
     );
@@ -72,7 +77,9 @@ export class SequenceRestInterface extends BaseRestInterface {
    * @param userId the userId
    * @returns requested sequences
    */
-  public static async getSequenceByUser(userId: number): Promise<ISequence[]> {
+  public static async getSequenceByUser(
+    userId: number
+  ): Promise<ISequence[] | undefined> {
     return await BaseRestInterface.get<ISequence[]>(
       `${this.sequence_path}list/${userId}`
     );
@@ -82,7 +89,7 @@ export class SequenceRestInterface extends BaseRestInterface {
    * Sends a request to backend to get all Sequences which were shared with the currently logged in Account
    * @returns requested sequences
    */
-  public static async getSequencesSharedWithYou(): Promise<ISequence[]> {
+  public static async getSequencesSharedWithYou(): Promise<ISequence[] | undefined> {
     return BaseRestInterface.get<ISequence[]>(
       `${this.sequence_path}list/shared`
     );
@@ -95,7 +102,7 @@ export class SequenceRestInterface extends BaseRestInterface {
    */
   public static async getMetadataForStudent(
     sequenceCode: string
-  ): Promise<Partial<ISequence>> {
+  ): Promise<Partial<ISequence> | undefined> {
     return await BaseRestInterface.get<Partial<ISequence>>(
       `${this.sequence_path}${sequenceCode}/view`
     );
@@ -110,7 +117,7 @@ export class SequenceRestInterface extends BaseRestInterface {
   public static async getSlide(
     sequenceCode: string,
     slideIndex: number
-  ): Promise<ISlide> {
+  ): Promise<ISlide | undefined> {
     return await BaseRestInterface.get<ISlide>(
       `${this.sequence_path}${sequenceCode}/view/${slideIndex}`
     );

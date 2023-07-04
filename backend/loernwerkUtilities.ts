@@ -77,8 +77,4 @@ export enum LoernwerkErrorCodes {
     UNAUTHORIZED = 'UNAUTHORIZED',
     FORBIDDEN = 'FORBIDDEN',
     UNKNOWN = 'UNKNOWN',
-    404 = NOT_FOUND,
-    400 = BAD_REQUEST,
-    401 = UNAUTHORIZED,
-    403 = FORBIDDEN,
 }
