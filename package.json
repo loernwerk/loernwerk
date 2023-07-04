@@ -23,7 +23,6 @@
         "@lumieducation/h5p-webcomponents": "^9.2.2",
         "axios": "^1.4.0",
         "bcrypt": "^5.1.0",
-
         "better-sqlite3": "^8.4.0",
         "connect-history-api-fallback": "^2.0.0",
         "cors": "^2.8.5",
