@@ -111,34 +111,20 @@ export class SequenceController {
         }
 
         if (sequence.readAccess !== undefined) {
-            for (const x of sequence.readAccess) {
-                const user = await DBUser.findOneBy({ id: x });
-                if (user === null) {
-                    throw new LoernwerkError(
-                        'A read access user, does not exist',
-                        LoernwerkErrorCodes.NOT_FOUND
-                    );
-                }
-                if (!user.sharedSequencesReadAccess.includes(seq.code)) {
-                    user.sharedSequencesReadAccess.push(seq.code);
-                }
-            }
+            this.updateSharedList(
+                seq.readAccess,
+                sequence.readAccess,
+                seq.code
+            );
             seq.readAccess = sequence.readAccess;
         }
 
         if (sequence.writeAccess !== undefined) {
-            for (const x of sequence.writeAccess) {
-                const user = await DBUser.findOneBy({ id: x });
-                if (user === null) {
-                    throw new LoernwerkError(
-                        'A read access user, does not exist',
-                        LoernwerkErrorCodes.NOT_FOUND
-                    );
-                }
-                if (!user.sharedSequencesWriteAccess.includes(seq.code)) {
-                    user.sharedSequencesWriteAccess.push(seq.code);
-                }
-            }
+            this.updateSharedList(
+                seq.writeAccess,
+                sequence.writeAccess,
+                seq.code
+            );
             seq.writeAccess = sequence.writeAccess;
         }
 
@@ -172,8 +158,10 @@ export class SequenceController {
             if (user == null) {
                 continue;
             }
-            const i = user.sharedSequencesReadAccess.indexOf(code);
-            user.sharedSequencesReadAccess.splice(i, 1);
+            user.sharedSequencesReadAccess = this.removeFromUserList(
+                user.sharedSequencesReadAccess,
+                code
+            );
             user.save();
         }
         for (const x of seq.writeAccess) {
@@ -181,8 +169,10 @@ export class SequenceController {
             if (user == null) {
                 continue;
             }
-            const i = user.sharedSequencesWriteAccess.indexOf(code);
-            user.sharedSequencesWriteAccess.splice(i, 1);
+            user.sharedSequencesWriteAccess = this.removeFromUserList(
+                user.sharedSequencesWriteAccess,
+                code
+            );
             user.save();
         }
         seq.remove();
@@ -326,5 +316,69 @@ export class SequenceController {
      */
     private static async isValidUser(userId: number): Promise<boolean> {
         return (await DBUser.findOneBy({ id: userId })) !== null;
+    }
+    /**
+     * removing the given code from the given list. used on read/write access lists
+     * @param list the list
+     * @param code the code
+     * @returns the list wihtout the code
+     */
+    private static removeFromUserList(list: string[], code: string): string[] {
+        return list.splice(list.indexOf(code), 1);
+    }
+
+    /**
+     * updates users to fullfill the new list
+     * @param oldList the old list
+     * @param newList the new list to fullfill
+     * @param code the code of the sequence
+     */
+    private static async updateSharedList(
+        oldList,
+        newList,
+        code
+    ): Promise<void> {
+        for (const x of newList) {
+            const user = await DBUser.findOneBy({ id: x });
+            if (user === null) {
+                throw new LoernwerkError(
+                    'A read access user, does not exist',
+                    LoernwerkErrorCodes.NOT_FOUND
+                );
+            }
+            if (!user.sharedSequencesReadAccess.includes(code)) {
+                user.sharedSequencesReadAccess.push(code);
+                user.save();
+            }
+        }
+        for (const x of this.getRemovedUser(oldList, newList)) {
+            const user = await DBUser.findOneBy({ id: x });
+            if (user === null) {
+                continue; //this should be fine, right?
+            }
+            user.sharedSequencesReadAccess = this.removeFromUserList(
+                user.sharedSequencesReadAccess,
+                code
+            );
+        }
+    }
+
+    /**
+     * gets the removed user from two access lists
+     * @param oldList the old access list
+     * @param newList the new access list
+     * @returns the removed user (may empty)
+     */
+    private static getRemovedUser(
+        oldList: number[],
+        newList: number[]
+    ): number[] {
+        const retAr: number[] = [];
+        for (const x of oldList) {
+            if (!newList.includes(x)) {
+                retAr.push(x);
+            }
+        }
+        return retAr;
     }
 }
