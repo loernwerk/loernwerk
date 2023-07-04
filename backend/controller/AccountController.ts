@@ -127,6 +127,11 @@ export class AccountController {
                 LoernwerkErrorCodes.NOT_FOUND
             );
         }
+        //Removing sequences through SequenceController
+        const sequences = await DBSequence.find({ where: { authorId: id } });
+        for (const x of sequences) {
+            SequenceController.deleteSequence(x.code);
+        }
         // Removing user from the read/write access list in shared sequences
         for (const x of user.sharedSequencesReadAccess) {
             const seq = await DBSequence.findOneBy({ code: x });
@@ -145,11 +150,6 @@ export class AccountController {
             const i = seq.writeAccess.indexOf(id);
             seq.writeAccess.splice(i, 1);
             seq.save();
-        }
-        //Removing sequences through SequenceController
-        const sequences = await DBSequence.find({ where: { authorId: id } });
-        for (const x of sequences) {
-            SequenceController.deleteSequence(x.code);
         }
         await user.remove();
     }
