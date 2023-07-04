@@ -229,7 +229,7 @@ export class SequenceController {
         code: string
     ): Promise<Partial<ISequence>> {
         const dbSequence = await DBSequence.findOne({
-            where: { code: code },
+            where: { code: code.toUpperCase() },
             select: {
                 name: true,
                 authorId: true,
@@ -257,7 +257,7 @@ export class SequenceController {
         slideIndex: number
     ): Promise<ISlide> {
         const slide = await DBSlide.findOne({
-            where: { sequenceCode: code, order: slideIndex },
+            where: { sequenceCode: code.toUpperCase(), order: slideIndex },
         });
         if (slide === null) {
             throw new LoernwerkError(
