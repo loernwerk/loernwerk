@@ -138,8 +138,8 @@ export class AccountController {
             if (seq === null) {
                 continue;
             }
-            const i = seq.readAccess.indexOf(id);
-            seq.readAccess.splice(i, 1);
+            const index = seq.readAccess.indexOf(id);
+            seq.readAccess.splice(index, 1);
             seq.save();
         }
         for (const code of user.sharedSequencesWriteAccess) {
@@ -147,8 +147,8 @@ export class AccountController {
             if (seq === null) {
                 continue;
             }
-            const i = seq.writeAccess.indexOf(id);
-            seq.writeAccess.splice(i, 1);
+            const index = seq.writeAccess.indexOf(id);
+            seq.writeAccess.splice(index, 1);
             seq.save();
         }
         await user.remove();
