@@ -1,5 +1,4 @@
 import {
-    fsImplementations,
     H5PConfig,
     H5PEditor,
     H5PPlayer,
@@ -7,7 +6,6 @@ import {
 import { H5PContentStorage } from './H5PContentStorage';
 import { H5PLibraryStorage } from './H5PLibraryStorage';
 import { LoernwerkError, LoernwerkErrorCodes } from '../loernwerkUtilities';
-import { resolve } from 'node:path';
 import DirectoryTemporaryFileStorage from '@lumieducation/h5p-server/build/src/implementation/fs/DirectoryTemporaryFileStorage';
 import CachedKeyValueStorage from '@lumieducation/h5p-server/build/src/implementation/cache/CachedKeyValueStorage';
 
@@ -48,9 +46,7 @@ export class H5PServer {
      * Initializes the H5PServer.
      */
     public async initialize(): Promise<void> {
-        const config = await new H5PConfig(
-            new fsImplementations.JsonStorage(resolve('h5p/config.json'))
-        ).load();
+        const config = await new H5PConfig().load();
 
         this.editor = new H5PEditor(
             new CachedKeyValueStorage('kvcache'),

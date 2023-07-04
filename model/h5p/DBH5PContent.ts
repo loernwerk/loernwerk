@@ -3,11 +3,12 @@ import {
     IContentAuthor,
     IContentChange,
 } from '@lumieducation/h5p-server/build/src/types';
-import { BaseEntity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {BaseEntity, Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 
 /**
  * Database object containing custom created H5P content.
  */
+@Entity()
 export class DBH5PContent extends BaseEntity implements IContentMetadata {
     @Column({ type: 'simple-json', nullable: true })
     dynamicDependencies?: ILibraryName[] | undefined;
@@ -39,7 +40,7 @@ export class DBH5PContent extends BaseEntity implements IContentMetadata {
     @Column({ nullable: true })
     w?: string | undefined;
 
-    @Column()
+    @Column({nullable: true})
     defaultLanguage: string;
 
     @Column({ nullable: true })

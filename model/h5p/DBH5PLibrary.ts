@@ -1,9 +1,10 @@
-import { BaseEntity, Column, PrimaryColumn } from 'typeorm';
+import {BaseEntity, Column, Entity, PrimaryColumn} from 'typeorm';
 import { IInstalledLibrary, ILibraryName } from '@lumieducation/h5p-server';
 
 /**
  * Database object containing information about a single installed H5P library.
  */
+@Entity()
 export class DBH5PLibrary extends BaseEntity implements IInstalledLibrary {
     @Column({ type: 'simple-json', nullable: true })
     addTo?: {

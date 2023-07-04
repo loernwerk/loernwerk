@@ -25,6 +25,9 @@ export class H5PRouterFactory extends RouterFactory {
             requireBody('params', 'library'),
             buildH5PRequest,
             async (req, res) => {
+                H5PServer.getInstance().getH5PEditor().config.baseUrl = `${
+                    req.protocol
+                }://${req.get('host')}/h5p`;
                 // Deeper checks of request body
                 if (
                     req.body.params.params === undefined ||
@@ -56,6 +59,9 @@ export class H5PRouterFactory extends RouterFactory {
             requireBody('params', 'library'),
             buildH5PRequest,
             async (req, res) => {
+                H5PServer.getInstance().getH5PEditor().config.baseUrl = `${
+                    req.protocol
+                }://${req.get('host')}/h5p`;
                 // Deeper checks of request body
                 if (
                     req.body.params.params === undefined ||
@@ -86,6 +92,9 @@ export class H5PRouterFactory extends RouterFactory {
             requireLogin,
             buildH5PRequest,
             async (req, res) => {
+                H5PServer.getInstance().getH5PEditor().config.baseUrl = `${
+                    req.protocol
+                }://${req.get('host')}/h5p`;
                 const editorModel = (await H5PServer.getInstance()
                     .getH5PEditor()
                     .render(
@@ -113,6 +122,9 @@ export class H5PRouterFactory extends RouterFactory {
         );
 
         h5pRouter.get('/:contentId/view', async (req, res) => {
+            H5PServer.getInstance().getH5PEditor().config.baseUrl = `${
+                req.protocol
+            }://${req.get('host')}/h5p`;
             try {
                 const content = await H5PServer.getInstance()
                     .getH5PPlayer()

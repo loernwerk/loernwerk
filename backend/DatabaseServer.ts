@@ -24,7 +24,7 @@ export class DatabaseServer {
         const database = process.env.DATABASE_FILE || 'dev.db';
 
         this.db = new DataSource({
-            type: 'better-sqlite3',
+            type: 'sqlite',
             database: database,
             entities: [
                 DBSlide,

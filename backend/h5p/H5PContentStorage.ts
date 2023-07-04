@@ -8,7 +8,7 @@ import {
     IUser,
     Permission,
 } from '@lumieducation/h5p-server';
-import { Readable, Stream } from 'stream';
+import { Readable } from 'stream';
 import { DBH5PFile } from '../../model/h5p/DBH5PFile';
 import { DBH5PContent } from '../../model/h5p/DBH5PContent';
 
@@ -62,17 +62,25 @@ export class H5PContentStorage implements IContentStorage {
     async addFile(
         contentId: ContentId,
         filename: string,
-        readStream: Stream,
+        readStream: Readable,
         user?: IUser
     ): Promise<void> {
         // TODO: Access control?
         void user;
+
+        // Converting the readable to a string
+        const chunks = [];
+        for await (const chunk of readStream) {
+            chunks.push(chunk);
+        }
+        const fileBuffer = Buffer.concat(chunks);
+
         const dbFile = new DBH5PFile();
         dbFile.filename = filename;
         dbFile.ownerType = 'content';
         dbFile.owner = contentId;
-        dbFile.content = await this.streamToString(readStream);
-        dbFile.size = dbFile.content.length;
+        dbFile.content = fileBuffer.toString('utf-8');
+        dbFile.size = fileBuffer.length;
         await dbFile.save();
     }
 
@@ -238,7 +246,7 @@ export class H5PContentStorage implements IContentStorage {
         const content = await DBH5PContent.findOneBy({
             h5pContentId: contentId,
         });
-        return content.content;
+        return content?.content;
     }
 
     /**
@@ -307,22 +315,5 @@ export class H5PContentStorage implements IContentStorage {
             where: { ownerType: 'content', owner: contentId },
         });
         return files.map((file) => file.filename);
-    }
-
-    /**
-     * Turns a readable stream into a string.
-     * @param read Stream to read from
-     * @returns String built from the stream
-     * @private
-     */
-    private async streamToString(read: Stream): Promise<string> {
-        const chunks: Buffer[] = [];
-        return new Promise((resolve, reject) => {
-            read.on('data', (chunk) => chunks.push(Buffer.from(chunk)));
-            read.on('error', (err) => reject(err));
-            read.on('end', () =>
-                resolve(Buffer.concat(chunks).toString('utf8'))
-            );
-        });
     }
 }

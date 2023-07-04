@@ -14,6 +14,8 @@ import { H5PRouterFactory } from './router/H5PRouterFactory';
 import { buildH5PRequest } from './loernwerkUtilities';
 import { h5pAjaxExpressRouter } from '@lumieducation/h5p-express';
 import { resolve } from 'node:path';
+import { AccountController } from './controller/AccountController';
+import fileUpload from 'express-fileupload';
 
 /**
  * Main class and entrypoint of the backend server.
@@ -28,6 +30,7 @@ class loernwerkServer {
         // Setting up webserver, database server, H5P server
         const app = express();
         await DatabaseServer.getInstance().initialize();
+        await AccountController.ensureAdminAccount();
         await H5PServer.getInstance().downloadServerFiles();
         await H5PServer.getInstance().initialize();
 
@@ -35,13 +38,24 @@ class loernwerkServer {
         app.use(
             cors({
                 credentials: true,
-                origin: 'http://localhost:8080',
+                origin: 'http://localhost:5173',
             })
         );
 
         // Setting up parsers to parse HTTP bodies
         app.use(json());
         app.use(urlencoded({ extended: true }));
+        // Setting up file upload for h5p
+        app.use(
+            fileUpload({
+                limits: {
+                    fileSize:
+                        H5PServer.getInstance().getH5PEditor().config
+                            .maxTotalSize,
+                },
+                useTempFiles: false,
+            })
+        );
 
         // Setting up cookies
         app.use(

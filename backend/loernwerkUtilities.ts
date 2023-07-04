@@ -66,28 +66,37 @@ export function requireBody(...data: string[]) {
 /**
  * Middleware for specifying the request attributes needed by the H5P library.
  * @param req Request object
- * @param res Response object
+ * @param _ Response object
  * @param next Next handler function
  */
 export async function buildH5PRequest(
     req: Request,
-    res: Response,
+    _: Response,
     next: NextFunction
 ): Promise<void> {
     if (req.session.userId === undefined) {
-        res.sendStatus(401);
-        return;
+        req.user = {
+            id: 'anonymous',
+            canCreateRestricted: false,
+            canInstallRecommended: false,
+            canUpdateAndInstallLibraries: false,
+            email: 'anonymous@loernwerk.de',
+            name: 'Anonymous student',
+            type: 'local',
+        };
+    } else {
+        // TODO: We can greatly speed this up if we store name & email in the session - then we avoid a db query here (and this gets called a TON)
+        const dbUser = await DBUser.findOneByOrFail({ id: req.session.userId });
+        req.user = {
+            id: dbUser.id.toString(),
+            canCreateRestricted: true,
+            canInstallRecommended: true,
+            canUpdateAndInstallLibraries: true,
+            email: dbUser.mail,
+            name: dbUser.name,
+            type: 'local',
+        };
     }
-    const dbUser = await DBUser.findOneByOrFail({ id: req.session.userId });
-    req.user = {
-        id: dbUser.id.toString(),
-        canCreateRestricted: true,
-        canInstallRecommended: true,
-        canUpdateAndInstallLibraries: true,
-        email: dbUser.mail,
-        name: dbUser.name,
-        type: 'local',
-    };
     req.t = (errorId, replacements): string => {
         void replacements;
         return errorId;

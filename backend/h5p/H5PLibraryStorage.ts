@@ -6,7 +6,7 @@ import {
     ILibraryName,
     ILibraryStorage,
 } from '@lumieducation/h5p-server';
-import { Readable, Stream } from 'stream';
+import { Readable } from 'stream';
 import { DBH5PFile } from '../../model/h5p/DBH5PFile';
 import { DBH5PLibrary } from '../../model/h5p/DBH5PLibrary';
 
@@ -29,12 +29,18 @@ export class H5PLibraryStorage implements ILibraryStorage {
         filename: string,
         readStream: Readable
     ): Promise<boolean> {
+        // Converting the readable to a string
+        const chunks = [];
+        for await (const chunk of readStream) {
+            chunks.push(chunk);
+        }
+        const fileBuffer = Buffer.concat(chunks);
         const dbFile = new DBH5PFile();
         dbFile.ownerType = 'library';
         dbFile.owner = DBH5PLibrary.formatNameAsString(library);
         dbFile.filename = filename;
-        dbFile.content = await this.streamToString(readStream);
-        dbFile.size = dbFile.content.length;
+        dbFile.content = fileBuffer.toString('utf-8');
+        dbFile.size = fileBuffer.length;
         await dbFile.save();
         return true;
     }
@@ -100,10 +106,17 @@ export class H5PLibraryStorage implements ILibraryStorage {
         library: ILibraryName,
         filename: string
     ): Promise<boolean> {
-        const file = await DBH5PFile.findOneBy({
-            ownerType: 'library',
-            owner: DBH5PLibrary.formatNameAsString(library),
-            filename: filename,
+        const file = await DBH5PFile.findOne({
+            where: {
+                ownerType: 'library',
+                owner: DBH5PLibrary.formatNameAsString(library),
+                filename: filename,
+            },
+            select: {
+                filename: true,
+                owner: true,
+                ownerType: true,
+            }
         });
         return file !== null;
     }
@@ -173,7 +186,7 @@ export class H5PLibraryStorage implements ILibraryStorage {
         library: ILibraryName,
         filename: string
     ): Promise<string> {
-        const file = await DBH5PFile.findOneBy({
+        const file = await DBH5PFile.findOneByOrFail({
             ownerType: 'library',
             owner: DBH5PLibrary.formatNameAsString(library),
             filename: filename,
@@ -192,7 +205,7 @@ export class H5PLibraryStorage implements ILibraryStorage {
         library: ILibraryName,
         filename: string
     ): Promise<IFileStats> {
-        const file = await DBH5PFile.findOneBy({
+        const file = await DBH5PFile.findOneByOrFail({
             ownerType: 'library',
             owner: DBH5PLibrary.formatNameAsString(library),
             filename: filename,
@@ -214,7 +227,7 @@ export class H5PLibraryStorage implements ILibraryStorage {
         library: ILibraryName,
         filename: string
     ): Promise<Readable> {
-        const file = await DBH5PFile.findOneBy({
+        const file = await DBH5PFile.findOneByOrFail({
             ownerType: 'library',
             owner: DBH5PLibrary.formatNameAsString(library),
             filename: filename,
@@ -272,10 +285,17 @@ export class H5PLibraryStorage implements ILibraryStorage {
      * @returns true if the library is installed
      */
     async isInstalled(library: ILibraryName): Promise<boolean> {
-        const dbLib = await DBH5PLibrary.findOneBy({
-            machineName: library.machineName,
-            majorVersion: library.majorVersion,
-            minorVersion: library.minorVersion,
+        const dbLib = await DBH5PLibrary.findOne({
+            where: {
+                machineName: library.machineName,
+                majorVersion: library.majorVersion,
+                minorVersion: library.minorVersion,
+            },
+            select: {
+                machineName: true,
+                majorVersion: true,
+                minorVersion: true,
+            }
         });
         return dbLib !== null;
     }
@@ -354,22 +374,5 @@ export class H5PLibraryStorage implements ILibraryStorage {
 
         await dbLib.save();
         return dbLib;
-    }
-
-    /**
-     * Turns a readable stream into a string.
-     * @param read Stream to read from
-     * @returns String built from the stream
-     * @private
-     */
-    private async streamToString(read: Stream): Promise<string> {
-        const chunks: Buffer[] = [];
-        return new Promise((resolve, reject) => {
-            read.on('data', (chunk) => chunks.push(Buffer.from(chunk)));
-            read.on('error', (err) => reject(err));
-            read.on('end', () =>
-                resolve(Buffer.concat(chunks).toString('utf8'))
-            );
-        });
     }
 }
