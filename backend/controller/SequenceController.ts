@@ -301,7 +301,7 @@ export class SequenceController {
     }
 
     /**
-     * Checks if the given user id matches an user in the db
+     * Checks if the given user id matches an user in the database
      * @param userId the id of the user
      * @returns true if the user exists
      */
@@ -319,18 +319,18 @@ export class SequenceController {
     }
 
     /**
-     * updates users to fullfill the new list
-     * @param oldList the old list
-     * @param newList the new list to fullfill
+     * updates users to fullfill a new access list
+     * @param oldAccessList the old access list
+     * @param newAccessList the new access list to fullfill
      * @param code the code of the sequence
      */
     private static async updateSharedList(
-        oldList,
-        newList,
-        code
+        oldAccessList: number[],
+        newAccessList: number[],
+        code: string
     ): Promise<void> {
-        for (const x of newList) {
-            const user = await DBUser.findOneBy({ id: x });
+        for (const uId of newAccessList) {
+            const user = await DBUser.findOneBy({ id: uId });
             if (user === null) {
                 throw new LoernwerkError(
                     'A read access user, does not exist',
@@ -339,11 +339,11 @@ export class SequenceController {
             }
             if (!user.sharedSequencesReadAccess.includes(code)) {
                 user.sharedSequencesReadAccess.push(code);
-                user.save();
+                await user.save();
             }
         }
-        for (const x of this.getRemovedUser(oldList, newList)) {
-            const user = await DBUser.findOneBy({ id: x });
+        for (const uId of this.getRemovedUser(oldAccessList, newAccessList)) {
+            const user = await DBUser.findOneBy({ id: uId });
             if (user === null) {
                 continue; //this should be fine, right?
             }
@@ -351,25 +351,26 @@ export class SequenceController {
                 user.sharedSequencesReadAccess,
                 code
             );
+            await user.save();
         }
     }
 
     /**
      * gets the removed user from two access lists
-     * @param oldList the old access list
-     * @param newList the new access list
+     * @param oldAccessList the old access list
+     * @param newAccessList the new access list
      * @returns the removed user (may empty)
      */
     private static getRemovedUser(
-        oldList: number[],
-        newList: number[]
+        oldAccessList: number[],
+        newAccessList: number[]
     ): number[] {
-        const retAr: number[] = [];
-        for (const x of oldList) {
-            if (!newList.includes(x)) {
-                retAr.push(x);
+        const returnArray: number[] = [];
+        for (const x of oldAccessList) {
+            if (!newAccessList.includes(x)) {
+                returnArray.push(x);
             }
         }
-        return retAr;
+        return returnArray;
     }
 }
