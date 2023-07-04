@@ -1,15 +1,23 @@
 <!-- Displays a text content -->
 <template>
+  <div v-if="editMode" class="h-full">
+    <textarea
+      v-model="changableContent.textSnippets[0].text"
+      @input="$emit('editing', changableContent)"
+      class="w-full h-full resize-none bg-transparent border-none"
+    />
+  </div>
   <div
+    v-else
     class="h-full overflow-hidden flex flex-col"
     :class="{ textAlign, justify, items }"
   >
-    <div
+    <p
       v-for="[index, line] in lines.entries()"
       :key="index"
       class="flex flex-row items-center"
     >
-      <div
+      <span
         v-for="[index2, snippet] in line.entries()"
         :key="index2"
         :class="{
@@ -17,16 +25,17 @@
           italic: snippet.options.italic,
           underline: snippet.options.underlined,
         }"
-        class="break-words whitespace-pre-wrap"
+        class="break-normal whitespace-pre-wrap overflow-hidden"
         :style="{
           color: snippet.options.color,
           fontSize: `${Math.round(snippet.options.size * pxPerPoint)}px`,
           fontFamily: snippet.options.font,
         }"
+        :id="`edit-${index}-${index2}`"
       >
         {{ snippet.text }}
-      </div>
-    </div>
+      </span>
+    </p>
   </div>
 </template>
 
@@ -43,7 +52,31 @@ const props = defineProps({
     type: Object as PropType<TextContent>,
     required: true,
   },
+  /**
+   * Indicates whether student or teacher is viewing the slide
+   */
+  editMode: {
+    type: Boolean,
+    required: true,
+  },
 });
+
+defineEmits(['editing']);
+
+const changableContent = ref(props.textContent);
+if (changableContent.value.textSnippets.length == 0) {
+  changableContent.value.textSnippets.push({
+    text: '',
+    options: {
+      bold: false,
+      italic: false,
+      underlined: false,
+      color: '#000000',
+      size: 12,
+      font: 'Arial',
+    },
+  });
+}
 
 // responsive font size
 const slideHeight = inject('slideHeight') as Ref<number>;
@@ -82,7 +115,7 @@ switch (props.textContent.alignmentVertical) {
     break;
 }
 
-// Each line is an array of text snippets
+// split content into lines
 const lines: TextSnippet[][] = [[]];
 // split text into lines
 for (const snippet of props.textContent.textSnippets) {
@@ -112,5 +145,4 @@ for (const line of lines) {
     line[0].text = ' ';
   }
 }
-console.log(lines);
 </script>
