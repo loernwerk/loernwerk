@@ -75,7 +75,8 @@ module.exports = {
     settings: {
         jsdoc: {
             tagNamePreference: {
-                augments: "extends"
+                augments: "extends",
+                template: "typeParam",
             }
         }
     }
