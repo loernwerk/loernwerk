@@ -204,10 +204,10 @@ export class SequenceController {
             );
         }
         const seqlist: ISequence[] = [];
-        for (const x of user.sharedSequencesReadAccess.concat(
+        for (const code of user.sharedSequencesReadAccess.concat(
             user.sharedSequencesWriteAccess
         )) {
-            const dbSequence = await DBSequence.findOneBy({ code: x });
+            const dbSequence = await DBSequence.findOneBy({ code: code });
             if (dbSequence === null) {
                 // May just bring it back to consistency?
                 throw new LoernwerkError(
@@ -274,7 +274,7 @@ export class SequenceController {
      */
     private static async saveSlides(slides: ISlide[]): Promise<void> {
         for (const s of slides) {
-            let slide = await DBSlide.findOneBy({ id: x.id });
+            let slide = await DBSlide.findOneBy({ id: s.id });
             if (slide === null) {
                 slide = new DBSlide();
             }
