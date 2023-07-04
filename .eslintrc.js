@@ -24,7 +24,7 @@ module.exports = {
         {
             files: ["frontend/**/*.{ts,vue,html}"],
             rules: {
-                "indent": ["error", 2],
+                "indent": ["error", 2, { "SwitchCase": 1, "ObjectExpression": "first", "ArrayExpression": "first", "MemberExpression": "off" }],
                 "@typescript-eslint/indent": ["error", 2, { "SwitchCase": 1, "ObjectExpression": "first", "ArrayExpression": "first", "MemberExpression": "off" }],
             }
         }
