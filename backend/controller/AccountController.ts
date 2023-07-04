@@ -134,22 +134,22 @@ export class AccountController {
         }
         // Removing user from the read/write access list in shared sequences
         for (const code of user.sharedSequencesReadAccess) {
-            const seq = await DBSequence.findOneBy({ code: code });
-            if (seq === null) {
+            const sequence = await DBSequence.findOneBy({ code: code });
+            if (sequence === null) {
                 continue;
             }
-            const index = seq.readAccess.indexOf(id);
-            seq.readAccess.splice(index, 1);
-            await seq.save();
+            const index = sequence.readAccess.indexOf(id);
+            sequence.readAccess.splice(index, 1);
+            await sequence.save();
         }
         for (const code of user.sharedSequencesWriteAccess) {
-            const seq = await DBSequence.findOneBy({ code: code });
-            if (seq === null) {
+            const sequence = await DBSequence.findOneBy({ code: code });
+            if (sequence === null) {
                 continue;
             }
-            const index = seq.writeAccess.indexOf(id);
-            seq.writeAccess.splice(index, 1);
-            await seq.save();
+            const index = sequence.writeAccess.indexOf(id);
+            sequence.writeAccess.splice(index, 1);
+            await sequence.save();
         }
         await user.remove();
     }
