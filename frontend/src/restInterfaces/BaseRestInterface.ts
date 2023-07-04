@@ -16,7 +16,7 @@ export abstract class BaseRestInterface {
    * @protected
    */
   protected static async get<T>(url: string): Promise<T> {
-    return (await this.executeWithErrorHandling<T>(axios.get<T>, url)) as T;
+    return await this.executeWithErrorHandling<T>(axios.get<T>, url);
   }
 
   /**
@@ -28,7 +28,7 @@ export abstract class BaseRestInterface {
    * @protected
    */
   protected static async post<T>(url: string, body: unknown): Promise<T> {
-    return (await this.executeWithErrorHandling(axios.post<T>, url, body)) as T;
+    return await this.executeWithErrorHandling(axios.post<T>, url, body);
   }
 
   /**
@@ -40,7 +40,7 @@ export abstract class BaseRestInterface {
    * @protected
    */
   protected static async put<T>(url: string, body: unknown): Promise<T> {
-    return (await this.executeWithErrorHandling(axios.put<T>, url, body)) as T;
+    return await this.executeWithErrorHandling(axios.put<T>, url, body);
   }
 
   /**
@@ -48,11 +48,10 @@ export abstract class BaseRestInterface {
    * @typeParam T generic type, to be replaced by object received from Webserver
    * @param url the url
    * @param body the params
-   * @returns server response
    * @protected
    */
   protected static async delete(url: string, body: unknown): Promise<void> {
-    return await this.executeWithErrorHandling(axios.delete, url, body);
+    await this.executeWithErrorHandling(axios.delete, url, body);
   }
 
   /**
@@ -60,11 +59,10 @@ export abstract class BaseRestInterface {
    * @typeParam T generic type, to be replaced by object received from Webserver
    * @param url the url
    * @param body the params
-   * @returns server response
    * @protected
    */
   protected static async patch(url: string, body: unknown): Promise<void> {
-    return await this.executeWithErrorHandling(axios.patch, url, body);
+    await this.executeWithErrorHandling(axios.patch, url, body);
   }
 
   /**
