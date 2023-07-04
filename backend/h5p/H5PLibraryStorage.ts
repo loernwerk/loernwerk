@@ -33,7 +33,7 @@ export class H5PLibraryStorage implements ILibraryStorage {
         dbFile.ownerType = 'library';
         dbFile.owner = DBH5PLibrary.formatNameAsString(library);
         dbFile.filename = filename;
-        dbFile.content = this.getFileAsString(readStream);
+        dbFile.content = await this.streamToString(readStream);
         dbFile.size = dbFile.content.length;
         await dbFile.save();
         return true;
@@ -232,11 +232,13 @@ export class H5PLibraryStorage implements ILibraryStorage {
     async getInstalledLibraryNames(
         machineName?: string
     ): Promise<ILibraryName[]> {
-        const filter = {};
         if (machineName !== undefined) {
-            filter.machineName = machineName;
+            return await DBH5PLibrary.find({
+                where: { machineName: machineName },
+            });
+        } else {
+            return await DBH5PLibrary.find({});
         }
-        return await DBH5PLibrary.find({ where: filter });
     }
 
     /**
@@ -257,12 +259,11 @@ export class H5PLibraryStorage implements ILibraryStorage {
      * @returns the metadata and information about the locally installed library
      */
     async getLibrary(library: ILibraryName): Promise<IInstalledLibrary> {
-        const dbLib = await DBH5PLibrary.findOneBy({
+        return await DBH5PLibrary.findOneBy({
             machineName: library.machineName,
             majorVersion: library.majorVersion,
             minorVersion: library.minorVersion,
         });
-        return dbLib;
     }
 
     /**
@@ -349,7 +350,7 @@ export class H5PLibraryStorage implements ILibraryStorage {
             minorVersion: libraryMetadata.minorVersion,
         });
 
-        Object.assign(dbLib, additionalMetadata);
+        Object.assign(dbLib, libraryMetadata);
 
         await dbLib.save();
         return dbLib;
