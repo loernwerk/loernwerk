@@ -145,12 +145,7 @@ export class AccountController {
             adminUser.sharedSequencesWriteAccess = [];
             await adminUser.save();
             console.log(
-                'Admin account created, username:' +
-                    adminUser.name +
-                    ', mail:' +
-                    adminUser.mail +
-                    ', password: ' +
-                    pw
+                `Admin account created, username: ${adminUser.name} ,mail: ${adminUser.mail}, password: ${pw}`
             );
         }
     }
