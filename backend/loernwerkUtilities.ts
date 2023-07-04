@@ -1,4 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
+import { IUser } from '@lumieducation/h5p-server';
+import { DBUser } from '../model/user/DBUser';
 
 /**
  * Express middleware for checking user authentication.
@@ -61,11 +63,52 @@ export function requireBody(...data: string[]) {
     };
 }
 
+/**
+ * Middleware for specifying the request attributes needed by the H5P library.
+ * @param req Request object
+ * @param res Response object
+ * @param next Next handler function
+ */
+export async function buildH5PRequest(
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> {
+    if (req.session.userId === undefined) {
+        res.sendStatus(401);
+        return;
+    }
+    const dbUser = await DBUser.findOneByOrFail({ id: req.session.userId });
+    req.user = {
+        id: dbUser.id.toString(),
+        canCreateRestricted: true,
+        canInstallRecommended: true,
+        canUpdateAndInstallLibraries: true,
+        email: dbUser.mail,
+        name: dbUser.name,
+        type: 'local',
+    };
+    req.t = (errorId, replacements): string => {
+        void replacements;
+        return errorId;
+    };
+    next();
+}
+
 // Declaring session information
 declare module 'express-session' {
     interface SessionData {
         userId?: number;
         isAdmin?: boolean;
+    }
+}
+
+// Declaring additional request properties for H5P
+declare module 'express-serve-static-core' {
+    interface Request {
+        user: IUser;
+        t: (errorId: string, replacements: { [key: string]: string }) => string;
+        language: string;
     }
 }
 

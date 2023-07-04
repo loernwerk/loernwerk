@@ -10,6 +10,10 @@ import { readFile } from 'fs/promises';
 import { createServer } from 'https';
 import { AccountRouterFactory } from './router/AccountRouterFactory';
 import { H5PServer } from './h5p/H5PServer';
+import { H5PRouterFactory } from './router/H5PRouterFactory';
+import { buildH5PRequest } from './loernwerkUtilities';
+import { h5pAjaxExpressRouter } from '@lumieducation/h5p-express';
+import { resolve } from 'node:path';
 
 /**
  * Main class and entrypoint of the backend server.
@@ -59,6 +63,16 @@ class loernwerkServer {
 
         // Setting up routers, TODO
         app.use('/api/account', new AccountRouterFactory().buildRouter());
+        app.use('/api/h5p', new H5PRouterFactory().buildRouter());
+        app.use(
+            '/h5p',
+            buildH5PRequest,
+            h5pAjaxExpressRouter(
+                H5PServer.getInstance().getH5PEditor(),
+                resolve('h5p/core'),
+                resolve('h5p/editor')
+            )
+        );
 
         // Serving built vue app
         app.use(history());
