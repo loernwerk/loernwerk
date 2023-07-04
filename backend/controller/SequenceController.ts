@@ -46,20 +46,14 @@ export class SequenceController {
      * @returns the sequence
      */
     public static async getSequenceByCode(code: string): Promise<ISequence> {
-        const seq = await DBSequence.findBy({ code: code });
-        if (seq.length === 0) {
+        const seq = await DBSequence.findOneBy({ code: code });
+        if (seq === null) {
             throw new LoernwerkError(
                 'no matching sequence',
                 LoernwerkErrorCodes.NOT_FOUND
             );
         }
-        if (seq.length > 1) {
-            throw new LoernwerkError(
-                'ambigious Code',
-                LoernwerkErrorCodes.AMBIGUOUS_INFORMATION
-            );
-        }
-        return seq[0];
+        return seq;
     }
 
     /**
