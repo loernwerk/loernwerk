@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import axios, { AxiosError } from 'axios';
 import {
   LoernwerkError,
   LoernwerkErrorCodes,
@@ -16,7 +16,13 @@ export abstract class BaseRestInterface {
    * @protected
    */
   protected static async get<T>(url: string): Promise<T> {
-    return await this.executeWithErrorHandling<T>(axios.get<T>, url);
+    try {
+      return (
+        await axios.get<T>(this.getBaseURL() + url, { withCredentials: true })
+      ).data;
+    } catch (e) {
+      throw this.transformError(e as Error);
+    }
   }
 
   /**
@@ -28,7 +34,15 @@ export abstract class BaseRestInterface {
    * @protected
    */
   protected static async post<T>(url: string, body: unknown): Promise<T> {
-    return await this.executeWithErrorHandling(axios.post<T>, url, body);
+    try {
+      return (
+        await axios.post<T>(this.getBaseURL() + url, body, {
+          withCredentials: true,
+        })
+      ).data;
+    } catch (e) {
+      throw this.transformError(e as Error);
+    }
   }
 
   /**
@@ -40,7 +54,15 @@ export abstract class BaseRestInterface {
    * @protected
    */
   protected static async put<T>(url: string, body: unknown): Promise<T> {
-    return await this.executeWithErrorHandling(axios.put<T>, url, body);
+    try {
+      return (
+        await axios.put<T>(this.getBaseURL() + url, body, {
+          withCredentials: true,
+        })
+      ).data;
+    } catch (e) {
+      throw this.transformError(e as Error);
+    }
   }
 
   /**
@@ -51,7 +73,14 @@ export abstract class BaseRestInterface {
    * @protected
    */
   protected static async delete(url: string, body: unknown): Promise<void> {
-    await this.executeWithErrorHandling(axios.delete, url, body);
+    try {
+      await axios.delete(this.getBaseURL() + url, {
+        withCredentials: true,
+        data: body,
+      });
+    } catch (e) {
+      throw this.transformError(e as Error);
+    }
   }
 
   /**
@@ -62,52 +91,49 @@ export abstract class BaseRestInterface {
    * @protected
    */
   protected static async patch(url: string, body: unknown): Promise<void> {
-    await this.executeWithErrorHandling(axios.patch, url, body);
+    try {
+      await axios.patch(this.getBaseURL() + url, body, {
+        withCredentials: true,
+      });
+    } catch (e) {
+      throw this.transformError(e as Error);
+    }
   }
 
   /**
-   * Implements the error handling for the BaseRestInterface methods
-   * @param awaitable the axios method to check for errors
-   * @param url URL to query
-   * @param body Body to send with the request
+   * Returns the backend base URL.
+   * @returns Base URL
    * @private
-   * @returns the return value of the given method
    */
-  private static async executeWithErrorHandling<T>(
-    // prettier-ignore
-    awaitable: ((url: string, body?: unknown, config?: AxiosRequestConfig) => Promise<{ data: T }>) | ((url: string, config?: AxiosRequestConfig) => Promise<{ data: T }>),
-    url: string,
-    body?: unknown
-  ): Promise<T> {
-    try {
-      const backendHost =
-        window.location.hostname.includes('localhost') ||
-        window.location.hostname.includes('127.0.0.1')
-          ? 'http://localhost:5000'
-          : window.location.origin;
+  private static getBaseURL(): string {
+    return window.location.hostname.includes('localhost') ||
+      window.location.hostname.includes('127.0.0.1')
+      ? 'http://localhost:5000/api'
+      : window.location.origin + '/api';
+  }
 
-      const { data } = await awaitable(`${backendHost}${url}/api`, {
-        data: body,
-        withCredentials: true,
-      });
-      return data;
-    } catch (e) {
-      let message;
-      let statusCode = 500;
-      if (e instanceof AxiosError) {
-        message = e.response?.data || e.message || 'Unknown error';
-        statusCode = e.response?.status || 500;
-      }
-      const errors: { [statusCode: number]: LoernwerkErrorCodes } = {
-        404: LoernwerkErrorCodes.NOT_FOUND,
-        400: LoernwerkErrorCodes.BAD_REQUEST,
-        401: LoernwerkErrorCodes.UNAUTHORIZED,
-        403: LoernwerkErrorCodes.FORBIDDEN,
-      };
-      throw new LoernwerkError(
-        message,
-        errors[statusCode] || LoernwerkErrorCodes.UNKNOWN
-      );
+  /**
+   * Transforms an error from a request to a LoernwerkError. Will parse AxiosError if provided.
+   * @param error Error to transform
+   * @returns Transformed LoernwerkError
+   * @private
+   */
+  private static transformError(error: Error): LoernwerkError {
+    let message;
+    let statusCode = 500;
+    if (error instanceof AxiosError) {
+      message = error.response?.data || error.message || 'Unknown error';
+      statusCode = error.response?.status || 500;
     }
+    const errors: { [statusCode: number]: LoernwerkErrorCodes } = {
+      404: LoernwerkErrorCodes.NOT_FOUND,
+      400: LoernwerkErrorCodes.BAD_REQUEST,
+      401: LoernwerkErrorCodes.UNAUTHORIZED,
+      403: LoernwerkErrorCodes.FORBIDDEN,
+    };
+    return new LoernwerkError(
+      message,
+      errors[statusCode] || LoernwerkErrorCodes.UNKNOWN
+    );
   }
 }
