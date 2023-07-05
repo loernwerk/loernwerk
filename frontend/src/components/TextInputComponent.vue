@@ -7,6 +7,7 @@
       :placeholder="placeHolder"
       v-model="inputText"
       class="cursor-pointer w-full placeholder:text-gray-500"
+      :class="{ uppercase: uppercase }"
     />
   </InteractableComponent>
 </template>
@@ -39,6 +40,15 @@ defineProps({
    * Whether the input should be hidden
    */
   hidden: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+
+  /**
+   * Wheter the input should displayed uppercase
+   */
+  uppercase: {
     type: Boolean,
     required: false,
     default: false,
