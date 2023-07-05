@@ -121,7 +121,7 @@ export class SequenceRouterFactory extends RouterFactory {
         sequenceRouter.get('/:code/edit', requireLogin, async (req, res) => {
             //check if user has write/read access to this sequence, owns it or is Admin
             try {
-                const sequence = await SequenceController.getSequenceWithSlide(
+                const sequence = await SequenceController.getSequenceWithSlides(
                     req.params.code
                 );
                 if (
