@@ -26,10 +26,10 @@ export class SequenceController {
             );
         }
         const dbSequence = new DBSequence();
-        let newCode = this.generateCode();
-        while ((await DBSequence.findBy({ code: newCode })).length > 0) {
+        let newCode = '';
+        do {
             newCode = this.generateCode();
-        }
+        } while ((await DBSequence.findOneBy({ code: newCode })) !== null);
         dbSequence.code = newCode;
         dbSequence.authorId = userId;
         dbSequence.name = name;
