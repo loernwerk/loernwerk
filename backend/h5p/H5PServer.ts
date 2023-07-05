@@ -1,13 +1,12 @@
-import {
-    H5PConfig,
-    H5PEditor,
-    H5PPlayer,
-} from '@lumieducation/h5p-server';
+import { H5PConfig, H5PEditor, H5PPlayer } from '@lumieducation/h5p-server';
 import { H5PContentStorage } from './H5PContentStorage';
 import { H5PLibraryStorage } from './H5PLibraryStorage';
 import { LoernwerkError, LoernwerkErrorCodes } from '../loernwerkUtilities';
 import DirectoryTemporaryFileStorage from '@lumieducation/h5p-server/build/src/implementation/fs/DirectoryTemporaryFileStorage';
 import CachedKeyValueStorage from '@lumieducation/h5p-server/build/src/implementation/cache/CachedKeyValueStorage';
+import axios from 'axios';
+import { access } from 'fs/promises';
+import decompress from 'decompress';
 
 /**
  * Class for managing the H5P integration.
@@ -70,7 +69,32 @@ export class H5PServer {
      * Automatically downloads the required H5P libraries to local disk.
      */
     public async downloadServerFiles(): Promise<void> {
-        // TODO: Automatically download required server files
+        // Check if the folders exist already
+        try {
+            await access('h5p/editor');
+            await access('h5p/core');
+            return;
+        } catch {
+            console.log(
+                'Downloading required H5P libraries, this might take a few seconds'
+            );
+        }
+
+        console.log('Downloading core files');
+        const coreFiles = await axios.get(
+            'https://github.com/h5p/h5p-php-library/archive/1.24.0.zip',
+            { responseType: 'arraybuffer' }
+        );
+        console.log('Downloading editor files');
+        const editorFiles = await axios.get(
+            'https://github.com/h5p/h5p-editor-php-library/archive/1.24.1.zip',
+            { responseType: 'arraybuffer' }
+        );
+        console.log('Unpacking core files');
+        await this.unzipFile(coreFiles.data, 'h5p/core/');
+        console.log('Unpacking editor files');
+        await this.unzipFile(editorFiles.data, 'h5p/editor/');
+        console.log('Done!');
     }
 
     /**
@@ -99,5 +123,28 @@ export class H5PServer {
             );
         }
         return this.player as H5PPlayer;
+    }
+
+    /**
+     * Unzip a zipfile to a destination folder.
+     * @param zipFile Zipfile buffer to unzip
+     * @param destinationFolder Destinatin folder
+     * @private
+     */
+    private async unzipFile(
+        zipFile: Buffer,
+        destinationFolder: string
+    ): Promise<void> {
+        await decompress(zipFile, destinationFolder, {
+            map: (file) => {
+                if (file.path.startsWith('h5p-php-library-1.24.0')) {
+                    file.path = file.path.substring(23);
+                }
+                if (file.path.startsWith('h5p-editor-php-library-1.24.1')) {
+                    file.path = file.path.substring(30);
+                }
+                return file;
+            },
+        });
     }
 }
