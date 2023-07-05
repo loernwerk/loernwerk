@@ -5,8 +5,8 @@ import {
     IContentStorage,
     IFileStats,
     ILibraryName,
-    IUser,
-    Permission,
+    IUser, LibraryName,
+    Permission
 } from '@lumieducation/h5p-server';
 import { Readable } from 'stream';
 import { DBH5PFile } from '../../model/h5p/DBH5PFile';
@@ -258,9 +258,25 @@ export class H5PContentStorage implements IContentStorage {
     async getUsage(
         library: ILibraryName
     ): Promise<{ asDependency: number; asMainLibrary: number }> {
-        // What am I supposed to do here
-        void library;
-        return Promise.resolve({ asDependency: 0, asMainLibrary: 0 });
+        let asDependency = 0;
+        let asMainLibrary = 0;
+
+        const contentIds = await this.listContent();
+
+        for (const contentId of contentIds) {
+            const contentMetadata = await this.getMetadata(contentId);
+            const isMainLibrary =
+                contentMetadata.mainLibrary === library.machineName;
+            if (contentMetadata.preloadedDependencies?.some((dep) => LibraryName.equal(dep, library)) || contentMetadata.editorDependencies?.some((dep) => LibraryName.equal(dep, library)) || contentMetadata.dynamicDependencies?.some((dep) => LibraryName.equal(dep, library))) {
+                if (isMainLibrary) {
+                    asMainLibrary += 1;
+                } else {
+                    asDependency += 1;
+                }
+            }
+        }
+
+        return { asDependency, asMainLibrary };
     }
 
     /**

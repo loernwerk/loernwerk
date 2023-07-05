@@ -4,11 +4,13 @@ import {
     IInstalledLibrary,
     ILibraryMetadata,
     ILibraryName,
-    ILibraryStorage,
+    ILibraryStorage, LibraryName
 } from '@lumieducation/h5p-server';
 import { Readable } from 'stream';
 import { DBH5PFile } from '../../model/h5p/DBH5PFile';
 import { DBH5PLibrary } from '../../model/h5p/DBH5PLibrary';
+import { extname, basename } from 'node:path';
+import { Not } from 'typeorm';
 
 /**
  * Custom H5P Library storage implementation to use the SQL database.
@@ -141,8 +143,51 @@ export class H5PLibraryStorage implements ILibraryStorage {
      * This means that H5P.Example is used by 10 other libraries.
      */
     async getAllDependentsCount(): Promise<{ [p: string]: number }> {
-        // What am I supposed to do here
-        return {};
+        const librariesNames = await this.getInstalledLibraryNames();
+        const librariesMetadata = await Promise.all(
+            librariesNames.map((lib) => this.getLibrary(lib))
+        );
+
+        // the metadata map allows faster access to libraries by ubername
+        const librariesMetadataMap: {
+            [ubername: string]: IInstalledLibrary;
+        } = librariesMetadata.reduce((prev, curr) => {
+            prev[LibraryName.toUberName(curr)] = curr;
+            return prev;
+        }, {});
+
+        // Remove circular dependencies caused by editor dependencies in content types.
+        for (const libraryMetadata of librariesMetadata) {
+            for (const dependency of libraryMetadata.editorDependencies ?? []) {
+                const ubername = LibraryName.toUberName(dependency);
+                const index = librariesMetadataMap[
+                    ubername
+                ]?.preloadedDependencies?.findIndex((ln) =>
+                    LibraryName.equal(ln, libraryMetadata)
+                );
+                if (index >= 0) {
+                    librariesMetadataMap[ubername].preloadedDependencies.splice(
+                        index,
+                        1
+                    );
+                }
+            }
+        }
+
+        // Count dependencies
+        const dependencies = {};
+        for (const libraryMetadata of librariesMetadata) {
+            for (const dependency of (
+                libraryMetadata.preloadedDependencies ?? []
+            )
+                .concat(libraryMetadata.editorDependencies ?? [])
+                .concat(libraryMetadata.dynamicDependencies ?? [])) {
+                const ubername = LibraryName.toUberName(dependency);
+                dependencies[ubername] = (dependencies[ubername] ?? 0) + 1;
+            }
+        }
+
+        return dependencies;
     }
 
     /**
@@ -151,9 +196,8 @@ export class H5PLibraryStorage implements ILibraryStorage {
      * @returns the number of libraries that depend on this library.
      */
     async getDependentsCount(library: ILibraryName): Promise<number> {
-        // Yet again, no idea
-        void library;
-        return 0;
+        const allDependencies = await this.getAllDependentsCount();
+        return allDependencies[LibraryName.toUberName(library)] ?? 0;
     }
 
     /**
@@ -261,9 +305,12 @@ export class H5PLibraryStorage implements ILibraryStorage {
      * extension .json)
      */
     async getLanguages(library: ILibraryName): Promise<string[]> {
-        // TODO, no idea yet
-        void library;
-        return [];
+        const allFiles = await DBH5PFile.find({ select: { filename: true }, where: { ownerType: 'library', owner: DBH5PLibrary.formatNameAsString(library) } });
+        return allFiles
+            .map(file => file.filename)
+            .filter(file => file.startsWith('language'))
+            .filter(file => extname(file) === '.json')
+            .map(file => basename(file, '.json'));
     }
 
     /**
@@ -308,8 +355,7 @@ export class H5PLibraryStorage implements ILibraryStorage {
      * @returns a list of library addons
      */
     async listAddons(): Promise<ILibraryMetadata[]> {
-        // TODO: What
-        return [];
+        return await DBH5PLibrary.findBy({ addTo: Not(null) });
     }
 
     /**
@@ -347,10 +393,21 @@ export class H5PLibraryStorage implements ILibraryStorage {
             majorVersion: library.majorVersion,
             minorVersion: library.minorVersion,
         });
-        // TODO: Check if there are any changes
-        Object.assign(dbLib, additionalMetadata);
-        await dbLib.save();
-        return true;
+
+        let changes = false;
+        for (const property of Object.keys(additionalMetadata)) {
+            if (additionalMetadata[property] !== dbLib[property]) {
+                dbLib[property] = additionalMetadata[property];
+                changes = true;
+            }
+        }
+
+        if (changes) {
+            await dbLib.save();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
