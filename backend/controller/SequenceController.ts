@@ -51,7 +51,7 @@ export class SequenceController {
         });
         if (dbSequence === null) {
             throw new LoernwerkError(
-                'no matching sequence',
+                'No matching sequence',
                 LoernwerkErrorCodes.NOT_FOUND
             );
         }
@@ -88,7 +88,7 @@ export class SequenceController {
     public static async saveSequence(
         sequence: Partial<ISequenceWithSlides>
     ): Promise<void> {
-        if (sequence.code == undefined) {
+        if (sequence.code === undefined) {
             throw new LoernwerkError(
                 'No Code provided',
                 LoernwerkErrorCodes.INSUFFICENT_INFORMATION
@@ -107,7 +107,7 @@ export class SequenceController {
         }
 
         if (sequence.readAccess !== undefined) {
-            await this.updateSharedList(
+            await this.updateSharedAccessList(
                 dbSequence.readAccess,
                 sequence.readAccess,
                 dbSequence.code
@@ -116,7 +116,7 @@ export class SequenceController {
         }
 
         if (sequence.writeAccess !== undefined) {
-            await this.updateSharedList(
+            await this.updateSharedAccessList(
                 dbSequence.writeAccess,
                 sequence.writeAccess,
                 dbSequence.code
@@ -298,7 +298,7 @@ export class SequenceController {
         const codechar = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
         const charactersLength = codechar.length;
         let result = '';
-        for (let i = 0; i < length; i++) {
+        for (let i = 0; i < charactersLength; i++) {
             result += codechar.charAt(
                 Math.floor(Math.random() * charactersLength)
             );
@@ -330,7 +330,7 @@ export class SequenceController {
      * @param newAccessList the new access list to fullfill
      * @param code the code of the sequence
      */
-    private static async updateSharedList(
+    private static async updateSharedAccessList(
         oldAccessList: number[],
         newAccessList: number[],
         code: string
@@ -348,7 +348,10 @@ export class SequenceController {
                 await user.save();
             }
         }
-        for (const uId of this.getRemovedUser(oldAccessList, newAccessList)) {
+        for (const uId of this.getRemovedUserFromAccessLists(
+            oldAccessList,
+            newAccessList
+        )) {
             const user = await DBUser.findOneBy({ id: uId });
             if (user === null) {
                 continue; //this should be fine, right?
@@ -367,7 +370,7 @@ export class SequenceController {
      * @param newAccessList the new access list
      * @returns the removed user (may empty)
      */
-    private static getRemovedUser(
+    private static getRemovedUserFromAccessLists(
         oldAccessList: number[],
         newAccessList: number[]
     ): number[] {
