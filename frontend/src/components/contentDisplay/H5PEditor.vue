@@ -18,6 +18,14 @@ defineProps({
     type: String,
     required: true,
   },
+
+  /**
+   * Code of sequence it belongs to
+   */
+  sequenceCode: {
+    type: String,
+    required: true,
+  },
 });
 
 const emits = defineEmits([

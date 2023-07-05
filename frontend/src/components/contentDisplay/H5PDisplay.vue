@@ -4,6 +4,7 @@
       <div class="absolute" v-if="isEditorOpen">
         <H5PEditor
           :content-id="h5pContent.h5pContentId"
+          :sequence-code="h5pContent.sequenceCode"
           @closed="isEditorOpen = false"
         />
       </div>

@@ -5,11 +5,11 @@
     :style="{ backgroundColor: slide.backgroundColor }"
   >
     <div class="grid grid-layout h-full" ref="wrapper">
-      <ContenDisplayFactory
-        v-for="slot in requiredSlots"
-        :key="slot"
-        :content="slide.content[slot]"
-        :style="getSlotStyle(slot)"
+      <ContentDisplayFactory
+        v-for="slot in usedSlots"
+        :key="slot.slot"
+        :content="slide.content[slot.slot]"
+        :style="slot.style"
         :edit-mode="editMode"
       />
     </div>
@@ -17,14 +17,10 @@
 </template>
 
 <script setup lang="ts">
-import {
-  Layout,
-  LayoutSlot,
-  LayoutType,
-} from '../../../../model/slide/layout/Layout';
+import { LayoutSlot, LayoutType } from '../../../../model/slide/layout/Layout';
 import { ISlide } from '../../../../model/slide/ISlide';
-import { PropType, Ref, onMounted, provide, ref } from 'vue';
-import ContenDisplayFactory from './ContenDisplayFactory.vue';
+import { PropType, Ref, computed, onMounted, provide, ref } from 'vue';
+import ContentDisplayFactory from './ContentDisplayFactory.vue';
 
 const props = defineProps({
   /**
@@ -51,58 +47,145 @@ interface GridSlot {
   gridColumnEnd: number;
 }
 
-const map: Record<LayoutSlot, GridSlot> = {
-  0: { gridRowStart: 1, gridRowEnd: 2, gridColumnStart: 1, gridColumnEnd: 3 },
-  1: { gridRowStart: 2, gridRowEnd: 4, gridColumnStart: 1, gridColumnEnd: 2 },
-  2: { gridRowStart: 2, gridRowEnd: 4, gridColumnStart: 2, gridColumnEnd: 3 },
-  3: { gridRowStart: 2, gridRowEnd: 4, gridColumnStart: 2, gridColumnEnd: 3 },
-  4: { gridRowStart: 2, gridRowEnd: 4, gridColumnStart: 2, gridColumnEnd: 3 },
-};
-
 /**
- * Gets the drid style for a given slot in the slides layout.
- *
- * @param slot Slot to check for
- * @returns Grid style for the slot
+ * The slots that are used in the current layout and their respective styles
  */
-function getSlotStyle(slot: LayoutSlot): GridSlot {
+const usedSlots: Ref<{ slot: LayoutSlot; style: GridSlot }[]> = computed(() => {
+  let slots: { slot: LayoutSlot; style: GridSlot }[] = [];
   const hasHeader =
     props.slide.layout === LayoutType.TWO_COLUMN_WITH_HEADER ||
     props.slide.layout === LayoutType.GRID_WITH_HEADER ||
     props.slide.layout === LayoutType.SINGLE_COLUMN_WITH_HEADER;
-  if (hasHeader && slot === LayoutSlot.HEADER) {
-    return {
-      gridRowStart: 1,
-      gridRowEnd: 2,
-      gridColumnStart: 1,
-      gridColumnEnd: 3,
-    };
-  } else if (
-    slot == LayoutSlot.HEADER &&
-    props.slide.layout === LayoutType.TITLEPAGE
-  ) {
-    return {
-      gridRowStart: 1,
-      gridRowEnd: 4,
-      gridColumnStart: 1,
-      gridColumnEnd: 3,
-    };
+
+  if (hasHeader) {
+    slots.push({
+      slot: LayoutSlot.HEADER,
+      style: {
+        gridRowStart: 1,
+        gridRowEnd: 2,
+        gridColumnStart: 1,
+        gridColumnEnd: 3,
+      },
+    });
   }
 
-  return map[slot];
+  switch (props.slide.layout) {
+    case LayoutType.SINGLE_COLUMN_WITH_HEADER:
+    case LayoutType.SINGLE_COLUMN:
+      slots.push({
+        slot: LayoutSlot.MAIN,
+        style: {
+          gridRowStart: 2,
+          gridRowEnd: 4,
+          gridColumnStart: 1,
+          gridColumnEnd: 3,
+        },
+      });
+      break;
+    case LayoutType.TWO_COLUMN_WITH_HEADER:
+    case LayoutType.TWO_COLUMN:
+      slots.push({
+        slot: LayoutSlot.MAIN,
+        style: {
+          gridRowStart: 2,
+          gridRowEnd: 4,
+          gridColumnStart: 1,
+          gridColumnEnd: 2,
+        },
+      });
+      slots.push({
+        slot: LayoutSlot.SECONDARY,
+        style: {
+          gridRowStart: 2,
+          gridRowEnd: 4,
+          gridColumnStart: 2,
+          gridColumnEnd: 3,
+        },
+      });
+      break;
+    case LayoutType.GRID_WITH_HEADER:
+    case LayoutType.GRID:
+      slots.push({
+        slot: LayoutSlot.MAIN,
+        style: {
+          gridRowStart: 2,
+          gridRowEnd: 3,
+          gridColumnStart: 1,
+          gridColumnEnd: 2,
+        },
+      });
+      slots.push({
+        slot: LayoutSlot.SECONDARY,
+        style: {
+          gridRowStart: 2,
+          gridRowEnd: 3,
+          gridColumnStart: 2,
+          gridColumnEnd: 3,
+        },
+      });
+      slots.push({
+        slot: LayoutSlot.TERTIARY,
+        style: {
+          gridRowStart: 3,
+          gridRowEnd: 4,
+          gridColumnStart: 1,
+          gridColumnEnd: 2,
+        },
+      });
+      slots.push({
+        slot: LayoutSlot.FOURARY,
+        style: {
+          gridRowStart: 3,
+          gridRowEnd: 4,
+          gridColumnStart: 2,
+          gridColumnEnd: 3,
+        },
+      });
+      break;
+    case LayoutType.SIDEBAR:
+      slots.push({
+        slot: LayoutSlot.HEADER,
+        style: {
+          gridRowStart: 1,
+          gridRowEnd: 2,
+          gridColumnStart: 1,
+          gridColumnEnd: 2,
+        },
+      });
+      slots.push({
+        slot: LayoutSlot.MAIN,
+        style: {
+          gridRowStart: 1,
+          gridRowEnd: 4,
+          gridColumnStart: 2,
+          gridColumnEnd: 3,
+        },
+      });
+      slots.push({
+        slot: LayoutSlot.SECONDARY,
+        style: {
+          gridRowStart: 2,
+          gridRowEnd: 4,
+          gridColumnStart: 1,
+          gridColumnEnd: 2,
+        },
+      });
+      break;
+    case LayoutType.TITLEPAGE:
+      slots.push({
+        slot: LayoutSlot.MAIN,
+        style: {
+          gridRowStart: 2,
+          gridRowEnd: 4,
+          gridColumnStart: 1,
+          gridColumnEnd: 3,
+        },
+      });
+      break;
+  }
 
-  //if (props.slide.layout === LayoutType.TWO_COLUMN_WITH_HEADER || props.slide.layout === LayoutType.TWO_COLUMN) {
-
-  //} else if (props.slide.layout === LayoutType.SINGLE_COLUMN_WITH_HEADER || props.slide.layout === LayoutType.SINGLE_COLUMN) {
-
-  //} else if (props.slide.layout === LayoutType.GRID_WITH_HEADER || props.slide.layout === LayoutType.GRID) {
-
-  //}
-
-  //eturn { gridRowStart: 1, gridRowEnd: 1, gridColumnStart: 1, gridColumnEnd: 1};
-}
-
-const requiredSlots = Layout.getLayoutSlots(props.slide.layout);
+  return slots;
+});
 
 // responsive font size
 const wrapper: Ref<HTMLElement | null> = ref(null);
@@ -127,6 +210,6 @@ provide('slideHeight', height);
 <style scoped>
 .grid-layout {
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto 1fr 1fr;
+  grid-template-rows: minmax(auto, 10%) 1fr 1fr;
 }
 </style>
