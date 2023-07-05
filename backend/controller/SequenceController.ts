@@ -46,7 +46,9 @@ export class SequenceController {
      * @returns the sequence
      */
     public static async getSequenceByCode(code: string): Promise<ISequence> {
-        const dbSequence = await DBSequence.findOneBy({ code: code });
+        const dbSequence = await DBSequence.findOneBy({
+            code: code.toUpperCase(),
+        });
         if (dbSequence === null) {
             throw new LoernwerkError(
                 'no matching sequence',
@@ -61,7 +63,7 @@ export class SequenceController {
      * @param code the code of the sequence
      * @returns the sequence with slides
      */
-    public static async getSequenceWithSlide(
+    public static async getSequenceWithSlides(
         code: string
     ): Promise<ISequenceWithSlides> {
         const sequenceWithoutSlide = await this.getSequenceByCode(code);
@@ -73,7 +75,7 @@ export class SequenceController {
         }
         const sequenceWithSlide = sequenceWithoutSlide as ISequenceWithSlides;
         sequenceWithSlide.slides = await DBSlide.find({
-            where: { sequenceCode: code },
+            where: { sequenceCode: code.toUpperCase() },
         });
         sequenceWithSlide.slideCount = sequenceWithSlide.slides.length;
         return sequenceWithSlide;
@@ -143,7 +145,7 @@ export class SequenceController {
         }
         const slides = await DBSlide.findBy({ sequenceCode: code });
         for (const s of slides) {
-            s.remove();
+            await s.remove();
         }
         // TODO: Remove H5P Content
         for (const uId of dbSequence.readAccess) {
@@ -277,6 +279,8 @@ export class SequenceController {
             let slide = await DBSlide.findOneBy({ id: s.id });
             if (slide === null) {
                 slide = new DBSlide();
+                slide.id = s.id;
+                slide.sequenceCode = s.sequenceCode;
             }
             slide.backgroundColor = s.backgroundColor;
             slide.content = s.content;
