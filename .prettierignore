@@ -11,4 +11,4 @@ package-lock.json
 postcss.config.js
 tailwind.config.js
 *.md
-h5p
+/h5p/
