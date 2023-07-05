@@ -41,7 +41,17 @@
           <div class="flex-grow">
             <!-- Empty div as space filler -->
           </div>
-          <ButtonComponent class="w-fit" @click="checkLogIn()">
+          <div class="w-fit text-red-500 italic" v-if="displayError">
+            Falscher Nutzername/Email oder Passwort.
+          </div>
+          <div class="flex-grow">
+            <!-- Empty div as space filler -->
+          </div>
+          <ButtonComponent
+            class="w-fit"
+            :loading="displaySpinner"
+            @click="checkLogIn()"
+          >
             Anmelden
           </ButtonComponent>
         </div>
@@ -55,15 +65,36 @@ import { ref } from 'vue';
 import ButtonComponent from '../components/ButtonComponent.vue';
 import ContainerComponent from '../components/ContainerComponent.vue';
 import TextInputComponent from '../components/TextInputComponent.vue';
+import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
 
 const mailField = ref('');
 const passwordField = ref('');
 const keepLoggedIn = ref(false);
+const displaySpinner = ref(false);
+const displayError = ref(false);
 
 /**
  * Checks whether the login data is correct
  */
-function checkLogIn(): void {
-  // TODO: Implement with Rest Interface
+async function checkLogIn(): Promise<void> {
+  //avoid multiple clicks on button
+  if (displaySpinner.value) {
+    return;
+  }
+
+  displaySpinner.value = true;
+  displayError.value = false;
+
+  const success = await AccountRestInterface.verifyLogin(
+    mailField.value,
+    passwordField.value,
+    keepLoggedIn.value
+  );
+  if (success) {
+    alert('SequenceOverView');
+  } else {
+    displayError.value = true;
+  }
+  displaySpinner.value = false;
 }
 </script>
