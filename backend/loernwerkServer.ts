@@ -16,7 +16,6 @@ import { H5PRouterFactory } from './router/H5PRouterFactory';
 import { buildH5PRequest } from './loernwerkUtilities';
 import { h5pAjaxExpressRouter } from '@lumieducation/h5p-express';
 import { resolve } from 'node:path';
-import { AccountController } from './controller/AccountController';
 import fileUpload from 'express-fileupload';
 
 /**
