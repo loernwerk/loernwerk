@@ -8,9 +8,10 @@ import {
   defineElements,
   H5PEditorComponent,
 } from '@lumieducation/h5p-webcomponents';
-import { onMounted, Ref, ref } from 'vue';
+import { onMounted, Ref, ref, toRefs } from 'vue';
+import { H5PRestInterface } from '../../restInterfaces/H5PRestInterface';
 
-defineProps({
+const props = defineProps({
   /**
    * The h5p content to display
    */
@@ -28,6 +29,8 @@ defineProps({
   },
 });
 
+const { sequenceCode } = toRefs(props);
+
 const emits = defineEmits([
   /**
    * Emitted when the editor is closed
@@ -44,17 +47,21 @@ onMounted(() => {
     h5pEditor.loadContentCallback = async (
       contentId: string
     ): Promise<IEditorModel> => {
-      // TODO
-      throw new Error('Error getting content with id: ' + contentId);
+      return await H5PRestInterface.getH5PContent(contentId);
     };
 
     h5pEditor.saveContentCallback = async (
       contentId: string,
       requestBody: { library: string; params: unknown }
     ): Promise<{ contentId: string; metadata: IContentMetadata }> => {
-      // TODO
-      console.log(requestBody);
-      throw new Error('Error saving content with id: ' + contentId);
+      if (contentId === undefined || contentId === 'undefined') {
+        return await H5PRestInterface.createH5PContent(
+          sequenceCode.value,
+          requestBody
+        );
+      } else {
+        return await H5PRestInterface.editH5PContent(contentId, requestBody);
+      }
     };
 
     h5pEditor.disconnectedCallback = (): void => {

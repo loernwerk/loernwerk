@@ -88,13 +88,16 @@ export abstract class BaseRestInterface {
    * @typeParam T generic type, to be replaced by object received from Webserver
    * @param url the url
    * @param body the params
+   * @returns server response
    * @protected
    */
-  protected static async patch(url: string, body: unknown): Promise<void> {
+  protected static async patch<T>(url: string, body: unknown): Promise<T> {
     try {
-      await axios.patch(this.getBaseURL() + url, body, {
-        withCredentials: true,
-      });
+      return (
+        await axios.patch<T>(this.getBaseURL() + url, body, {
+          withCredentials: true,
+        })
+      ).data;
     } catch (e) {
       throw this.transformError(e as Error);
     }
