@@ -8,7 +8,7 @@
         "dev:frontend": "vite dev frontend",
         "build": "npm run build:frontend && npm run build:backend",
         "build:backend": "tsc --project tsconfig.node.json",
-        "build:frontend": "vue-tsc && vite build frontend",
+        "build:frontend": "vue-tsc && vite build frontend --emptyOutDir",
         "start": "node build/backend/loernwerkServer.js",
         "preview": "vite preview frontend",
         "lint": "eslint .",

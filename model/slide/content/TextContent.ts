@@ -9,7 +9,7 @@ export class TextContent extends Content {
     textSnippets: TextSnippet[];
 
     /** Horizontal text alignement */
-    alignementHorizontal: 'left' | 'center' | 'right';
+    alignmentHorizontal: 'left' | 'center' | 'right';
     /** Vertical text alignment */
     alignmentVertical: 'top' | 'center' | 'bottom';
 }

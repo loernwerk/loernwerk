@@ -9,6 +9,7 @@ import history from 'connect-history-api-fallback';
 import { readFile } from 'fs/promises';
 import { createServer } from 'https';
 import { AccountRouterFactory } from './router/AccountRouterFactory';
+import { SequenceRouterFactory } from './router/SequenceRouterFactory';
 import { H5PServer } from './h5p/H5PServer';
 import { H5PRouterFactory } from './router/H5PRouterFactory';
 import { buildH5PRequest } from './loernwerkUtilities';
@@ -77,6 +78,7 @@ class loernwerkServer {
 
         // Setting up routers, TODO
         app.use('/api/account', new AccountRouterFactory().buildRouter());
+        app.use('/api/sequence', new SequenceRouterFactory().buildRouter());
         app.use('/api/h5p', new H5PRouterFactory().buildRouter());
         app.use(
             '/h5p',
@@ -100,13 +102,13 @@ class loernwerkServer {
             process.exit(0);
         });
 
-        const port = parseInt(process.env.PORT) || 5000;
+        const port = parseInt(process.env.PORT as string) || 5000;
         const hostname = process.env.HOSTNAME || 'localhost';
 
         const caFile = process.env.SSL_CAFILE;
         const keyFile = process.env.SSL_KEYFILE;
         const certFile = process.env.SSL_CERTFILE;
-        const sslPort = parseInt(process.env.SSL_PORT) || 5443;
+        const sslPort = parseInt(process.env.SSL_PORT as string) || 5443;
 
         // Starting the server
         if (process.env.DISABLE_HTTP === undefined) {
