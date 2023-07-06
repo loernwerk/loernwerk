@@ -20,6 +20,7 @@
           </div>
           <CodeInput
             :showRedBorder="showRedBorder"
+            :disableInputShowSpinner="disableInputShowSpinner"
             @code-entered="(code) => checkCode(code)"
             @code-emptied="() => (showRedBorder = false)"
           />
@@ -50,6 +51,7 @@ library.add(faSpinner);
 
 const displaySpinner = ref(false);
 const showRedBorder = ref(false);
+const disableInputShowSpinner = ref(false);
 
 /**
  * Verify inputted sequence code. If input is valid, redirect. Otherwise change border color of CodeInput.
@@ -58,6 +60,8 @@ const showRedBorder = ref(false);
 async function checkCode(code: string): Promise<void> {
   showRedBorder.value = false;
   displaySpinner.value = true;
+  disableInputShowSpinner.value = true;
+
   try {
     await SequenceRestInterface.getMetadataForStudent(code);
     alert('Right Code');
@@ -66,5 +70,6 @@ async function checkCode(code: string): Promise<void> {
     showRedBorder.value = true;
   }
   displaySpinner.value = false;
+  disableInputShowSpinner.value = false;
 }
 </script>

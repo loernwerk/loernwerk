@@ -1,6 +1,7 @@
 <template>
   <TextInputComponent
-    uppercase
+    :uppercase="true"
+    :disabled="disableInputShowSpinner"
     class="w-64 text-7xl font-mono border-2"
     :class="{ 'border-red-600': showRedBorder }"
     :max-length="codeLength"
@@ -16,6 +17,11 @@ defineProps({
    * Display red border line
    */
   showRedBorder: {
+    type: Boolean,
+    required: true,
+  },
+
+  disableInputShowSpinner: {
     type: Boolean,
     required: true,
   },

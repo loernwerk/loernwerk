@@ -5,6 +5,7 @@
       :type="hidden ? 'password' : 'text'"
       :maxLength="maxLength"
       :placeholder="placeHolder"
+      :disabled="disabled"
       v-model="inputText"
       class="cursor-pointer w-full placeholder:text-gray-500"
       :class="{ uppercase: uppercase }"
@@ -53,7 +54,17 @@ defineProps({
     required: false,
     default: false,
   },
+
+  /**
+   * Wheter the input is disabled during loading
+   */
+  disabled: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 });
+
 const emit = defineEmits([
   /**
    * Event for when the input was changed
