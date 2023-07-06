@@ -1,16 +1,29 @@
 <template>
-  <TextInputComponent
-    :uppercase="true"
-    :disabled="disableInputShowSpinner"
-    class="w-64 text-7xl font-mono border-2"
-    :class="{ 'border-red-600': showRedBorder }"
-    :max-length="codeLength"
-    @input-changed="(text) => updateCode(text)"
-  />
+  <div class="relative">
+    <div
+      class="absolute w-full h-full text-center bg-gray-300 bg-opacity-70 rounded-md"
+      v-if="disableInputShowSpinner"
+    >
+      <FontAwesomeIcon icon="spinner" size="3x" class="animate-spin mt-5" />
+    </div>
+    <TextInputComponent
+      :uppercase="true"
+      :disabled="disableInputShowSpinner"
+      class="w-64 text-7xl font-mono border-2"
+      :class="{ 'border-red-600': showRedBorder }"
+      :max-length="codeLength"
+      @input-changed="(text) => updateCode(text)"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
 import TextInputComponent from './TextInputComponent.vue';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faSpinner);
 
 defineProps({
   /**

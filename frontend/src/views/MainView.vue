@@ -7,24 +7,12 @@
         <h1 class="text-3xl text-center">Code eingeben:</h1>
       </template>
       <template #default>
-        <div class="relative">
-          <div class="absolute w-full h-full text-center" v-if="displaySpinner">
-            <div
-              class="absolute h-full w-full bg-gray-300 opacity-70 rounded-md"
-            ></div>
-            <FontAwesomeIcon
-              icon="spinner"
-              size="3x"
-              class="animate-spin mt-5"
-            />
-          </div>
-          <CodeInput
-            :showRedBorder="showRedBorder"
-            :disableInputShowSpinner="disableInputShowSpinner"
-            @code-entered="(code) => checkCode(code)"
-            @code-emptied="() => (showRedBorder = false)"
-          />
-        </div>
+        <CodeInput
+          :showRedBorder="showRedBorder"
+          :disableInputShowSpinner="disableInputShowSpinner"
+          @code-entered="(code) => checkCode(code)"
+          @code-emptied="() => (showRedBorder = false)"
+        />
       </template>
     </ContainerComponent>
     <ButtonComponent
@@ -42,14 +30,8 @@ import ContainerComponent from '../components/ContainerComponent.vue';
 import CodeInput from '../components/CodeInput.vue';
 import { router } from '../router';
 import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { ref } from 'vue';
 
-library.add(faSpinner);
-
-const displaySpinner = ref(false);
 const showRedBorder = ref(false);
 const disableInputShowSpinner = ref(false);
 
@@ -59,7 +41,6 @@ const disableInputShowSpinner = ref(false);
  */
 async function checkCode(code: string): Promise<void> {
   showRedBorder.value = false;
-  displaySpinner.value = true;
   disableInputShowSpinner.value = true;
 
   try {
@@ -69,7 +50,6 @@ async function checkCode(code: string): Promise<void> {
   } catch {
     showRedBorder.value = true;
   }
-  displaySpinner.value = false;
   disableInputShowSpinner.value = false;
 }
 </script>
