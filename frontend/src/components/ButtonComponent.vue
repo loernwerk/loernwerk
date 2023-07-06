@@ -2,10 +2,10 @@
 <template>
   <div>
     <div class="relative">
-      <div class="absolute w-full h-full text-center" v-if="loading">
-        <div
-          class="absolute h-full w-full bg-gray-300 opacity-70 rounded-md"
-        ></div>
+      <div
+        class="absolute w-full h-full text-center bg-gray-300 bg-opacity-70 rounded-md"
+        v-if="loading"
+      >
         <FontAwesomeIcon icon="spinner" size="1x" class="animate-spin mt-2" />
       </div>
       <InteractableComponent @click="(e) => $emit('click', e)">
