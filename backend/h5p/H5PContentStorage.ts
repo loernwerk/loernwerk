@@ -15,7 +15,7 @@ import { DBH5PContent } from '../../model/h5p/DBH5PContent';
 import { DBUser } from '../../model/user/DBUser';
 import { DBSequence } from '../../model/sequence/DBSequence';
 import { UserClass } from '../../model/user/IUser';
-import { LoernwerkError, LoernwerkErrorCodes } from '../loernwerkUtilities';
+import { LoernwerkError, LoernwerkErrorCodes } from '../loernwerkError';
 import { In } from 'typeorm';
 
 /**

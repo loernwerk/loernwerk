@@ -3,7 +3,7 @@ import { ISlide } from '../../model/slide/ISlide';
 import { ISequenceWithSlides } from '../../model/sequence/ISequenceWithSlides';
 import { DBSequence } from '../../model/sequence/DBSequence';
 import { DBSlide } from '../../model/slide/DBSlide';
-import { LoernwerkError, LoernwerkErrorCodes } from '../loernwerkUtilities';
+import { LoernwerkError, LoernwerkErrorCodes } from '../loernwerkError';
 import { DBUser } from '../../model/user/DBUser';
 /**
  * Manages the sequence data in the database and handles inquiries requests regarding these

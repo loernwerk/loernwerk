@@ -1,9 +1,9 @@
 import { BaseRestInterface } from './BaseRestInterface';
-import { IContentMetadata } from '@lumieducation/h5p-server';
 import {
+  IContentMetadata,
   IEditorModel,
   IPlayerModel,
-} from '@lumieducation/h5p-server/build/src/types';
+} from '@lumieducation/h5p-server';
 
 /**
  * Implements communication with the Server concerning all H5P-requests
