@@ -36,7 +36,7 @@ defineProps({
   },
 
   /**
-   * Disable input an display spinner
+   * Disable input and display spinner
    */
   disableInputShowSpinner: {
     type: Boolean,
