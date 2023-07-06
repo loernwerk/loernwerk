@@ -18,8 +18,8 @@ export class DBH5PFile extends BaseEntity implements IFileStats {
     @Column()
     size: number;
 
-    @Column()
-    content: string;
+    @Column({ type: 'blob' })
+    content: Buffer;
 
     @Column()
     ownerType: 'library' | 'content';

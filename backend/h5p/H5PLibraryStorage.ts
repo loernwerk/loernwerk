@@ -42,7 +42,7 @@ export class H5PLibraryStorage implements ILibraryStorage {
         dbFile.ownerType = 'library';
         dbFile.owner = DBH5PLibrary.formatNameAsString(library);
         dbFile.filename = filename;
-        dbFile.content = fileBuffer.toString('utf-8');
+        dbFile.content = fileBuffer;
         dbFile.size = fileBuffer.length;
         await dbFile.save();
         return true;
@@ -217,7 +217,7 @@ export class H5PLibraryStorage implements ILibraryStorage {
             owner: DBH5PLibrary.formatNameAsString(library),
             filename: filename,
         });
-        return JSON.parse(file.content);
+        return JSON.parse(Buffer.from(file.content).toString('utf8'));
     }
 
     /**
@@ -236,7 +236,7 @@ export class H5PLibraryStorage implements ILibraryStorage {
             owner: DBH5PLibrary.formatNameAsString(library),
             filename: filename,
         });
-        return file.content;
+        return Buffer.from(file.content).toString('utf8');
     }
 
     /**
@@ -277,7 +277,7 @@ export class H5PLibraryStorage implements ILibraryStorage {
             owner: DBH5PLibrary.formatNameAsString(library),
             filename: filename,
         });
-        return Readable.from(file.content);
+        return Readable.from(Buffer.from(file.content));
     }
 
     /**

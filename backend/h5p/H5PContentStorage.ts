@@ -87,7 +87,7 @@ export class H5PContentStorage implements IContentStorage {
         dbFile.filename = filename;
         dbFile.ownerType = 'content';
         dbFile.owner = contentId;
-        dbFile.content = fileBuffer.toString('utf-8');
+        dbFile.content = fileBuffer;
         dbFile.size = fileBuffer.length;
         await dbFile.save();
     }
@@ -221,11 +221,17 @@ export class H5PContentStorage implements IContentStorage {
         });
         let read: Readable;
         if (rangeStart !== undefined && rangeEnd !== undefined) {
-            read = Readable.from(file.content.substring(rangeStart, rangeEnd));
+            read = Readable.from(
+                Buffer.from(file.content).subarray(rangeStart, rangeEnd)
+            );
         } else if (rangeStart !== undefined) {
-            read = Readable.from(file.content.substring(rangeStart));
+            read = Readable.from(
+                Buffer.from(file.content).subarray(rangeStart)
+            );
         } else if (rangeEnd !== undefined) {
-            read = Readable.from(file.content.substring(0, rangeEnd));
+            read = Readable.from(
+                Buffer.from(file.content).subarray(0, rangeEnd)
+            );
         } else {
             read = Readable.from(file.content);
         }
