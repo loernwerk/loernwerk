@@ -1,3 +1,4 @@
+<!-- Component to enter code for sequence execution -->
 <template>
   <div class="relative">
     <div
@@ -34,6 +35,9 @@ defineProps({
     required: true,
   },
 
+  /**
+   * Disable input an display spinner
+   */
   disableInputShowSpinner: {
     type: Boolean,
     required: true,

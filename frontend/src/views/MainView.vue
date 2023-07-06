@@ -1,4 +1,4 @@
-<!-- View for entering code -->
+<!-- View for entering code for sequence execution or redirect to login view -->
 <template>
   <div class="flex flex-col">
     <img src="../assets/Logo.png" class="w-1/3 mx-auto" />

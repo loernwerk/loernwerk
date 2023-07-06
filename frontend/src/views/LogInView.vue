@@ -1,3 +1,4 @@
+<!-- View for users to log in -->
 <template>
   <div>
     <img src="../assets/Logo.png" class="w-1/3 mx-auto" />
