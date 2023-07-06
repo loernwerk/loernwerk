@@ -1,5 +1,11 @@
 <template>
   <h5p-editor ref="editor" :content-id="contentId" />
+  <div class="flex items-center">
+    <ButtonComponent class="w-fit" :loading="currentlySaving" @click="save"
+      >Save</ButtonComponent
+    >
+    <ButtonComponent class="w-fit ml-1" @click="close">Close</ButtonComponent>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -10,6 +16,7 @@ import {
 } from '@lumieducation/h5p-webcomponents';
 import { onMounted, Ref, ref, toRefs } from 'vue';
 import { H5PRestInterface } from '../../restInterfaces/H5PRestInterface';
+import ButtonComponent from '../ButtonComponent.vue';
 
 const props = defineProps({
   /**
@@ -29,11 +36,14 @@ const props = defineProps({
   },
 });
 
-const { sequenceCode } = toRefs(props);
+const { contentId, sequenceCode } = toRefs(props);
+const currentlySaving = ref(false);
 
 const emits = defineEmits([
   /**
    * Emitted when the editor is closed
+   *
+   * @param h5pId Id of the Content that was edited
    */
   'closed',
 ]);
@@ -63,12 +73,24 @@ onMounted(() => {
         return await H5PRestInterface.editH5PContent(contentId, requestBody);
       }
     };
-
-    h5pEditor.disconnectedCallback = (): void => {
-      emits('closed');
-    };
   }
 });
+
+/**
+ * Saves the current state of the H5P editor.
+ */
+async function save(): Promise<void> {
+  currentlySaving.value = true;
+  const { contentId } = await (editor.value as H5PEditorComponent).save();
+  emits('closed', contentId);
+}
+
+/**
+ * Closes the editor without prior saving.
+ */
+function close(): void {
+  emits('closed', contentId.value);
+}
 
 window.addEventListener('resize', () => {
   const h5pEditor = editor.value;
