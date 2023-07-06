@@ -4,7 +4,8 @@ import {
     IInstalledLibrary,
     ILibraryMetadata,
     ILibraryName,
-    ILibraryStorage, LibraryName
+    ILibraryStorage,
+    LibraryName,
 } from '@lumieducation/h5p-server';
 import { Readable } from 'stream';
 import { DBH5PFile } from '../../model/h5p/DBH5PFile';
@@ -118,7 +119,7 @@ export class H5PLibraryStorage implements ILibraryStorage {
                 filename: true,
                 owner: true,
                 ownerType: true,
-            }
+            },
         });
         return file !== null;
     }
@@ -305,12 +306,18 @@ export class H5PLibraryStorage implements ILibraryStorage {
      * extension .json)
      */
     async getLanguages(library: ILibraryName): Promise<string[]> {
-        const allFiles = await DBH5PFile.find({ select: { filename: true }, where: { ownerType: 'library', owner: DBH5PLibrary.formatNameAsString(library) } });
+        const allFiles = await DBH5PFile.find({
+            select: { filename: true },
+            where: {
+                ownerType: 'library',
+                owner: DBH5PLibrary.formatNameAsString(library),
+            },
+        });
         return allFiles
-            .map(file => file.filename)
-            .filter(file => file.startsWith('language'))
-            .filter(file => extname(file) === '.json')
-            .map(file => basename(file, '.json'));
+            .map((file) => file.filename)
+            .filter((file) => file.startsWith('language'))
+            .filter((file) => extname(file) === '.json')
+            .map((file) => basename(file, '.json'));
     }
 
     /**
@@ -342,7 +349,7 @@ export class H5PLibraryStorage implements ILibraryStorage {
                 machineName: true,
                 majorVersion: true,
                 minorVersion: true,
-            }
+            },
         });
         return dbLib !== null;
     }

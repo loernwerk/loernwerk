@@ -3,7 +3,7 @@ import {
     IContentAuthor,
     IContentChange,
 } from '@lumieducation/h5p-server/build/src/types';
-import {BaseEntity, Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 /**
  * Database object containing custom created H5P content.
@@ -40,7 +40,7 @@ export class DBH5PContent extends BaseEntity implements IContentMetadata {
     @Column({ nullable: true })
     w?: string | undefined;
 
-    @Column({nullable: true})
+    @Column({ nullable: true })
     defaultLanguage: string;
 
     @Column({ nullable: true })
@@ -84,4 +84,7 @@ export class DBH5PContent extends BaseEntity implements IContentMetadata {
 
     @Column({ type: 'simple-json' })
     content: unknown;
+
+    @Column({ nullable: true })
+    ownerSequence: string;
 }

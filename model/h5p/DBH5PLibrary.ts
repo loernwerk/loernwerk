@@ -1,4 +1,4 @@
-import {BaseEntity, Column, Entity, PrimaryColumn} from 'typeorm';
+import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
 import { IInstalledLibrary, ILibraryName } from '@lumieducation/h5p-server';
 
 /**

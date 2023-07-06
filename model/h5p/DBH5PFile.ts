@@ -1,4 +1,10 @@
-import {BaseEntity, Column, CreateDateColumn, Entity, PrimaryColumn} from 'typeorm';
+import {
+    BaseEntity,
+    Column,
+    CreateDateColumn,
+    Entity,
+    PrimaryColumn,
+} from 'typeorm';
 import { IFileStats } from '@lumieducation/h5p-server';
 
 /**
