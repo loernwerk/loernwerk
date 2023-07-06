@@ -251,9 +251,17 @@ export class H5PContentStorage implements IContentStorage {
     ): Promise<IContentMetadata> {
         // Since anyone is allowed to view H5P Content, we dont need to check user permissions here
         void user;
-        const content = await DBH5PContent.findOneBy({
-            h5pContentId: contentId,
+        const content = await DBH5PContent.findOne({
+            where: { h5pContentId: contentId },
         });
+
+        // Delete null fields, otherwise saving will cry again
+        for (const prop of Object.keys(content)) {
+            if (content[prop] === null) {
+                delete content[prop];
+            }
+        }
+
         return content;
     }
 

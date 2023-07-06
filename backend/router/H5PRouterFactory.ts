@@ -39,26 +39,31 @@ export class H5PRouterFactory extends RouterFactory {
                     return;
                 }
 
-                const h5pObject = await H5PServer.getInstance()
-                    .getH5PEditor()
-                    .saveOrUpdateContentReturnMetaData(
-                        undefined,
-                        req.body.params.params,
-                        req.body.params.metadata,
-                        req.body.library,
-                        req.user
+                try {
+                    const h5pObject = await H5PServer.getInstance()
+                        .getH5PEditor()
+                        .saveOrUpdateContentReturnMetaData(
+                            undefined,
+                            req.body.params.params,
+                            req.body.params.metadata,
+                            req.body.library,
+                            req.user
+                        );
+
+                    // Try to update belonging sequence code
+                    await DBH5PContent.update(
+                        { h5pContentId: h5pObject.id },
+                        { ownerSequence: req.body.sequence }
                     );
 
-                // Try to update belonging sequence code
-                await DBH5PContent.update(
-                    { h5pContentId: h5pObject.id },
-                    { ownerSequence: req.body.sequence }
-                );
-
-                res.json({
-                    contentId: h5pObject.id,
-                    metadata: h5pObject.metadata,
-                });
+                    res.json({
+                        contentId: h5pObject.id,
+                        metadata: h5pObject.metadata,
+                    });
+                } catch (e) {
+                    res.status(400).send(e.message);
+                    return;
+                }
             }
         );
 
@@ -80,19 +85,24 @@ export class H5PRouterFactory extends RouterFactory {
                     return;
                 }
 
-                const h5pObject = await H5PServer.getInstance()
-                    .getH5PEditor()
-                    .saveOrUpdateContentReturnMetaData(
-                        req.params.contentId.toString(),
-                        req.body.params.params,
-                        req.body.params.metadata,
-                        req.body.library,
-                        req.user
-                    );
-                res.json({
-                    contentId: h5pObject.id,
-                    metadata: h5pObject.metadata,
-                });
+                try {
+                    const h5pObject = await H5PServer.getInstance()
+                        .getH5PEditor()
+                        .saveOrUpdateContentReturnMetaData(
+                            req.params.contentId.toString(),
+                            req.body.params.params,
+                            req.body.params.metadata,
+                            req.body.library,
+                            req.user
+                        );
+                    res.json({
+                        contentId: h5pObject.id,
+                        metadata: h5pObject.metadata,
+                    });
+                } catch (e) {
+                    res.status(400).send(e.message);
+                    return;
+                }
             }
         );
 
@@ -104,28 +114,33 @@ export class H5PRouterFactory extends RouterFactory {
                 H5PServer.getInstance().getH5PEditor().config.baseUrl = `${
                     req.protocol
                 }://${req.get('host')}/h5p`;
-                const editorModel = (await H5PServer.getInstance()
-                    .getH5PEditor()
-                    .render(
-                        req.params.contentId === 'undefined'
-                            ? undefined
-                            : req.params.contentId,
-                        req.language ?? 'en',
-                        req.user
-                    )) as IEditorModel;
-
-                if (req.params.contentId === 'undefined') {
-                    res.json(editorModel);
-                } else {
-                    const content = await H5PServer.getInstance()
+                try {
+                    const editorModel = (await H5PServer.getInstance()
                         .getH5PEditor()
-                        .getContent(req.params.contentId);
-                    res.json({
-                        ...editorModel,
-                        library: content.library,
-                        metadata: content.params.metadata,
-                        params: content.params.params,
-                    });
+                        .render(
+                            req.params.contentId === 'undefined'
+                                ? undefined
+                                : req.params.contentId,
+                            req.language ?? 'en',
+                            req.user
+                        )) as IEditorModel;
+
+                    if (req.params.contentId === 'undefined') {
+                        res.json(editorModel);
+                    } else {
+                        const content = await H5PServer.getInstance()
+                            .getH5PEditor()
+                            .getContent(req.params.contentId);
+                        res.json({
+                            ...editorModel,
+                            library: content.library,
+                            metadata: content.params.metadata,
+                            params: content.params.params,
+                        });
+                    }
+                } catch (e) {
+                    res.status(400).send(e.message);
+                    return;
                 }
             }
         );
