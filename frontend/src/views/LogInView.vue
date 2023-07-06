@@ -41,14 +41,10 @@
               >Angemeldet bleiben</label
             >
           </div>
-          <div class="flex-grow">
-            <!-- Empty div as space filler -->
-          </div>
-          <div class="w-fit text-red-500 italic" v-if="displayError">
-            Falscher Nutzername/Email oder Passwort.
-          </div>
-          <div class="flex-grow">
-            <!-- Empty div as space filler -->
+          <div class="flex-grow text-center">
+            <div class="text-red-500 italic" v-if="displayError">
+              Falscher Nutzername/Email oder Passwort.
+            </div>
           </div>
           <ButtonComponent
             class="w-fit"
@@ -89,11 +85,6 @@ function disableCheckBox(): void {
  * Checks whether the login data is correct
  */
 async function checkLogIn(): Promise<void> {
-  //avoid multiple clicks on button
-  if (disableInputShowSpinner.value) {
-    return;
-  }
-
   disableInputShowSpinner.value = true;
   displayError.value = false;
 

@@ -5,6 +5,7 @@
       <div
         class="absolute w-full h-full text-center bg-gray-300 bg-opacity-70 rounded-md"
         v-if="loading"
+        :class="{ 'cursor-not-allowed': loading }"
       >
         <FontAwesomeIcon icon="spinner" size="1x" class="animate-spin mt-2" />
       </div>
