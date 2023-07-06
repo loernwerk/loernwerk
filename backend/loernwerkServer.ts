@@ -9,6 +9,7 @@ import history from 'connect-history-api-fallback';
 import { readFile } from 'fs/promises';
 import { createServer } from 'https';
 import { AccountRouterFactory } from './router/AccountRouterFactory';
+import { AccountController } from './controller/AccountController';
 import { SequenceRouterFactory } from './router/SequenceRouterFactory';
 import { H5PServer } from './h5p/H5PServer';
 import { H5PRouterFactory } from './router/H5PRouterFactory';
