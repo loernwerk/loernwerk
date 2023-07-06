@@ -11,6 +11,7 @@
             <td class="p-1">Nutzername/Email:</td>
             <td class="w-full p-1">
               <TextInputComponent
+                :disabled="disableInputShowSpinner"
                 placeHolder="Nutzername/Email"
                 @input-changed="(val) => (mailField = val)"
               />
@@ -20,6 +21,7 @@
             <td class="p-1">Passwort:</td>
             <td class="w-full p-1">
               <TextInputComponent
+                :disabled="disableInputShowSpinner"
                 :hidden="true"
                 placeHolder="Passwort"
                 @input-changed="(val) => (passwordField = val)"
@@ -30,11 +32,12 @@
         <div class="flex items-center pt-4">
           <div class="space-x-2">
             <input
+              :disabled="disableInputShowSpinner"
               type="checkbox"
               class="cursor-pointer"
               v-model="keepLoggedIn"
             />
-            <label class="cursor-pointer" @click="keepLoggedIn = !keepLoggedIn"
+            <label class="cursor-pointer" @click="disableCheckBox"
               >Angemeldet bleiben</label
             >
           </div>
@@ -49,7 +52,7 @@
           </div>
           <ButtonComponent
             class="w-fit"
-            :loading="displaySpinner"
+            :loading="disableInputShowSpinner"
             @click="checkLogIn()"
           >
             Anmelden
@@ -70,19 +73,28 @@ import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
 const mailField = ref('');
 const passwordField = ref('');
 const keepLoggedIn = ref(false);
-const displaySpinner = ref(false);
+const disableInputShowSpinner = ref(false);
 const displayError = ref(false);
+
+/**
+ * Locks the Checkbox while checking Login data
+ */
+function disableCheckBox(): void {
+  if (!disableInputShowSpinner.value) {
+    keepLoggedIn.value = !keepLoggedIn.value;
+  }
+}
 
 /**
  * Checks whether the login data is correct
  */
 async function checkLogIn(): Promise<void> {
   //avoid multiple clicks on button
-  if (displaySpinner.value) {
+  if (disableInputShowSpinner.value) {
     return;
   }
 
-  displaySpinner.value = true;
+  disableInputShowSpinner.value = true;
   displayError.value = false;
 
   const success = await AccountRestInterface.verifyLogin(
@@ -90,11 +102,12 @@ async function checkLogIn(): Promise<void> {
     passwordField.value,
     keepLoggedIn.value
   );
+
   if (success) {
     alert('SequenceOverView');
   } else {
     displayError.value = true;
   }
-  displaySpinner.value = false;
+  disableInputShowSpinner.value = false;
 }
 </script>
