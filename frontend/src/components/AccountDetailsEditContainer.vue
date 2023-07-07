@@ -176,11 +176,8 @@ async function updateInformation(): Promise<void> {
       return;
     }
   }
-  if (isAdmin.value === true) {
-    //undefined would needed for non admins
-    updateUser.type = UserClass.ADMIN;
-  } else {
-    updateUser.type = UserClass.REGULAR;
+  if (originalUser.type === UserClass.ADMIN) {
+    updateUser.type = isAdmin.value ? UserClass.ADMIN : UserClass.REGULAR;
   }
   AccountRestInterface.updateAccount(updateUser);
   disableInputShowSpinner.value = false;
