@@ -63,6 +63,11 @@ defineProps({
     required: false,
     default: false,
   },
+  startText: {
+    type: String,
+    required: false,
+    default: '',
+  },
 });
 
 const emit = defineEmits([

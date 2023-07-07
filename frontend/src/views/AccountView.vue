@@ -1,6 +1,8 @@
 <template>
   <div class="">
-    <AccountDetailsEditContainer />
+    <Suspense>
+      <AccountDetailsEditContainer />
+    </Suspense>
   </div>
 </template>
 
