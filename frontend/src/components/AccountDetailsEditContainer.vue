@@ -59,6 +59,7 @@ import TextInputComponent from './TextInputComponent.vue';
 import ButtonComponent from './ButtonComponent.vue';
 import ContainerComponent from './ContainerComponent.vue';
 import { IUser } from '../../../model/user/IUser';
+import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
 
 const nameField = ref('');
 const mailField = ref('');
@@ -70,6 +71,13 @@ const disableInputShowSpinner = ref(false);
  * Updates Information from the User with the entered information
  */
 async function updateInformation(): Promise<void> {
+  if (
+    nameField.value === '' &&
+    mailField.value === '' &&
+    pwField.value === ''
+  ) {
+    return;
+  }
   disableInputShowSpinner.value = true;
 
   const updateUser: Partial<IUser> = {};
@@ -86,7 +94,7 @@ async function updateInformation(): Promise<void> {
       //TODO: Throw error
     }
   }
-
+  AccountRestInterface.updateAccount(updateUser);
   disableInputShowSpinner.value = false;
 }
 </script>
