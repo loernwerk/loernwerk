@@ -66,12 +66,12 @@ export function requireBody(...data: string[]) {
 /**
  * Middleware for specifying the request attributes needed by the H5P library.
  * @param req Request object
- * @param _ Response object, never used
+ * @param res Response object, never used
  * @param next Next handler function
  */
 export async function buildH5PRequest(
     req: Request,
-    _: Response,
+    res: Response,
     next: NextFunction
 ): Promise<void> {
     if (req.session.userId === undefined) {
