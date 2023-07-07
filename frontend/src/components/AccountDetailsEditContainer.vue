@@ -75,7 +75,7 @@
           <ButtonComponent
             class="w-fit p-1"
             :loading="disableInputShowSpinner"
-            @click="updateInformation()"
+            @click="reset()"
           >
             Abbrechen
           </ButtonComponent>
@@ -96,7 +96,7 @@
           <ButtonComponent
             class="w-fit p-1"
             :loading="disableInputShowSpinner"
-            @click="updateInformation()"
+            @click="deleteAccount()"
           >
             Löschen
           </ButtonComponent>
@@ -106,7 +106,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
+import { getCurrentInstance, ref } from 'vue';
 import TextInputComponent from './TextInputComponent.vue';
 import ButtonComponent from './ButtonComponent.vue';
 import ContainerComponent from './ContainerComponent.vue';
@@ -180,5 +180,21 @@ async function updateInformation(): Promise<void> {
   }
   AccountRestInterface.updateAccount(updateUser);
   disableInputShowSpinner.value = false;
+}
+/**
+ * deletes a account
+ */
+async function deleteAccount(): Promise<void> {
+  if (originalUser.id === null) {
+    console.log('user id is empty - should not happen');
+    return;
+  }
+  AccountRestInterface.deleteAccount(originalUser.id as number);
+}
+/**
+ * reseting this component
+ */
+async function reset(): Promise<void> {
+  getCurrentInstance()?.proxy?.$forceUpdate();
 }
 </script>

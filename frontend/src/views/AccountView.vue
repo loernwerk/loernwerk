@@ -1,7 +1,7 @@
 <template>
-  <div class="">
+  <div>
     <Suspense>
-      <AccountDetailsEditContainer />
+      <AccountDetailsEditContainer :showadmin="true" :showdelete="true" />
     </Suspense>
   </div>
 </template>
