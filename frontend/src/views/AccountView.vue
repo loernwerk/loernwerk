@@ -1,5 +1,7 @@
 <template>
-  <AccountDetailsEditContainer />
+  <div class="">
+    <AccountDetailsEditContainer />
+  </div>
 </template>
 
 <script setup lang="ts">
