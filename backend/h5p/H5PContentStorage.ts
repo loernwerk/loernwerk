@@ -33,7 +33,7 @@ export class H5PContentStorage implements IContentStorage {
      * @param contentId (optional) The content id to use
      * @returns The newly assigned content id
      */
-    async addContent(
+    public async addContent(
         metadata: IContentMetadata,
         content: unknown,
         user: IUser,
@@ -63,7 +63,7 @@ export class H5PContentStorage implements IContentStorage {
      * @param readStream A readable stream that contains the data
      * @param user (optional) The user who owns this object
      */
-    async addFile(
+    public async addFile(
         contentId: ContentId,
         filename: string,
         readStream: Readable,
@@ -97,7 +97,7 @@ export class H5PContentStorage implements IContentStorage {
      * @param contentId the content id to check
      * @returns true if the piece of content exists
      */
-    async contentExists(contentId: ContentId): Promise<boolean> {
+    public async contentExists(contentId: ContentId): Promise<boolean> {
         const content = await DBH5PContent.findOneBy({
             h5pContentId: contentId,
         });
@@ -111,7 +111,10 @@ export class H5PContentStorage implements IContentStorage {
      * subdirectories (e.g. 'images/xyz.png')
      * @returns true if the file exists
      */
-    async fileExists(contentId: ContentId, filename: string): Promise<boolean> {
+    public async fileExists(
+        contentId: ContentId,
+        filename: string
+    ): Promise<boolean> {
         const file = await DBH5PFile.findOneBy({
             ownerType: 'content',
             owner: contentId,
@@ -126,7 +129,10 @@ export class H5PContentStorage implements IContentStorage {
      * @param contentId The content id to delete.
      * @param user The user who wants to delete the content
      */
-    async deleteContent(contentId: ContentId, user?: IUser): Promise<void> {
+    public async deleteContent(
+        contentId: ContentId,
+        user?: IUser
+    ): Promise<void> {
         if (!(await this.canUserAccessContent(user.id, contentId, true))) {
             throw new LoernwerkError(
                 'User is not allowed to edit this content',
@@ -145,7 +151,7 @@ export class H5PContentStorage implements IContentStorage {
      * subdirectories (e.g. 'images/xyz.png')
      * @param user The user who wants to delete the file
      */
-    async deleteFile(
+    public async deleteFile(
         contentId: ContentId,
         filename: string,
         user?: IUser
@@ -172,7 +178,7 @@ export class H5PContentStorage implements IContentStorage {
      * @param user the user who wants to retrieve the content file
      * @returns FileStats of the requested file
      */
-    async getFileStats(
+    public async getFileStats(
         contentId: ContentId,
         filename: string,
         user: IUser
@@ -207,7 +213,7 @@ export class H5PContentStorage implements IContentStorage {
      * should end
      * @returns the stream (that can be used to send the file to the user)
      */
-    async getFileStream(
+    public async getFileStream(
         contentId: ContentId,
         filename: string,
         user: IUser,
@@ -232,7 +238,7 @@ export class H5PContentStorage implements IContentStorage {
      * undefined, access must be granted.
      * @returns the metadata
      */
-    async getMetadata(
+    public async getMetadata(
         contentId: ContentId,
         user?: IUser
     ): Promise<IContentMetadata> {
@@ -259,7 +265,7 @@ export class H5PContentStorage implements IContentStorage {
      * undefined, access must be granted.
      * @returns the content object
      */
-    async getParameters(
+    public async getParameters(
         contentId: ContentId,
         user?: IUser
     ): Promise<ContentParameters> {
@@ -277,7 +283,7 @@ export class H5PContentStorage implements IContentStorage {
      * @returns asDependency: how often the library is used as subcontent in
      * content; asMainLibrary: how often the library is used as a main library
      */
-    async getUsage(
+    public async getUsage(
         library: ILibraryName
     ): Promise<{ asDependency: number; asMainLibrary: number }> {
         let asDependency = 0;
@@ -318,7 +324,7 @@ export class H5PContentStorage implements IContentStorage {
      * @returns the permissions the user has for this content (e.g. download it,
      * delete it etc.)
      */
-    async getUserPermissions(
+    public async getUserPermissions(
         contentId: ContentId,
         user: IUser
     ): Promise<Permission[]> {
@@ -364,7 +370,7 @@ export class H5PContentStorage implements IContentStorage {
      * @param user (optional) the user who owns the content
      * @returns a list of contentIds
      */
-    async listContent(user?: IUser): Promise<ContentId[]> {
+    public async listContent(user?: IUser): Promise<ContentId[]> {
         // Since content isn't owned by individual users here, all we can check is content used by sequences owned by a single user
         if (user) {
             const sequences = await DBSequence.find({
@@ -393,7 +399,10 @@ export class H5PContentStorage implements IContentStorage {
      * @returns a list of files that are used in the piece of content, e.g.
      * ['images/image1.png', 'videos/video2.mp4', 'file.xyz']
      */
-    async listFiles(contentId: ContentId, user: IUser): Promise<string[]> {
+    public async listFiles(
+        contentId: ContentId,
+        user: IUser
+    ): Promise<string[]> {
         // Since all users are allowed to view H5P, I dont think access control is needed here
         void user;
         const files = await DBH5PFile.find({

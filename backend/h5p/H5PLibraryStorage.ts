@@ -27,7 +27,7 @@ export class H5PLibraryStorage implements ILibraryStorage {
      * @param readStream The stream containing the file content
      * @returns true if successful
      */
-    async addFile(
+    public async addFile(
         library: ILibraryName,
         filename: string,
         readStream: Readable
@@ -59,7 +59,7 @@ export class H5PLibraryStorage implements ILibraryStorage {
      * @returns The newly created library object to use when adding library
      * files with addFile(...)
      */
-    async addLibrary(
+    public async addLibrary(
         libraryData: ILibraryMetadata,
         restricted: boolean
     ): Promise<IInstalledLibrary> {
@@ -75,7 +75,7 @@ export class H5PLibraryStorage implements ILibraryStorage {
      * (Used when updating libraries.)
      * @param library the library whose files should be deleted
      */
-    async clearFiles(library: ILibraryName): Promise<void> {
+    public async clearFiles(library: ILibraryName): Promise<void> {
         await DBH5PFile.delete({
             ownerType: 'library',
             owner: DBH5PLibrary.formatNameAsString(library),
@@ -87,7 +87,7 @@ export class H5PLibraryStorage implements ILibraryStorage {
      * Throws errors if something went wrong.
      * @param library The library to remove.
      */
-    async deleteLibrary(library: ILibraryName): Promise<void> {
+    public async deleteLibrary(library: ILibraryName): Promise<void> {
         await DBH5PLibrary.delete({
             machineName: library.machineName,
             majorVersion: library.majorVersion,
@@ -105,7 +105,7 @@ export class H5PLibraryStorage implements ILibraryStorage {
      * @param filename Filename to check
      * @returns true if file exists in library, false otherwise
      */
-    async fileExists(
+    public async fileExists(
         library: ILibraryName,
         filename: string
     ): Promise<boolean> {
@@ -143,7 +143,7 @@ export class H5PLibraryStorage implements ILibraryStorage {
      * }
      * This means that H5P.Example is used by 10 other libraries.
      */
-    async getAllDependentsCount(): Promise<{ [p: string]: number }> {
+    public async getAllDependentsCount(): Promise<{ [p: string]: number }> {
         const librariesNames = await this.getInstalledLibraryNames();
         const librariesMetadata = await Promise.all(
             librariesNames.map((lib) => this.getLibrary(lib))
@@ -196,7 +196,7 @@ export class H5PLibraryStorage implements ILibraryStorage {
      * @param library the library to check
      * @returns the number of libraries that depend on this library.
      */
-    async getDependentsCount(library: ILibraryName): Promise<number> {
+    public async getDependentsCount(library: ILibraryName): Promise<number> {
         const allDependencies = await this.getAllDependentsCount();
         return allDependencies[LibraryName.toUberName(library)] ?? 0;
     }
@@ -208,7 +208,7 @@ export class H5PLibraryStorage implements ILibraryStorage {
      * @param filename the relative path inside the library
      * @returns a JSON object of the file's contents
      */
-    async getFileAsJson(
+    public async getFileAsJson(
         library: ILibraryName,
         filename: string
     ): Promise<unknown> {
@@ -227,7 +227,7 @@ export class H5PLibraryStorage implements ILibraryStorage {
      * @param filename the relative path inside the library
      * @returns a string of the file's contents
      */
-    async getFileAsString(
+    public async getFileAsString(
         library: ILibraryName,
         filename: string
     ): Promise<string> {
@@ -246,7 +246,7 @@ export class H5PLibraryStorage implements ILibraryStorage {
      * @param filename the relative path inside the library
      * @returns the file stats
      */
-    async getFileStats(
+    public async getFileStats(
         library: ILibraryName,
         filename: string
     ): Promise<IFileStats> {
@@ -268,7 +268,7 @@ export class H5PLibraryStorage implements ILibraryStorage {
      * @param filename the relative path inside the library
      * @returns a readable stream of the file's contents
      */
-    async getFileStream(
+    public async getFileStream(
         library: ILibraryName,
         filename: string
     ): Promise<Readable> {
@@ -287,7 +287,7 @@ export class H5PLibraryStorage implements ILibraryStorage {
      * machine name
      * @returns the libraries installed
      */
-    async getInstalledLibraryNames(
+    public async getInstalledLibraryNames(
         machineName?: string
     ): Promise<ILibraryName[]> {
         if (machineName !== undefined) {
@@ -305,7 +305,7 @@ export class H5PLibraryStorage implements ILibraryStorage {
      * @returns The list of JSON files in the language folder (without the
      * extension .json)
      */
-    async getLanguages(library: ILibraryName): Promise<string[]> {
+    public async getLanguages(library: ILibraryName): Promise<string[]> {
         const allFiles = await DBH5PFile.find({
             select: { filename: true },
             where: {
@@ -325,7 +325,7 @@ export class H5PLibraryStorage implements ILibraryStorage {
      * @param library the library
      * @returns the metadata and information about the locally installed library
      */
-    async getLibrary(library: ILibraryName): Promise<IInstalledLibrary> {
+    public async getLibrary(library: ILibraryName): Promise<IInstalledLibrary> {
         return await DBH5PLibrary.findOneBy({
             machineName: library.machineName,
             majorVersion: library.majorVersion,
@@ -338,7 +338,7 @@ export class H5PLibraryStorage implements ILibraryStorage {
      * @param library the library to check
      * @returns true if the library is installed
      */
-    async isInstalled(library: ILibraryName): Promise<boolean> {
+    public async isInstalled(library: ILibraryName): Promise<boolean> {
         const dbLib = await DBH5PLibrary.findOne({
             where: {
                 machineName: library.machineName,
@@ -361,7 +361,7 @@ export class H5PLibraryStorage implements ILibraryStorage {
      * If it is not implemented, addons won't be available in the system.
      * @returns a list of library addons
      */
-    async listAddons(): Promise<ILibraryMetadata[]> {
+    public async listAddons(): Promise<ILibraryMetadata[]> {
         return await DBH5PLibrary.findBy({ addTo: Not(null) });
     }
 
@@ -370,7 +370,7 @@ export class H5PLibraryStorage implements ILibraryStorage {
      * @param library Library to list files for
      * @returns all files that exist for the library
      */
-    async listFiles(library: ILibraryName): Promise<string[]> {
+    public async listFiles(library: ILibraryName): Promise<string[]> {
         const files = await DBH5PFile.findBy({
             ownerType: 'library',
             owner: DBH5PLibrary.formatNameAsString(library),
@@ -391,7 +391,7 @@ export class H5PLibraryStorage implements ILibraryStorage {
      * and if they were successfully saved; false if there were not changes.
      * Throws an error if saving was not possible.
      */
-    async updateAdditionalMetadata(
+    public async updateAdditionalMetadata(
         library: ILibraryName,
         additionalMetadata: Partial<IAdditionalLibraryMetadata>
     ): Promise<boolean> {
@@ -425,7 +425,7 @@ export class H5PLibraryStorage implements ILibraryStorage {
      * @param libraryMetadata the new library metadata
      * @returns The updated library object
      */
-    async updateLibrary(
+    public async updateLibrary(
         libraryMetadata: ILibraryMetadata
     ): Promise<IInstalledLibrary> {
         const dbLib = await DBH5PLibrary.findOneByOrFail({
