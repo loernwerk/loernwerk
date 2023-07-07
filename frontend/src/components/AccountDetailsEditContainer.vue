@@ -114,7 +114,7 @@ import ContainerComponent from './ContainerComponent.vue';
 import { IUser, UserClass } from '../../../model/user/IUser';
 import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
 
-defineProps({
+const props = defineProps({
   /**
    * Whether the delete button is displayed
    */
@@ -122,6 +122,11 @@ defineProps({
     type: Boolean,
     required: false,
     default: false,
+  },
+  userid: {
+    type: Number,
+    required: false,
+    default: null,
   },
 });
 
@@ -131,7 +136,10 @@ const pwField = ref('');
 const pwFieldControl = ref('');
 const disableInputShowSpinner = ref(false);
 const displayError = ref(false);
-const originalUser = await AccountRestInterface.getOwnAccount();
+const originalUser =
+  props.userid === null
+    ? await AccountRestInterface.getOwnAccount()
+    : await AccountRestInterface.getAccount(props.userid);
 const isAdmin = ref(originalUser.type === UserClass.ADMIN);
 
 /**
@@ -196,6 +204,14 @@ async function deleteAccount(): Promise<void> {
  * reseting this component
  */
 async function reset(): Promise<void> {
-  getCurrentInstance()?.proxy?.$forceUpdate();
+  const i = getCurrentInstance();
+  if (i === undefined) {
+    console.log('i is undefined');
+  }
+  const p = i?.proxy;
+  if (p === undefined) {
+    console.log('p is undefined');
+  }
+  p?.$forceUpdate();
 }
 </script>

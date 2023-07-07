@@ -9,6 +9,7 @@
       v-model="inputText"
       class="cursor-pointer w-full placeholder:text-gray-500"
       :class="{ uppercase: uppercase }"
+      :value="startText"
     />
   </InteractableComponent>
 </template>
@@ -17,7 +18,7 @@
 import { ref, watch } from 'vue';
 import InteractableComponent from './InteractableComponent.vue';
 
-defineProps({
+const props = defineProps({
   /**
    * The placeholder text for the input
    */
@@ -66,9 +67,11 @@ defineProps({
   startText: {
     type: String,
     required: false,
-    default: '',
+    default: 'a',
   },
 });
+
+console.log(props.startText);
 
 const emit = defineEmits([
   /**

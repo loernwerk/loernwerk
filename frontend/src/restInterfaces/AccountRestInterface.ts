@@ -65,6 +65,16 @@ export class AccountRestInterface extends BaseRestInterface {
   public static async getOwnAccount(): Promise<Partial<IUser>> {
     return await BaseRestInterface.get<Partial<IUser>>(this.account_path);
   }
+  /**
+   * Sends request to backend to get the account of the user with the given id
+   * @param id the id of the user
+   * @returns the requested user
+   */
+  public static async getAccount(id: number): Promise<Partial<IUser>> {
+    return await BaseRestInterface.get<Partial<IUser>>(
+      this.account_path + '/' + id
+    );
+  }
 
   /**
    * Sends request to backend to get Usernames to given Account-IDs
