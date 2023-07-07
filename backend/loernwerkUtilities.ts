@@ -66,7 +66,7 @@ export function requireBody(...data: string[]) {
 /**
  * Middleware for specifying the request attributes needed by the H5P library.
  * @param req Request object
- * @param _ Response object
+ * @param _ Response object, never used
  * @param next Next handler function
  */
 export async function buildH5PRequest(
@@ -107,7 +107,9 @@ export async function buildH5PRequest(
 // Declaring session information
 declare module 'express-session' {
     interface SessionData {
+        // ID of the user
         userId?: number;
+        // Indicating whether the user is an admin
         isAdmin?: boolean;
     }
 }
@@ -115,8 +117,11 @@ declare module 'express-session' {
 // Declaring additional request properties for H5P
 declare module 'express-serve-static-core' {
     interface Request {
+        // User object required by H5P library.
         user: IUser;
+        // Translation function for error messages. Name forced by H5P library.
         t: (errorId: string, replacements: { [key: string]: string }) => string;
+        // Language used by the user.
         language: string;
     }
 }
