@@ -151,13 +151,16 @@ async function updateInformation(): Promise<void> {
   if (
     nameField.value === '' &&
     mailField.value === '' &&
-    pwField.value === ''
+    pwField.value === '' &&
+    (isAdmin.value === true ? UserClass.ADMIN : UserClass.REGULAR) ===
+      originalUser.type
   ) {
     return;
   }
   disableInputShowSpinner.value = true;
 
-  const updateUser: Partial<IUser> = {};
+  const updateUser: Partial<IUser> = { id: originalUser.id };
+
   if (nameField.value !== '') {
     updateUser.name = nameField.value;
   }
@@ -169,10 +172,19 @@ async function updateInformation(): Promise<void> {
       updateUser.password = pwField.value;
     } else {
       displayError.value = true;
+      disableInputShowSpinner.value = false;
+      return;
     }
+  }
+  if (isAdmin.value === true) {
+    //undefined would needed for non admins
+    updateUser.type = UserClass.ADMIN;
+  } else {
+    updateUser.type = UserClass.REGULAR;
   }
   AccountRestInterface.updateAccount(updateUser);
   disableInputShowSpinner.value = false;
+  console.log(updateUser);
 }
 /**
  * deletes a account
