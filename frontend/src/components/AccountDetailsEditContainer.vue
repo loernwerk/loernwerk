@@ -58,6 +58,7 @@ import { ref } from 'vue';
 import TextInputComponent from './TextInputComponent.vue';
 import ButtonComponent from './ButtonComponent.vue';
 import ContainerComponent from './ContainerComponent.vue';
+import { IUser } from '../../../model/user/IUser';
 
 const nameField = ref('');
 const mailField = ref('');
@@ -70,7 +71,22 @@ const disableInputShowSpinner = ref(false);
  */
 async function updateInformation(): Promise<void> {
   disableInputShowSpinner.value = true;
-  //TODO: Logic
+
+  const updateUser: Partial<IUser> = {};
+  if (nameField.value !== '') {
+    updateUser.name = nameField.value;
+  }
+  if (mailField.value !== '') {
+    updateUser.mail = mailField.value;
+  }
+  if (pwField.value !== '') {
+    if (pwField.value === pwFieldControl.value) {
+      updateUser.password = pwField.value;
+    } else {
+      //TODO: Throw error
+    }
+  }
+
   disableInputShowSpinner.value = false;
 }
 </script>
