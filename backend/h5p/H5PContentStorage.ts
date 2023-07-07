@@ -71,7 +71,7 @@ export class H5PContentStorage implements IContentStorage {
     ): Promise<void> {
         if (!(await this.canUserAccessContent(user.id, contentId))) {
             throw new LoernwerkError(
-                'User isnt allowed to edit this content',
+                'User is not allowed to edit this content',
                 LoernwerkErrorCodes.FORBIDDEN
             );
         }
@@ -105,6 +105,22 @@ export class H5PContentStorage implements IContentStorage {
     }
 
     /**
+     * Checks if a file exists.
+     * @param contentId The id of the content to add the file to
+     * @param filename the filename of the file to get; can be a path including
+     * subdirectories (e.g. 'images/xyz.png')
+     * @returns true if the file exists
+     */
+    async fileExists(contentId: ContentId, filename: string): Promise<boolean> {
+        const file = await DBH5PFile.findOneBy({
+            ownerType: 'content',
+            owner: contentId,
+            filename: filename,
+        });
+        return file !== null;
+    }
+
+    /**
      * Deletes a content object and all its dependent files from the repository.
      * Throws errors if something goes wrong.
      * @param contentId The content id to delete.
@@ -113,7 +129,7 @@ export class H5PContentStorage implements IContentStorage {
     async deleteContent(contentId: ContentId, user?: IUser): Promise<void> {
         if (!(await this.canUserAccessContent(user.id, contentId, true))) {
             throw new LoernwerkError(
-                'User isnt allowed to edit this content',
+                'User is not allowed to edit this content',
                 LoernwerkErrorCodes.FORBIDDEN
             );
         }
@@ -136,7 +152,7 @@ export class H5PContentStorage implements IContentStorage {
     ): Promise<void> {
         if (!(await this.canUserAccessContent(user.id, contentId, true))) {
             throw new LoernwerkError(
-                'User isnt allowed to edit this content',
+                'User is not allowed to edit this content',
                 LoernwerkErrorCodes.FORBIDDEN
             );
         }
@@ -146,22 +162,6 @@ export class H5PContentStorage implements IContentStorage {
             owner: contentId,
             filename: filename,
         });
-    }
-
-    /**
-     * Checks if a file exists.
-     * @param contentId The id of the content to add the file to
-     * @param filename the filename of the file to get; can be a path including
-     * subdirectories (e.g. 'images/xyz.png')
-     * @returns true if the file exists
-     */
-    async fileExists(contentId: ContentId, filename: string): Promise<boolean> {
-        const file = await DBH5PFile.findOneBy({
-            ownerType: 'content',
-            owner: contentId,
-            filename: filename,
-        });
-        return file !== null;
     }
 
     /**
@@ -179,7 +179,7 @@ export class H5PContentStorage implements IContentStorage {
     ): Promise<IFileStats> {
         if (!(await this.canUserAccessContent(user.id, contentId, true))) {
             throw new LoernwerkError(
-                'User isnt allowed to edit this content',
+                'User is not allowed to edit this content',
                 LoernwerkErrorCodes.FORBIDDEN
             );
         }
@@ -219,23 +219,10 @@ export class H5PContentStorage implements IContentStorage {
             owner: contentId,
             filename: filename,
         });
-        let read: Readable;
-        if (rangeStart !== undefined && rangeEnd !== undefined) {
-            read = Readable.from(
-                Buffer.from(file.content).subarray(rangeStart, rangeEnd)
-            );
-        } else if (rangeStart !== undefined) {
-            read = Readable.from(
-                Buffer.from(file.content).subarray(rangeStart)
-            );
-        } else if (rangeEnd !== undefined) {
-            read = Readable.from(
-                Buffer.from(file.content).subarray(0, rangeEnd)
-            );
-        } else {
-            read = Readable.from(file.content);
-        }
-        return read;
+        const buffer = Buffer.from(file.content);
+        const bufferStart = rangeStart | 0;
+        const bufferEnd = rangeEnd | buffer.length;
+        return Readable.from(buffer.subarray(bufferStart, bufferEnd));
     }
 
     /**
@@ -255,7 +242,7 @@ export class H5PContentStorage implements IContentStorage {
             where: { h5pContentId: contentId },
         });
 
-        // Delete null fields, otherwise saving will cry again
+        // Delete null fields, otherwise saving will fail
         for (const prop of Object.keys(content)) {
             if (content[prop] === null) {
                 delete content[prop];
