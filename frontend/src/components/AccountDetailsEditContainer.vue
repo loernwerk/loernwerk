@@ -7,8 +7,8 @@
       <template #default>
         <table>
           <tr>
-            <td>Nutzername:</td>
-            <td>
+            <td class="p-1">Nutzername:</td>
+            <td class="p-1">
               <TextInputComponent
                 :disabled="disableInputShowSpinner"
                 place-holder="Nutzername"
@@ -17,8 +17,8 @@
             </td>
           </tr>
           <tr>
-            <td>E-mail:</td>
-            <td>
+            <td class="p-1">E-mail:</td>
+            <td class="p-1">
               <TextInputComponent
                 :disabled="disableInputShowSpinner"
                 place-holder="E-mail"
@@ -27,8 +27,8 @@
             </td>
           </tr>
           <tr>
-            <td>Passwort:</td>
-            <td>
+            <td class="p-1">Passwort:</td>
+            <td class="p-1">
               <TextInputComponent
                 :disabled="disableInputShowSpinner"
                 :hidden="true"
@@ -38,8 +38,8 @@
             </td>
           </tr>
           <tr>
-            <td>Passwort wiederholen:</td>
-            <td>
+            <td class="p-1">Passwort wiederholen:</td>
+            <td class="p-1">
               <TextInputComponent
                 :disabled="disableInputShowSpinner"
                 :hidden="true"
@@ -49,6 +49,9 @@
             </td>
           </tr>
         </table>
+        <div class="text-gray-400 p-1 text-xs">
+          Hinweis: Sie müssen nicht alle Felder ausfüllen
+        </div>
         <div class="flex items-center pt-4">
           <div class="flex-grow text-center">
             <div class="text-red-500 italic" v-if="displayError">
