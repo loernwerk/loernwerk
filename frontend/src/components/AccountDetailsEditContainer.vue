@@ -44,7 +44,13 @@
         </td>
       </tr>
     </table>
-    <ButtonComponent>Speichern</ButtonComponent>
+    <ButtonComponent
+      class="w-fit"
+      :loading="disableInputShowSpinner"
+      @click="updateInformation()"
+    >
+      Speichern
+    </ButtonComponent>
   </ContainerComponent>
 </template>
 <script setup lang="ts">
@@ -58,4 +64,13 @@ const mailField = ref('');
 const pwField = ref('');
 const pwFieldControl = ref('');
 const disableInputShowSpinner = ref(false);
+
+/**
+ * Updates Information from the User with the entered information
+ */
+async function updateInformation(): Promise<void> {
+  disableInputShowSpinner.value = true;
+  //TODO: Logic
+  disableInputShowSpinner.value = false;
+}
 </script>
