@@ -11,6 +11,7 @@ import {
 } from '@lumieducation/h5p-webcomponents';
 import { Ref, onMounted, ref } from 'vue';
 import { IPlayerModel } from '@lumieducation/h5p-server';
+import { H5PRestInterface } from '../../restInterfaces/H5PRestInterface';
 
 defineProps({
   /**
@@ -31,8 +32,7 @@ onMounted(() => {
     h5pPlayer.loadContentCallback = async (
       contentId: string
     ): Promise<IPlayerModel> => {
-      // TODO
-      throw new Error('Error getting content with id: ' + contentId);
+      return await H5PRestInterface.getH5PContentForExecution(contentId);
     };
   }
 });
