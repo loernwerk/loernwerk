@@ -184,7 +184,6 @@ async function updateInformation(): Promise<void> {
   }
   AccountRestInterface.updateAccount(updateUser);
   disableInputShowSpinner.value = false;
-  console.log(updateUser);
 }
 /**
  * deletes a account
