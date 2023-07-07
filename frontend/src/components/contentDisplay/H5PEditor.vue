@@ -1,5 +1,11 @@
 <template>
   <h5p-editor ref="editor" :content-id="contentId" />
+  <div class="flex items-center">
+    <ButtonComponent class="w-fit" :loading="currentlySaving" @click="save"
+      >Save</ButtonComponent
+    >
+    <ButtonComponent class="w-fit ml-1" @click="close">Close</ButtonComponent>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -8,9 +14,11 @@ import {
   defineElements,
   H5PEditorComponent,
 } from '@lumieducation/h5p-webcomponents';
-import { onMounted, Ref, ref } from 'vue';
+import { onMounted, Ref, ref, toRefs } from 'vue';
+import { H5PRestInterface } from '../../restInterfaces/H5PRestInterface';
+import ButtonComponent from '../ButtonComponent.vue';
 
-defineProps({
+const props = defineProps({
   /**
    * The h5p content to display
    */
@@ -28,9 +36,14 @@ defineProps({
   },
 });
 
+const { contentId, sequenceCode } = toRefs(props);
+const currentlySaving = ref(false);
+
 const emits = defineEmits([
   /**
    * Emitted when the editor is closed
+   *
+   * @param h5pId Id of the Content that was edited
    */
   'closed',
 ]);
@@ -44,24 +57,40 @@ onMounted(() => {
     h5pEditor.loadContentCallback = async (
       contentId: string
     ): Promise<IEditorModel> => {
-      // TODO
-      throw new Error('Error getting content with id: ' + contentId);
+      return await H5PRestInterface.getH5PContent(contentId);
     };
 
     h5pEditor.saveContentCallback = async (
       contentId: string,
       requestBody: { library: string; params: unknown }
     ): Promise<{ contentId: string; metadata: IContentMetadata }> => {
-      // TODO
-      console.log(requestBody);
-      throw new Error('Error saving content with id: ' + contentId);
-    };
-
-    h5pEditor.disconnectedCallback = (): void => {
-      emits('closed');
+      if (contentId === undefined || contentId === 'undefined') {
+        return await H5PRestInterface.createH5PContent(
+          sequenceCode.value,
+          requestBody
+        );
+      } else {
+        return await H5PRestInterface.editH5PContent(contentId, requestBody);
+      }
     };
   }
 });
+
+/**
+ * Saves the current state of the H5P editor.
+ */
+async function save(): Promise<void> {
+  currentlySaving.value = true;
+  const { contentId } = await (editor.value as H5PEditorComponent).save();
+  emits('closed', contentId);
+}
+
+/**
+ * Closes the editor without prior saving.
+ */
+function close(): void {
+  emits('closed', contentId.value);
+}
 
 window.addEventListener('resize', () => {
   const h5pEditor = editor.value;

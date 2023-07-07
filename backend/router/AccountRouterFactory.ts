@@ -2,12 +2,8 @@ import { Router } from 'express';
 import { RouterFactory } from './RouterFactory';
 import { AccountController } from '../controller/AccountController';
 import { UserClass } from '../../model/user/IUser';
-import {
-    LoernwerkErrorCodes,
-    requireAdmin,
-    requireBody,
-    requireLogin,
-} from '../loernwerkUtilities';
+import { requireAdmin, requireBody, requireLogin } from '../loernwerkUtilities';
+import { LoernwerkErrorCodes } from '../loernwerkError';
 
 /**
  * Builds router for request regarding Account management

@@ -2,3 +2,4 @@ frontend/vite.config.ts
 .eslintrc.js
 build
 tailwind.config.js
+/h5p/
