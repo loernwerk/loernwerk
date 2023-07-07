@@ -102,7 +102,7 @@ export class DBH5PLibrary extends BaseEntity implements IInstalledLibrary {
         if (this.majorVersion - otherLibrary.majorVersion !== 0) {
             return this.majorVersion - otherLibrary.majorVersion;
         }
-        return this.minorVersion - otherLibrary.majorVersion;
+        return this.minorVersion - otherLibrary.minorVersion;
     }
 
     /**

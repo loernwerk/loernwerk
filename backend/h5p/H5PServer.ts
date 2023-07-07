@@ -8,6 +8,13 @@ import axios from 'axios';
 import { access } from 'fs/promises';
 import decompress from 'decompress';
 
+const DIRECTORY_EDITOR = 'h5p/editor';
+const DIRECTORY_CORE = 'h5p/core';
+const DOWNLOAD_LINK_EDITOR =
+    'https://github.com/h5p/h5p-editor-php-library/archive/1.24.1.zip';
+const DOWNLOAD_LINK_CORE =
+    'https://github.com/h5p/h5p-php-library/archive/1.24.0.zip';
+
 /**
  * Class for managing the H5P integration.
  */
@@ -70,30 +77,28 @@ export class H5PServer {
      */
     public async downloadServerFiles(): Promise<void> {
         // Check if the folders exist already
-        try {
-            await access('h5p/editor');
-            await access('h5p/core');
+        if (
+            (await this.directoryExists(DIRECTORY_EDITOR)) &&
+            (await this.directoryExists(DIRECTORY_CORE))
+        ) {
             return;
-        } catch {
-            console.log(
-                'Downloading required H5P libraries, this might take a few seconds'
-            );
         }
+        console.log(
+            'Downloading required H5P libraries, this might take a few seconds'
+        );
 
         console.log('Downloading core files');
-        const coreFiles = await axios.get(
-            'https://github.com/h5p/h5p-php-library/archive/1.24.0.zip',
-            { responseType: 'arraybuffer' }
-        );
+        const coreFiles = await axios.get(DOWNLOAD_LINK_CORE, {
+            responseType: 'arraybuffer',
+        });
         console.log('Downloading editor files');
-        const editorFiles = await axios.get(
-            'https://github.com/h5p/h5p-editor-php-library/archive/1.24.1.zip',
-            { responseType: 'arraybuffer' }
-        );
+        const editorFiles = await axios.get(DOWNLOAD_LINK_EDITOR, {
+            responseType: 'arraybuffer',
+        });
         console.log('Unpacking core files');
-        await this.unzipFile(coreFiles.data, 'h5p/core/');
+        await this.unzipFile(coreFiles.data, DIRECTORY_CORE);
         console.log('Unpacking editor files');
-        await this.unzipFile(editorFiles.data, 'h5p/editor/');
+        await this.unzipFile(editorFiles.data, DIRECTORY_EDITOR);
         console.log('Done!');
     }
 
@@ -128,7 +133,7 @@ export class H5PServer {
     /**
      * Unzip a zipfile to a destination folder.
      * @param zipFile Zipfile buffer to unzip
-     * @param destinationFolder Destinatin folder
+     * @param destinationFolder Destination folder
      * @private
      */
     private async unzipFile(
@@ -146,5 +151,21 @@ export class H5PServer {
                 return file;
             },
         });
+    }
+
+    /**
+     * Tries to access a directory in order to figure out if it exists.
+     * @param directory The directory to check
+     * @private
+     * @returns true, if the directory exists, false otherwise
+     */
+    private async directoryExists(directory: string): Promise<boolean> {
+        // Every `exists` method is deprecated, so we have to do this
+        try {
+            await access(directory);
+            return true;
+        } catch {
+            return false;
+        }
     }
 }
