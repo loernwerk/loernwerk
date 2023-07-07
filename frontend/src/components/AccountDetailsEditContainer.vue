@@ -53,7 +53,7 @@
               />
             </td>
           </tr>
-          <tr>
+          <tr :class="showadmin ? '' : 'collapse'">
             <td></td>
             <td>
               <div>
@@ -62,6 +62,7 @@
                   type="checkbox"
                   class="cursor-pointer"
                   v-model="isAdmin"
+                  :checked="isAdmin"
                 />
                 <label class="cursor-pointer" @click="toggleCheckBox">
                   Adminaccount
@@ -91,7 +92,7 @@
             Speichern
           </ButtonComponent>
         </div>
-        <div class="flex items-center pt-4">
+        <div :class="showdelete ? 'flex items-center pt-4' : 'collapse'">
           <ButtonComponent
             class="w-fit p-1"
             :loading="disableInputShowSpinner"
