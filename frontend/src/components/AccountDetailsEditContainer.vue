@@ -53,7 +53,7 @@
               />
             </td>
           </tr>
-          <tr :class="showadmin ? '' : 'collapse'">
+          <tr :class="showadminview ? '' : 'collapse'">
             <td></td>
             <td>
               <div>
@@ -92,7 +92,8 @@
             Speichern
           </ButtonComponent>
         </div>
-        <div :class="showdelete ? 'flex items-center pt-4' : 'collapse'">
+        <div :class="showadminview ? 'flex items-center pt-1' : 'collapse'">
+          <div class="flex-grow"></div>
           <ButtonComponent
             class="w-fit p-1"
             :loading="disableInputShowSpinner"
@@ -117,15 +118,7 @@ defineProps({
   /**
    * Whether the delete button is displayed
    */
-  showdelete: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
-  /**
-   * Whether the delete button is displayed
-   */
-  showadmin: {
+  showadminview: {
     type: Boolean,
     required: false,
     default: false,
