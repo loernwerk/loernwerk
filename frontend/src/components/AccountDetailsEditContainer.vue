@@ -5,6 +5,9 @@
         <h1 class="underline text-xl">Daten ändern:</h1>
       </template>
       <template #default>
+        <div class="text-gray-400 p-1 text-xs">
+          Hinweis: Sie müssen nicht alle Felder ausfüllen
+        </div>
         <table>
           <tr>
             <td class="p-1">Nutzername:</td>
@@ -49,9 +52,6 @@
             </td>
           </tr>
         </table>
-        <div class="text-gray-400 p-1 text-xs">
-          Hinweis: Sie müssen nicht alle Felder ausfüllen
-        </div>
         <div class="flex items-center pt-4">
           <div class="flex-grow text-center">
             <div class="text-red-500 italic" v-if="displayError">
