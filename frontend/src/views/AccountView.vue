@@ -1,6 +1,8 @@
 <template>
   <div class="flex-grow text-center">
-    <div class="text-green-500 italic" v-if="showerror">Account gelöscht</div>
+    <div class="text-green-500 italic" v-if="showerror">
+      Account nicht verfügbar
+    </div>
   </div>
   <div class="w-full mt-auto mb-auto ml-3 mr-3">
     <AccountDetailsEditContainer
