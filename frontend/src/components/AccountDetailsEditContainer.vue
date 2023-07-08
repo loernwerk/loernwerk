@@ -207,7 +207,7 @@ async function updateInformation(): Promise<void> {
   if (props.showadminview) {
     updateUser.type = isAdmin.value ? UserClass.ADMIN : UserClass.REGULAR;
   }
-  AccountRestInterface.updateAccount(updateUser);
+  await AccountRestInterface.updateAccount(updateUser);
   disableInputShowSpinner.value = false;
 }
 /**
