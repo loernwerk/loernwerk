@@ -219,7 +219,7 @@ async function deleteAccount(): Promise<void> {
     console.log('user id is empty - should not happen');
     return;
   }
-  AccountRestInterface.deleteAccount(originalUser.id as number);
+  await AccountRestInterface.deleteAccount(originalUser.id as number);
   disableInputShowSpinner.value = false;
   deleted.value = true;
 }
