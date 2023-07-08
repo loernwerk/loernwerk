@@ -15,7 +15,7 @@
               <TextInputComponent
                 :disabled="disableInputShowSpinner"
                 place-holder="Nutzername"
-                :start-text="originalUser.name"
+                :startText="originalUser.name"
                 @input-changed="(val) => (nameField = val)"
               />
             </td>
@@ -26,7 +26,7 @@
               <TextInputComponent
                 :disabled="disableInputShowSpinner"
                 place-holder="E-mail"
-                :start-text="originalUser.mail"
+                :startText="originalUser.mail"
                 @input-changed="(val) => (mailField = val)"
               />
             </td>
@@ -141,6 +141,8 @@ const originalUser =
     ? await AccountRestInterface.getOwnAccount()
     : await AccountRestInterface.getAccount(props.userid);
 const isAdmin = ref(originalUser.type === UserClass.ADMIN);
+
+console.log(originalUser);
 
 /**
  * toggles the checkbox

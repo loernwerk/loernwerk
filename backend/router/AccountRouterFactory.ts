@@ -112,8 +112,8 @@ export class AccountRouterFactory extends RouterFactory {
             );
             res.status(200).json({
                 id: user.id,
-                username: user.name,
-                email: user.mail,
+                name: user.name,
+                mail: user.mail,
                 type: user.type,
             });
         });

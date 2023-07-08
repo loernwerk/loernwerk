@@ -9,7 +9,6 @@
       v-model="inputText"
       class="cursor-pointer w-full placeholder:text-gray-500"
       :class="{ uppercase: uppercase }"
-      :value="startText"
     />
   </InteractableComponent>
 </template>
@@ -67,11 +66,9 @@ const props = defineProps({
   startText: {
     type: String,
     required: false,
-    default: 'a',
+    default: '',
   },
 });
-
-console.log(props.startText);
 
 const emit = defineEmits([
   /**
@@ -82,7 +79,7 @@ const emit = defineEmits([
   'input-changed',
 ]);
 
-const inputText = ref('');
+const inputText = ref(props.startText);
 
 watch(inputText, (newValue) => {
   emit('input-changed', newValue);
