@@ -111,7 +111,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { getCurrentInstance, ref } from 'vue';
+import { ref } from 'vue';
 import TextInputComponent from './TextInputComponent.vue';
 import ButtonComponent from './ButtonComponent.vue';
 import ContainerComponent from './ContainerComponent.vue';
@@ -210,14 +210,6 @@ async function deleteAccount(): Promise<void> {
  * reseting this component
  */
 async function reset(): Promise<void> {
-  const i = getCurrentInstance();
-  if (i === undefined) {
-    console.log('i is undefined');
-  }
-  const p = i?.proxy;
-  if (p === undefined) {
-    console.log('p is undefined');
-  }
-  p?.$forceUpdate();
+  window.location.reload();
 }
 </script>
