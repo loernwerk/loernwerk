@@ -1,13 +1,20 @@
 <template>
   <div>
+    <div :class="forbidden ? 'flex-grow text-center' : 'collapse'">
+      <div class="text-red-500 italic">
+        Sie haben nicht die Berechtigungen diesen Nutzer zu bearbeiten
+      </div>
+    </div>
     <ContainerComponent>
       <template #Header>
         <h1 class="underline text-xl">Daten ändern:</h1>
       </template>
+
       <template #default>
         <div class="text-gray-400 p-1 text-xs">
           Hinweis: Sie müssen nicht alle Felder ausfüllen
         </div>
+
         <table class="w-full">
           <tr>
             <td class="p-1">Nutzername:</td>
@@ -121,6 +128,11 @@ import ButtonComponent from './ButtonComponent.vue';
 import ContainerComponent from './ContainerComponent.vue';
 import { IUser, UserClass } from '../../../model/user/IUser';
 import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
+import {
+  LoernwerkError,
+  LoernwerkErrorCodes,
+} from '../../../backend/loernwerkError';
+import { router } from '../router';
 
 const props = defineProps({
   /**
@@ -145,10 +157,28 @@ const pwFieldControl = ref('');
 const disableInputShowSpinner = ref(false);
 const deleted = ref(false);
 const displayError = ref(false);
-const originalUser =
-  props.userid === null
-    ? await AccountRestInterface.getOwnAccount()
-    : await AccountRestInterface.getAccount(props.userid);
+const forbidden = ref(false);
+let originalUser: Partial<IUser>;
+try {
+  originalUser =
+    props.userid === null
+      ? await AccountRestInterface.getOwnAccount()
+      : await AccountRestInterface.getAccount(props.userid);
+} catch (e) {
+  if (e instanceof LoernwerkError) {
+    if (e.code === LoernwerkErrorCodes.UNAUTHORIZED) {
+      router.push('LogIn');
+    } else if (e.code === LoernwerkErrorCodes.FORBIDDEN) {
+      forbidden.value = true;
+    } else {
+      throw e;
+    }
+  } else {
+    throw e;
+  }
+} finally {
+  originalUser = { type: UserClass.REGULAR };
+}
 const isAdmin = ref(originalUser.type === UserClass.ADMIN);
 
 console.log(originalUser);
