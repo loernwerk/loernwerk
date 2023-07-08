@@ -89,6 +89,9 @@
             <div class="text-red-500 italic" v-if="displayError">
               Ungültige Eingabe
             </div>
+            <div class="text-green-500 italic" v-if="displaySuccess">
+              Account gespeichert
+            </div>
           </div>
           <ButtonComponent
             class="w-fit p-1"
@@ -149,6 +152,7 @@ const pwFieldControl = ref('');
 const disableInputShowSpinner = ref(false);
 const deleted = ref(false);
 const displayError = ref(false);
+const displaySuccess = ref(false);
 let originalUser = props.user as IUser;
 const isAdmin = ref(originalUser.type === UserClass.ADMIN);
 console.log('test');
@@ -168,6 +172,7 @@ async function updateInformation(): Promise<void> {
   if (deleted.value) {
     return;
   }
+  displaySuccess.value = false;
   displayError.value = false;
   if (
     nameField.value === '' &&
@@ -202,6 +207,7 @@ async function updateInformation(): Promise<void> {
   }
   await AccountRestInterface.updateAccount(updateUser);
   disableInputShowSpinner.value = false;
+  displaySuccess.value = true;
 }
 /**
  * deletes a account
