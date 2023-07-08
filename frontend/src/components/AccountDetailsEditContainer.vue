@@ -146,8 +146,8 @@ const props = defineProps({
   },
 });
 
-const nameField = ref('');
-const mailField = ref('');
+const nameField = ref(props.user.name);
+const mailField = ref(props.user.mail);
 const pwField = ref('');
 const pwFieldControl = ref('');
 const disableInputShowSpinner = ref(false);
