@@ -1,8 +1,13 @@
 <template>
+  <div class="flex-grow text-center">
+    <div class="text-green-500 italic" v-if="showerror">Account gelöscht</div>
+  </div>
   <div class="w-full mt-auto mb-auto ml-3 mr-3">
-    <Suspense>
-      <AccountDetailsEditContainer :showadminview="true" :user="originalUser" />
-    </Suspense>
+    <AccountDetailsEditContainer
+      :showadminview="true"
+      :user="originalUser"
+      v-if="!showerror"
+    />
   </div>
 </template>
 
@@ -11,24 +16,26 @@ import {
   LoernwerkError,
   LoernwerkErrorCodes,
 } from '../../../backend/loernwerkError';
-import { IUser, UserClass } from '../../../model/user/IUser';
+import { IUser } from '../../../model/user/IUser';
 import AccountDetailsEditContainer from '../components/AccountDetailsEditContainer.vue';
 import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
 import { router } from '../router';
+import { ref } from 'vue';
+
+const showerror = ref(false);
 let originalUser: Partial<IUser>;
 try {
   originalUser = await AccountRestInterface.getOwnAccount();
+  console.log(originalUser);
 } catch (e) {
   if (e instanceof LoernwerkError) {
     if (e.code === LoernwerkErrorCodes.UNAUTHORIZED) {
       router.push('LogIn');
-    } else if (e.code === LoernwerkErrorCodes.FORBIDDEN) {
-      originalUser = { type: UserClass.REGULAR }; //TODO: Show error insted accountdetailseditcontainer
     } else {
-      throw e;
+      showerror.value = true;
     }
   } else {
-    throw e;
+    showerror.value = true;
   }
 }
 </script>

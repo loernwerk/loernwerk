@@ -1,10 +1,5 @@
 <template>
   <div>
-    <div :class="forbidden ? 'flex-grow text-center' : 'collapse'">
-      <div class="text-red-500 italic">
-        Sie haben nicht die Berechtigungen diesen Nutzer zu bearbeiten
-      </div>
-    </div>
     <ContainerComponent>
       <template #Header>
         <h1 class="underline text-xl">Daten ändern:</h1>
@@ -154,11 +149,9 @@ const pwFieldControl = ref('');
 const disableInputShowSpinner = ref(false);
 const deleted = ref(false);
 const displayError = ref(false);
-const forbidden = ref(false);
 let originalUser = props.user as IUser;
-
 const isAdmin = ref(originalUser.type === UserClass.ADMIN);
-
+console.log('test');
 /**
  * toggles the checkbox
  */
