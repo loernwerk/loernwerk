@@ -63,6 +63,9 @@ const props = defineProps({
     required: false,
     default: false,
   },
+  /**
+   * String, that is inserted in to the input
+   */
   startText: {
     type: String,
     required: false,
