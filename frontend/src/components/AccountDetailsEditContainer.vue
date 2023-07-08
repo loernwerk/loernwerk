@@ -64,7 +64,7 @@
                 <input
                   :disabled="disableInputShowSpinner"
                   type="checkbox"
-                  class="cursor-pointer"
+                  class="cursor-pointer m-1"
                   v-model="isAdmin"
                   :checked="isAdmin"
                 />
