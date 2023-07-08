@@ -1,7 +1,7 @@
 <!-- Main component for seperating semantic contents -->
 <template>
   <div
-    class="p-2 border-1 rounded-md bg-container border-container-border box-border shadow overflow-hidden flex flex-col max-h-0 min-h-full"
+    class="p-2 border-1 rounded-md bg-container border-container-border box-border shadow overflow-hidden flex flex-col"
   >
     <div>
       <!-- Header that does not get scrolled -->

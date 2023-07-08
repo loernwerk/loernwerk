@@ -2,6 +2,11 @@
 
 Documentation incoming. Soon :tm:
 
+## Warning
+This platform automatically downloads & serves the required H5P libraries.
+This poses a possible security risk, if the H5P libraries are compromised.
+To avoid the auto download, download the required [H5P library](https://github.com/h5p/h5p-php-library/archive/1.24.0.zip) and [H5P editor library](https://github.com/h5p/h5p-editor-php-library/archive/1.24.1.zip) and place them in the `/h5p/core` and `/h5p/editor` directories.
+
 ## Environment variables
 - `PORT`: Port of the application. Default: 5000
 - `HOSTNAME`: Hostname of the application. Default: 'localhost'
