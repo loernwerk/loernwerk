@@ -13,7 +13,7 @@
             <td class="p-1">Nutzername:</td>
             <td class="p-1">
               <TextInputComponent
-                :disabled="disableInputShowSpinner"
+                :disabled="disableInputShowSpinner || deleted"
                 place-holder="Nutzername"
                 :startText="originalUser.name"
                 @input-changed="(val) => (nameField = val)"
@@ -25,7 +25,7 @@
             <td class="p-1">E-mail:</td>
             <td class="p-1">
               <TextInputComponent
-                :disabled="disableInputShowSpinner"
+                :disabled="disableInputShowSpinner || deleted"
                 place-holder="E-mail"
                 :startText="originalUser.mail"
                 @input-changed="(val) => (mailField = val)"
@@ -37,7 +37,7 @@
             <td class="p-1">Passwort:</td>
             <td class="p-1">
               <TextInputComponent
-                :disabled="disableInputShowSpinner"
+                :disabled="disableInputShowSpinner || deleted"
                 :hidden="true"
                 place-holder="Passwort"
                 @input-changed="(val) => (pwField = val)"
@@ -49,7 +49,7 @@
             <td class="p-1">Passwort wiederholen:</td>
             <td class="p-1">
               <TextInputComponent
-                :disabled="disableInputShowSpinner"
+                :disabled="disableInputShowSpinner || deleted"
                 :hidden="true"
                 place-holder="Passwort wiederholen"
                 @input-changed="(val) => (pwFieldControl = val)"
@@ -62,7 +62,7 @@
             <td>
               <div>
                 <input
-                  :disabled="disableInputShowSpinner"
+                  :disabled="disableInputShowSpinner || deleted"
                   type="checkbox"
                   class="cursor-pointer m-1"
                   v-model="isAdmin"
@@ -139,6 +139,7 @@ const mailField = ref('');
 const pwField = ref('');
 const pwFieldControl = ref('');
 const disableInputShowSpinner = ref(false);
+const deleted = ref(false);
 const displayError = ref(false);
 const originalUser =
   props.userid === null
@@ -161,6 +162,9 @@ function toggleCheckBox(): void {
  * Updates Information from the User with the entered information
  */
 async function updateInformation(): Promise<void> {
+  if (deleted.value) {
+    return;
+  }
   displayError.value = false;
   if (
     nameField.value === '' &&
@@ -200,16 +204,22 @@ async function updateInformation(): Promise<void> {
  * deletes a account
  */
 async function deleteAccount(): Promise<void> {
+  disableInputShowSpinner.value = true;
   if (originalUser.id === null) {
     console.log('user id is empty - should not happen');
     return;
   }
   AccountRestInterface.deleteAccount(originalUser.id as number);
+  disableInputShowSpinner.value = false;
+  deleted.value = true;
 }
 /**
  * reseting this component
  */
 async function reset(): Promise<void> {
+  if (deleted.value) {
+    return;
+  }
   window.location.reload();
 }
 </script>
