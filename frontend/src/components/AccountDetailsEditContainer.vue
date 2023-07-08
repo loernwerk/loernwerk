@@ -7,7 +7,8 @@
 
       <template #default>
         <div class="text-gray-400 p-1 text-xs">
-          Hinweis: Sie müssen nicht alle Felder ausfüllen
+          Hinweis: Sie müssen nicht alle Felder ausfüllen, leere Felder werden
+          nicht geändert
         </div>
 
         <table class="w-full">
