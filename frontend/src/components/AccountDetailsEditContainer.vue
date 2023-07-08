@@ -137,7 +137,7 @@ const props = defineProps({
     default: false,
   },
   /**
-   * The User to display
+   * The user to display
    */
   user: {
     type: Object as () => Partial<IUser>,
@@ -174,15 +174,6 @@ async function updateInformation(): Promise<void> {
   }
   displaySuccess.value = false;
   displayError.value = false;
-  if (
-    nameField.value === '' &&
-    mailField.value === '' &&
-    pwField.value === '' &&
-    (isAdmin.value === true ? UserClass.ADMIN : UserClass.REGULAR) ===
-      originalUser.type
-  ) {
-    return;
-  }
   disableInputShowSpinner.value = true;
 
   const updateUser: Partial<IUser> = { id: originalUser.id };
