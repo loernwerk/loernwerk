@@ -23,7 +23,7 @@ try {
     if (e.code === LoernwerkErrorCodes.UNAUTHORIZED) {
       router.push('LogIn');
     } else if (e.code === LoernwerkErrorCodes.FORBIDDEN) {
-      originalUser = { type: UserClass.REGULAR };
+      originalUser = { type: UserClass.REGULAR }; //TODO: Show error insted accountdetailseditcontainer
     } else {
       throw e;
     }

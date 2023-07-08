@@ -138,6 +138,9 @@ const props = defineProps({
     required: false,
     default: false,
   },
+  /**
+   * The User to display
+   */
   user: {
     type: Object as () => Partial<IUser>,
     required: true,
