@@ -128,11 +128,6 @@ import ButtonComponent from './ButtonComponent.vue';
 import ContainerComponent from './ContainerComponent.vue';
 import { IUser, UserClass } from '../../../model/user/IUser';
 import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
-import {
-  LoernwerkError,
-  LoernwerkErrorCodes,
-} from '../../../backend/loernwerkError';
-import { router } from '../router';
 
 const props = defineProps({
   /**
@@ -143,10 +138,9 @@ const props = defineProps({
     required: false,
     default: false,
   },
-  userid: {
-    type: Number,
-    required: false,
-    default: null,
+  user: {
+    type: Object as () => Partial<IUser>,
+    required: true,
   },
 });
 
@@ -158,30 +152,9 @@ const disableInputShowSpinner = ref(false);
 const deleted = ref(false);
 const displayError = ref(false);
 const forbidden = ref(false);
-let originalUser: Partial<IUser>;
-try {
-  originalUser =
-    props.userid === null
-      ? await AccountRestInterface.getOwnAccount()
-      : await AccountRestInterface.getAccount(props.userid);
-} catch (e) {
-  if (e instanceof LoernwerkError) {
-    if (e.code === LoernwerkErrorCodes.UNAUTHORIZED) {
-      router.push('LogIn');
-    } else if (e.code === LoernwerkErrorCodes.FORBIDDEN) {
-      forbidden.value = true;
-    } else {
-      throw e;
-    }
-  } else {
-    throw e;
-  }
-} finally {
-  originalUser = { type: UserClass.REGULAR };
-}
-const isAdmin = ref(originalUser.type === UserClass.ADMIN);
+let originalUser = props.user as IUser;
 
-console.log(originalUser);
+const isAdmin = ref(originalUser.type === UserClass.ADMIN);
 
 /**
  * toggles the checkbox
