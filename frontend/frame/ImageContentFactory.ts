@@ -5,8 +5,8 @@ import { ContentFactory } from './ContentFactory';
  */
 export class ImageContentFactory extends ContentFactory {
   /**
-   * Factory-Object,transforms JSON to ImageContent Object
-   * @param json the JSON sent by the Webserver
+   * @inheritDoc
+   * @param json the JSON
    * @returns the imageContent as ImageContent type
    * @protected
    */

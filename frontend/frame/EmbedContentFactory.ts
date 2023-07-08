@@ -6,8 +6,8 @@ import { EmbedContent } from '../../model/slide/content/EmbedContent';
  */
 export class EmbedContentFactory extends ContentFactory {
   /**
-   * Factory-Object,transforms JSON to EmbedContent Object
-   * @param json the JSON sent by the Webserver
+   * @inheritDoc
+   * @param json the JSON
    * @returns the buildContent as BuildContent type
    * @protected
    */

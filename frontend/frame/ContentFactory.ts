@@ -10,44 +10,32 @@ import { TextContentFactory } from './TextContentFactory';
 export abstract class ContentFactory {
   /**
    * Converts JSON to Content Object
-   * @param json the JSON sent by the Webserver
+   * @param json the JSON
    * @returns a contentObject of the specified type
    */
   public static createContent(json: unknown): Content {
-    let contentObject: Content;
     switch ((json as Content).type) {
-      case ContentType.EMBED: {
-        const eFactory = new EmbedContentFactory();
-        contentObject = eFactory.buildContent(json);
-        break;
-      }
+      case ContentType.EMBED:
+        return new EmbedContentFactory().buildContent(json);
 
-      case ContentType.H5P: {
-        const hFactory = new H5PContentFactory();
-        contentObject = hFactory.buildContent(json);
-        break;
-      }
+      case ContentType.H5P:
+        return new H5PContentFactory().buildContent(json);
 
-      case ContentType.IMAGE: {
-        const iFactory = new ImageContentFactory();
-        contentObject = iFactory.buildContent(json);
-        break;
-      }
+      case ContentType.IMAGE:
+        return new ImageContentFactory().buildContent(json);
 
-      case ContentType.TEXT: {
-        const tFactory = new TextContentFactory();
-        contentObject = tFactory.buildContent(json);
-      }
+      case ContentType.TEXT:
+        return new TextContentFactory().buildContent(json);
+
+      default:
+        throw new Error(`Not supported content type ${(json as Content).type}`);
     }
-
-    return contentObject;
   }
 
   /**
    * Converts JSON to Content Object
-   * @param json the JSON sent by the Webserver
+   * @param json the JSON
    * @protected
    */
-
   protected abstract buildContent(json: unknown): Content;
 }

@@ -6,8 +6,8 @@ import { ContentFactory } from './ContentFactory';
  */
 export class H5PContentFactory extends ContentFactory {
   /**
-   * Factory-Object,transforms JSON to H5PContent Object
-   * @param json the JSON sent by the Webserver
+   * @inheritDoc
+   * @param json the JSON
    * @returns the h5pContent as H5PContent type
    * @protected
    */

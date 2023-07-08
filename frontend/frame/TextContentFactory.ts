@@ -6,8 +6,8 @@ import { ContentFactory } from './ContentFactory';
  */
 export class TextContentFactory extends ContentFactory {
   /**
-   * Factory-Object,transforms JSON to TextContent Object
-   * @param json the JSON sent by the Webserver
+   * @inheritDoc
+   * @param json the JSON
    * @returns the textContent as TextContent type
    * @protected
    */
@@ -15,7 +15,11 @@ export class TextContentFactory extends ContentFactory {
     const textContent = new TextContent();
     textContent.alignmentHorizontal = (json as TextContent).alignmentHorizontal;
     textContent.alignmentVertical = (json as TextContent).alignmentVertical;
-    textContent.textSnippets = (json as TextContent).textSnippets;
+    textContent.textSnippets = [];
+
+    (json as TextContent).textSnippets.forEach((snippet) => {
+      textContent.textSnippets.push(Object.assign({}, snippet));
+    });
     return textContent;
   }
 }
