@@ -17,6 +17,9 @@ To avoid the auto download, download the required [H5P library](https://github.c
 - `SSL_CAFILE`: CA File to be used for SSL encryption. Optional.
 - `DISABLE_HTTP`: If set, the HTTP server wont be started and therefore disabled.
 
+## Imprint
+To add your own imprint, edit the `build/dist/imprint.html` file.
+
 ## Command reference
 
 - `npm run dev`: Runs both backend and frontend dev server
