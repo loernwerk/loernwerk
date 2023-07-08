@@ -190,7 +190,7 @@ async function updateInformation(): Promise<void> {
       return;
     }
   }
-  if (originalUser.type === UserClass.ADMIN) {
+  if (props.showadminview) {
     updateUser.type = isAdmin.value ? UserClass.ADMIN : UserClass.REGULAR;
   }
   AccountRestInterface.updateAccount(updateUser);
