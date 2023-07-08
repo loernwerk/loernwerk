@@ -2,7 +2,9 @@ import { DBUser } from '../../model/user/DBUser';
 import { IUser, UserClass } from '../../model/user/IUser';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
-import { LoernwerkError, LoernwerkErrorCodes } from '../loernwerkUtilities';
+import { LoernwerkError, LoernwerkErrorCodes } from '../loernwerkError';
+import { DBSequence } from '../../model/sequence/DBSequence';
+import { SequenceController } from '../controller/SequenceController';
 /**
  * Manages account data in the database and handles requests for account requests regarding account data
  */
@@ -124,6 +126,30 @@ export class AccountController {
                 'No existing User with given ID',
                 LoernwerkErrorCodes.NOT_FOUND
             );
+        }
+        //Removing sequences through SequenceController
+        const sequences = await DBSequence.find({ where: { authorId: id } });
+        for (const s of sequences) {
+            await SequenceController.deleteSequence(s.code);
+        }
+        // Removing user from the read/write access list in shared sequences
+        for (const code of user.sharedSequencesReadAccess) {
+            const sequence = await DBSequence.findOneBy({ code: code });
+            if (sequence === null) {
+                continue;
+            }
+            const index = sequence.readAccess.indexOf(id);
+            sequence.readAccess.splice(index, 1);
+            await sequence.save();
+        }
+        for (const code of user.sharedSequencesWriteAccess) {
+            const sequence = await DBSequence.findOneBy({ code: code });
+            if (sequence === null) {
+                continue;
+            }
+            const index = sequence.writeAccess.indexOf(id);
+            sequence.writeAccess.splice(index, 1);
+            await sequence.save();
         }
         await user.remove();
     }
