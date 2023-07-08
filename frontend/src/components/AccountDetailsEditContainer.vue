@@ -8,7 +8,7 @@
         <div class="text-gray-400 p-1 text-xs">
           Hinweis: Sie müssen nicht alle Felder ausfüllen
         </div>
-        <table>
+        <table class="w-full">
           <tr>
             <td class="p-1">Nutzername:</td>
             <td class="p-1">
@@ -17,6 +17,7 @@
                 place-holder="Nutzername"
                 :startText="originalUser.name"
                 @input-changed="(val) => (nameField = val)"
+                :max-length="128"
               />
             </td>
           </tr>
@@ -28,6 +29,7 @@
                 place-holder="E-mail"
                 :startText="originalUser.mail"
                 @input-changed="(val) => (mailField = val)"
+                :max-length="320"
               />
             </td>
           </tr>
@@ -39,6 +41,7 @@
                 :hidden="true"
                 place-holder="Passwort"
                 @input-changed="(val) => (pwField = val)"
+                :max-length="128"
               />
             </td>
           </tr>
@@ -50,6 +53,7 @@
                 :hidden="true"
                 place-holder="Passwort wiederholen"
                 @input-changed="(val) => (pwFieldControl = val)"
+                :max-length="128"
               />
             </td>
           </tr>

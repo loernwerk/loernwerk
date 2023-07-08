@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="w-1/2">
     <Suspense>
       <AccountDetailsEditContainer :showadminview="true" />
     </Suspense>
