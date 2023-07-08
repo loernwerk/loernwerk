@@ -11,7 +11,7 @@
         <table class="w-full">
           <tr>
             <td class="p-1">Nutzername:</td>
-            <td class="p-1">
+            <td class="p-1 w-2/3">
               <TextInputComponent
                 :disabled="disableInputShowSpinner || deleted"
                 place-holder="Nutzername"
