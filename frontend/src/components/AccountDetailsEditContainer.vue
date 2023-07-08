@@ -156,7 +156,6 @@ const displayError = ref(false);
 const displaySuccess = ref(false);
 let originalUser = props.user as IUser;
 const isAdmin = ref(originalUser.type === UserClass.ADMIN);
-console.log('test');
 /**
  * toggles the checkbox
  */
