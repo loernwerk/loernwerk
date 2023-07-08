@@ -26,4 +26,3 @@ build
 .env
 *.pem
 /h5p/
-dev.db
