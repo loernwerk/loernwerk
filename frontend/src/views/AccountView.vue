@@ -5,11 +5,7 @@
     </div>
   </div>
   <div class="w-full mt-auto mb-auto ml-3 mr-3">
-    <AccountDetailsEditContainer
-      :showadminview="true"
-      :user="originalUser"
-      v-if="!showerror"
-    />
+    <AccountDetailsEditContainer :user="originalUser" v-if="!showerror" />
   </div>
 </template>
 
