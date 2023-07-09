@@ -6,11 +6,6 @@
       </template>
 
       <template #default>
-        <div class="text-gray-400 p-1 text-xs">
-          Hinweis: Sie müssen nicht alle Felder ausfüllen, leere Felder werden
-          nicht geändert
-        </div>
-
         <table class="w-full">
           <tr>
             <td class="p-1">Nutzername:</td>
@@ -178,12 +173,9 @@ async function updateInformation(): Promise<void> {
 
   const updateUser: Partial<IUser> = { id: originalUser.id };
 
-  if (nameField.value !== '') {
-    updateUser.name = nameField.value;
-  }
-  if (mailField.value !== '') {
-    updateUser.mail = mailField.value;
-  }
+  updateUser.name = nameField.value;
+  updateUser.mail = mailField.value;
+
   if (pwField.value !== '') {
     if (pwField.value === pwFieldControl.value) {
       updateUser.password = pwField.value;
@@ -196,9 +188,13 @@ async function updateInformation(): Promise<void> {
   if (props.showadminview) {
     updateUser.type = isAdmin.value ? UserClass.ADMIN : UserClass.REGULAR;
   }
-  await AccountRestInterface.updateAccount(updateUser);
+  try {
+    await AccountRestInterface.updateAccount(updateUser);
+    displaySuccess.value = true;
+  } catch (e) {
+    displayError.value = true;
+  }
   disableInputShowSpinner.value = false;
-  displaySuccess.value = true;
 }
 /**
  * deletes a account
