@@ -12,6 +12,7 @@
             :slide="selectedSlide"
             :sequence="sequence"
             @update-sequence="(val) => (sequence.name = val.name)"
+            @save="save()"
           />
         </template>
 
@@ -30,14 +31,7 @@
         </template>
 
         <template #Text>
-          <TextOptionsTab
-            :textContent="{
-              type: ContentType.TEXT,
-              textSnippets: [],
-              alignmentHorizontal: 'center',
-              alignmentVertical: 'center',
-            }"
-          />
+          <TextOptionsTab :textContent="txt" />
         </template>
       </TabbedContainer>
       <div class="grow flex items-center justify-center">
@@ -64,6 +58,8 @@ import ImageOptionsTab from '../components/sequenceEditOptionsTab/ImageOptionsTa
 import SlideOptionsTab from '../components/sequenceEditOptionsTab/SlideOptionsTab.vue';
 import TextOptionsTab from '../components/sequenceEditOptionsTab/TextOptionsTab.vue';
 import SlideDisplayFactory from '../components/contentDisplay/SlideDisplayFactory.vue';
+import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
+import { TextContent } from '../../../model/slide/content/TextContent';
 
 defineProps({
   /**
@@ -77,7 +73,7 @@ defineProps({
 
 const emb = ref({
   type: ContentType.EMBED,
-  url: 'https://www.youtube.com/embed/agUSn_r92QQ',
+  url: 'youtube.com/embed/',
 });
 
 const im = ref({
@@ -90,6 +86,13 @@ const h = ref({
   type: ContentType.H5P,
   h5pContentId: '',
   sequenceCode: '',
+});
+
+const txt: Ref<TextContent> = ref({
+  type: ContentType.TEXT,
+  textSnippets: [],
+  alignmentHorizontal: 'center',
+  alignmentVertical: 'center',
 });
 
 const sequence = ref<ISequenceWithSlides>({
@@ -143,6 +146,7 @@ const selectedSlideIndex = ref(0);
 const selectedSlide = computed(
   () => sequence.value.slides[selectedSlideIndex.value]
 );
+
 const editOptionsTabContainer: Ref<typeof TabbedContainer | null> = ref(null);
 
 const currentEditingSlot: Ref<LayoutSlot | null> = ref(null);
@@ -188,4 +192,11 @@ const tabs = computed(() => {
   }
   return tabs;
 });
+
+/**
+ * Saves the sequence
+ */
+async function save(): Promise<void> {
+  await SequenceRestInterface.updateSequence(sequence.value);
+}
 </script>

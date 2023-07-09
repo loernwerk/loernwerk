@@ -5,7 +5,7 @@
         <div class="flex items-center space-x-2">
           <p>Name:</p>
           <TextInputComponent
-            :start-text="refSequence.name"
+            :start-text="sequence.name"
             @input-changed="(val) => updateSequenceName(val)"
           />
         </div>
@@ -14,17 +14,19 @@
         <p>Hintergrundfarbe:</p>
         <input
           type="color"
-          :value="color"
+          :value="slide.backgroundColor"
           @change="val => updateSlideBackgroundColor((val.target as HTMLInputElement).value)"
         />
       </div>
       <div class="flex space-x-2 items-start">
         <p class="flex items-center h-10">Anordnung:</p>
-        <div class="flex flex-wrap flex-col h-28 space-y-2 space-x-2">
+        <div class="flex flex-wrap flex-col h-28">
           <InteractableComponent
             v-for="layout in layouts"
+            :class="{ 'bg-interactable-selected': layout == slide.layout }"
             :key="layout"
             @click="updateSlideLayout(layout)"
+            class="mb-2 mr-2"
           >
             <img
               :src="`/src/assets/layouts/${layoutImageMap[layout]}`"
@@ -34,12 +36,14 @@
         </div>
       </div>
     </div>
-    <ButtonComponent @click="save()" class="h-fit">Speichern</ButtonComponent>
+    <ButtonComponent @click="$emit('save')" class="h-fit"
+      >Speichern</ButtonComponent
+    >
   </div>
 </template>
 
 <script setup lang="ts">
-import { PropType, ref } from 'vue';
+import { PropType } from 'vue';
 import { ISlide } from '../../../../model/slide/ISlide';
 import ButtonComponent from '../ButtonComponent.vue';
 import TextInputComponent from '../TextInputComponent.vue';
@@ -59,24 +63,22 @@ const props = defineProps({
   },
 });
 
-const emits = defineEmits(['update-slide', 'update-sequence']);
-
-const refSlide = ref(props.slide);
-const color = refSlide.value.backgroundColor;
-const refSequence = ref(props.sequence);
+const emits = defineEmits(['update-slide', 'update-sequence', 'save']);
 
 /**
  * Sends the updated sequence
+ * @param sequence The new Sequence
  */
-function updateSequence(): void {
-  emits('update-sequence', refSequence.value);
+function updateSequence(sequence: ISequence): void {
+  emits('update-sequence', sequence);
 }
 
 /**
  * Sends the updated slide
+ * @param slide The new slide
  */
-function updateSlide(): void {
-  emits('update-slide', refSlide.value);
+function updateSlide(slide: ISlide): void {
+  emits('update-slide', slide);
 }
 
 /**
@@ -84,8 +86,9 @@ function updateSlide(): void {
  * @param name The new name of the sequence
  */
 function updateSequenceName(name: string): void {
-  refSequence.value.name = name;
-  updateSequence();
+  const tempSequence = props.sequence;
+  tempSequence.name = name;
+  updateSequence(tempSequence);
 }
 
 /**
@@ -93,8 +96,9 @@ function updateSequenceName(name: string): void {
  * @param color The new background color of the slide
  */
 function updateSlideBackgroundColor(color: string): void {
-  refSlide.value.backgroundColor = color;
-  updateSlide();
+  const tempSlide = props.slide;
+  tempSlide.backgroundColor = color;
+  updateSlide(tempSlide);
 }
 
 /**
@@ -102,15 +106,9 @@ function updateSlideBackgroundColor(color: string): void {
  * @param layout The new layout of the slide
  */
 function updateSlideLayout(layout: LayoutType): void {
-  refSlide.value.layout = layout;
-  updateSlide();
-}
-
-/**
- * Saves the sequence
- */
-function save(): void {
-  // TODO
+  const tempSlide = props.slide;
+  tempSlide.layout = layout;
+  updateSlide(tempSlide);
 }
 
 const layoutImageMap: Record<LayoutType, string> = {
