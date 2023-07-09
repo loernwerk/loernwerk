@@ -102,7 +102,7 @@
             Speichern
           </ButtonComponent>
         </div>
-        <div :class="showadminview ? 'flex items-center pt-1' : 'collapse'">
+        <div class="flex items-center pt-1" v-if="showadminview">
           <div class="flex-grow text-center">
             <div class="text-green-500 italic" v-if="deleted">
               Account gelöscht
