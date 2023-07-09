@@ -60,7 +60,7 @@
               />
             </td>
           </tr>
-          <tr :class="showadminview ? '' : 'collapse'">
+          <tr v-if="showadminview">
             <td></td>
             <td>
               <div>
