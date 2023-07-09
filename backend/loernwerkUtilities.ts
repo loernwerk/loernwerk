@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import { IUser } from '@lumieducation/h5p-server';
-import { DBUser } from '../model/user/DBUser';
 import i18next, { TFunction } from 'i18next';
 import i18nextFsBackend from 'i18next-fs-backend';
 import i18nextHttpMiddleware from 'i18next-http-middleware';
@@ -73,11 +72,7 @@ export function requireBody(...data: string[]) {
  * @returns middleware to specify request attributes
  */
 export function buildH5PRequest(translationFunction: TFunction) {
-    return async function (
-        req: Request,
-        res: Response,
-        next: NextFunction
-    ): Promise<void> {
+    return function (req: Request, res: Response, next: NextFunction): void {
         if (req.session.userId === undefined) {
             req.user = {
                 id: 'anonymous',
@@ -89,17 +84,13 @@ export function buildH5PRequest(translationFunction: TFunction) {
                 type: 'local',
             };
         } else {
-            // TODO: We can greatly speed this up if we store name & email in the session - then we avoid a db query here (and this gets called a TON)
-            const dbUser = await DBUser.findOneByOrFail({
-                id: req.session.userId,
-            });
             req.user = {
-                id: dbUser.id.toString(),
+                id: req.session.userId?.toString(),
                 canCreateRestricted: true,
                 canInstallRecommended: true,
                 canUpdateAndInstallLibraries: true,
-                email: dbUser.mail,
-                name: dbUser.name,
+                email: req.session.email,
+                name: req.session.username,
                 type: 'local',
             };
         }
@@ -144,6 +135,10 @@ declare module 'express-session' {
         userId?: number;
         // Indicating whether the user is an admin
         isAdmin?: boolean;
+        // Username of the user
+        username?: string;
+        // Email of the user
+        email?: string;
     }
 }
 
