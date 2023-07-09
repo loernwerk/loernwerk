@@ -3,7 +3,7 @@
   <div class="flex justify-center items-center h-full overflow-hidden">
     <img
       :src="imageContent.img"
-      class="w-auto h-auto block max-h-0"
+      class="w-auto h-auto block"
       :style="{
         maxHeight: `${imageContent.scale * 100}%`,
         maxWidth: `${imageContent.scale * 100}%`,

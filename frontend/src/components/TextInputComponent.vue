@@ -14,11 +14,17 @@
 import { ref, watch } from 'vue';
 import InteractableComponent from './InteractableComponent.vue';
 
-defineProps({
+const props = defineProps({
   /**
    * The placeholder text for the input
    */
   placeHolder: {
+    type: String,
+    required: false,
+    default: '',
+  },
+
+  startText: {
     type: String,
     required: false,
     default: '',
@@ -33,7 +39,7 @@ const emit = defineEmits([
   'input-changed',
 ]);
 
-const inputText = ref('');
+const inputText = ref(props.startText);
 
 watch(inputText, (newValue) => {
   emit('input-changed', newValue);

@@ -4,13 +4,14 @@
     class="aspect-video p-5 rounded-md"
     :style="{ backgroundColor: slide.backgroundColor }"
   >
-    <div class="grid grid-layout h-full" ref="wrapper">
+    <div class="grid h-full" ref="wrapper" :style="gridTemplate">
       <ContentDisplayFactory
         v-for="slot in usedSlots"
         :key="slot.slot"
         :content="slide.content[slot.slot]"
         :style="slot.style"
         :edit-mode="editMode"
+        @editing="(val) => $emit('editing', { slot: slot.slot, emit: val })"
       />
     </div>
   </div>
@@ -40,6 +41,8 @@ const props = defineProps({
   },
 });
 
+defineEmits(['editing']);
+
 interface GridSlot {
   gridRowStart: number;
   gridRowEnd: number;
@@ -47,17 +50,35 @@ interface GridSlot {
   gridColumnEnd: number;
 }
 
+const hasHeader = computed(() => {
+  return (
+    props.slide.layout === LayoutType.TWO_COLUMN_WITH_HEADER ||
+    props.slide.layout === LayoutType.GRID_WITH_HEADER ||
+    props.slide.layout === LayoutType.SINGLE_COLUMN_WITH_HEADER
+  );
+});
+
 /**
  * The slots that are used in the current layout and their respective styles
  */
 const usedSlots: Ref<{ slot: LayoutSlot; style: GridSlot }[]> = computed(() => {
-  let slots: { slot: LayoutSlot; style: GridSlot }[] = [];
-  const hasHeader =
-    props.slide.layout === LayoutType.TWO_COLUMN_WITH_HEADER ||
-    props.slide.layout === LayoutType.GRID_WITH_HEADER ||
-    props.slide.layout === LayoutType.SINGLE_COLUMN_WITH_HEADER;
+  if (props.slide.layout == LayoutType.TITLEPAGE) {
+    return [
+      {
+        slot: LayoutSlot.MAIN,
+        style: {
+          gridRowStart: 2,
+          gridRowEnd: 3,
+          gridColumnStart: 1,
+          gridColumnEnd: 3,
+        },
+      },
+    ];
+  }
 
-  if (hasHeader) {
+  let slots: { slot: LayoutSlot; style: GridSlot }[] = [];
+
+  if (hasHeader.value) {
     slots.push({
       slot: LayoutSlot.HEADER,
       style: {
@@ -171,20 +192,22 @@ const usedSlots: Ref<{ slot: LayoutSlot; style: GridSlot }[]> = computed(() => {
         },
       });
       break;
-    case LayoutType.TITLEPAGE:
-      slots.push({
-        slot: LayoutSlot.MAIN,
-        style: {
-          gridRowStart: 2,
-          gridRowEnd: 4,
-          gridColumnStart: 1,
-          gridColumnEnd: 3,
-        },
-      });
-      break;
   }
 
   return slots;
+});
+
+const gridTemplate = computed(() => {
+  if (props.slide.layout == LayoutType.TITLEPAGE) {
+    return {
+      gridTemplateRows: '1fr 1fr 1fr',
+      gridTemplateColumns: '1fr 1fr',
+    };
+  }
+  return {
+    gridTemplateRows: `${hasHeader.value ? '10%' : '0'} 1fr 1fr`,
+    gridTemplateColumns: '1fr 1fr',
+  };
 });
 
 // responsive font size
@@ -206,10 +229,3 @@ window.addEventListener('resize', () => {
 });
 provide('slideHeight', height);
 </script>
-
-<style scoped>
-.grid-layout {
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: minmax(auto, 10%) 1fr 1fr;
-}
-</style>

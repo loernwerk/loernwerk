@@ -1,29 +1,33 @@
 <!-- Visualizes a content object. -->
 <template>
-  <div class="h-full p-3">
+  <div class="h-full p-3" v-if="content">
     <EmbedDisplay
       v-if="content.type === ContentType.EMBED"
       :embed-content="(content as EmbedContent)"
       :edit-mode="editMode"
       class="h-full"
+      @editing="(val) => $emit('editing', val)"
     />
     <TextDisplay
       v-else-if="content.type === ContentType.TEXT"
       :text-content="(content as TextContent)"
       :edit-mode="editMode"
       class="h-full"
+      @editing="(val) => $emit('editing', val)"
     />
     <ImageDisplay
       v-else-if="content.type === ContentType.IMAGE"
       :image-content="(content as ImageContent)"
       :edit-mode="editMode"
       class="h-full"
+      @editing="(val) => $emit('editing', val)"
     />
     <H5PDisplay
       v-else-if="content.type === ContentType.H5P"
       :h5p-content="(content as H5PContent)"
       :edit-mode="editMode"
       class="h-full"
+      @editing="(val) => $emit('editing', val)"
     />
   </div>
 </template>
@@ -45,7 +49,7 @@ defineProps({
    * The content to display
    */
   content: {
-    type: Object as PropType<Content>,
+    type: Object as PropType<Content | undefined>,
     required: true,
   },
 
@@ -58,4 +62,6 @@ defineProps({
     default: false,
   },
 });
+
+defineEmits(['editing']);
 </script>

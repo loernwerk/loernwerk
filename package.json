@@ -33,6 +33,7 @@
         "reflect-metadata": "^0.1.13",
         "typeorm": "^0.3.17",
         "vue": "^3.2.47",
+        "vue-draggable-next": "^2.2.1",
         "vue-router": "^4.2.2"
     },
     "devDependencies": {
