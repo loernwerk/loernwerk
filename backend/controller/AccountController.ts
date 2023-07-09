@@ -26,13 +26,27 @@ export class AccountController {
             );
         }
 
-        if ((await DBUser.findBy({ mail: data.mail as string })).length > 0) {
+        if (
+            (
+                await DBUser.find({
+                    where: { mail: data.mail as string },
+                    select: ['mail'],
+                })
+            ).length > 0
+        ) {
             throw new LoernwerkError(
                 'mail already exists',
                 LoernwerkErrorCodes.ALREADY_EXISTS
             );
         }
-        if ((await DBUser.findBy({ name: data.name as string })).length > 0) {
+        if (
+            (
+                await DBUser.find({
+                    where: { name: data.name as string },
+                    select: ['name'],
+                })
+            ).length > 0
+        ) {
             throw new LoernwerkError(
                 'username already exists',
                 LoernwerkErrorCodes.ALREADY_EXISTS
@@ -120,7 +134,10 @@ export class AccountController {
      * @param id the id of the account
      */
     public static async deleteAccount(id: number): Promise<void> {
-        const user = await DBUser.findOneBy({ id: id });
+        const user = await DBUser.findOne({
+            where: { id: id },
+            select: ['sharedSequencesReadAccess', 'sharedSequencesWriteAccess'],
+        });
         if (user === null) {
             throw new LoernwerkError(
                 'No existing User with given ID',

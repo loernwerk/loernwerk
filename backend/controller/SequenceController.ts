@@ -21,7 +21,7 @@ export class SequenceController {
         name: string,
         userId: number
     ): Promise<ISequence> {
-        if (!this.isValidUser(userId)) {
+        if (!(await this.isValidUser(userId))) {
             throw new LoernwerkError(
                 'user not found',
                 LoernwerkErrorCodes.NOT_FOUND
@@ -31,7 +31,12 @@ export class SequenceController {
         let newCode = '';
         do {
             newCode = this.generateCode();
-        } while ((await DBSequence.findOneBy({ code: newCode })) !== null);
+        } while (
+            (await DBSequence.findOne({
+                where: { code: newCode },
+                select: ['code'],
+            })) !== null
+        );
         dbSequence.code = newCode;
         dbSequence.authorId = userId;
         dbSequence.name = name;
@@ -138,7 +143,10 @@ export class SequenceController {
      * @param code the code of the sequence
      */
     public static async deleteSequence(code: string): Promise<void> {
-        const dbSequence = await DBSequence.findOneBy({ code: code });
+        const dbSequence = await DBSequence.findOne({
+            where: { code: code },
+            select: ['readAccess', 'writeAccess'],
+        });
         if (dbSequence === null) {
             throw new LoernwerkError(
                 'Sequence not Found',
@@ -150,7 +158,7 @@ export class SequenceController {
             await s.remove();
         }
         const h5pContent = await DBH5PContent.find({
-            select: { h5pContentId: true },
+            select: ['h5pContentId'],
             where: { ownerSequence: code },
         });
         for (const h5p of h5pContent) {
@@ -208,7 +216,10 @@ export class SequenceController {
     public static async getSharedSequencesOfUser(
         userId: number
     ): Promise<ISequence[]> {
-        const user = await DBUser.findOneBy({ id: userId });
+        const user = await DBUser.findOne({
+            where: { id: userId },
+            select: ['sharedSequencesWriteAccess', 'sharedSequencesReadAccess'],
+        });
         if (user === null) {
             throw new LoernwerkError(
                 'User doesnt exists',
@@ -322,7 +333,12 @@ export class SequenceController {
      * @returns true if the user exists
      */
     private static async isValidUser(userId: number): Promise<boolean> {
-        return (await DBUser.findOneBy({ id: userId })) !== null;
+        return (
+            (await DBUser.findOne({
+                where: { id: userId },
+                select: ['id'],
+            })) !== null
+        );
     }
     /**
      * removing the given code from the given list. used on read/write access lists
