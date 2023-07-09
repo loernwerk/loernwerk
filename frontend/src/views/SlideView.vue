@@ -6,6 +6,7 @@
         v-if="slide != null"
         :slide="slide"
         :editMode="false"
+        :key="index"
       >
       </SlideDisplayFactory>
     </div>
