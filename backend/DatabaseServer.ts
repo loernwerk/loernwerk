@@ -4,6 +4,9 @@ import { DBSlide } from '../model/slide/DBSlide';
 import { DBUser } from '../model/user/DBUser';
 import 'reflect-metadata';
 import 'dotenv/config';
+import { DBH5PFile } from '../model/h5p/DBH5PFile';
+import { DBH5PContent } from '../model/h5p/DBH5PContent';
+import { DBH5PLibrary } from '../model/h5p/DBH5PLibrary';
 
 /**
  * Handles database connection for the backend server.
@@ -21,9 +24,16 @@ export class DatabaseServer {
         const database = process.env.DATABASE_FILE || 'dev.db';
 
         this.db = new DataSource({
-            type: 'better-sqlite3',
+            type: 'sqlite',
             database: database,
-            entities: [DBSlide, DBSequence, DBUser],
+            entities: [
+                DBSlide,
+                DBSequence,
+                DBUser,
+                DBH5PFile,
+                DBH5PContent,
+                DBH5PLibrary,
+            ],
         });
 
         console.log(`Loaded database file: ${database}`);

@@ -9,7 +9,14 @@ import history from 'connect-history-api-fallback';
 import { readFile } from 'fs/promises';
 import { createServer } from 'https';
 import { AccountRouterFactory } from './router/AccountRouterFactory';
+import { AccountController } from './controller/AccountController';
 import { SequenceRouterFactory } from './router/SequenceRouterFactory';
+import { H5PServer } from './h5p/H5PServer';
+import { H5PRouterFactory } from './router/H5PRouterFactory';
+import { buildH5PRequest } from './loernwerkUtilities';
+import { h5pAjaxExpressRouter } from '@lumieducation/h5p-express';
+import { resolve } from 'node:path';
+import fileUpload from 'express-fileupload';
 
 /**
  * Main class and entrypoint of the backend server.
@@ -21,21 +28,35 @@ class loernwerkServer {
     public static async main(): Promise<void> {
         console.log('loernwerk booting up.');
 
-        // Setting up webserver, database server
+        // Setting up webserver, database server, H5P server
         const app = express();
         await DatabaseServer.getInstance().initialize();
+        await AccountController.ensureAdminAccount();
+        await H5PServer.getInstance().downloadServerFiles();
+        await H5PServer.getInstance().initialize();
 
         // Setting up Cross-Origin-Resource-Sharing for dev environment
         app.use(
             cors({
                 credentials: true,
-                origin: 'http://localhost:8080',
+                origin: 'http://localhost:5173',
             })
         );
 
         // Setting up parsers to parse HTTP bodies
         app.use(json());
         app.use(urlencoded({ extended: true }));
+        // Setting up file upload for h5p
+        app.use(
+            fileUpload({
+                limits: {
+                    fileSize:
+                        H5PServer.getInstance().getH5PEditor().config
+                            .maxTotalSize,
+                },
+                useTempFiles: false,
+            })
+        );
 
         // Setting up cookies
         app.use(
@@ -58,6 +79,16 @@ class loernwerkServer {
         // Setting up routers, TODO
         app.use('/api/account', new AccountRouterFactory().buildRouter());
         app.use('/api/sequence', new SequenceRouterFactory().buildRouter());
+        app.use('/api/h5p', new H5PRouterFactory().buildRouter());
+        app.use(
+            '/h5p',
+            buildH5PRequest,
+            h5pAjaxExpressRouter(
+                H5PServer.getInstance().getH5PEditor(),
+                resolve('h5p/core'),
+                resolve('h5p/editor')
+            )
+        );
 
         // Serving built vue app
         app.use(history());

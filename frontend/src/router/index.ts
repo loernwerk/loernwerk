@@ -9,6 +9,11 @@ const router = createRouter({
       component: import('../views/MainView.vue'),
     },
     {
+      path: '/login',
+      name: 'LogIn',
+      component: import('../views/LogInView.vue'),
+    },
+    {
       path: '/edit/:sequenceCode',
       name: 'SequenceEdit',
       component: import('../views/SequenceEditView.vue'),

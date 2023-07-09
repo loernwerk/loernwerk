@@ -1,4 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
+import { IUser } from '@lumieducation/h5p-server';
+import { DBUser } from '../model/user/DBUser';
 
 /**
  * Express middleware for checking user authentication.
@@ -61,38 +63,65 @@ export function requireBody(...data: string[]) {
     };
 }
 
+/**
+ * Middleware for specifying the request attributes needed by the H5P library.
+ * @param req Request object
+ * @param res Response object, never used
+ * @param next Next handler function
+ */
+export async function buildH5PRequest(
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> {
+    if (req.session.userId === undefined) {
+        req.user = {
+            id: 'anonymous',
+            canCreateRestricted: false,
+            canInstallRecommended: false,
+            canUpdateAndInstallLibraries: false,
+            email: 'anonymous@loernwerk.de',
+            name: 'Anonymous student',
+            type: 'local',
+        };
+    } else {
+        // TODO: We can greatly speed this up if we store name & email in the session - then we avoid a db query here (and this gets called a TON)
+        const dbUser = await DBUser.findOneByOrFail({ id: req.session.userId });
+        req.user = {
+            id: dbUser.id.toString(),
+            canCreateRestricted: true,
+            canInstallRecommended: true,
+            canUpdateAndInstallLibraries: true,
+            email: dbUser.mail,
+            name: dbUser.name,
+            type: 'local',
+        };
+    }
+    req.t = (errorId, replacements): string => {
+        void replacements;
+        return errorId;
+    };
+    next();
+}
+
 // Declaring session information
 declare module 'express-session' {
     interface SessionData {
+        // ID of the user
         userId?: number;
+        // Indicating whether the user is an admin
         isAdmin?: boolean;
     }
 }
 
-/**
- * Custom error class allowing to specify the error code in the constructor.
- */
-export class LoernwerkError extends Error {
-    code: LoernwerkErrorCodes;
-
-    /**
-     * Constructs a new error with the given message and error code.
-     * @param message Message of the error
-     * @param code Error code
-     */
-    constructor(message: string, code: LoernwerkErrorCodes) {
-        super(message);
-        this.code = code;
+// Declaring additional request properties for H5P
+declare module 'express-serve-static-core' {
+    interface Request {
+        // User object required by H5P library.
+        user: IUser;
+        // Translation function for error messages. Name forced by H5P library.
+        t: (errorId: string, replacements: { [key: string]: string }) => string;
+        // Language used by the user.
+        language: string;
     }
-}
-
-export enum LoernwerkErrorCodes {
-    ALREADY_EXISTS = 'ALREADY_EXISTS',
-    INSUFFICENT_INFORMATION = 'INSUFFICENT_INFORMATION',
-    AMBIGUOUS_INFORMATION = 'AMBIGUOUS_INFORMATION',
-    NOT_FOUND = 'NOT_FOUND',
-    BAD_REQUEST = 'BAD_REQUEST',
-    UNAUTHORIZED = 'UNAUTHORIZED',
-    FORBIDDEN = 'FORBIDDEN',
-    UNKNOWN = 'UNKNOWN',
 }
