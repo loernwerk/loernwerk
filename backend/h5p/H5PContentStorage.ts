@@ -69,7 +69,7 @@ export class H5PContentStorage implements IContentStorage {
         readStream: Readable,
         user?: IUser
     ): Promise<void> {
-        if (!(await this.canUserAccessContent(user.id, contentId))) {
+        if (user && !(await this.canUserAccessContent(user.id, contentId))) {
             throw new LoernwerkError(
                 'User is not allowed to edit this content',
                 LoernwerkErrorCodes.FORBIDDEN
@@ -133,7 +133,10 @@ export class H5PContentStorage implements IContentStorage {
         contentId: ContentId,
         user?: IUser
     ): Promise<void> {
-        if (!(await this.canUserAccessContent(user.id, contentId, true))) {
+        if (
+            user &&
+            !(await this.canUserAccessContent(user.id, contentId, true))
+        ) {
             throw new LoernwerkError(
                 'User is not allowed to edit this content',
                 LoernwerkErrorCodes.FORBIDDEN
@@ -156,7 +159,10 @@ export class H5PContentStorage implements IContentStorage {
         filename: string,
         user?: IUser
     ): Promise<void> {
-        if (!(await this.canUserAccessContent(user.id, contentId, true))) {
+        if (
+            user &&
+            !(await this.canUserAccessContent(user.id, contentId, true))
+        ) {
             throw new LoernwerkError(
                 'User is not allowed to edit this content',
                 LoernwerkErrorCodes.FORBIDDEN

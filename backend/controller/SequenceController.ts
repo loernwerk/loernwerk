@@ -5,6 +5,8 @@ import { DBSequence } from '../../model/sequence/DBSequence';
 import { DBSlide } from '../../model/slide/DBSlide';
 import { LoernwerkError, LoernwerkErrorCodes } from '../loernwerkError';
 import { DBUser } from '../../model/user/DBUser';
+import { DBH5PContent } from '../../model/h5p/DBH5PContent';
+import { H5PServer } from '../h5p/H5PServer';
 /**
  * Manages the sequence data in the database and handles inquiries requests regarding these
  */
@@ -147,7 +149,15 @@ export class SequenceController {
         for (const s of slides) {
             await s.remove();
         }
-        // TODO: Remove H5P Content
+        const h5pContent = await DBH5PContent.find({
+            select: { h5pContentId: true },
+            where: { ownerSequence: code },
+        });
+        for (const h5p of h5pContent) {
+            await H5PServer.getInstance()
+                .getH5PEditor()
+                .deleteContent(h5p.h5pContentId, undefined);
+        }
         for (const uId of dbSequence.readAccess) {
             const user = await DBUser.findOneBy({ id: uId });
             if (user == null) {

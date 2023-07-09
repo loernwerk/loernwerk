@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import { LoernwerkError, LoernwerkErrorCodes } from '../loernwerkError';
 import { DBSequence } from '../../model/sequence/DBSequence';
-import { SequenceController } from '../controller/SequenceController';
+import { SequenceController } from './SequenceController';
 /**
  * Manages account data in the database and handles requests for account requests regarding account data
  */
