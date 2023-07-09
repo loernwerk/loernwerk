@@ -3,6 +3,7 @@ import { ISlide } from '../../../model/slide/ISlide';
 import { ISequence } from '../../../model/sequence/ISequence';
 import { ISequenceWithSlides } from '../../../model/sequence/ISequenceWithSlides';
 import { ContentFactory } from '../../frame/ContentFactory';
+import { LayoutSlot } from '../../../model/slide/layout/Layout';
 
 /**
  * Implements communication with the Server concerning all Sequence-requests
@@ -57,7 +58,10 @@ export class SequenceRestInterface extends BaseRestInterface {
 
     respond.slides.forEach((slide) => {
       for (const key in slide.content) {
-        slide.content[key] = ContentFactory.createContent(slide.content[key]);
+        const enumKey = parseInt(key) as LayoutSlot;
+        slide.content[enumKey] = ContentFactory.createContent(
+          slide.content[enumKey]
+        );
       }
     });
 
