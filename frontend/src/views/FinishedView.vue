@@ -1,3 +1,4 @@
+<!-- View for a finished sequence -->
 <template>
   <div class="flex flex-col">
     <img src="../assets/Logo.png" class="w-1/2 mx-auto" />

@@ -1,6 +1,7 @@
+<!-- View for execution of a sequence -->
 <template>
   <div class="flex w-full flex-col content-center">
-    <div class="flex flex-grow">
+    <div class="flex flex-grow justify-center">
       <SlideDisplayFactory
         v-if="slide != null"
         :slide="slide"
@@ -29,10 +30,11 @@ import ButtonComponent from '../components/ButtonComponent.vue';
 import ProgressBar from '../components/ProgressBar.vue';
 import SlideDisplayFactory from '../components/contentDisplay/SlideDisplayFactory.vue';
 import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { ISlide } from '../../../model/slide/ISlide';
 
 const route = useRoute();
+const router = useRouter();
 const displaySpinner = ref(false);
 const percentage = ref(0);
 const slide: Ref<ISlide | null> = ref(null);
@@ -49,12 +51,17 @@ await nextSlideToExecute();
 async function nextSlideToExecute(): Promise<void> {
   displaySpinner.value = true;
 
-  slide.value = await SequenceRestInterface.getSlide(
-    sequence.code as string,
-    index.value
-  );
+  try {
+    slide.value = await SequenceRestInterface.getSlide(
+      sequence.code as string,
+      index.value
+    );
+  } catch {
+    router.push({ name: 'Finished', params: { code: sequence.code } });
+  }
 
-  index.value++;
+  percentage.value = index.value / (sequence.slideCount as number);
+  index.value = index.value + 1;
   displaySpinner.value = false;
 }
 </script>
