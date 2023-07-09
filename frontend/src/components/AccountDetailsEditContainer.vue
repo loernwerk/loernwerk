@@ -71,7 +71,7 @@
                   v-model="isAdmin"
                   :checked="isAdmin"
                 />
-                <label class="cursor-pointer" @click="toggleCheckBox">
+                <label class="cursor-pointer" @click="toggleAdminCheckBox">
                   Adminaccount
                 </label>
               </div>
@@ -159,7 +159,7 @@ const isAdmin = ref(originalUser.type === UserClass.ADMIN);
 /**
  * toggles the checkbox
  */
-function toggleCheckBox(): void {
+function toggleAdminCheckBox(): void {
   if (!disableInputShowSpinner.value) {
     isAdmin.value = !isAdmin.value;
   }
