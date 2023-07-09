@@ -24,7 +24,6 @@ const showerror = ref(false);
 let originalUser: Partial<IUser>;
 try {
   originalUser = await AccountRestInterface.getOwnAccount();
-  console.log(originalUser);
 } catch (e) {
   if (e instanceof LoernwerkError) {
     if (e.code === LoernwerkErrorCodes.UNAUTHORIZED) {
