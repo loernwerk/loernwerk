@@ -31,21 +31,4 @@ defineProps({
 });
 </script>
 
-<style>
-.left-container {
-  position: absolute;
-  top: 20%;
-  left: 1%;
-  bottom: 1%;
-  width: 49%; /* Set the width of the left container */
-  background-color: #f2f2f2; /* Example background color */
-  padding: 10px; /* Padding for the containers */
-  border: 1px solid #ccc; /* Grey border */
-  border-radius: 10px; /* Rounded border */
-  overflow: hidden; /* Hide overflowing content */
-}
-
-.container-pair {
-  display: flex;
-}
-</style>
+<style></style>

@@ -30,9 +30,4 @@ defineProps({
 });
 </script>
 
-<style>
-.small-container {
-  padding: 20px; /* Example padding */
-  background-color: #fff; /* Example background color */
-}
-</style>
+<style></style>
