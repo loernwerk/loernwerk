@@ -12,6 +12,9 @@
         :style="slot.style"
         :edit-mode="editMode"
         @editing="(val) => $emit('editing', { slot: slot.slot, emit: val })"
+        @change-content="
+          (type) => $emit('changeContent', { slot: slot.slot, type: type })
+        "
       />
     </div>
   </div>
@@ -41,7 +44,7 @@ const props = defineProps({
   },
 });
 
-defineEmits(['editing']);
+defineEmits(['editing', 'changeContent']);
 
 interface GridSlot {
   gridRowStart: number;

@@ -3,10 +3,10 @@
   <div class="flex flex-row grow space-x-5">
     <SlideOverviewContainer
       :slides="sequence.slides"
-      @selection-changed="(val) => (selectedSlideIndex = val)"
+      @selection-changed="(val) => changeSelectedSlide(val)"
     />
     <div class="flex flex-col grow space-y-5">
-      <TabbedContainer class="h-48" :tabs="tabs">
+      <TabbedContainer class="h-48" :tabs="tabs" ref="editOptionsTabContainer">
         <template #Seite>
           <SlideOptionsTab
             :slide="selectedSlide"
@@ -18,20 +18,25 @@
 
         <template #Embed>
           <EmbedOptionsTab
-            :embedContent="emb"
+            v-if="currentEditingSlot"
+            :embedContent="(selectedSlide.content[currentEditingSlot] as EmbedContent)"
             @update-content="(val) => (emb = val)"
           />
         </template>
 
         <template #Bild>
           <ImageOptionsTab
-            :imageContent="im"
+            v-if="currentEditingSlot"
+            :imageContent="(selectedSlide.content[currentEditingSlot] as ImageContent)"
             @update-content="(val) => (im = val)"
           />
         </template>
 
         <template #Text>
-          <TextOptionsTab :textContent="txt" />
+          <TextOptionsTab
+            v-if="currentEditingSlot"
+            :textContent="(selectedSlide.content[currentEditingSlot] as TextContent)"
+          />
         </template>
       </TabbedContainer>
       <div class="grow flex items-center justify-center">
@@ -40,6 +45,7 @@
           :edit-mode="true"
           class="h-[100%]"
           @editing="(val) => selectEditingSlot(val.slot)"
+          @change-content="(val) => changeContent(val.slot, val.type)"
         />
       </div>
     </div>
@@ -47,7 +53,7 @@
 </template>
 
 <script setup lang="ts">
-import { Ref, computed, ref } from 'vue';
+import { Ref, computed, ref, watch } from 'vue';
 import { ISequenceWithSlides } from '../../../model/sequence/ISequenceWithSlides';
 import SlideOverviewContainer from '../components/SlideOverviewContainer.vue';
 import { LayoutSlot, LayoutType } from '../../../model/slide/layout/Layout';
@@ -60,6 +66,9 @@ import TextOptionsTab from '../components/sequenceEditOptionsTab/TextOptionsTab.
 import SlideDisplayFactory from '../components/contentDisplay/SlideDisplayFactory.vue';
 import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
 import { TextContent } from '../../../model/slide/content/TextContent';
+import { ImageContent } from '../../../model/slide/content/ImageContent';
+import { EmbedContent } from '../../../model/slide/content/EmbedContent';
+import { H5PContent } from '../../../model/slide/content/H5PContent';
 
 defineProps({
   /**
@@ -110,7 +119,7 @@ const sequence = ref<ISequenceWithSlides>({
 sequence.value.slides.push({
   layout: LayoutType.SINGLE_COLUMN,
   content: {
-    [LayoutSlot.MAIN]: emb.value,
+    [LayoutSlot.MAIN]: txt.value,
   },
   backgroundColor: '#ff0000',
   sequenceCode: '',
@@ -169,34 +178,80 @@ function getTabNameForSlot(slot: LayoutSlot): string | undefined {
   return undefined;
 }
 
+const tabs = ref(['Seite']);
+
 /**
  * Selects the tab for the given slot
  * @param slot Slot to select for
  */
 function selectEditingSlot(slot: LayoutSlot): void {
   currentEditingSlot.value = slot;
-  const tabName = getTabNameForSlot(slot);
-  if (tabName) {
-    editOptionsTabContainer.value?.selectTab(tabName);
-  }
 }
 
-const tabs = computed(() => {
-  const tabs = ['Seite'];
-  const slot = currentEditingSlot.value;
+watch(currentEditingSlot, (slot) => {
+  tabs.value = ['Seite'];
   if (slot) {
     const tabName = getTabNameForSlot(slot);
     if (tabName) {
-      tabs.push(tabName);
+      tabs.value.push(tabName);
+      editOptionsTabContainer.value?.selectTab(tabName);
     }
   }
-  return tabs;
 });
+
+/**
+ * Switches to the slide with the given index
+ * @param index Index of the slide to select
+ */
+function changeSelectedSlide(index: number): void {
+  selectedSlideIndex.value = index;
+  currentEditingSlot.value = null;
+  editOptionsTabContainer.value?.selectTab('Seite');
+}
 
 /**
  * Saves the sequence
  */
 async function save(): Promise<void> {
   await SequenceRestInterface.updateSequence(sequence.value);
+}
+
+/**
+ * Changes the content of the given slot to the given content type
+ * @param slot Slot to change the content for
+ * @param contentType Content type to change to
+ */
+function changeContent(slot: LayoutSlot, contentType: ContentType): void {
+  let content;
+  switch (contentType) {
+    case ContentType.IMAGE:
+      content = new ImageContent();
+      content.type = ContentType.IMAGE;
+      content.img = '';
+      break;
+
+    case ContentType.TEXT:
+      content = new TextContent();
+      content.type = ContentType.TEXT;
+      content.textSnippets = [];
+      content.alignmentHorizontal = 'left';
+      content.alignmentVertical = 'top';
+      break;
+
+    case ContentType.EMBED:
+      content = new EmbedContent();
+      content.type = ContentType.EMBED;
+      content.url = '';
+      break;
+
+    case ContentType.H5P:
+      content = new H5PContent();
+      content.type = ContentType.H5P;
+      content.h5pContentId = '';
+      break;
+  }
+
+  sequence.value.slides[selectedSlideIndex.value].content[slot] = content;
+  console.log(sequence.value);
 }
 </script>

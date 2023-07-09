@@ -39,7 +39,7 @@ const selectedTab = ref(0);
  * Switches to a tab
  * @param tabName name of the tab to switch to
  */
-function switchTab(tabName: string): void {
+function selectTab(tabName: string): void {
   const index = props.tabs.indexOf(tabName);
   if (index !== -1) {
     selectedTab.value = index;
@@ -47,6 +47,6 @@ function switchTab(tabName: string): void {
 }
 
 defineExpose({
-  switchTab,
+  selectTab,
 });
 </script>
