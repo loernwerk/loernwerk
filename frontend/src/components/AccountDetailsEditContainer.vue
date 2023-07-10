@@ -151,6 +151,8 @@ const displayError = ref(false);
 const displaySuccess = ref(false);
 let originalUser = props.user as IUser;
 const isAdmin = ref(originalUser.type === UserClass.ADMIN);
+const regexMail =
+  '[a-zA-Z0-9]+(?:\\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:\\.[a-zA-Z0-9]+)+$';
 /**
  * toggles the checkbox
  */
@@ -174,7 +176,13 @@ async function updateInformation(): Promise<void> {
   const updateUser: Partial<IUser> = { id: originalUser.id };
 
   updateUser.name = nameField.value;
-  updateUser.mail = mailField.value;
+  if (mailField.value?.match(regexMail)) {
+    updateUser.mail = mailField.value;
+  } else {
+    displayError.value = true;
+    disableInputShowSpinner.value = false;
+    return;
+  }
 
   if (pwField.value !== '') {
     if (pwField.value === pwFieldControl.value) {
