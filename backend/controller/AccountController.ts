@@ -301,9 +301,6 @@ export class AccountController {
      * @returns true if the password is valid
      */
     private static isValidPassword(pw: string): boolean {
-        if (pw == '') {
-            return false;
-        }
         if (pw.length < 6) {
             return false;
         }
