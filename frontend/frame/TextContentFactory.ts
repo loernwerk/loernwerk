@@ -1,5 +1,6 @@
 import { TextContent } from '../../model/slide/content/TextContent';
 import { ContentFactory } from './ContentFactory';
+import { TextSnippet } from '../../model/slide/content/TextSnippet';
 
 /**
  * Class which transforms JSON to TextContent Object
@@ -18,7 +19,10 @@ export class TextContentFactory extends ContentFactory {
     textContent.textSnippets = [];
 
     (json as TextContent).textSnippets.forEach((snippet) => {
-      textContent.textSnippets.push(Object.assign({}, snippet));
+      const textSnippet = new TextSnippet();
+      textSnippet.text = snippet.text;
+      textSnippet.options = snippet.options;
+      textContent.textSnippets.push(textSnippet);
     });
     return textContent;
   }
