@@ -43,8 +43,8 @@ export class AccountController {
         }
 
         if (
-            this.isValidMail(data.mail) ||
-            this.isValidUsername(data.name) ||
+            this.isValidMail(data.mail, false) ||
+            this.isValidUsername(data.name, false) ||
             this.isValidPassword(data.password)
         ) {
             throw new LoernwerkError(
@@ -214,7 +214,9 @@ export class AccountController {
             dbuser.type = data.type;
         }
         if (data.name != null) {
-            if (!this.isValidUsername(data.name)) {
+            if (
+                !this.isValidUsername(data.name, data.type == UserClass.ADMIN)
+            ) {
                 throw new LoernwerkError(
                     'Given information do not satisfy the requirements',
                     LoernwerkErrorCodes.BAD_REQUEST
@@ -223,7 +225,7 @@ export class AccountController {
             dbuser.name = data.name;
         }
         if (data.mail != null) {
-            if (!this.isValidMail(data.name)) {
+            if (!this.isValidMail(data.name, data.type == UserClass.ADMIN)) {
                 throw new LoernwerkError(
                     'Given information do not satisfy the requirements',
                     LoernwerkErrorCodes.BAD_REQUEST
@@ -268,11 +270,18 @@ export class AccountController {
     /**
      * Tests if a username fullfills the requirments
      * @param name the username
+     * @param skipFurtherChecks this is enabled further checks wont be executed, only testing for empty field
      * @returns true if the username is valid
      */
-    private static isValidUsername(name: string): boolean {
+    private static isValidUsername(
+        name: string,
+        skipFurtherChecks: boolean
+    ): boolean {
         if (name == '') {
             return false;
+        }
+        if (skipFurtherChecks) {
+            return true;
         }
         if (name.toLowerCase() == this.defaultUsername) {
             return false;
@@ -283,11 +292,18 @@ export class AccountController {
     /**
      * Tests if a mail fullfills the requirments
      * @param mail the mail
+     * @param skipFurtherChecks if this is enabled further checks wont be executed, only testing for empty field
      * @returns true if the mail is valid
      */
-    private static isValidMail(mail: string): boolean {
+    private static isValidMail(
+        mail: string,
+        skipFurtherChecks: boolean
+    ): boolean {
         if (mail == '') {
             return false;
+        }
+        if (skipFurtherChecks) {
+            return true;
         }
         if (mail.toLowerCase() == this.defaultMail) {
             return false;
