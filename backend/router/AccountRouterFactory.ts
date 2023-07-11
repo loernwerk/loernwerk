@@ -3,7 +3,7 @@ import { RouterFactory } from './RouterFactory';
 import { AccountController } from '../controller/AccountController';
 import { UserClass } from '../../model/user/IUser';
 import { requireAdmin, requireBody, requireLogin } from '../loernwerkUtilities';
-import { LoernwerkErrorCodes } from '../loernwerkError';
+import { LoernwerkErrorCodes } from '../../model/loernwerkError';
 
 /**
  * Builds router for request regarding Account management

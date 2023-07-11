@@ -3,7 +3,10 @@ import { ISlide } from '../../model/slide/ISlide';
 import { ISequenceWithSlides } from '../../model/sequence/ISequenceWithSlides';
 import { DBSequence } from '../../model/sequence/DBSequence';
 import { DBSlide } from '../../model/slide/DBSlide';
-import { LoernwerkError, LoernwerkErrorCodes } from '../loernwerkError';
+import {
+    LoernwerkError,
+    LoernwerkErrorCodes,
+} from '../../model/loernwerkError';
 import { DBUser } from '../../model/user/DBUser';
 import { DBH5PContent } from '../../model/h5p/DBH5PContent';
 import { H5PServer } from '../h5p/H5PServer';

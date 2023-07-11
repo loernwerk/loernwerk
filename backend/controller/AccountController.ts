@@ -2,7 +2,10 @@ import { DBUser } from '../../model/user/DBUser';
 import { IUser, UserClass } from '../../model/user/IUser';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
-import { LoernwerkError, LoernwerkErrorCodes } from '../loernwerkError';
+import {
+    LoernwerkError,
+    LoernwerkErrorCodes,
+} from '../../model/loernwerkError';
 import { DBSequence } from '../../model/sequence/DBSequence';
 import { SequenceController } from './SequenceController';
 /**
