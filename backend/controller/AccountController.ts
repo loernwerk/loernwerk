@@ -215,7 +215,11 @@ export class AccountController {
         }
         if (data.name != null) {
             if (
-                !this.isValidUsername(data.name, data.type == UserClass.ADMIN)
+                !this.isValidUsername(
+                    data.name,
+                    data.type === UserClass.ADMIN ||
+                        dbuser.type === UserClass.ADMIN
+                )
             ) {
                 throw new LoernwerkError(
                     'Given information do not satisfy the requirements',
@@ -225,7 +229,13 @@ export class AccountController {
             dbuser.name = data.name;
         }
         if (data.mail != null) {
-            if (!this.isValidMail(data.name, data.type == UserClass.ADMIN)) {
+            if (
+                !this.isValidMail(
+                    data.name,
+                    data.type === UserClass.ADMIN ||
+                        dbuser.type === UserClass.ADMIN
+                )
+            ) {
                 throw new LoernwerkError(
                     'Given information do not satisfy the requirements',
                     LoernwerkErrorCodes.BAD_REQUEST
