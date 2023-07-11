@@ -49,7 +49,7 @@
                 :hidden="true"
                 place-holder="Passwort wiederholen"
                 :max-length="128"
-                v-model="pwField"
+                v-model="pwFieldControl"
               />
             </td>
           </tr>
