@@ -88,7 +88,6 @@ function disableCheckBox(): void {
 async function checkLogIn(): Promise<void> {
   disableInputShowSpinner.value = true;
   displayError.value = false;
-  console.log(mailField.value);
   const success = await AccountRestInterface.verifyLogin(
     mailField.value,
     passwordField.value,
