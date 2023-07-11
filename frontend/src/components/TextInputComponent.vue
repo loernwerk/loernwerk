@@ -6,7 +6,6 @@
       :maxLength="maxLength"
       :placeholder="placeHolder"
       :disabled="disabled"
-      :value="props.modelValue"
       class="cursor-pointer w-full placeholder:text-gray-500"
       :class="{ uppercase: uppercase }"
       v-model="inputRef"
