@@ -3,12 +3,16 @@
   <div class="flex w-full flex-col content-center">
     <div class="flex flex-grow justify-center">
       <SlideDisplayFactory
-        v-if="slide != null"
+        v-if="slide != null && !error"
         :slide="slide"
         :editMode="false"
         :key="index"
       >
       </SlideDisplayFactory>
+      <div class="text-red-500" v-if="error">
+        Es ist ein Fehler bei der Folien Ansicht aufgetreten. Bitte laden sie
+        die Seite erneut.
+      </div>
     </div>
     <div class="flex items-center">
       <div class="w-full mr-4">
@@ -33,6 +37,7 @@ import SlideDisplayFactory from '../components/contentDisplay/SlideDisplayFactor
 import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
 import { useRoute, useRouter } from 'vue-router';
 import { ISlide } from '../../../model/slide/ISlide';
+import { ISequence } from '../../../model/sequence/ISequence';
 
 const route = useRoute();
 const router = useRouter();
@@ -40,11 +45,17 @@ const displaySpinner = ref(false);
 const percentage = ref(0);
 const slide: Ref<ISlide | null> = ref(null);
 const index = ref(0);
+const error = ref(false);
 
-const sequence = await SequenceRestInterface.getMetadataForStudent(
-  route.params.code as string
-);
-await nextSlideToExecute();
+let sequence: Partial<ISequence>;
+try {
+  sequence = await SequenceRestInterface.getMetadataForStudent(
+    route.params.code as string
+  );
+  await nextSlideToExecute();
+} catch {
+  router.push({ name: 'Main' });
+}
 
 /**
  * Get next slide for execution
@@ -52,13 +63,17 @@ await nextSlideToExecute();
 async function nextSlideToExecute(): Promise<void> {
   displaySpinner.value = true;
 
+  if (index.value == sequence.slideCount) {
+    router.push({ name: 'Finished', params: { code: sequence.code } });
+    return;
+  }
   try {
     slide.value = await SequenceRestInterface.getSlide(
       sequence.code as string,
       index.value
     );
   } catch {
-    router.push({ name: 'Finished', params: { code: sequence.code } });
+    error.value = true;
   }
 
   percentage.value = index.value / (sequence.slideCount as number);
