@@ -7,6 +7,7 @@ const router = createRouter({
       path: '/',
       name: 'Main',
       component: import('../views/MainView.vue'),
+      meta: { hasNavBar: true },
     },
     {
       path: '/login',

@@ -114,6 +114,7 @@ export class AccountRouterFactory extends RouterFactory {
                 id: user.id,
                 username: user.name,
                 email: user.mail,
+                type: user.type,
             });
         });
 
