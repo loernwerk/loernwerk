@@ -6,7 +6,7 @@
       :maxLength="maxLength"
       :placeholder="placeHolder"
       :disabled="disabled"
-      v-model="inputText"
+      :value="props.input"
       class="cursor-pointer w-full placeholder:text-gray-500"
       :class="{ uppercase: uppercase }"
     />
@@ -64,13 +64,9 @@ const props = defineProps({
     default: false,
   },
   /**
-   * String, that is inserted in to the input
+   *
    */
-  startText: {
-    type: String,
-    required: false,
-    default: '',
-  },
+  input: String,
 });
 
 const emit = defineEmits([
@@ -79,12 +75,12 @@ const emit = defineEmits([
    *
    * @param inputText The text in the input
    */
-  'input-changed',
+  'update:input',
 ]);
 
-const inputText = ref(props.startText);
+const inputText = ref(props.input);
 
 watch(inputText, (newValue) => {
-  emit('input-changed', newValue);
+  emit('update:input', newValue);
 });
 </script>

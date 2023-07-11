@@ -14,8 +14,8 @@
                 :disabled="disableInputShowSpinner || deleted"
                 place-holder="Nutzername"
                 :startText="originalUser.name"
-                @input-changed="(val) => (nameField = val)"
                 :max-length="128"
+                v-model:input="nameField"
               />
             </td>
           </tr>
@@ -26,8 +26,8 @@
                 :disabled="disableInputShowSpinner || deleted"
                 place-holder="E-mail"
                 :startText="originalUser.mail"
-                @input-changed="(val) => (mailField = val)"
                 :max-length="320"
+                v-model:input="mailField"
               />
             </td>
           </tr>
@@ -38,8 +38,8 @@
                 :disabled="disableInputShowSpinner || deleted"
                 :hidden="true"
                 place-holder="Passwort"
-                @input-changed="(val) => (pwField = val)"
                 :max-length="128"
+                v-model:input="pwField"
               />
             </td>
           </tr>
@@ -50,8 +50,8 @@
                 :disabled="disableInputShowSpinner || deleted"
                 :hidden="true"
                 place-holder="Passwort wiederholen"
-                @input-changed="(val) => (pwFieldControl = val)"
                 :max-length="128"
+                v-model:input="pwField"
               />
             </td>
           </tr>
@@ -224,6 +224,9 @@ async function reset(): Promise<void> {
   if (deleted.value) {
     return;
   }
-  window.location.reload();
+  nameField.value = props.user.name;
+  mailField.value = props.user.mail;
+  pwField.value = '';
+  pwFieldControl.value = '';
 }
 </script>
