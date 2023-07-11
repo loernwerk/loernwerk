@@ -79,7 +79,7 @@ const emit = defineEmits([
   'update:input',
 ]);
 
-const inputRef = ref('');
+const inputRef = ref(props.input);
 
 watch(inputRef, (newInput) => {
   emit('update:input', newInput);
