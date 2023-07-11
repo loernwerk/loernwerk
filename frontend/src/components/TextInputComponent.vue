@@ -6,7 +6,7 @@
       :maxLength="maxLength"
       :placeholder="placeHolder"
       :disabled="disabled"
-      :value="props.input"
+      :value="props.modelValue"
       class="cursor-pointer w-full placeholder:text-gray-500"
       :class="{ uppercase: uppercase }"
       v-model="inputRef"
@@ -67,7 +67,7 @@ const props = defineProps({
   /**
    *
    */
-  input: String,
+  modelValue: String,
 });
 
 const emit = defineEmits([
@@ -76,12 +76,12 @@ const emit = defineEmits([
    *
    * @param inputText The text in the input
    */
-  'update:input',
+  'update:modelValue',
 ]);
 
-const inputRef = ref(props.input);
+const inputRef = ref(props.modelValue);
 
 watch(inputRef, (newInput) => {
-  emit('update:input', newInput);
+  emit('update:modelValue', newInput);
 });
 </script>

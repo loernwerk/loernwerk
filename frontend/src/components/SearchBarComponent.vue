@@ -10,7 +10,7 @@
       <TextInputComponent
         class="flex-1 !border-none !bg-transparent"
         :placeHolder="placeHolder"
-        v-model:input="searchText"
+        v-model="searchText"
       />
     </div>
   </InteractableComponent>

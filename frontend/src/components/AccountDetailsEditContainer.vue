@@ -13,9 +13,8 @@
               <TextInputComponent
                 :disabled="disableInputShowSpinner || deleted"
                 place-holder="Nutzername"
-                :startText="originalUser.name"
                 :max-length="128"
-                v-model:input="nameField"
+                v-model="nameField"
               />
             </td>
           </tr>
@@ -25,9 +24,8 @@
               <TextInputComponent
                 :disabled="disableInputShowSpinner || deleted"
                 place-holder="E-mail"
-                :startText="originalUser.mail"
                 :max-length="320"
-                v-model:input="mailField"
+                v-model="mailField"
               />
             </td>
           </tr>
@@ -39,7 +37,7 @@
                 :hidden="true"
                 place-holder="Passwort"
                 :max-length="128"
-                v-model:input="pwField"
+                v-model="pwField"
               />
             </td>
           </tr>
@@ -51,7 +49,7 @@
                 :hidden="true"
                 place-holder="Passwort wiederholen"
                 :max-length="128"
-                v-model:input="pwField"
+                v-model="pwField"
               />
             </td>
           </tr>

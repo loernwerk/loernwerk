@@ -13,7 +13,7 @@
       class="w-64 text-7xl font-mono border-2"
       :class="{ 'border-red-600': showRedBorder }"
       :max-length="codeLength"
-      v-model:input="code"
+      v-model="code"
     />
   </div>
 </template>

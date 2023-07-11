@@ -14,7 +14,7 @@
               <TextInputComponent
                 :disabled="disableInputShowSpinner"
                 placeHolder="Nutzername/Email"
-                v-model:input="mailField"
+                v-model="mailField"
               />
             </td>
           </tr>
@@ -25,7 +25,7 @@
                 :disabled="disableInputShowSpinner"
                 :hidden="true"
                 placeHolder="Passwort"
-                v-model:input="passwordField"
+                v-model="passwordField"
               />
             </td>
           </tr>
