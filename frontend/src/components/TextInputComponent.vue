@@ -65,7 +65,7 @@ const props = defineProps({
     default: false,
   },
   /**
-   *
+   * The variable for the v-model option
    */
   modelValue: String,
 });
