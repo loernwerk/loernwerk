@@ -1,35 +1,14 @@
 <template>
-  <div class="flex-grow text-center">
-    <div class="text-red-500 italic" v-if="showerror">
-      Account nicht verfügbar
-    </div>
-  </div>
-  <div class="w-full mt-auto mb-auto ml-3 mr-3">
-    <AccountDetailsEditContainer :user="originalUser" v-if="!showerror" />
-  </div>
+  <AccountDetailsEditContainer :user="originalUser" v-if="!showerror" />
 </template>
 
 <script setup lang="ts">
-import {
-  LoernwerkError,
-  LoernwerkErrorCodes,
-} from '../../../backend/loernwerkError';
 import { IUser } from '../../../model/user/IUser';
 import AccountDetailsEditContainer from '../components/AccountDetailsEditContainer.vue';
 import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
-import { router } from '../router';
 import { ref } from 'vue';
 
 const showerror = ref(false);
 let originalUser: Partial<IUser>;
-try {
-  originalUser = await AccountRestInterface.getOwnAccount();
-} catch (e) {
-  if (e instanceof LoernwerkError) {
-    if (e.code === LoernwerkErrorCodes.UNAUTHORIZED) {
-      router.push('LogIn');
-    }
-  }
-  showerror.value = true;
-}
+originalUser = await AccountRestInterface.getOwnAccount();
 </script>
