@@ -28,11 +28,8 @@ try {
   if (e instanceof LoernwerkError) {
     if (e.code === LoernwerkErrorCodes.UNAUTHORIZED) {
       router.push('LogIn');
-    } else {
-      showerror.value = true;
     }
-  } else {
-    showerror.value = true;
   }
+  showerror.value = true;
 }
 </script>
