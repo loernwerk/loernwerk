@@ -39,7 +39,7 @@ import { useRouter } from 'vue-router';
 import { ISlide } from '../../../model/slide/ISlide';
 import { ISequence } from '../../../model/sequence/ISequence';
 
-const prop = defineProps({
+const props = defineProps({
   /**
    * Sequence code to get meta data
    */
@@ -58,7 +58,7 @@ const error = ref(false);
 
 let sequence: Partial<ISequence>;
 try {
-  sequence = await SequenceRestInterface.getMetadataForStudent(prop.code);
+  sequence = await SequenceRestInterface.getMetadataForStudent(props.code);
   await nextSlideToExecute();
 } catch {
   router.push({ name: 'Main' });

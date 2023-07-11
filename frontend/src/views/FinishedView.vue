@@ -16,7 +16,7 @@
 import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
 import { ref } from 'vue';
 
-const prop = defineProps({
+const props = defineProps({
   /**
    * Sequence code to get meta data
    */
@@ -27,7 +27,7 @@ const prop = defineProps({
 });
 
 const sequence = ref(
-  await SequenceRestInterface.getMetadataForStudent(prop.code)
+  await SequenceRestInterface.getMetadataForStudent(props.code)
 );
 </script>
 
