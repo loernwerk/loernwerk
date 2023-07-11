@@ -13,7 +13,7 @@
       class="w-64 text-7xl font-mono border-2"
       :class="{ 'border-red-600': showRedBorder }"
       :max-length="codeLength"
-      @input-changed="(text) => updateCode(text)"
+      v-model:input="code"
     />
   </div>
 </template>
@@ -23,6 +23,7 @@ import TextInputComponent from './TextInputComponent.vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { ref, watch } from 'vue';
 
 library.add(faSpinner);
 
@@ -59,19 +60,15 @@ const emit = defineEmits([
 ]);
 
 const codeLength = 6;
+const code = ref('');
 
-/**
- * Function gets triggered by the TextInputComponent when the input was changed
- *
- * @param code The code that was entered
- */
-function updateCode(code: string): void {
-  if (code.length == codeLength) {
-    emit('code-entered', code.toUpperCase());
+watch(code, (codeEntered) => {
+  if (codeEntered.length == codeLength) {
+    emit('code-entered', codeEntered.toUpperCase());
   }
 
-  if (code.length == 0) {
+  if (codeEntered.length == 0) {
     emit('code-emptied');
   }
-}
+});
 </script>
