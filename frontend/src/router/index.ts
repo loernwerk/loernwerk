@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import MainView from '../views/MainView.vue';
+import LoginView from '../views/LogInView.vue';
 
 const router = createRouter({
   history: createWebHistory(''),
@@ -6,13 +8,13 @@ const router = createRouter({
     {
       path: '/',
       name: 'Main',
-      component: import('../views/MainView.vue'),
+      component: MainView,
       meta: { hasNavBar: true },
     },
     {
       path: '/login',
       name: 'LogIn',
-      component: import('../views/LogInView.vue'),
+      component: LoginView,
     },
   ],
 });
