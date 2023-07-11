@@ -17,11 +17,13 @@ const router = createRouter({
       path: '/:code',
       name: 'Slide',
       component: import('../views/SlideView.vue'),
+      props: true,
     },
     {
       path: '/:code/finished',
       name: 'Finished',
       component: import('../views/FinishedView.vue'),
+      props: true,
     },
   ],
 });

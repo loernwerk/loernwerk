@@ -13,13 +13,21 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from 'vue-router';
 import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
 import { ref } from 'vue';
 
-const route = useRoute();
+const prop = defineProps({
+  /**
+   * Sequence code to get meta data
+   */
+  code: {
+    type: String,
+    required: true,
+  },
+});
+
 const sequence = ref(
-  await SequenceRestInterface.getMetadataForStudent(route.params.code as string)
+  await SequenceRestInterface.getMetadataForStudent(prop.code)
 );
 </script>
 

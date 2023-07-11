@@ -35,11 +35,20 @@ import ButtonComponent from '../components/ButtonComponent.vue';
 import ProgressBar from '../components/ProgressBar.vue';
 import SlideDisplayFactory from '../components/contentDisplay/SlideDisplayFactory.vue';
 import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { ISlide } from '../../../model/slide/ISlide';
 import { ISequence } from '../../../model/sequence/ISequence';
 
-const route = useRoute();
+const prop = defineProps({
+  /**
+   * Sequence code to get meta data
+   */
+  code: {
+    type: String,
+    required: true,
+  },
+});
+
 const router = useRouter();
 const displaySpinner = ref(false);
 const percentage = ref(0);
@@ -49,9 +58,7 @@ const error = ref(false);
 
 let sequence: Partial<ISequence>;
 try {
-  sequence = await SequenceRestInterface.getMetadataForStudent(
-    route.params.code as string
-  );
+  sequence = await SequenceRestInterface.getMetadataForStudent(prop.code);
   await nextSlideToExecute();
 } catch {
   router.push({ name: 'Main' });
