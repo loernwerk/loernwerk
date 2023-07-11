@@ -9,12 +9,13 @@
       :value="props.input"
       class="cursor-pointer w-full placeholder:text-gray-500"
       :class="{ uppercase: uppercase }"
+      @input="(event) => updateValue(event.target.value)"
     />
+    <!--Note: VSCode will show that event.target.value dont exists, but it does-->
   </InteractableComponent>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
 import InteractableComponent from './InteractableComponent.vue';
 
 const props = defineProps({
@@ -78,9 +79,11 @@ const emit = defineEmits([
   'update:input',
 ]);
 
-const inputText = ref(props.input);
-
-watch(inputText, (newValue) => {
-  emit('update:input', newValue);
-});
+/**
+ * The update function, that updates the v-mode input var
+ * @param value the new value
+ */
+function updateValue(value: string): void {
+  emit('update:input', value);
+}
 </script>
