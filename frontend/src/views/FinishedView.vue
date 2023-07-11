@@ -23,6 +23,7 @@ const sequence = ref(
 );
 </script>
 
+<!-- Firework by https://alvaromontoro.com/blog/68002/creating-a-firework-effect-with-css -->
 <style scoped>
 @keyframes firework {
   0% {

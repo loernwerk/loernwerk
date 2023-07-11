@@ -21,7 +21,7 @@
       <ButtonComponent
         class="w-fit"
         :loading="displaySpinner"
-        @click="nextSlideToExecute"
+        @click="nextSlideToExecute()"
       >
         Weiter
       </ButtonComponent>

@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, toRefs } from 'vue';
+import { computed } from 'vue';
 
 const prop = defineProps({
   /**
@@ -21,9 +21,8 @@ const prop = defineProps({
     required: true,
   },
 });
-const { percentage } = toRefs(prop);
 
 const checkValueRange = computed(() => {
-  return Math.max(0, Math.min(percentage.value, 1)) * 100;
+  return Math.max(0, Math.min(prop.percentage, 1)) * 100;
 });
 </script>
