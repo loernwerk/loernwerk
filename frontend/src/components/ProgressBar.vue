@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-const prop = defineProps({
+const props = defineProps({
   /**
    * Percentage number of progressbar. Value between 0 and 1.
    */
@@ -23,6 +23,6 @@ const prop = defineProps({
 });
 
 const checkValueRange = computed(() => {
-  return Math.max(0, Math.min(prop.percentage, 1)) * 100;
+  return Math.max(0, Math.min(props.percentage, 1)) * 100;
 });
 </script>
