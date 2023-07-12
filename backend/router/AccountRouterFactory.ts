@@ -120,7 +120,7 @@ export class AccountRouterFactory extends RouterFactory {
 
         accountRouter.get('/list', requireAdmin, async (req, res) => {
             const listUsers = await AccountController.getAllAccounts();
-            res.status(200).json({ listUsers });
+            res.status(200).json(listUsers);
         });
 
         return accountRouter;

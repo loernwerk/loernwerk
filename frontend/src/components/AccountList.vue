@@ -1,16 +1,10 @@
 <template>
   <div class="flex flex-col">
-    <div
-      v-for="(user,index) in (accounts as Array<IterableUser>).entries()"
-      :key="index"
-    >
+    <div v-for="user in accounts" :key="user.id">
       <div>
         <ContainerComponent>
-          <ButtonComponent @click="clicked(user.id)">
-            <span>
-              Name: {{ user.name }} : {{ user.id }} : {{ user }}
-              {{ console.log(user) }}
-            </span>
+          <ButtonComponent @click="clicked(user.id as number)">
+            {{ user.name }}
           </ButtonComponent>
         </ContainerComponent>
       </div>
@@ -38,10 +32,5 @@ const emit = defineEmits(['selected']);
  */
 function clicked(userId: number): void {
   emit('selected', userId);
-}
-
-interface IterableUser {
-  name: string;
-  id: number;
 }
 </script>
