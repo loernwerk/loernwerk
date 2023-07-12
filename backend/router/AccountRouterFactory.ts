@@ -118,6 +118,13 @@ export class AccountRouterFactory extends RouterFactory {
             });
         });
 
+        accountRouter.get('/list', requireAdmin, async (req, res) => {
+            const listUsers = await AccountController.getAllAccounts();
+            res.status(200).json({ listUsers });
+        });
+
+        return accountRouter;
+
         accountRouter.get('/:ids', async (req, res) => {
             const map = {};
             const listIds = req.params.ids.split(',');
@@ -138,12 +145,5 @@ export class AccountRouterFactory extends RouterFactory {
                 res.status(200).json(map);
             }
         });
-
-        accountRouter.get('/list', requireAdmin, async (req, res) => {
-            const listUsers = await AccountController.getAllAccounts();
-            res.status(200).json({ listUsers });
-        });
-
-        return accountRouter;
     }
 }

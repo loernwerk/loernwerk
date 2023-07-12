@@ -1,10 +1,16 @@
 <template>
   <div class="flex flex-col">
-    <div v-for="(user, index) in accounts" :key="index">
+    <div
+      v-for="(user,index) in (accounts as Array<IterableUser>).entries()"
+      :key="index"
+    >
       <div>
         <ContainerComponent>
-          <ButtonComponent @click="clicked(user)">
-            {{ user.name }}
+          <ButtonComponent @click="clicked(user.id)">
+            <span>
+              Name: {{ user.name }} : {{ user.id }} : {{ user }}
+              {{ console.log(user) }}
+            </span>
           </ButtonComponent>
         </ContainerComponent>
       </div>
@@ -20,7 +26,7 @@ import ContainerComponent from './ContainerComponent.vue';
 
 defineProps({
   accounts: {
-    type: Object as PropType<Partial<IUser>[]>,
+    type: Object as PropType<Array<Partial<IUser>>>,
     required: true,
   },
 });
@@ -28,9 +34,14 @@ defineProps({
 const emit = defineEmits(['selected']);
 /**
  * emits, when the user clicks on a user in the list
- * @param user the user clicked on
+ * @param userId the userId of the user clicked on
  */
-function clicked(user: Partial<IUser>): void {
-  emit('selected', user);
+function clicked(userId: number): void {
+  emit('selected', userId);
+}
+
+interface IterableUser {
+  name: string;
+  id: number;
 }
 </script>
