@@ -23,6 +23,7 @@ const router = createRouter({
       path: '/account',
       name: 'Account',
       component: AccountView,
+      meta: { hasNavBar: true },
     },
     {
       path: '/:code',

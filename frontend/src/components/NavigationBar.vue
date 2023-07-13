@@ -1,26 +1,31 @@
 <template>
   <div class="w-full h-20 bg-gray-300 flex flex-row items-center gap-5">
     <img src="../assets/Logo.png" class="h-full mr-5" />
-    <span
-      class="text-2xl font-bold italic select-none"
+    <ButtonComponent
+      class="text-2xl selected-menu-item"
       v-if="currentViewLocalized !== ''"
-      >{{ currentViewLocalized }}</span
     >
-    <span
-      class="text-2xl cursor-pointer select-none"
+      {{ currentViewLocalized }}
+    </ButtonComponent>
+    <ButtonComponent
+      class="text-2xl"
       :class="{ 'selected-menu-item': isCurrentView('LogIn') }"
-      >Sequenzübersicht</span
     >
-    <span class="text-2xl cursor-pointer select-none" v-if="isAdmin"
-      >Admin</span
+      Sequenzübersicht
+    </ButtonComponent>
+    <ButtonComponent
+      class="text-2xl"
+      :class="{ 'selected-menu-item': isCurrentView('LogIn') }"
+      v-if="isAdmin"
     >
-    <ButtonComponent class="text-2xl">Sequenzübersicht</ButtonComponent>
-    <ButtonComponent class="text-2xl">Admin</ButtonComponent>
+      Admin
+    </ButtonComponent>
     <div class="flex-grow"></div>
     <FontAwesomeIcon
       icon="circle-user"
       size="3x"
       class="float-right mr-5 cursor-pointer"
+      @click="router.push('Account')"
     ></FontAwesomeIcon>
   </div>
 </template>
@@ -62,8 +67,8 @@ function updateNavBar(newView: RouteLocationNormalized): void {
   currentViewLocalized.value = '';
   switch (currentView.value) {
     // Template
-    case 'Main':
-      currentViewLocalized.value = 'Startseite';
+    case 'Account':
+      currentViewLocalized.value = 'Account';
       break;
   }
 }
@@ -83,5 +88,6 @@ function isCurrentView(viewName: string): boolean {
 .selected-menu-item {
   font-style: italic;
   font-weight: bold;
+  cursor: not-allowed;
 }
 </style>
