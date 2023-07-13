@@ -5,6 +5,7 @@
         selectedUser = null;
         displayCreateUser = true;
       "
+      class="p-0.5"
     >
       Nutzer erstellen
     </ButtonComponent>
@@ -18,7 +19,7 @@
       "
     />
   </ContainerComponent>
-  <div v-if="selectedUser !== null">
+  <div v-if="selectedUser !== null" class="flex grow">
     <AccountDetailsEditContainer :showadminview="true" :user="selectedUser" />
     <AccountSequenceContainer :sequences="sequencesOfUser" />
   </div>

@@ -1,5 +1,8 @@
 <template>
   <ContainerComponent>
+    <template #Header>
+      <h1 class="underline text-xl">Sequenzen des Nutzers:</h1>
+    </template>
     <div v-for="sequence in sequencesArray" :key="sequence.code">
       <ContainerComponent>
         <div class="flex flex-col">
@@ -7,8 +10,13 @@
             {{ sequence.name }}
           </div>
           <div class="flex">
-            <ButtonComponent> anzeigen </ButtonComponent>
-            <ButtonComponent> löschen </ButtonComponent>
+            <ButtonComponent @click="showSequence(sequence.code)">
+              anzeigen
+            </ButtonComponent>
+
+            <ButtonComponent @click="deleteSequence(sequence.code)">
+              löschen
+            </ButtonComponent>
           </div>
         </div>
       </ContainerComponent>
@@ -20,6 +28,7 @@ import { PropType, ref } from 'vue';
 import { ISequence } from '../../../model/sequence/ISequence';
 import ContainerComponent from './ContainerComponent.vue';
 import ButtonComponent from './ButtonComponent.vue';
+import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
 
 const props = defineProps({
   sequences: {
@@ -27,6 +36,23 @@ const props = defineProps({
     required: true,
   },
 });
+
+/**
+ * Shows the selected Sequence
+ * @param code the code of the sequence
+ */
+function showSequence(code: string): void {
+  void code;
+  //redirect
+}
+
+/**
+ * Deletes the sequence
+ * @param code the code of the sequence
+ */
+function deleteSequence(code: string): void {
+  SequenceRestInterface.deleteSequence(code);
+}
 
 const sequencesArray = ref(props.sequences);
 </script>

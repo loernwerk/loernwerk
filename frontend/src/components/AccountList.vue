@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col">
-    <div>
+    <div class="p-0.5">
       <SearchBarComponent
         @input-changed="
           (newInput) => {
@@ -11,7 +11,7 @@
       />
     </div>
     <div v-for="user in accountArray" :key="user.id">
-      <div>
+      <div class="p-0.5">
         <ButtonComponent @click="emit('selected', user.id)">
           {{ user.name }}
         </ButtonComponent>
@@ -24,6 +24,7 @@
 import { PropType, ref } from 'vue';
 import { IUser } from '../../../model/user/IUser';
 import ButtonComponent from './ButtonComponent.vue';
+//import ContainerComponent from './ContainerComponent.vue';
 import SearchBarComponent from './SearchBarComponent.vue';
 
 const props = defineProps({
