@@ -31,6 +31,7 @@ const emit = defineEmits(['selected']);
  * @param userId the userId of the user clicked on
  */
 function clicked(userId: number): void {
+  console.log('Pressed: ' + userId);
   emit('selected', userId);
 }
 </script>
