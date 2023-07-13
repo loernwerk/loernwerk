@@ -1,6 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import MainView from '../views/MainView.vue';
 import LoginView from '../views/LogInView.vue';
+import AccountView from '../views/AccountView.vue';
+import SlideView from '../views/SlideView.vue';
+import FinishedView from '../views/FinishedView.vue';
 
 const router = createRouter({
   history: createWebHistory(''),
@@ -19,18 +22,18 @@ const router = createRouter({
     {
       path: '/account',
       name: 'Account',
-      component: import('../views/AccountView.vue'),
+      component: AccountView,
     },
     {
       path: '/:code',
       name: 'Slide',
-      component: import('../views/SlideView.vue'),
+      component: SlideView,
       props: true,
     },
     {
       path: '/:code/finished',
       name: 'Finished',
-      component: import('../views/FinishedView.vue'),
+      component: FinishedView,
       props: true,
     },
   ],
