@@ -8,7 +8,9 @@
         ></NavigationBar>
       </Suspense>
       <div class="relative top-0 left-0 bottom-0 right-0 p-5 flex flex-grow">
-        <RouterView />
+        <Suspense>
+          <RouterView />
+        </Suspense>
       </div>
     </div>
   </div>

@@ -45,8 +45,7 @@ async function checkCode(code: string): Promise<void> {
 
   try {
     await SequenceRestInterface.getMetadataForStudent(code);
-    alert('Right Code');
-    //router.push('SlideView');
+    router.push({ name: 'Slide', params: { code: code } });
   } catch {
     showRedBorder.value = true;
   }
