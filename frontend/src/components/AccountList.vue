@@ -12,11 +12,9 @@
     </div>
     <div v-for="user in accountArray" :key="user.id">
       <div>
-        <ContainerComponent>
-          <ButtonComponent @click="emit('selected', user.id)">
-            {{ user.name }}
-          </ButtonComponent>
-        </ContainerComponent>
+        <ButtonComponent @click="emit('selected', user.id)">
+          {{ user.name }}
+        </ButtonComponent>
       </div>
     </div>
   </div>
@@ -26,7 +24,6 @@
 import { PropType, ref } from 'vue';
 import { IUser } from '../../../model/user/IUser';
 import ButtonComponent from './ButtonComponent.vue';
-import ContainerComponent from './ContainerComponent.vue';
 import SearchBarComponent from './SearchBarComponent.vue';
 
 const props = defineProps({
