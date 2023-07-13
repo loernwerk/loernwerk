@@ -18,11 +18,11 @@
       "
     />
   </ContainerComponent>
-  <AccountDetailsEditContainer
-    v-if="selectedUser !== null"
-    :showadminview="true"
-    :user="selectedUser"
-  />
+  <div v-if="selectedUser !== null">
+    <AccountDetailsEditContainer :showadminview="true" :user="selectedUser" />
+    <AccountSequenceContainer :sequences="sequencesOfUser" />
+  </div>
+
   <AccountCreationContainer v-if="displayCreateUser" />
 </template>
 <script setup lang="ts">
@@ -34,9 +34,24 @@ import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
 import ContainerComponent from '../components/ContainerComponent.vue';
 import ButtonComponent from '../components/ButtonComponent.vue';
 import AccountCreationContainer from '../components/AccountCreationContainer.vue';
+import AccountSequenceContainer from '../components/AccountSequenceContainer.vue';
+import { ISequence } from '../../../model/sequence/ISequence';
+//import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
 
 let displayCreateUser = ref(false);
 let selectedUser: Ref<Partial<IUser>> | Ref<null> = ref(null);
+let sequencesOfUser: Ref<ISequence[]> = ref([
+  {
+    name: 'test',
+    creationDate: new Date(),
+    modificationDate: new Date(),
+    code: '111111',
+    authorId: 1,
+    writeAccess: [],
+    readAccess: [],
+    slideCount: 0,
+  },
+]);
 let test: Partial<IUser>[];
 try {
   test = await AccountRestInterface.getAccountMetaDataList();
@@ -50,5 +65,6 @@ try {
 async function updateUser(id: number): Promise<void> {
   void id;
   selectedUser.value = await AccountRestInterface.getOwnAccount();
+  //sequencesOfUser.value = await SequenceRestInterface.getSequenceByUser(selectedUser.value.id as number)
 }
 </script>
