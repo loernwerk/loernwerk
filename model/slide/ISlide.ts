@@ -14,7 +14,7 @@ export interface ISlide {
     /** Background color of this slide */
     backgroundColor: string;
 
-    /** Code of the sequence to which this slides belongs */
+    /** Code of the sequence to which this slide belongs */
     sequenceCode: string;
 
     /** Represents the position of this slide in the sequence */

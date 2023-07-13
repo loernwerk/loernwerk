@@ -4,7 +4,7 @@
       <h1 class="underline text-xl">{{ name }}</h1>
 
       <div class="mt-2" v-for="sequence in sequences" :key="sequence.name">
-        <SequenceDisplayPreview :name="sequence.name"></SequenceDisplayPreview>
+        <SequenceDisplayPreview :name="sequence.name" @popUpOpened="$emit('popUpOpened')"></SequenceDisplayPreview>
       </div>
     </template>
   </ContainerComponent>

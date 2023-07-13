@@ -1,40 +1,29 @@
 <template>
-  <div
-    v-if="isOpen"
-    class="fixed inset-0 flex items-center justify-center z-50"
-  >
-    <div class="bg-white rounded-lg p-6 shadow-xl">
+  <div class="popup" v-if="isOpen">
+    <div class="popupcontent">
       <slot></slot>
-      <ButtonComponent
-        @click="close"
-        class="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
-      >
-        Close
-      </ButtonComponent>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import {ref, watch} from 'vue';
 import ButtonComponent from './ButtonComponent.vue';
+import useEventsBus from './../eventBus';
+const { bus } = useEventsBus()
+let isOpen = ref(false)
+watch(()=>bus.value.get('open-popup'), () => {
+  isOpen.value = true
+  console.log(isOpen)
+})
+const emit = defineEmits(['closed']);
 
-defineEmits(['closed']);
+;
 
-let isOpen = ref('false');
-
-/**
- *  const open = function containerOpen():void {
- *   isOpen = ref('true');
- * };
- */
-
-/**
- * Sets popup to closed
- */
-function close(): void {
-  isOpen = ref('false');
-}
+// const togglePopUp = () => {
+//   if(!isOpen.value) {
+//     emit('closed');
+//   }
+//   isOpen.value = !isOpen.value;
+// }
 </script>
-
-<style scoped></style>
