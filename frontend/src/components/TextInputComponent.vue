@@ -6,9 +6,9 @@
       :maxLength="maxLength"
       :placeholder="placeHolder"
       :disabled="disabled"
-      v-model="inputText"
       class="cursor-pointer w-full placeholder:text-gray-500"
       :class="{ uppercase: uppercase }"
+      v-model="inputRef"
     />
   </InteractableComponent>
 </template>
@@ -17,7 +17,7 @@
 import { ref, watch } from 'vue';
 import InteractableComponent from './InteractableComponent.vue';
 
-defineProps({
+const props = defineProps({
   /**
    * The placeholder text for the input
    */
@@ -63,6 +63,10 @@ defineProps({
     required: false,
     default: false,
   },
+  /**
+   * The variable for the v-model option
+   */
+  modelValue: String,
 });
 
 const emit = defineEmits([
@@ -71,12 +75,12 @@ const emit = defineEmits([
    *
    * @param inputText The text in the input
    */
-  'input-changed',
+  'update:modelValue',
 ]);
 
-const inputText = ref('');
+const inputRef = ref(props.modelValue);
 
-watch(inputText, (newValue) => {
-  emit('input-changed', newValue);
+watch(inputRef, (newInput) => {
+  emit('update:modelValue', newInput);
 });
 </script>
