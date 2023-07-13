@@ -19,6 +19,7 @@ To avoid the auto download, download the required [H5P library](https://github.c
 
 ## Imprint
 To add your own imprint, edit the `build/dist/imprint.html` file.
+Alternatively, the source file at `frontend/public/imprint.html` can be edited, however, the platform needs to be recompiled afterwards.
 
 ## Command reference
 
