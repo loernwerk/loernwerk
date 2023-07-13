@@ -1,9 +1,19 @@
 <template>
   <div class="flex flex-col">
-    <div v-for="user in accounts" :key="user.id">
+    <div>
+      <SearchBarComponent
+        @input-changed="
+          (newInput) => {
+            filterText = newInput;
+            filter();
+          }
+        "
+      />
+    </div>
+    <div v-for="user in accountArray" :key="user.id">
       <div>
         <ContainerComponent>
-          <ButtonComponent @click="clicked(user.id as number)">
+          <ButtonComponent @click="emit('selected', user.id)">
             {{ user.name }}
           </ButtonComponent>
         </ContainerComponent>
@@ -13,12 +23,13 @@
 </template>
 
 <script setup lang="ts">
-import { PropType } from 'vue';
+import { PropType, ref } from 'vue';
 import { IUser } from '../../../model/user/IUser';
 import ButtonComponent from './ButtonComponent.vue';
 import ContainerComponent from './ContainerComponent.vue';
+import SearchBarComponent from './SearchBarComponent.vue';
 
-defineProps({
+const props = defineProps({
   accounts: {
     type: Object as PropType<Array<Partial<IUser>>>,
     required: true,
@@ -30,8 +41,16 @@ const emit = defineEmits(['selected']);
  * emits, when the user clicks on a user in the list
  * @param userId the userId of the user clicked on
  */
-function clicked(userId: number): void {
-  console.log('Pressed: ' + userId);
-  emit('selected', userId);
+
+const accountArray = ref(props.accounts);
+const filterText = ref('');
+
+/**
+ * filters the prop account array by the inputed text
+ */
+function filter(): void {
+  accountArray.value = props.accounts.filter((element) => {
+    return element.name?.match(filterText.value.concat('.*'));
+  });
 }
 </script>
