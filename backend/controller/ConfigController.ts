@@ -1,4 +1,6 @@
 import { ConfigKey } from '../../model/configuration/ConfigKey';
+import { DBConfigEntry } from '../../model/configuration/DBConfigEntry';
+import { LoernwerkError, LoernwerkErrorCodes } from '../loernwerkError';
 
 /**
  * Manages configuration data in the database and handles requests for config requests
@@ -7,10 +9,10 @@ export class ConfigController {
     /**
      * Searches a configurationentry from the database
      * @param key the configurationkey of the entry
+     * @returns the value of the entry
      */
     public static async getConfigEntry(key: ConfigKey): Promise<unknown> {
-        void key;
-        throw new Error('Not implemented');
+        return await DBConfigEntry.findOneBy({ key: key });
     }
 
     /**
@@ -22,9 +24,15 @@ export class ConfigController {
         key: ConfigKey,
         value: unknown
     ): Promise<void> {
-        void key;
-        void value;
-        throw new Error('Not implemented');
+        const entry = await DBConfigEntry.findOneBy({ key: key });
+        if (entry === null) {
+            throw new LoernwerkError(
+                'Config not Found',
+                LoernwerkErrorCodes.NOT_FOUND
+            );
+        }
+        entry.value = value;
+        entry.save();
     }
 
     /**
