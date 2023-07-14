@@ -10,11 +10,13 @@
         "
       />
     </div>
-    <div v-for="user in accountArray" :key="user.id">
-      <div class="p-0.5">
-        <ButtonComponent @click="emit('selected', user.id)">
-          {{ user.name }}
-        </ButtonComponent>
+    <div class="">
+      <div v-for="user in accountArray" :key="user.id">
+        <div class="p-0.5">
+          <ButtonComponent @click="emit('selected', user.id)">
+            {{ user.name }}
+          </ButtonComponent>
+        </div>
       </div>
     </div>
   </div>
@@ -45,11 +47,14 @@ const emit = defineEmits([
 const accountArray = ref(props.accounts);
 const filterText = ref('');
 
-watch(props.accounts, (newVal) => {
-  accountArray.value = newVal;
-  console.log(newVal);
-  filter();
-});
+watch(
+  () => props.accounts,
+  (newVal) => {
+    accountArray.value = newVal;
+    console.log(newVal);
+    filter();
+  }
+);
 
 /**
  * filters the prop account array by the inputed text

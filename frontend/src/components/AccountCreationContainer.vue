@@ -118,6 +118,7 @@ async function updateInformation(): Promise<void> {
       password: pwField.value,
     });
     displaySuccess.value = true;
+    console.log('create');
     emit('create');
   } catch (e) {
     console.log('server fault');

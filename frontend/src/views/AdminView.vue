@@ -1,36 +1,42 @@
 <template>
-  <ContainerComponent>
-    <ButtonComponent
-      @click="
-        selectedUser = null;
-        displayCreateUser = true;
-      "
-      @create="refresh()"
-      class="p-0.5"
-    >
-      Nutzer erstellen
-    </ButtonComponent>
-    <AccountList
-      :accounts="accounts"
-      :key="key"
-      @selected="
-        (id) => {
-          displayCreateUser = false;
-          updateUser(id);
-        }
-      "
-    />
-  </ContainerComponent>
-  <div v-if="selectedUser !== null" class="flex grow">
-    <AccountDetailsEditContainer
-      :showadminview="true"
-      :user="selectedUser"
-      @delete="refresh()"
-    />
-    <AccountSequenceContainer :sequences="sequencesOfUser" />
+  <div class="w-full flex">
+    <ContainerComponent class="w-1/4">
+      <ButtonComponent
+        @click="
+          selectedUser = null;
+          displayCreateUser = true;
+        "
+        @create="refresh()"
+        class="p-0.5"
+      >
+        Nutzer erstellen
+      </ButtonComponent>
+      <AccountList
+        :accounts="accounts"
+        @selected="
+          (id) => {
+            displayCreateUser = false;
+            updateUser(id);
+          }
+        "
+      />
+    </ContainerComponent>
+    <div class="flex flex-grow">
+      <div v-if="selectedUser !== null" class="w-full flex">
+        <AccountDetailsEditContainer
+          class="w-2/3 pl-1 pr-1"
+          :showadminview="true"
+          :user="selectedUser"
+          @delete="refresh()"
+        />
+        <AccountSequenceContainer
+          :sequences="sequencesOfUser"
+          class="flex-grow"
+        />
+      </div>
+      <AccountCreationContainer v-if="displayCreateUser" class="w-2/3 pl-1" />
+    </div>
   </div>
-
-  <AccountCreationContainer v-if="displayCreateUser" />
 </template>
 <script setup lang="ts">
 import { Ref, ref } from 'vue';
@@ -59,7 +65,6 @@ let sequencesOfUser: Ref<ISequence[]> = ref([
     slideCount: 0,
   },
 ]);
-const key = ref(1);
 const accounts: Ref<Partial<IUser>[]> = ref([]);
 try {
   accounts.value = await AccountRestInterface.getAccountMetaDataList();
