@@ -10,10 +10,10 @@
         "
       />
     </div>
-    <div v-for="user in accountArray" :key="user?.id">
+    <div v-for="user in accountArray" :key="user.id">
       <div class="p-0.5">
-        <ButtonComponent @click="emit('selected', user?.id)">
-          {{ user?.name }}
+        <ButtonComponent @click="emit('selected', user.id)">
+          {{ user.name }}
         </ButtonComponent>
       </div>
     </div>
@@ -28,25 +28,28 @@ import ButtonComponent from './ButtonComponent.vue';
 import SearchBarComponent from './SearchBarComponent.vue';
 
 const props = defineProps({
-  modelValue: Object as PropType<Partial<IUser>[]>,
+  accounts: {
+    type: Object as PropType<Partial<IUser>[]>,
+    required: true,
+  },
 });
 
-const emit = defineEmits(['update:modelValue', 'selected']);
+const emit = defineEmits(['selected']);
 
 /**
  * emits, when the user clicks on a user in the list
  * @param userId the userId of the user clicked on
  */
 
-const accountArray = ref(props.modelValue);
+const accountArray = ref(props.accounts);
 const filterText = ref('');
 
 /**
  * filters the prop account array by the inputed text
  */
 function filter(): void {
-  accountArray.value = props.modelValue?.filter((element) => {
-    return element?.name?.match(filterText.value.concat('.*'));
+  accountArray.value = props.accounts?.filter((element) => {
+    return element.name?.match(filterText.value.concat('.*'));
   });
 }
 </script>

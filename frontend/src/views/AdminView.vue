@@ -11,7 +11,7 @@
       Nutzer erstellen
     </ButtonComponent>
     <AccountList
-      v-model="test"
+      :accounts="(accounts as Partial<IUser>[])"
       @selected="
         (id) => {
           displayCreateUser = false;
@@ -58,9 +58,9 @@ let sequencesOfUser: Ref<ISequence[]> = ref([
     slideCount: 0,
   },
 ]);
-let test: Ref<Partial<IUser>[] | undefined> = ref(undefined);
+let accounts: Ref<Partial<IUser>[] | undefined> = ref(undefined);
 try {
-  test.value = await AccountRestInterface.getAccountMetaDataList();
+  accounts.value = await AccountRestInterface.getAccountMetaDataList();
 } catch (e) {
   console.log(e);
 }
@@ -76,6 +76,6 @@ async function updateUser(id: number): Promise<void> {
  * refreshes the account list
  */
 async function refresh(): Promise<void> {
-  test.value = await AccountRestInterface.getAccountMetaDataList();
+  accounts.value = await AccountRestInterface.getAccountMetaDataList();
 }
 </script>
