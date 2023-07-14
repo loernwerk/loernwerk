@@ -5,12 +5,13 @@
         selectedUser = null;
         displayCreateUser = true;
       "
+      @create="refresh()"
       class="p-0.5"
     >
       Nutzer erstellen
     </ButtonComponent>
     <AccountList
-      :accounts="test"
+      v-model="test"
       @selected="
         (id) => {
           displayCreateUser = false;
@@ -20,7 +21,11 @@
     />
   </ContainerComponent>
   <div v-if="selectedUser !== null" class="flex grow">
-    <AccountDetailsEditContainer :showadminview="true" :user="selectedUser" />
+    <AccountDetailsEditContainer
+      :showadminview="true"
+      :user="selectedUser"
+      @delete="refresh()"
+    />
     <AccountSequenceContainer :sequences="sequencesOfUser" />
   </div>
 
@@ -53,9 +58,9 @@ let sequencesOfUser: Ref<ISequence[]> = ref([
     slideCount: 0,
   },
 ]);
-let test: Partial<IUser>[];
+let test: Ref<Partial<IUser>[] | undefined> = ref(undefined);
 try {
-  test = await AccountRestInterface.getAccountMetaDataList();
+  test.value = await AccountRestInterface.getAccountMetaDataList();
 } catch (e) {
   console.log(e);
 }
@@ -66,5 +71,11 @@ try {
 async function updateUser(id: number): Promise<void> {
   selectedUser.value = await AccountRestInterface.getAccount(id);
   //sequencesOfUser.value = await SequenceRestInterface.getSequenceByUser(selectedUser.value.id as number)
+}
+/**
+ * refreshes the account list
+ */
+async function refresh(): void {
+  test.value = await AccountRestInterface.getAccountMetaDataList();
 }
 </script>

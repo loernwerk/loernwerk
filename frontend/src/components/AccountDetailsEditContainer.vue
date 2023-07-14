@@ -138,6 +138,7 @@ const props = defineProps({
     required: true,
   },
 });
+const emit = defineEmits(['delete']);
 
 const nameField = ref(props.user.name);
 const mailField = ref(props.user.mail);
@@ -214,6 +215,7 @@ async function deleteAccount(): Promise<void> {
   await AccountRestInterface.deleteAccount(originalUser.id as number);
   disableInputShowSpinner.value = false;
   deleted.value = true;
+  emit('delete');
 }
 /**
  * reseting this component

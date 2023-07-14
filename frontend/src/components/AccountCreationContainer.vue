@@ -82,6 +82,8 @@ import ButtonComponent from './ButtonComponent.vue';
 import ContainerComponent from './ContainerComponent.vue';
 import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
 
+const emit = defineEmits(['create']);
+
 const nameField = ref('');
 const mailField = ref('');
 const pwField = ref('');
@@ -116,6 +118,7 @@ async function updateInformation(): Promise<void> {
       password: pwField.value,
     });
     displaySuccess.value = true;
+    emit('create');
   } catch (e) {
     console.log('server fault');
     displayError.value = true;
