@@ -7,7 +7,7 @@
       und die Lernsequenz "{{ sequence.name }}" vollständig bearbeitet!
     </div>
     <div class="flex justify-center mt-6">
-      <ButtonComponent class="w-fit" @click="downloadCertificate">
+      <ButtonComponent class="w-fit" @click="downloadCertificate()">
         Teilnahmezertifikat
       </ButtonComponent>
     </div>
@@ -19,6 +19,7 @@
 
 <script setup lang="ts">
 import ButtonComponent from '../components/ButtonComponent.vue';
+import { BaseRestInterface } from '../restInterfaces/BaseRestInterface';
 import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
 import { ref } from 'vue';
 
@@ -40,7 +41,12 @@ const sequence = ref(
  * Opens a new tab and downloads certificate as pdf
  */
 function downloadCertificate(): void {
-  window.open('/api/sequence/' + props.code + '/view/certificate');
+  window.open(
+    BaseRestInterface.getBaseURL() +
+      '/sequence/' +
+      props.code +
+      '/view/certificate'
+  );
 }
 </script>
 
