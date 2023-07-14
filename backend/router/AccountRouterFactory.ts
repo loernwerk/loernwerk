@@ -42,7 +42,7 @@ export class AccountRouterFactory extends RouterFactory {
         accountRouter.put(
             '/',
             requireAdmin,
-            requireBody('username', 'email', 'password'),
+            requireBody('name', 'mail', 'password'),
             async (req, res) => {
                 try {
                     const user = await AccountController.createNewAccount(

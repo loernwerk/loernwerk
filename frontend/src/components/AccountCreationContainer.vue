@@ -117,6 +117,7 @@ async function updateInformation(): Promise<void> {
     });
     displaySuccess.value = true;
   } catch (e) {
+    console.log('server fault');
     displayError.value = true;
   }
   disableInputShowSpinner.value = false;
