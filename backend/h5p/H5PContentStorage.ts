@@ -15,7 +15,10 @@ import { DBH5PContent } from '../../model/h5p/DBH5PContent';
 import { DBUser } from '../../model/user/DBUser';
 import { DBSequence } from '../../model/sequence/DBSequence';
 import { UserClass } from '../../model/user/IUser';
-import { LoernwerkError, LoernwerkErrorCodes } from '../loernwerkError';
+import {
+    LoernwerkError,
+    LoernwerkErrorCodes,
+} from '../../model/loernwerkError';
 import { In } from 'typeorm';
 
 /**
@@ -69,7 +72,7 @@ export class H5PContentStorage implements IContentStorage {
         readStream: Readable,
         user?: IUser
     ): Promise<void> {
-        if (!(await this.canUserAccessContent(user.id, contentId))) {
+        if (user && !(await this.canUserAccessContent(user.id, contentId))) {
             throw new LoernwerkError(
                 'User is not allowed to edit this content',
                 LoernwerkErrorCodes.FORBIDDEN
@@ -133,7 +136,10 @@ export class H5PContentStorage implements IContentStorage {
         contentId: ContentId,
         user?: IUser
     ): Promise<void> {
-        if (!(await this.canUserAccessContent(user.id, contentId, true))) {
+        if (
+            user &&
+            !(await this.canUserAccessContent(user.id, contentId, true))
+        ) {
             throw new LoernwerkError(
                 'User is not allowed to edit this content',
                 LoernwerkErrorCodes.FORBIDDEN
@@ -156,7 +162,10 @@ export class H5PContentStorage implements IContentStorage {
         filename: string,
         user?: IUser
     ): Promise<void> {
-        if (!(await this.canUserAccessContent(user.id, contentId, true))) {
+        if (
+            user &&
+            !(await this.canUserAccessContent(user.id, contentId, true))
+        ) {
             throw new LoernwerkError(
                 'User is not allowed to edit this content',
                 LoernwerkErrorCodes.FORBIDDEN
