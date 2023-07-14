@@ -76,6 +76,7 @@ async function updateUser(id: number): Promise<void> {
  * refreshes the account list
  */
 async function refresh(): Promise<void> {
+  console.log('refreshing');
   accounts.value = await AccountRestInterface.getAccountMetaDataList();
 }
 </script>

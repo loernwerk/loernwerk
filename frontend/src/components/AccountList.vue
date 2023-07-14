@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, ref } from 'vue';
+import { PropType, ref, watch } from 'vue';
 import { IUser } from '../../../model/user/IUser';
 import ButtonComponent from './ButtonComponent.vue';
 //import ContainerComponent from './ContainerComponent.vue';
@@ -34,15 +34,22 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['selected']);
-
-/**
- * emits, when the user clicks on a user in the list
- * @param userId the userId of the user clicked on
- */
+const emit = defineEmits([
+  /**
+   * emits, when the user clicks on a user in the list
+   * @param userId the userId of the user clicked on
+   */
+  'selected',
+]);
 
 const accountArray = ref(props.accounts);
 const filterText = ref('');
+
+watch(props.accounts, (newVal) => {
+  accountArray.value = newVal;
+  console.log(newVal);
+  filter();
+});
 
 /**
  * filters the prop account array by the inputed text
