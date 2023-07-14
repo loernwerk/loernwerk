@@ -73,7 +73,7 @@ export class AccountRestInterface extends BaseRestInterface {
    */
   public static async getAccount(id: number): Promise<Partial<IUser>> {
     return await BaseRestInterface.get<Partial<IUser>>(
-      this.account_path.concat('?id=').concat(id as unknown as string)
+      this.account_path.concat('?id=').concat(id.toString())
     );
   }
 

@@ -110,13 +110,13 @@ export class AccountRouterFactory extends RouterFactory {
             const reqUserId = req.query.id;
             let id: number;
             if (reqUserId !== null) {
-                id = reqUserId as unknown as number;
+                id = parseInt(reqUserId as string);
                 if (req.session.isAdmin !== true) {
                     res.status(403);
                     return;
                 }
             } else {
-                id = req.session.id as unknown as number;
+                id = req.session.userId as number;
             }
             let user: IUser;
 
