@@ -1,6 +1,9 @@
 <!-- Displays an image content. -->
 <template>
-  <div class="flex justify-center items-center h-full overflow-hidden">
+  <div
+    class="flex justify-center items-center h-full w-full overflow-hidden"
+    @click="$emit('editing')"
+  >
     <img
       :src="imageContent.img"
       class="w-auto h-auto block"
@@ -9,7 +12,6 @@
         maxWidth: `${imageContent.scale * 100}%`,
       }"
       :class="{ 'cursor-pointer': editMode }"
-      @click="$emit('editing')"
     />
   </div>
 </template>

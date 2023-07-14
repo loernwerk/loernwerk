@@ -4,9 +4,15 @@
     <SlideOverviewContainer
       :slides="sequence.slides"
       @selection-changed="(val) => changeSelectedSlide(val)"
+      @add-slide="addSlide()"
     />
     <div class="flex flex-col grow space-y-5">
-      <TabbedContainer class="h-48" :tabs="tabs" ref="editOptionsTabContainer">
+      <TabbedContainer
+        class="h-48"
+        :shown-tabs="tabs"
+        :possible-tabs="['Seite', 'Embed', 'Bild', 'Text']"
+        ref="editOptionsTabContainer"
+      >
         <template #Seite>
           <SlideOptionsTab
             :slide="selectedSlide"
@@ -33,10 +39,7 @@
         </template>
 
         <template #Text>
-          <TextOptionsTab
-            v-if="currentEditingSlot"
-            :textContent="(selectedSlide.content[currentEditingSlot] as TextContent)"
-          />
+          <TextOptionsTab />
         </template>
       </TabbedContainer>
       <div class="grow flex items-center justify-center">
@@ -44,7 +47,12 @@
           :slide="selectedSlide"
           :edit-mode="true"
           class="h-[100%]"
-          @editing="(val) => selectEditingSlot(val.slot)"
+          @editing="
+            (val) => {
+              selectEditingSlot(val.slot);
+              updateContent(val.slot, val.emit);
+            }
+          "
           @change-content="(val) => changeContent(val.slot, val.type)"
         />
       </div>
@@ -69,6 +77,7 @@ import { TextContent } from '../../../model/slide/content/TextContent';
 import { ImageContent } from '../../../model/slide/content/ImageContent';
 import { EmbedContent } from '../../../model/slide/content/EmbedContent';
 import { H5PContent } from '../../../model/slide/content/H5PContent';
+import Delta from 'quill-delta';
 
 defineProps({
   /**
@@ -99,9 +108,15 @@ const h = ref({
 
 const txt: Ref<TextContent> = ref({
   type: ContentType.TEXT,
-  textSnippets: [],
-  alignmentHorizontal: 'center',
-  alignmentVertical: 'center',
+  delta: new Delta(),
+});
+const txt2: Ref<TextContent> = ref({
+  type: ContentType.TEXT,
+  delta: new Delta(),
+});
+const txt3: Ref<TextContent> = ref({
+  type: ContentType.TEXT,
+  delta: new Delta(),
 });
 
 const sequence = ref<ISequenceWithSlides>({
@@ -128,9 +143,10 @@ sequence.value.slides.push({
 });
 
 sequence.value.slides.push({
-  layout: LayoutType.SINGLE_COLUMN,
+  layout: LayoutType.TWO_COLUMN,
   content: {
-    [LayoutSlot.MAIN]: im.value,
+    [LayoutSlot.MAIN]: txt3.value,
+    [LayoutSlot.SECONDARY]: txt2.value,
   },
   backgroundColor: '#00ff00',
   sequenceCode: '',
@@ -185,10 +201,26 @@ const tabs = ref(['Seite']);
  * @param slot Slot to select for
  */
 function selectEditingSlot(slot: LayoutSlot): void {
+  console.log('selecting slot', slot);
   currentEditingSlot.value = slot;
 }
 
-watch(currentEditingSlot, (slot) => {
+/**
+ * Updates the content in the given slot
+ * @param slot Slot of content
+ * @param update Object containing data for update
+ */
+function updateContent(slot: LayoutSlot, update: unknown): void {
+  if (selectedSlide.value.content[slot]?.type == ContentType.TEXT) {
+    (selectedSlide.value.content[slot] as TextContent).delta = update as Delta;
+  }
+}
+
+/**
+ * Updates the tabs shown in the tab container
+ */
+function updateShownTabs(): void {
+  const slot = currentEditingSlot.value;
   tabs.value = ['Seite'];
   if (slot) {
     const tabName = getTabNameForSlot(slot);
@@ -197,7 +229,33 @@ watch(currentEditingSlot, (slot) => {
       editOptionsTabContainer.value?.selectTab(tabName);
     }
   }
+}
+
+watch(currentEditingSlot, () => {
+  updateShownTabs();
 });
+
+/**
+ * Adds a new slide to the sequence
+ */
+function addSlide(): void {
+  let maxId = -1;
+  sequence.value.slides.forEach((slide) => {
+    if (slide.id > maxId) {
+      maxId = slide.id;
+    }
+  });
+
+  sequence.value.slides.push({
+    layout: LayoutType.SINGLE_COLUMN,
+    content: {},
+    backgroundColor: '#ffffff',
+    sequenceCode: sequence.value.code,
+    order: sequence.value.slides.length,
+    id: maxId + 1,
+  });
+  sequence.value.slideCount = sequence.value.slides.length;
+}
 
 /**
  * Switches to the slide with the given index
@@ -228,14 +286,13 @@ function changeContent(slot: LayoutSlot, contentType: ContentType): void {
       content = new ImageContent();
       content.type = ContentType.IMAGE;
       content.img = '';
+      content.scale = 1;
       break;
 
     case ContentType.TEXT:
       content = new TextContent();
       content.type = ContentType.TEXT;
-      content.textSnippets = [];
-      content.alignmentHorizontal = 'left';
-      content.alignmentVertical = 'top';
+      content.delta = new Delta();
       break;
 
     case ContentType.EMBED:
@@ -252,6 +309,6 @@ function changeContent(slot: LayoutSlot, contentType: ContentType): void {
   }
 
   sequence.value.slides[selectedSlideIndex.value].content[slot] = content;
-  console.log(sequence.value);
+  updateShownTabs();
 }
 </script>

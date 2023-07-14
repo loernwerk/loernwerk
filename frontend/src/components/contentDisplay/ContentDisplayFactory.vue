@@ -31,7 +31,10 @@
         @editing="(val) => $emit('editing', val)"
       />
     </div>
-    <div class="absolute flex flex-rows space-x-2 top-3 right-3">
+    <div
+      class="absolute flex flex-rows space-x-2 top-3 right-3"
+      v-if="editMode"
+    >
       <img
         v-for="[content, image] in possibleNewContentTypes"
         :key="content"

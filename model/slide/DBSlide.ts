@@ -17,8 +17,8 @@ export class DBSlide extends BaseEntity implements ISlide {
     @Column()
     backgroundColor: string;
 
-    @Column()
     @Index()
+    @PrimaryColumn()
     sequenceCode: string;
 
     @Column()

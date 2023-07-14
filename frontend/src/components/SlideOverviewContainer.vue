@@ -4,20 +4,26 @@
       <h1 class="text-3xl mb-2">Seiten</h1>
     </template>
     <template #default>
-      <VueDraggableNext :list="slides" @change="updateOrder()">
-        <div
-          class="mb-2 mr-2 flex flex-row space-x-2 items-center"
-          v-for="[index, slide] in slides.entries()"
-          :key="slide.id"
-        >
-          <p>{{ index + 1 }}</p>
-          <SlideOverviewContainerElement
-            :slide="slide"
-            class="rounded-md"
-            @click="$emit('selectionChanged', index)"
-          />
-        </div>
-      </VueDraggableNext>
+      <div class="flex flex-col min-h-full">
+        <VueDraggableNext :list="slides" @change="updateOrder()">
+          <div
+            class="mb-2 mr-2 flex flex-row space-x-2 items-center"
+            v-for="[index, slide] in slides.entries()"
+            :key="slide.id"
+          >
+            <p>{{ index + 1 }}</p>
+            <SlideOverviewContainerElement
+              :slide="slide"
+              class="rounded-md"
+              @click="$emit('selectionChanged', index)"
+            />
+          </div>
+        </VueDraggableNext>
+        <div class="flex-grow"></div>
+        <ButtonComponent @click="$emit('addSlide')" class="w-full text-center">
+          +
+        </ButtonComponent>
+      </div>
     </template>
   </ContainerComponent>
 </template>
@@ -27,6 +33,7 @@ import { ISlide } from '../../../model/slide/ISlide';
 import ContainerComponent from './ContainerComponent.vue';
 import { VueDraggableNext } from 'vue-draggable-next';
 import SlideOverviewContainerElement from './SlideOverviewContainerElement.vue';
+import ButtonComponent from './ButtonComponent.vue';
 
 const props = defineProps({
   slides: {
@@ -35,7 +42,7 @@ const props = defineProps({
   },
 });
 
-defineEmits(['selectionChanged']);
+defineEmits(['selectionChanged', 'addSlide']);
 
 /**
  * Updates the order of the slides after a drag and drop event
