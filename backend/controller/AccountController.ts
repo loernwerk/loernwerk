@@ -314,6 +314,7 @@ export class AccountController {
             return true;
         }
         if (name.toLowerCase() == this.defaultUsername) {
+            console.log('rejected: ' + name);
             return false;
         }
         return true;
@@ -336,6 +337,7 @@ export class AccountController {
             return true;
         }
         if (mail.toLowerCase() == this.defaultMail) {
+            console.log('rejected: ' + mail);
             return false;
         }
         return true;
