@@ -4,13 +4,13 @@
     <TextInputComponent
       class="grow"
       :start-text="embedContent.url"
-      @input-changed="(text) => update(text)"
+      v-model:model-value="url"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { PropType, ref } from 'vue';
+import { PropType, ref, watch } from 'vue';
 import { EmbedContent } from '../../../../model/slide/content/EmbedContent';
 import TextInputComponent from '../TextInputComponent.vue';
 
@@ -25,12 +25,14 @@ const content = ref(props.embedContent);
 
 const emits = defineEmits(['update-content']);
 
+const url = ref(content.value.url);
+
 /**
  * Updates the content
  * @param url The new url
  */
-function update(url: string): void {
-  content.value.url = url;
+watch(url, () => {
+  content.value.url = url.value;
   emits('update-content', content.value);
-}
+});
 </script>
