@@ -6,6 +6,11 @@
       Du hast es geschafft<br />
       und die Lernsequenz "{{ sequence.name }}" vollständig bearbeitet!
     </div>
+    <div class="flex justify-center mt-6">
+      <ButtonComponent class="w-fit" @click="downloadCertificate">
+        Teilnahmezertifikat
+      </ButtonComponent>
+    </div>
   </div>
   <div class="firework overflow-hidden"></div>
   <div class="firework overflow-hidden"></div>
@@ -13,6 +18,7 @@
 </template>
 
 <script setup lang="ts">
+import ButtonComponent from '../components/ButtonComponent.vue';
 import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
 import { ref } from 'vue';
 
@@ -29,6 +35,13 @@ const props = defineProps({
 const sequence = ref(
   await SequenceRestInterface.getMetadataForStudent(props.code)
 );
+
+/**
+ * Opens a new tab and downloads certificate as pdf
+ */
+function downloadCertificate(): void {
+  window.open('/api/sequence/' + props.code + '/view/certificate');
+}
 </script>
 
 <!-- Firework by https://alvaromontoro.com/blog/68002/creating-a-firework-effect-with-css -->
