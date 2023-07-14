@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { RouterFactory } from './RouterFactory';
 import { AccountController } from '../controller/AccountController';
-import { UserClass } from '../../model/user/IUser';
+import { IUser, UserClass } from '../../model/user/IUser';
 import { requireAdmin, requireBody, requireLogin } from '../loernwerkUtilities';
 import { LoernwerkErrorCodes } from '../loernwerkError';
 
@@ -107,9 +107,26 @@ export class AccountRouterFactory extends RouterFactory {
         );
 
         accountRouter.get('/', requireLogin, async (req, res) => {
-            const user = await AccountController.getAccountById(
-                req.session.userId as number
-            );
+            const reqUserId = req.query.id;
+            let id: number;
+            if (reqUserId !== null) {
+                id = reqUserId as unknown as number;
+                if (req.session.isAdmin !== true) {
+                    res.status(403);
+                    return;
+                }
+            } else {
+                id = req.session.id as unknown as number;
+            }
+            let user: IUser;
+
+            try {
+                user = await AccountController.getAccountById(id);
+            } catch (e) {
+                res.status(404);
+                return;
+            }
+
             res.status(200).json({
                 id: user.id,
                 name: user.name,
