@@ -37,12 +37,19 @@ export class ConfigController {
 
     /**
      * returns all configurationentries from the database
+     * @returns a record with all config entries
      */
     public static async getAllConfigEntries(): Promise<
         Record<ConfigKey, unknown>
     > {
         const config = await DBConfigEntry.find();
-        void config;
-        throw new Error();
+        const rec: Record<ConfigKey, unknown> = Object.assign(
+            {},
+            ...Object.keys(ConfigKey).map((x) => ({ [x]: 'not present' }))
+        );
+        for (const x of config) {
+            rec[x.key] = x.value;
+        }
+        return rec;
     }
 }
