@@ -21,6 +21,7 @@
     >
       Anmelden
     </ButtonComponent>
+    <a class="absolute bottom-5 m-auto" href="/imprint.html">Impressum</a>
   </div>
 </template>
 
