@@ -12,6 +12,7 @@
     </ButtonComponent>
     <AccountList
       :accounts="accounts"
+      :key="key"
       @selected="
         (id) => {
           displayCreateUser = false;
@@ -58,6 +59,7 @@ let sequencesOfUser: Ref<ISequence[]> = ref([
     slideCount: 0,
   },
 ]);
+const key = ref(1);
 const accounts: Ref<Partial<IUser>[]> = ref([]);
 try {
   accounts.value = await AccountRestInterface.getAccountMetaDataList();
@@ -69,6 +71,8 @@ try {
  * @param id the id of the user
  */
 async function updateUser(id: number): Promise<void> {
+  console.log(id);
+  selectedUser.value = null;
   selectedUser.value = await AccountRestInterface.getAccount(id);
   //sequencesOfUser.value = await SequenceRestInterface.getSequenceByUser(selectedUser.value.id as number)
 }
@@ -77,6 +81,8 @@ async function updateUser(id: number): Promise<void> {
  */
 async function refresh(): Promise<void> {
   console.log('refreshing');
+  accounts.value = [];
   accounts.value = await AccountRestInterface.getAccountMetaDataList();
+  console.log(accounts.value);
 }
 </script>
