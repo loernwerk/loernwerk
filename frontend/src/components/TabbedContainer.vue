@@ -13,7 +13,6 @@
         >
           {{ tab }}
         </h1>
-        {{ selectedTab }}
       </div>
     </template>
     <template #default>
@@ -24,7 +23,6 @@
       >
         <slot :name="tab"></slot>
       </div>
-      <slot></slot>
     </template>
   </ContainerComponent>
 </template>

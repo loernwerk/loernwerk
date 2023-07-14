@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, Ref, onMounted, ref } from 'vue';
+import { PropType, Ref, onMounted, ref, watch } from 'vue';
 import { TextContent } from '../../../../model/slide/content/TextContent';
 import Quill from 'quill';
 import { colors, sizes } from './DesignOptions';
@@ -83,6 +83,23 @@ onMounted(() => {
     emits('editing', editor.value?.getContents());
   });
 });
+
+watch(
+  () => props.textContent,
+  () => {
+    if (editor.value === null) {
+      return;
+    }
+    if (props.textContent.delta == editor.value.getContents()) {
+      return;
+    }
+
+    // requiere vs import is an issue here
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    editor.value.setContents(props.textContent.delta);
+  }
+);
 </script>
 
 <style lang="postcss">
