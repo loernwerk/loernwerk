@@ -157,6 +157,21 @@ export class SequenceRouterFactory extends RouterFactory {
             }
         });
 
+        sequenceRouter.get('/:code/view/certificate', async (req, res) => {
+            try {
+                const pdf = await SequenceController.getCertificatePDF(
+                    req.params.code
+                );
+                res.set(
+                    'Content-Disposition',
+                    'attachment;filename=Teilnahmezertifikat.pdf'
+                );
+                res.status(200).send(pdf);
+            } catch {
+                res.sendStatus(404);
+            }
+        });
+
         sequenceRouter.get('/:code/view/:slide', async (req, res) => {
             try {
                 const slide = await SequenceController.getSequenceSlideByCode(
