@@ -89,36 +89,7 @@ defineProps({
   },
 });
 
-const emb = ref({
-  type: ContentType.EMBED,
-  url: 'youtube.com/embed/',
-});
-
-const im = ref({
-  type: ContentType.IMAGE,
-  img: ' data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAMAAABHPGVmAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAABgUExURf////3MyPYrJfUqJH4/FH0+E/zDdgAAAPvDdvvDevzCen8+FEVUyURTyfmxr/lhYHOC13KA2HKB1vcxKv7dUP7dT/cwKkRVy0RVyURTyEVUykRTxkNSx5ZOHpROHebUxiDKqjUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIcSURBVGhD7dftThtBDIXhQIECJbSlpRBa4P7vEnz8KrbYSdiZSSo+5vmxGox9vCutQlgMw2YH29DT7XAberoRV0ZPN+LK6OlGXBk93Ygro6eHcr7oWpZ/x0w1DY8lc2n4Qyw5Mse6uhPzVXQ8obGHgseSuRS8vyXHopx0dHlJwmSFdOPp6NKSU10dkxVScjq6sWQiJaej298Sp4KbFOSM+VlShB+dCm5SkHPmZ0kRfnQquElB/suTvOkl6bMrf7h4hR/WGpYI4+Ebv3iWPzyZrMCgITqMJRMMGqLDzpYkRJfR0424Mnq6EVdGTzfiyujpRlwZPd2IK6OnB1+lzYVZ6rjUWUf/wk13I0U4BY8lWynCKXjHSy7le/hhfup4pbOOzpuZrKA7zHT3G57EMVmBwaDgsWQDBoOCd7bkFzMv/DbXir/WWdW8RP6Q8oqxxH26Jef8zTOau1Gy+MvrV7lVB91m5j9BZ7QbRVQtmfmtfixxDUuEPLNKV7mjZ611yR2BzyZP0rokv8JStaThFZZ9PMnHXELU2mTJX13pNp9uSX6FFZG8vqThFVZEsrMnyUv+mZWubmU4Gz/TbWYuyXSfyVLVyZOo2kwRyViylSKSvSy5D1SCqg+6UmmkCEclqDqWZIpwVIKq72CJhjPqgXqgXoHBQD1QD9QrMBioB+qBegUGA/VAPVCvwGCgHqgH6hUeX6IeqAfqw1u3WDwBMxSLRhknKX0AAAAASUVORK5CYII=',
-  scale: 0.5,
-});
-
-const h = ref({
-  type: ContentType.H5P,
-  h5pContentId: '',
-  sequenceCode: '',
-});
-
-const txt: Ref<TextContent> = ref({
-  type: ContentType.TEXT,
-  delta: new Delta(),
-});
-const txt2: Ref<TextContent> = ref({
-  type: ContentType.TEXT,
-  delta: new Delta(),
-});
-const txt3: Ref<TextContent> = ref({
-  type: ContentType.TEXT,
-  delta: new Delta(),
-});
-
+// TODO: replace with database request
 const sequence = ref<ISequenceWithSlides>({
   code: '',
   name: '',
@@ -131,41 +102,9 @@ const sequence = ref<ISequenceWithSlides>({
   slideCount: 0,
 });
 
-sequence.value.slides.push({
-  layout: LayoutType.SINGLE_COLUMN,
-  content: {
-    [LayoutSlot.MAIN]: txt.value,
-  },
-  backgroundColor: '#ff0000',
-  sequenceCode: '',
-  order: 0,
-  id: 0,
-});
-
-sequence.value.slides.push({
-  layout: LayoutType.TWO_COLUMN,
-  content: {
-    [LayoutSlot.MAIN]: txt3.value,
-    [LayoutSlot.SECONDARY]: txt2.value,
-  },
-  backgroundColor: '#00ff00',
-  sequenceCode: '',
-  order: 1,
-  id: 1,
-});
-
-sequence.value.slides.push({
-  layout: LayoutType.SINGLE_COLUMN,
-  content: {
-    [LayoutSlot.MAIN]: h.value,
-  },
-  backgroundColor: '#0000ff',
-  sequenceCode: '',
-  order: 2,
-  id: 2,
-});
-
-sequence.value.slideCount = sequence.value.slides.length;
+if (sequence.value.slides.length == 0) {
+  addSlide();
+}
 
 const selectedSlideIndex = ref(0);
 const selectedSlide = computed(
@@ -188,7 +127,7 @@ function getTabNameForSlot(slot: LayoutSlot): string | undefined {
     [ContentType.EMBED]: 'Embed',
   };
   const type = selectedSlide.value.content[slot]?.type;
-  if (type && type != ContentType.H5P) {
+  if (type != undefined && type != ContentType.H5P) {
     return tabNameMap[type];
   }
   return undefined;
@@ -222,8 +161,10 @@ function updateContent(slot: LayoutSlot, update: unknown): void {
 function updateShownTabs(): void {
   const slot = currentEditingSlot.value;
   tabs.value = ['Seite'];
-  if (slot) {
+  console.log('updating tabs', slot);
+  if (slot != null) {
     const tabName = getTabNameForSlot(slot);
+    console.log(tabName);
     if (tabName) {
       tabs.value.push(tabName);
       editOptionsTabContainer.value?.selectTab(tabName);

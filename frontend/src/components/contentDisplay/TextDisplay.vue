@@ -1,7 +1,12 @@
 <!-- Displays a text content -->
 <template>
   <div class="h-full">
-    <div id="editor" class="h-full" ref="editorDiv"></div>
+    <div
+      id="editor"
+      class="h-full"
+      ref="editorDiv"
+      @click="emitEditing()"
+    ></div>
   </div>
 </template>
 
@@ -30,6 +35,18 @@ const props = defineProps({
 
 const emits = defineEmits(['editing']);
 const editorDiv: Ref<HTMLDivElement | null> = ref(null);
+const editor: Ref<Quill | null> = ref(null);
+
+/**
+ * Emits the editing event
+ */
+function emitEditing(): void {
+  if (editor.value === null) {
+    emits('editing', props.textContent.delta);
+  } else {
+    emits('editing', editor.value?.getContents());
+  }
+}
 
 onMounted(() => {
   const qlColors = Quill.import('attributors/style/color');
@@ -48,7 +65,7 @@ onMounted(() => {
     return;
   }
 
-  const editor = new Quill(realEditorDiv, {
+  editor.value = new Quill(realEditorDiv, {
     modules: {
       toolbar: {
         container: '#toolbar',
@@ -57,10 +74,13 @@ onMounted(() => {
     readOnly: !props.editMode,
   });
 
-  editor.setContents(props.textContent.delta);
+  // requiere vs import is an issue here
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  editor.value.setContents(props.textContent.delta);
 
-  editor.on('text-change', () => {
-    emits('editing', editor.getContents());
+  editor.value.on('text-change', () => {
+    emits('editing', editor.value?.getContents());
   });
 });
 </script>

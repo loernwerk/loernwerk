@@ -1,6 +1,6 @@
 <template>
-  <div id="toolbar" class="flex space-x-5">
-    <span class="flex space-x-2">
+  <div id="toolbar" class="flex space-x-7 pt-5 items-center">
+    <span class="flex space-x-2 items-center">
       <select class="ql-size interactable h-fit">
         <option
           v-for="size in firstSizes"
@@ -9,7 +9,7 @@
         >
           {{ size }}
         </option>
-        <option selected>{{ defaultTextSize }}</option>
+        <option selected></option>
         <option
           v-for="size in secondSizes"
           :key="(size as string)"
@@ -19,7 +19,7 @@
         </option>
       </select>
 
-      <span class="flex space-x-2">
+      <span class="flex space-x-1 items-center">
         <ButtonComponent @click="showColorPicker = !showColorPicker">
           <FontAwesomeIcon :icon="['fas', 'palette']" />
         </ButtonComponent>
@@ -37,8 +37,8 @@
         </span>
       </span>
 
-      <select class="ql-font interactable h-fit">
-        <option selected ref="defaultFontOption"></option>
+      <select class="ql-font interactable h-fit items-center">
+        <option selected></option>
         <option value="serif">Serif</option>
         <option value="monospace">Monospace</option>
       </select>
@@ -106,9 +106,3 @@ const firstSizes = sizes.slice(0, indexOfDefaultTextSize);
 
 const showColorPicker = ref(false);
 </script>
-
-<style scoped>
-.test::after {
-  content: 'test';
-}
-</style>
