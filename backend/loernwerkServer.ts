@@ -17,6 +17,7 @@ import { buildH5PRequest } from './loernwerkUtilities';
 import { h5pAjaxExpressRouter } from '@lumieducation/h5p-express';
 import { resolve } from 'node:path';
 import fileUpload from 'express-fileupload';
+import { ConfigRouterFactory } from './router/ConfigRouterFactory';
 
 /**
  * Main class and entrypoint of the backend server.
@@ -89,6 +90,7 @@ class loernwerkServer {
                 resolve('h5p/editor')
             )
         );
+        app.use('/api/config', new ConfigRouterFactory().buildRouter());
 
         // Serving built vue app
         app.use(history());
