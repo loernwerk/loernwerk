@@ -7,7 +7,7 @@
       :placeholder="placeHolder"
       :disabled="disabled"
       v-model="inputText"
-      class="cursor-pointer w-full placeholder:text-gray-500"
+      class="cursor-pointer w-full placeholder:text-gray-500 bg-transparent border-0"
       :class="{ uppercase: uppercase }"
     />
   </InteractableComponent>
