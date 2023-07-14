@@ -41,6 +41,8 @@ export class ConfigController {
     public static async getAllConfigEntries(): Promise<
         Record<ConfigKey, unknown>
     > {
-        throw new Error('Not implemented');
+        const config = await DBConfigEntry.find();
+        void config;
+        throw new Error();
     }
 }
