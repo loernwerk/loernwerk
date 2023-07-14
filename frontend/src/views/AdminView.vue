@@ -11,7 +11,7 @@
       Nutzer erstellen
     </ButtonComponent>
     <AccountList
-      :accounts="(accounts as Partial<IUser>[])"
+      :accounts="accounts"
       @selected="
         (id) => {
           displayCreateUser = false;
@@ -58,7 +58,7 @@ let sequencesOfUser: Ref<ISequence[]> = ref([
     slideCount: 0,
   },
 ]);
-let accounts: Ref<Partial<IUser>[] | undefined> = ref(undefined);
+const accounts: Ref<Partial<IUser>[]> = ref([]);
 try {
   accounts.value = await AccountRestInterface.getAccountMetaDataList();
 } catch (e) {
