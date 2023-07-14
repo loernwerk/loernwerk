@@ -15,19 +15,20 @@ import ContainerComponent from '../ContainerComponent.vue';
 import ButtonComponent from '../ButtonComponent.vue';
 import { SequenceRestInterface } from '../../restInterfaces/SequenceRestInterface';
 import { ISequence } from '../../../../model/sequence/ISequence';
+import useEventsBus from "../../eventBus";
 
 const props = defineProps({
   sequenceId: Object as () => ISequence,
 });
 
-const emits = defineEmits(['delete']);
+const { emit }=useEventsBus();
 
 /**
  * This Method deletes the desired Sequence
  */
 function deleteSequence(): void {
   if (props.sequenceId?.code !== undefined) {
-    emits(
+    emit(
       'delete',
       SequenceRestInterface.deleteSequence(props.sequenceId.code)
     );

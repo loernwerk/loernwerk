@@ -1,16 +1,25 @@
 <template>
-  <div class="w-full h-full">
-<!--    <PopupComponent v-if='popUpOpen' ref="popUpRef">-->
-    <PopupComponent>
-      <TabbedContainer :tabs='items.map(i=>i.name)'>
-        <template v-slot:item="{ item }">
-          {{ item.component }}
+  <main>
+    <PopupComponent v-if="addTagConfirmed">
+      <TabbedContainer :tabs='tabNames'>
+        <template v-slot:[0]="{ item }" >
+          <TagSequencePopupTab
+              :sequenceToBeTagged="sequenceToBeModified"
+          />
+        </template>
+        <template v-slot:[1]="{ item }" >
+          <DeleteSequencePopup
+              :sequenceId="sequenceToBeModified"
+          />
+        </template>
+        <template v-slot:[2]="{ item }" >
+          <ShareSequencePopupTab/>
         </template>
       </TabbedContainer>
     </PopupComponent>
+  <div class="w-full h-full">
     <div class="h-24.5 col-span-2 w-full -mt-28 -mb-20 flex flex-row">
       <div><img src="../assets/Logo.png" class="w-1/3 -ml-44 scale-50" /></div>
-      <div><ButtonComponent class="-ml-6 -mb-40">Menü</ButtonComponent></div>
       <div>
         <font-awesome-icon
           :icon="['fas', 'circle-user']"
@@ -34,6 +43,7 @@
       ></SequenceDisplayContainer>
     </div>
   </div>
+  </main>
 </template>
 
 <script setup lang="ts">
@@ -50,20 +60,22 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import ButtonComponent from '../components/ButtonComponent.vue';
 import PopupComponent from "../components/PopupComponent.vue";
 import TabbedContainer from "../components/TabbedContainer.vue";
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import TagSequencePopupTab from "../components/PopupTabs/TagSequencePopupTab.vue";
 import DeleteSequencePopup from "../components/PopupTabs/DeleteSequencePopup.vue";
 import ShareSequencePopupTab from "../components/PopupTabs/ShareSequencePopupTab.vue";
-
+import useEventsBus from "../eventBus";
 const name = 'Meine Sequenzen:';
 const name2 = 'Mit mir geteilte Sequenzen:';
 let sequences, sharedSequences: ISequence[];
 library.add(faCircleUser);
+const { bus } = useEventsBus();
 
 let originalUser: unknown;
-const popUpOpen = ref(true);
-const tabs = ['Sequenz löschen', 'Sequenz teilen','Sequenz Taggen','Schließen']
-
+const tabs = ['TagSequencePopupTab', 'DeleteSequencePopup','ShareSequencePopupTab']
+const tabNames = ['Sequenz Taggen','Sequenz löschen','Sequenz teilen']
+let sequenceToBeModified;
+let addTagConfirmed = true;
 
 let items = [
   {
@@ -116,4 +128,12 @@ try {
     }
   }
 }
+watch(()=>bus.value.get('open-popup'), (val) => {
+   sequenceToBeModified = val;
+
+});
+watch(()=>bus.value.get('confirmAddTag'), () => {
+  addTagConfirmed = !addTagConfirmed;
+
+})
 </script>

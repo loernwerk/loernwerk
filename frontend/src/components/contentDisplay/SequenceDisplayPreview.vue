@@ -3,11 +3,9 @@
     <h3>{{ name }}</h3>
     <div class="columns-2">
       <ButtonComponent @click="router.push('LogIn')"
-        >Bearbeiten</ButtonComponent
-      >
-      <!--TODO redirect to Sequence-mod-menu-->
+        >Bearbeiten
+      </ButtonComponent>
       <ButtonComponent @click="openPopUp">Menü</ButtonComponent>
-<!--      <ButtonComponent @click="$emit('popupOpened', openPopUp)">Menü</ButtonComponent>-->
     </div>
     <div class="Popup">
     </div>
@@ -24,20 +22,18 @@ import {ref} from "vue";
 import useEventsBus from './../../eventBus';
 import TabbedContainer from "../TabbedContainer.vue";
 
-defineProps({
-  sequences: {
+const props = defineProps({
+  sequence: {
     type: Object as () => ISequence,
-    required: false,
   },
   name: {
     type: String,
     required: true,
   },
 });
-// const isOpen = ref(false);
 const { emit }=useEventsBus()
 function openPopUp() {
-    emit("open-popup");
+    emit("open-popup", props.sequence);
 }
 </script>
 
