@@ -1,5 +1,12 @@
 <template>
-  <AccountDetailsEditContainer :user="originalUser" v-if="!showerror" />
+  <div class="flex-grow text-center">
+    <div class="text-red-500 italic" v-if="showerror">
+      Account nicht verfügbar
+    </div>
+  </div>
+  <div class="w-full mt-auto mb-auto ml-3 mr-3">
+    <AccountDetailsEditContainer :user="originalUser" v-if="!showerror" />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -10,5 +17,9 @@ import { ref } from 'vue';
 
 const showerror = ref(false);
 let originalUser: Partial<IUser>;
-originalUser = await AccountRestInterface.getOwnAccount();
+try {
+  originalUser = await AccountRestInterface.getOwnAccount();
+} catch (e) {
+  showerror.value = true;
+}
 </script>

@@ -2,13 +2,19 @@ import { DBUser } from '../../model/user/DBUser';
 import { IUser, UserClass } from '../../model/user/IUser';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
-import { LoernwerkError, LoernwerkErrorCodes } from '../loernwerkError';
+import {
+    LoernwerkError,
+    LoernwerkErrorCodes,
+} from '../../model/loernwerkError';
 import { DBSequence } from '../../model/sequence/DBSequence';
-import { SequenceController } from '../controller/SequenceController';
+import { SequenceController } from './SequenceController';
 /**
  * Manages account data in the database and handles requests for account requests regarding account data
  */
 export class AccountController {
+    static defaultUsername = 'admin';
+    static defaultMail = 'admin@loernwerk.de';
+
     /**
      * Creates a new account with given mail, name, password (ignoring the other values existing in the Partial<IUser>) in the database
      * @param data A user object that contains the initial values to be saved
@@ -26,16 +32,41 @@ export class AccountController {
             );
         }
 
-        if ((await DBUser.findBy({ mail: data.mail as string })).length > 0) {
+        if (
+            (
+                await DBUser.find({
+                    where: { mail: data.mail as string },
+                    select: ['mail'],
+                })
+            ).length > 0
+        ) {
             throw new LoernwerkError(
                 'mail already exists',
                 LoernwerkErrorCodes.ALREADY_EXISTS
             );
         }
-        if ((await DBUser.findBy({ name: data.name as string })).length > 0) {
+        if (
+            (
+                await DBUser.find({
+                    where: { name: data.name as string },
+                    select: ['name'],
+                })
+            ).length > 0
+        ) {
             throw new LoernwerkError(
                 'username already exists',
                 LoernwerkErrorCodes.ALREADY_EXISTS
+            );
+        }
+
+        if (
+            this.isValidMail(data.mail, false) ||
+            this.isValidUsername(data.name, false) ||
+            this.isValidPassword(data.password)
+        ) {
+            throw new LoernwerkError(
+                'Given information do not satisfy the requirements',
+                LoernwerkErrorCodes.BAD_REQUEST
             );
         }
 
@@ -120,7 +151,10 @@ export class AccountController {
      * @param id the id of the account
      */
     public static async deleteAccount(id: number): Promise<void> {
-        const user = await DBUser.findOneBy({ id: id });
+        const user = await DBUser.findOne({
+            where: { id: id },
+            select: ['sharedSequencesReadAccess', 'sharedSequencesWriteAccess'],
+        });
         if (user === null) {
             throw new LoernwerkError(
                 'No existing User with given ID',
@@ -163,8 +197,8 @@ export class AccountController {
         if (user === null) {
             const adminUser = new DBUser();
             adminUser.type = UserClass.ADMIN;
-            adminUser.name = 'admin';
-            adminUser.mail = 'admin@loernwerk.de';
+            adminUser.name = this.defaultUsername;
+            adminUser.mail = this.defaultMail;
             const pw = crypto.randomBytes(16).toString('hex');
             adminUser.password = await this.hashPW(pw);
             adminUser.sharedSequencesReadAccess = [];
@@ -200,12 +234,42 @@ export class AccountController {
             dbuser.type = data.type;
         }
         if (data.name != null) {
+            if (
+                !this.isValidUsername(
+                    data.name,
+                    data.type === UserClass.ADMIN ||
+                        dbuser.type === UserClass.ADMIN
+                )
+            ) {
+                throw new LoernwerkError(
+                    'Given information do not satisfy the requirements',
+                    LoernwerkErrorCodes.BAD_REQUEST
+                );
+            }
             dbuser.name = data.name;
         }
         if (data.mail != null) {
+            if (
+                !this.isValidMail(
+                    data.name,
+                    data.type === UserClass.ADMIN ||
+                        dbuser.type === UserClass.ADMIN
+                )
+            ) {
+                throw new LoernwerkError(
+                    'Given information do not satisfy the requirements',
+                    LoernwerkErrorCodes.BAD_REQUEST
+                );
+            }
             dbuser.mail = data.mail;
         }
         if (data.password != null) {
+            if (!this.isValidPassword(data.name)) {
+                throw new LoernwerkError(
+                    'Given information do not satisfy the requirements',
+                    LoernwerkErrorCodes.BAD_REQUEST
+                );
+            }
             dbuser.password = await this.hashPW(data.password);
         }
         await dbuser.save();
@@ -231,5 +295,61 @@ export class AccountController {
         hash: string
     ): Promise<boolean> {
         return bcrypt.compare(pw, hash);
+    }
+
+    /**
+     * Tests if a username fullfills the requirments
+     * @param name the username
+     * @param skipFurtherChecks this is enabled further checks wont be executed, only testing for empty field
+     * @returns true if the username is valid
+     */
+    private static isValidUsername(
+        name: string,
+        skipFurtherChecks: boolean
+    ): boolean {
+        if (name == '') {
+            return false;
+        }
+        if (skipFurtherChecks) {
+            return true;
+        }
+        if (name.toLowerCase() == this.defaultUsername) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Tests if a mail fullfills the requirments
+     * @param mail the mail
+     * @param skipFurtherChecks if this is enabled further checks wont be executed, only testing for empty field
+     * @returns true if the mail is valid
+     */
+    private static isValidMail(
+        mail: string,
+        skipFurtherChecks: boolean
+    ): boolean {
+        if (mail == '') {
+            return false;
+        }
+        if (skipFurtherChecks) {
+            return true;
+        }
+        if (mail.toLowerCase() == this.defaultMail) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Tests if a password fullfills the requirments
+     * @param pw the password
+     * @returns true if the password is valid
+     */
+    private static isValidPassword(pw: string): boolean {
+        if (pw.length < 6) {
+            return false;
+        }
+        return true;
     }
 }

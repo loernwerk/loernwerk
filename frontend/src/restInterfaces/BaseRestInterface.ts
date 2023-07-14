@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios';
 import {
   LoernwerkError,
   LoernwerkErrorCodes,
-} from '../../../backend/loernwerkError';
+} from '../../../model/loernwerkError';
 
 /**
  * Base Class responsible for the interaction with the server. Implements different types of HTTP-Methods.
