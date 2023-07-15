@@ -53,22 +53,11 @@ import ButtonComponent from '../components/ButtonComponent.vue';
 import AccountCreationContainer from '../components/AccountCreationContainer.vue';
 import AccountSequenceContainer from '../components/AccountSequenceContainer.vue';
 import { ISequence } from '../../../model/sequence/ISequence';
-//import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
+import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
 
-let displayCreateUser = ref(false);
-let selectedUser: Ref<Partial<IUser>> | Ref<null> = ref(null);
-let sequencesOfUser: Ref<ISequence[]> = ref([
-  {
-    name: 'test',
-    creationDate: new Date(),
-    modificationDate: new Date(),
-    code: '111111',
-    authorId: 1,
-    writeAccess: [],
-    readAccess: [],
-    slideCount: 0,
-  },
-]);
+const displayCreateUser = ref(false);
+const selectedUser: Ref<Partial<IUser>> | Ref<null> = ref(null);
+const sequencesOfUser: Ref<ISequence[]> = ref([]);
 const accounts: Ref<Partial<IUser>[]> = ref([]);
 try {
   accounts.value = await AccountRestInterface.getAccountMetaDataList();
@@ -83,7 +72,9 @@ async function updateUser(id: number): Promise<void> {
   console.log(id);
   selectedUser.value = null;
   selectedUser.value = await AccountRestInterface.getAccount(id);
-  //sequencesOfUser.value = await SequenceRestInterface.getSequenceByUser(selectedUser.value.id as number)
+  sequencesOfUser.value = await SequenceRestInterface.getSequenceByUser(
+    selectedUser.value.id as number
+  );
 }
 /**
  * refreshes the account list
@@ -97,18 +88,8 @@ async function refresh(): Promise<void> {
  * refreshing the sequenceArray
  */
 async function refreshSequence(): Promise<void> {
-  //sequencesOfUser.value = await SequenceRestInterface.getSequenceByUser(selectedUser.value?.id as number)
-  sequencesOfUser.value = [
-    {
-      name: 'test1',
-      creationDate: new Date(),
-      modificationDate: new Date(),
-      code: '111111',
-      authorId: 1,
-      writeAccess: [],
-      readAccess: [],
-      slideCount: 0,
-    },
-  ];
+  sequencesOfUser.value = await SequenceRestInterface.getSequenceByUser(
+    selectedUser.value?.id as number
+  );
 }
 </script>
