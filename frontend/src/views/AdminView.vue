@@ -1,16 +1,17 @@
 <template>
   <div class="w-full flex h-[calc(100vh-2.5rem)]">
-    <ContainerComponent class="w-1/4 overflow-hidden">
+    <ContainerComponent class="w-1/4 overflow-hidden flex flex-col">
       <ButtonComponent
         @click="
           selectedUser = null;
           displayCreateUser = true;
         "
-        class="p-0.5"
+        class="p-0.5 sticky top-0 z-10"
       >
         Nutzer erstellen
       </ButtonComponent>
       <AccountList
+        class=""
         :accounts="accounts"
         @selected="
           (id) => {

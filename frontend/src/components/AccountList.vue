@@ -1,21 +1,20 @@
 <template>
-  <div class="flex flex-col">
-    <div class="p-0.5">
-      <SearchBarComponent
-        @input-changed="
-          (newInput) => {
-            filterText = newInput;
-          }
-        "
-      />
-    </div>
-    <div class="">
-      <div v-for="user in filteredAccountList" :key="user.id">
-        <div class="p-0.5">
-          <ButtonComponent @click="emit('selected', user.id)">
-            {{ user.name }}
-          </ButtonComponent>
-        </div>
+  <div class="p-0.5 sticky top-9 z-10">
+    <SearchBarComponent
+      class=""
+      @input-changed="
+        (newInput) => {
+          filterText = newInput;
+        }
+      "
+    />
+  </div>
+  <div class="">
+    <div v-for="user in filteredAccountList" :key="user.id">
+      <div class="p-0.5">
+        <ButtonComponent @click="emit('selected', user.id)">
+          {{ user.name }}
+        </ButtonComponent>
       </div>
     </div>
   </div>
