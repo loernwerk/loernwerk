@@ -25,7 +25,6 @@
 import { PropType, computed, ref } from 'vue';
 import { IUser } from '../../../model/user/IUser';
 import ButtonComponent from './ButtonComponent.vue';
-//import ContainerComponent from './ContainerComponent.vue';
 import SearchBarComponent from './SearchBarComponent.vue';
 
 const props = defineProps({

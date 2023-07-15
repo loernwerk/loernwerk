@@ -54,6 +54,7 @@ import AccountCreationContainer from '../components/AccountCreationContainer.vue
 import AccountSequenceContainer from '../components/AccountSequenceContainer.vue';
 import { ISequence } from '../../../model/sequence/ISequence';
 import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
+import { router } from '../router';
 
 const displayCreateUser = ref(false);
 const selectedUser: Ref<Partial<IUser>> | Ref<null> = ref(null);
@@ -62,14 +63,13 @@ const accounts: Ref<Partial<IUser>[]> = ref([]);
 try {
   accounts.value = await AccountRestInterface.getAccountMetaDataList();
 } catch (e) {
-  console.log(e);
+  router.push('/');
 }
 /**
  * Requests the user with the given id from the backend (currently not)
  * @param id the id of the user
  */
 async function updateUser(id: number): Promise<void> {
-  console.log(id);
   selectedUser.value = null;
   selectedUser.value = await AccountRestInterface.getAccount(id);
   sequencesOfUser.value = await SequenceRestInterface.getSequenceByUser(
@@ -80,12 +80,11 @@ async function updateUser(id: number): Promise<void> {
  * refreshes the account list
  */
 async function refresh(): Promise<void> {
-  console.log('refreshing');
   accounts.value = await AccountRestInterface.getAccountMetaDataList();
   console.log(accounts.value);
 }
 /**
- * refreshing the sequenceArray
+ * refreshes the sequenceArray
  */
 async function refreshSequence(): Promise<void> {
   sequencesOfUser.value = await SequenceRestInterface.getSequenceByUser(

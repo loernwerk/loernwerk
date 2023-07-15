@@ -3,7 +3,7 @@
     <template #Header>
       <h1 class="underline text-xl">Sequenzen des Nutzers:</h1>
     </template>
-    <div v-for="sequence in sequencesArray" :key="sequence.code">
+    <div v-for="sequence in sequences" :key="sequence.code">
       <ContainerComponent>
         <div class="flex flex-col">
           <div>
@@ -26,14 +26,14 @@
   </ContainerComponent>
 </template>
 <script setup lang="ts">
-import { PropType, ref, watch } from 'vue';
+import { PropType, ref } from 'vue';
 import { ISequence } from '../../../model/sequence/ISequence';
 import ContainerComponent from './ContainerComponent.vue';
 import ButtonComponent from './ButtonComponent.vue';
 import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
 import { router } from '../router';
 
-const props = defineProps({
+defineProps({
   sequences: {
     type: Object as PropType<Array<ISequence>>,
     required: true,
@@ -42,23 +42,12 @@ const props = defineProps({
 
 const emit = defineEmits(['sequenceDelete']);
 
-const sequencesArray = ref(props.sequences);
-
-watch(
-  () => props.sequences,
-  (newVal) => {
-    sequencesArray.value = newVal;
-    console.log(newVal);
-  }
-);
-
 const showError = ref(false);
 /**
  * Shows the selected Sequence
  * @param code the code of the sequence
  */
 function showSequence(code: string): void {
-  void code;
   router.push('/'.concat(code));
 }
 
