@@ -66,9 +66,9 @@ function showSequence(code: string): void {
  * Deletes the sequence
  * @param code the code of the sequence
  */
-function deleteSequence(code: string): void {
+async function deleteSequence(code: string): Promise<void> {
   try {
-    SequenceRestInterface.deleteSequence(code);
+    await SequenceRestInterface.deleteSequence(code);
     emit('sequenceDelete');
   } catch {
     showError.value = true;
