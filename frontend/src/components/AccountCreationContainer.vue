@@ -68,7 +68,7 @@
             :loading="disableInputShowSpinner"
             @click="createUser()"
           >
-            Speichern
+            Erstellen
           </ButtonComponent>
         </div>
       </template>
