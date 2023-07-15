@@ -154,7 +154,11 @@ export class AccountController {
     public static async deleteAccount(id: number): Promise<void> {
         const user = await DBUser.findOne({
             where: { id: id },
-            select: ['sharedSequencesReadAccess', 'sharedSequencesWriteAccess'],
+            select: [
+                'id',
+                'sharedSequencesReadAccess',
+                'sharedSequencesWriteAccess',
+            ],
         });
         if (user === null) {
             throw new LoernwerkError(

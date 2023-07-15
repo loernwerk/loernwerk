@@ -102,7 +102,8 @@ export class AccountRouterFactory extends RouterFactory {
                 try {
                     await AccountController.deleteAccount(req.body.id);
                     res.sendStatus(204);
-                } catch {
+                } catch (e) {
+                    console.log(e.message);
                     res.sendStatus(404);
                     return;
                 }
@@ -125,7 +126,6 @@ export class AccountRouterFactory extends RouterFactory {
                 res.status(404);
                 return;
             }
-            console.log(user);
             res.status(200).json({
                 id: user.id,
                 name: user.name,
