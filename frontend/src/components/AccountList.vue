@@ -5,7 +5,6 @@
         @input-changed="
           (newInput) => {
             filterText = newInput;
-            filter();
           }
         "
       />
@@ -23,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, computed, ref, watch } from 'vue';
+import { PropType, computed, ref } from 'vue';
 import { IUser } from '../../../model/user/IUser';
 import ButtonComponent from './ButtonComponent.vue';
 //import ContainerComponent from './ContainerComponent.vue';
@@ -44,29 +43,10 @@ const emit = defineEmits([
   'selected',
 ]);
 
-const accountArray = ref(props.accounts);
 const filterText = ref('');
 const filteredAccountList = computed(() => {
   return props.accounts?.filter((element) => {
     return element.name?.match(filterText.value.concat('.*'));
   });
 });
-
-watch(
-  () => props.accounts,
-  (newVal) => {
-    accountArray.value = newVal;
-    console.log(newVal);
-    filter();
-  }
-);
-
-/**
- * filters the prop account array by the inputed text
- */
-function filter(): void {
-  accountArray.value = props.accounts?.filter((element) => {
-    return element.name?.match(filterText.value.concat('.*'));
-  });
-}
 </script>
