@@ -66,7 +66,7 @@
           <ButtonComponent
             class="w-fit p-1"
             :loading="disableInputShowSpinner"
-            @click="updateInformation()"
+            @click="createUser()"
           >
             Speichern
           </ButtonComponent>
@@ -95,9 +95,9 @@ const regexMail =
   '[a-zA-Z0-9]+(?:\\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:\\.[a-zA-Z0-9]+)+$';
 
 /**
- * Updates Information from the User with the entered information
+ * Creates a user with the given information
  */
-async function updateInformation(): Promise<void> {
+async function createUser(): Promise<void> {
   displaySuccess.value = false;
   displayError.value = false;
   disableInputShowSpinner.value = true;
