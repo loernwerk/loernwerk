@@ -16,11 +16,7 @@
       </div>
     </template>
     <template #default>
-      <div
-        v-for="tab in possibleTabs"
-        :key="tab"
-        :class="{ hidden: tab != selectedTab }"
-      >
+      <div v-for="tab in possibleTabs" :key="tab" v-show="tab == selectedTab">
         <slot :name="tab"></slot>
       </div>
     </template>

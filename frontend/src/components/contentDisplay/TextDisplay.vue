@@ -15,6 +15,7 @@ import { PropType, Ref, onMounted, ref, watch } from 'vue';
 import { TextContent } from '../../../../model/slide/content/TextContent';
 import Quill from 'quill';
 import { colors, sizes, fontFamilies } from './DesignOptions';
+import { LayoutSlot } from '../../../../model/slide/layout/Layout';
 
 const props = defineProps({
   /**
@@ -29,6 +30,13 @@ const props = defineProps({
    */
   editMode: {
     type: Boolean,
+    required: true,
+  },
+  /**
+   * The slot this display is in
+   */
+  layoutSlot: {
+    type: Object as PropType<LayoutSlot>,
     required: true,
   },
 });
@@ -69,7 +77,7 @@ onMounted(() => {
   editor.value = new Quill(realEditorDiv, {
     modules: {
       toolbar: {
-        container: '#toolbar',
+        container: `#q-toolbar-${props.layoutSlot.toString()}`,
       },
     },
     readOnly: !props.editMode,
@@ -78,7 +86,7 @@ onMounted(() => {
   // requiere vs import is an issue here
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  editor.value.setContents(props.textContent.delta);
+  editor.value.setContents(props.textContent.delta, 'api');
 
   editor.value.on('text-change', () => {
     emits('editing', editor.value?.getContents());
@@ -98,7 +106,7 @@ watch(
     // requiere vs import is an issue here
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    editor.value.setContents(props.textContent.delta);
+    editor.value.setContents(props.textContent.delta, 'api');
   }
 );
 </script>

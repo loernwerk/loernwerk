@@ -13,6 +13,7 @@
         v-else-if="content.type === ContentType.TEXT"
         :text-content="(content as TextContent)"
         :edit-mode="editMode"
+        :layout-slot="layoutSlot"
         class="h-full"
         @editing="(val) => $emit('editing', val)"
       />
@@ -33,7 +34,7 @@
     </div>
     <div
       class="absolute flex flex-rows space-x-2 top-3 right-3"
-      v-if="editMode"
+      v-if="editMode && layoutSlot != LayoutSlot.HEADER"
     >
       <img
         v-for="[content, image] in possibleNewContentTypes"
@@ -57,6 +58,7 @@ import TextDisplay from './TextDisplay.vue';
 import { TextContent } from '../../../../model/slide/content/TextContent';
 import H5PDisplay from './H5PDisplay.vue';
 import { H5PContent } from '../../../../model/slide/content/H5PContent';
+import { LayoutSlot } from '../../../../model/slide/layout/Layout';
 
 const props = defineProps({
   /**
@@ -72,8 +74,15 @@ const props = defineProps({
    */
   editMode: {
     type: Boolean,
-    required: true,
+    required: false,
     default: false,
+  },
+  /**
+   * The slot this display is in
+   */
+  layoutSlot: {
+    type: Object as PropType<LayoutSlot>,
+    required: true,
   },
 });
 

@@ -7,6 +7,7 @@
     <div class="grid h-full" ref="wrapper" :style="gridTemplate">
       <ContentDisplayFactory
         v-for="slot in usedSlots"
+        :layout-slot="slot.slot"
         :key="slot.slot"
         :content="slide.content[slot.slot]"
         :style="slot.style"
@@ -21,7 +22,11 @@
 </template>
 
 <script setup lang="ts">
-import { LayoutSlot, LayoutType } from '../../../../model/slide/layout/Layout';
+import {
+  Layout,
+  LayoutSlot,
+  LayoutType,
+} from '../../../../model/slide/layout/Layout';
 import { ISlide } from '../../../../model/slide/ISlide';
 import { PropType, Ref, computed, onMounted, provide, ref } from 'vue';
 import ContentDisplayFactory from './ContentDisplayFactory.vue';
@@ -53,14 +58,6 @@ interface GridSlot {
   gridColumnEnd: number;
 }
 
-const hasHeader = computed(() => {
-  return (
-    props.slide.layout === LayoutType.TWO_COLUMN_WITH_HEADER ||
-    props.slide.layout === LayoutType.GRID_WITH_HEADER ||
-    props.slide.layout === LayoutType.SINGLE_COLUMN_WITH_HEADER
-  );
-});
-
 /**
  * The slots that are used in the current layout and their respective styles
  */
@@ -81,7 +78,7 @@ const usedSlots: Ref<{ slot: LayoutSlot; style: GridSlot }[]> = computed(() => {
 
   let slots: { slot: LayoutSlot; style: GridSlot }[] = [];
 
-  if (hasHeader.value) {
+  if (Layout.hasHeader(props.slide.layout)) {
     slots.push({
       slot: LayoutSlot.HEADER,
       style: {
@@ -208,7 +205,9 @@ const gridTemplate = computed(() => {
     };
   }
   return {
-    gridTemplateRows: `${hasHeader.value ? '10%' : '0'} 1fr 1fr`,
+    gridTemplateRows: `${
+      Layout.hasHeader(props.slide.layout) ? '10%' : '0'
+    } 1fr 1fr`,
     gridTemplateColumns: '1fr 1fr',
   };
 });

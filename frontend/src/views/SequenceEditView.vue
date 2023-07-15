@@ -40,7 +40,11 @@
         </template>
 
         <template #Text>
-          <TextOptionsTab />
+          <TextOptionsTab
+            :selected-slot="
+              currentEditingSlot != null ? currentEditingSlot : undefined
+            "
+          />
         </template>
       </TabbedContainer>
       <div class="grow flex items-center justify-center">
