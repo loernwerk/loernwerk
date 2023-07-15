@@ -13,7 +13,7 @@
             <ButtonComponent @click="showSequence(sequence.code)">
               anzeigen
             </ButtonComponent>
-
+            <div v-if="showError">Löschen fehlgeschlagen</div>
             <ButtonComponent @click="deleteSequence(sequence.code)">
               löschen
             </ButtonComponent>
@@ -24,11 +24,12 @@
   </ContainerComponent>
 </template>
 <script setup lang="ts">
-import { PropType, ref } from 'vue';
+import { PropType, ref, watch } from 'vue';
 import { ISequence } from '../../../model/sequence/ISequence';
 import ContainerComponent from './ContainerComponent.vue';
 import ButtonComponent from './ButtonComponent.vue';
 import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
+import { router } from '../router';
 
 const props = defineProps({
   sequences: {
@@ -37,13 +38,26 @@ const props = defineProps({
   },
 });
 
+const emit = defineEmits(['sequenceDelete']);
+
+const sequencesArray = ref(props.sequences);
+
+watch(
+  () => props.sequences,
+  (newVal) => {
+    sequencesArray.value = newVal;
+    console.log(newVal);
+  }
+);
+
+const showError = ref(false);
 /**
  * Shows the selected Sequence
  * @param code the code of the sequence
  */
 function showSequence(code: string): void {
   void code;
-  //redirect
+  router.push('/'.concat(code));
 }
 
 /**
@@ -51,8 +65,11 @@ function showSequence(code: string): void {
  * @param code the code of the sequence
  */
 function deleteSequence(code: string): void {
-  SequenceRestInterface.deleteSequence(code);
+  try {
+    SequenceRestInterface.deleteSequence(code);
+    emit('sequenceDelete');
+  } catch {
+    showError.value = true;
+  }
 }
-
-const sequencesArray = ref(props.sequences);
 </script>

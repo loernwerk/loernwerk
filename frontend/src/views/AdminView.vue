@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full flex">
+  <div class="w-full flex h-screen">
     <ContainerComponent class="w-1/4">
       <ButtonComponent
         @click="
@@ -31,6 +31,7 @@
         <AccountSequenceContainer
           :sequences="sequencesOfUser"
           class="flex-grow"
+          @sequence-delete="refreshSequence()"
         />
       </div>
       <AccountCreationContainer
@@ -89,8 +90,25 @@ async function updateUser(id: number): Promise<void> {
  */
 async function refresh(): Promise<void> {
   console.log('refreshing');
-  accounts.value = [];
   accounts.value = await AccountRestInterface.getAccountMetaDataList();
   console.log(accounts.value);
+}
+/**
+ * refreshing the sequenceArray
+ */
+async function refreshSequence(): Promise<void> {
+  //sequencesOfUser.value = await SequenceRestInterface.getSequenceByUser(selectedUser.value?.id as number)
+  sequencesOfUser.value = [
+    {
+      name: 'test1',
+      creationDate: new Date(),
+      modificationDate: new Date(),
+      code: '111111',
+      authorId: 1,
+      writeAccess: [],
+      readAccess: [],
+      slideCount: 0,
+    },
+  ];
 }
 </script>
