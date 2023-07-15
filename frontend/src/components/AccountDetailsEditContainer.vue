@@ -224,7 +224,6 @@ async function reset(): Promise<void> {
   if (deleted.value) {
     return;
   }
-  emit('delete');
   nameField.value = props.user.name;
   mailField.value = props.user.mail;
   pwField.value = '';

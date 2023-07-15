@@ -20,7 +20,7 @@ const router = createRouter({
     },
     {
       path: '/admin',
-      name: 'Account',
+      name: 'Admin',
       component: import('../views/AdminView.vue'),
     },
     {
