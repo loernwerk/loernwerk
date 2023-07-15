@@ -58,11 +58,12 @@ export class AccountController {
                 LoernwerkErrorCodes.ALREADY_EXISTS
             );
         }
-
         if (
-            this.isValidMail(data.mail, false) ||
-            this.isValidUsername(data.name, false) ||
-            this.isValidPassword(data.password)
+            !(
+                this.isValidMail(data.mail, false) &&
+                this.isValidUsername(data.name, false) &&
+                this.isValidPassword(data.password)
+            )
         ) {
             throw new LoernwerkError(
                 'Given information do not satisfy the requirements',

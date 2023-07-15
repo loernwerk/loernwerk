@@ -51,7 +51,8 @@ export class AccountRouterFactory extends RouterFactory {
                         req.body
                     );
                     res.status(201).json({ id: user.id });
-                } catch {
+                } catch (e) {
+                    console.log(e.message);
                     res.sendStatus(400);
                 }
             }

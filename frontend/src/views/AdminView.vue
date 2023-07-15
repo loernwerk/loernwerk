@@ -6,7 +6,6 @@
           selectedUser = null;
           displayCreateUser = true;
         "
-        @create="refresh()"
         class="p-0.5"
       >
         Nutzer erstellen
@@ -34,7 +33,11 @@
           class="flex-grow"
         />
       </div>
-      <AccountCreationContainer v-if="displayCreateUser" class="w-2/3 pl-1" />
+      <AccountCreationContainer
+        v-if="displayCreateUser"
+        class="w-2/3 pl-1"
+        @create="refresh()"
+      />
     </div>
   </div>
 </template>
