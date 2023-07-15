@@ -11,7 +11,7 @@
       />
     </div>
     <div class="">
-      <div v-for="user in accountArray" :key="user.id">
+      <div v-for="user in filteredAccountList" :key="user.id">
         <div class="p-0.5">
           <ButtonComponent @click="emit('selected', user.id)">
             {{ user.name }}
@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, ref, watch } from 'vue';
+import { PropType, computed, ref, watch } from 'vue';
 import { IUser } from '../../../model/user/IUser';
 import ButtonComponent from './ButtonComponent.vue';
 //import ContainerComponent from './ContainerComponent.vue';
@@ -46,6 +46,11 @@ const emit = defineEmits([
 
 const accountArray = ref(props.accounts);
 const filterText = ref('');
+const filteredAccountList = computed(() => {
+  return props.accounts?.filter((element) => {
+    return element.name?.match(filterText.value.concat('.*'));
+  });
+});
 
 watch(
   () => props.accounts,
