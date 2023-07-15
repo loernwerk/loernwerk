@@ -82,6 +82,7 @@ export class SequenceRouterFactory extends RouterFactory {
                     }
                 } catch {
                     res.sendStatus(404);
+                    return;
                 }
 
                 try {

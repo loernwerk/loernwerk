@@ -13,7 +13,9 @@
             <ButtonComponent @click="showSequence(sequence.code)">
               anzeigen
             </ButtonComponent>
-            <div v-if="showError">Löschen fehlgeschlagen</div>
+            <div class="flex-grow text-red-500">
+              <div v-if="showError">Löschen fehlgeschlagen</div>
+            </div>
             <ButtonComponent @click="deleteSequence(sequence.code)">
               löschen
             </ButtonComponent>
