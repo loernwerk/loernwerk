@@ -1,6 +1,6 @@
 <template>
-  <div class="w-full flex h-screen">
-    <ContainerComponent class="w-1/4">
+  <div class="w-full flex h-[calc(100vh-2.5rem)]">
+    <ContainerComponent class="w-1/4 overflow-hidden">
       <ButtonComponent
         @click="
           selectedUser = null;
