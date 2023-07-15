@@ -1,10 +1,10 @@
 <template>
   <ContainerComponent>
     <template #Header>
-      <h1 class="text-3xl mb-2">Seiten</h1>
+      <h1 class="text-3xl">Seiten</h1>
     </template>
     <template #default>
-      <div class="flex flex-col min-h-full">
+      <div class="flex flex-col min-h-full pt-2">
         <VueDraggableNext :list="slides" @change="updateOrder()">
           <div
             class="mb-2 mr-2 flex flex-row space-x-2 items-center"
@@ -16,6 +16,7 @@
               :slide="slide"
               class="rounded-md"
               @click="$emit('selectionChanged', index)"
+              @delete="$emit('deleteSlide', index)"
             />
           </div>
         </VueDraggableNext>
@@ -42,7 +43,7 @@ const props = defineProps({
   },
 });
 
-defineEmits(['selectionChanged', 'addSlide']);
+defineEmits(['selectionChanged', 'addSlide', 'deleteSlide']);
 
 /**
  * Updates the order of the slides after a drag and drop event

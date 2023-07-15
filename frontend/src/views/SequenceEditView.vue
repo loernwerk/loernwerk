@@ -5,6 +5,7 @@
       :slides="sequence.slides"
       @selection-changed="(val) => changeSelectedSlide(val)"
       @add-slide="addSlide()"
+      @delete-slide="(val) => deleteSlide(val)"
     />
     <div class="flex flex-col grow space-y-5">
       <TabbedContainer
@@ -26,7 +27,7 @@
           <EmbedOptionsTab
             v-if="currentEditingSlot"
             :embedContent="(selectedSlide.content[currentEditingSlot] as EmbedContent)"
-            @update-content="(val) => (emb = val)"
+            @update-content="(val) => (selectedSlide.content[currentEditingSlot as LayoutSlot] = val)"
           />
         </template>
 
@@ -34,7 +35,7 @@
           <ImageOptionsTab
             v-if="currentEditingSlot"
             :imageContent="(selectedSlide.content[currentEditingSlot] as ImageContent)"
-            @update-content="(val) => (im = val)"
+            @update-content="(val) => (selectedSlide.content[currentEditingSlot as LayoutSlot] = val)"
           />
         </template>
 
@@ -153,6 +154,14 @@ function updateContent(slot: LayoutSlot, update: unknown): void {
   if (selectedSlide.value.content[slot]?.type == ContentType.TEXT) {
     (selectedSlide.value.content[slot] as TextContent).delta = update as Delta;
   }
+}
+
+/**
+ * Deletes the slide at the given index
+ * @param index Index of the slide to delete
+ */
+function deleteSlide(index: number): void {
+  sequence.value.slides.splice(index, 1);
 }
 
 /**

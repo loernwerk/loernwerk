@@ -4,11 +4,25 @@
     :style="{ backgroundColor: slide.backgroundColor }"
     @click="(e) => $emit('click', e)"
   ></div>
+  <div class="relative">
+    <div class="absolute -top-14 right-0">
+      <FontAwesomeIcon
+        class="cursor-pointer"
+        :icon="['fas', 'circle-xmark']"
+        @click="$emit('delete')"
+      />
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { PropType } from 'vue';
 import { ISlide } from '../../../model/slide/ISlide';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
+import { library } from '@fortawesome/fontawesome-svg-core';
+
+library.add(faCircleXmark);
 
 defineProps({
   slide: {
@@ -17,5 +31,5 @@ defineProps({
   },
 });
 
-defineEmits(['click']);
+defineEmits(['click', 'delete']);
 </script>
