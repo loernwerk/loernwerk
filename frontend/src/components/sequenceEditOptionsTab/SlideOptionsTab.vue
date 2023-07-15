@@ -6,7 +6,7 @@
           <p>Name:</p>
           <TextInputComponent
             :start-text="sequence.name"
-            @input-changed="(val) => updateSequenceName(val)"
+            @input-changed="(val: string) => updateSequenceName(val)"
           />
         </div>
       </div>

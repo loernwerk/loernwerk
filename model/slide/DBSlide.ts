@@ -12,7 +12,7 @@ export class DBSlide extends BaseEntity implements ISlide {
     layout: LayoutType;
 
     @Column('simple-json')
-    content: Record<LayoutSlot, Content>;
+    content: Partial<Record<LayoutSlot, Content>>;
 
     @Column()
     backgroundColor: string;
