@@ -90,7 +90,7 @@ import { H5PContent } from '../../../model/slide/content/H5PContent';
 import Delta from 'quill-delta';
 import { ISlide } from '../../../model/slide/ISlide';
 
-defineProps({
+const props = defineProps({
   /**
    * The code of the sequence to edit
    */
@@ -101,17 +101,9 @@ defineProps({
 });
 
 // TODO: replace with database request
-const sequence = ref<ISequenceWithSlides>({
-  code: '',
-  name: '',
-  slides: [],
-  creationDate: new Date(),
-  modificationDate: new Date(),
-  writeAccess: [],
-  readAccess: [],
-  authorId: 0,
-  slideCount: 0,
-});
+const sequence = ref<ISequenceWithSlides>(
+  await SequenceRestInterface.getSequence(props.sequenceCode)
+);
 
 if (sequence.value.slides.length == 0) {
   addSlide();
@@ -122,38 +114,6 @@ const selectedSlide = computed(
   () => sequence.value.slides[selectedSlideIndex.value]
 );
 
-const editOptionsTabContainer: Ref<typeof TabbedContainer | null> = ref(null);
-
-const currentEditingSlot: Ref<LayoutSlot | null> = ref(null);
-
-/**
- * Returns the name of the tab for the given slot
- * @param slot Slot to get the name for
- * @returns Name of the tab for the given slot or null if the slot does not have a coreesponding tab
- */
-function getTabNameForSlot(slot: LayoutSlot): string | undefined {
-  const tabNameMap = {
-    [ContentType.TEXT]: 'Text',
-    [ContentType.IMAGE]: 'Bild',
-    [ContentType.EMBED]: 'Embed',
-  };
-  const type = selectedSlide.value.content[slot]?.type;
-  if (type != undefined && type != ContentType.H5P) {
-    return tabNameMap[type];
-  }
-  return undefined;
-}
-
-const tabs = ref(['Seite']);
-
-/**
- * Selects the tab for the given slot
- * @param slot Slot to select for
- */
-function selectEditingSlot(slot: LayoutSlot): void {
-  currentEditingSlot.value = slot;
-}
-
 /**
  * Updates the content in the given slot
  * @param slot Slot of content
@@ -163,96 +123,6 @@ function updateContent(slot: LayoutSlot, update: unknown): void {
   if (selectedSlide.value.content[slot]?.type == ContentType.TEXT) {
     (selectedSlide.value.content[slot] as TextContent).delta = update as Delta;
   }
-}
-
-/**
- * Deletes the slide at the given index
- * @param index Index of the slide to delete
- */
-function deleteSlide(index: number): void {
-  if (sequence.value.slides.length == 1) {
-    return;
-  }
-  sequence.value.slides.splice(index, 1);
-  sequence.value.slideCount--;
-}
-
-/**
- * Updates the selected slide
- * @param slide Slide to use for update
- */
-function updateSlide(slide: ISlide): void {
-  if (Layout.hasHeader(slide.layout) && !slide.content[LayoutSlot.HEADER]) {
-    const header = new TextContent();
-    header.type = ContentType.TEXT;
-    header.delta = new Delta();
-    slide.content[LayoutSlot.HEADER] = header;
-  }
-  sequence.value.slides[selectedSlideIndex.value] = slide;
-}
-
-/**
- * Updates the tabs shown in the tab container
- */
-function updateShownTabs(): void {
-  const slot = currentEditingSlot.value;
-  tabs.value = ['Seite'];
-  if (slot != null) {
-    const tabName = getTabNameForSlot(slot);
-    if (tabName) {
-      tabs.value.push(tabName);
-      editOptionsTabContainer.value?.selectTab(tabName);
-    }
-  }
-}
-
-watch(currentEditingSlot, () => {
-  updateShownTabs();
-});
-
-/**
- * Adds a new slide to the sequence
- */
-function addSlide(): void {
-  let maxId = -1;
-  sequence.value.slides.forEach((slide) => {
-    if (slide.id > maxId) {
-      maxId = slide.id;
-    }
-  });
-
-  const slide: ISlide = {
-    layout: LayoutType.SINGLE_COLUMN_WITH_HEADER,
-    content: {},
-    backgroundColor: '#ffffff',
-    sequenceCode: sequence.value.code,
-    order: sequence.value.slides.length,
-    id: maxId + 1,
-  };
-  const header = new TextContent();
-  header.type = ContentType.TEXT;
-  header.delta = new Delta();
-  slide.content[LayoutSlot.HEADER] = header;
-
-  sequence.value.slides.push(slide);
-  sequence.value.slideCount = sequence.value.slides.length;
-}
-
-/**
- * Switches to the slide with the given index
- * @param index Index of the slide to select
- */
-function changeSelectedSlide(index: number): void {
-  selectedSlideIndex.value = index;
-  currentEditingSlot.value = null;
-  editOptionsTabContainer.value?.selectTab('Seite');
-}
-
-/**
- * Saves the sequence
- */
-async function save(): Promise<void> {
-  await SequenceRestInterface.updateSequence(sequence.value);
 }
 
 /**
@@ -291,5 +161,125 @@ function changeContent(slot: LayoutSlot, contentType: ContentType): void {
 
   sequence.value.slides[selectedSlideIndex.value].content[slot] = content;
   updateShownTabs();
+}
+
+/**
+ * Switches to the slide with the given index
+ * @param index Index of the slide to select
+ */
+function changeSelectedSlide(index: number): void {
+  selectedSlideIndex.value = index;
+  currentEditingSlot.value = null;
+  editOptionsTabContainer.value?.selectTab('Seite');
+}
+
+/**
+ * Adds a new slide to the sequence
+ */
+function addSlide(): void {
+  let maxId = -1;
+  sequence.value.slides.forEach((slide) => {
+    if (slide.id > maxId) {
+      maxId = slide.id;
+    }
+  });
+
+  const slide: ISlide = {
+    layout: LayoutType.SINGLE_COLUMN_WITH_HEADER,
+    content: {},
+    backgroundColor: '#ffffff',
+    sequenceCode: sequence.value.code,
+    order: sequence.value.slides.length,
+    id: maxId + 1,
+  };
+  const header = new TextContent();
+  header.type = ContentType.TEXT;
+  header.delta = new Delta();
+  slide.content[LayoutSlot.HEADER] = header;
+
+  sequence.value.slides.push(slide);
+  sequence.value.slideCount = sequence.value.slides.length;
+}
+
+/**
+ * Deletes the slide at the given index
+ * @param index Index of the slide to delete
+ */
+function deleteSlide(index: number): void {
+  if (sequence.value.slides.length == 1) {
+    return;
+  }
+  sequence.value.slides.splice(index, 1);
+  sequence.value.slideCount--;
+}
+
+/**
+ * Updates the selected slide
+ * @param slide Slide to use for update
+ */
+function updateSlide(slide: ISlide): void {
+  if (Layout.hasHeader(slide.layout) && !slide.content[LayoutSlot.HEADER]) {
+    const header = new TextContent();
+    header.type = ContentType.TEXT;
+    header.delta = new Delta();
+    slide.content[LayoutSlot.HEADER] = header;
+  }
+  sequence.value.slides[selectedSlideIndex.value] = slide;
+}
+
+const currentEditingSlot: Ref<LayoutSlot | null> = ref(null);
+const tabs = ref(['Seite']);
+const editOptionsTabContainer: Ref<typeof TabbedContainer | null> = ref(null);
+
+/**
+ * Selects the tab for the given slot
+ * @param slot Slot to select for
+ */
+function selectEditingSlot(slot: LayoutSlot): void {
+  currentEditingSlot.value = slot;
+}
+
+/**
+ * Updates the tabs shown in the tab container
+ */
+function updateShownTabs(): void {
+  const slot = currentEditingSlot.value;
+  tabs.value = ['Seite'];
+  if (slot != null) {
+    const tabName = getTabNameForSlot(slot);
+    if (tabName) {
+      tabs.value.push(tabName);
+      editOptionsTabContainer.value?.selectTab(tabName);
+    }
+  }
+}
+
+watch(currentEditingSlot, () => {
+  updateShownTabs();
+});
+
+/**
+ * Returns the name of the tab for the given slot
+ * @param slot Slot to get the name for
+ * @returns Name of the tab for the given slot or null if the slot does not have a coreesponding tab
+ */
+function getTabNameForSlot(slot: LayoutSlot): string | undefined {
+  const tabNameMap = {
+    [ContentType.TEXT]: 'Text',
+    [ContentType.IMAGE]: 'Bild',
+    [ContentType.EMBED]: 'Embed',
+  };
+  const type = selectedSlide.value.content[slot]?.type;
+  if (type != undefined && type != ContentType.H5P) {
+    return tabNameMap[type];
+  }
+  return undefined;
+}
+
+/**
+ * Saves the sequence
+ */
+async function save(): Promise<void> {
+  await SequenceRestInterface.updateSequence(sequence.value);
 }
 </script>
