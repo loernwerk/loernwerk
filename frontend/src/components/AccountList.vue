@@ -44,7 +44,7 @@ const emit = defineEmits([
 const filterText = ref('');
 const filteredAccountList = computed(() => {
   return props.accounts?.filter((element) => {
-    return element.name?.match(filterText.value.concat('.*'));
+    return element.name?.includes(filterText.value);
   });
 });
 </script>
