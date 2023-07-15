@@ -1,20 +1,8 @@
 <template>
   <div id="toolbar" class="flex space-x-7 pt-5 items-center">
     <span class="flex space-x-2 items-center">
-      <select class="ql-size interactable h-fit">
-        <option
-          v-for="size in firstSizes"
-          :key="(size as string)"
-          :value="size"
-        >
-          {{ size }}
-        </option>
-        <option selected></option>
-        <option
-          v-for="size in secondSizes"
-          :key="(size as string)"
-          :value="size"
-        >
+      <select class="ql-size interactable h-fit w-32">
+        <option v-for="size in sizes" :key="(size as string)" :value="size">
           {{ size }}
         </option>
       </select>
@@ -37,10 +25,10 @@
         </span>
       </span>
 
-      <select class="ql-font interactable h-fit items-center">
-        <option selected></option>
-        <option value="serif">Serif</option>
-        <option value="monospace">Monospace</option>
+      <select class="ql-font interactable h-fit items-center w-96">
+        <option v-for="font in fontFamilies" :key="font" :value="font">
+          {{ font }}
+        </option>
       </select>
     </span>
 
@@ -83,11 +71,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import {
-  sizes,
-  colors,
-  defaultTextSize,
-} from '../contentDisplay/DesignOptions';
+import { sizes, colors, fontFamilies } from '../contentDisplay/DesignOptions';
 import ButtonComponent from '../ButtonComponent.vue';
 
 library.add(
@@ -99,10 +83,6 @@ library.add(
   faAlignRight,
   faPalette
 );
-
-const indexOfDefaultTextSize = sizes.indexOf(defaultTextSize);
-const secondSizes = sizes.slice(indexOfDefaultTextSize + 1);
-const firstSizes = sizes.slice(0, indexOfDefaultTextSize);
 
 const showColorPicker = ref(false);
 </script>
