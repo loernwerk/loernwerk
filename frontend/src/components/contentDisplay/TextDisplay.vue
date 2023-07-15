@@ -103,8 +103,13 @@ watch(
 );
 </script>
 
-<style lang="postcss">
+<style>
 .ql-editor {
   height: 100%;
+}
+
+.ql-container {
+  font-size: 14px;
+  font-family: Arial;
 }
 </style>

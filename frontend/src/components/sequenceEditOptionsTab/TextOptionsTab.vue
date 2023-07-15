@@ -2,7 +2,12 @@
   <div id="toolbar" class="flex space-x-7 pt-5 items-center">
     <span class="flex space-x-2 items-center">
       <select class="ql-size interactable h-fit w-32">
-        <option v-for="size in sizes" :key="(size as string)" :value="size">
+        <option
+          v-for="size in sizes"
+          :key="(size as string)"
+          :value="size !== defaultTextSize ? size : null"
+          :size="size"
+        >
           {{ size }}
         </option>
       </select>
@@ -26,7 +31,12 @@
       </span>
 
       <select class="ql-font interactable h-fit items-center w-96">
-        <option v-for="font in fontFamilies" :key="font" :value="font">
+        <option
+          v-for="font in fontFamilies"
+          :key="font"
+          :value="font !== defaultFontFamily ? font : null"
+          :font="font"
+        >
           {{ font }}
         </option>
       </select>
@@ -59,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import {
   faBold,
   faItalic,
@@ -71,7 +81,13 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { sizes, colors, fontFamilies } from '../contentDisplay/DesignOptions';
+import {
+  sizes,
+  colors,
+  fontFamilies,
+  defaultTextSize,
+  defaultFontFamily,
+} from '../contentDisplay/DesignOptions';
 import ButtonComponent from '../ButtonComponent.vue';
 
 library.add(
@@ -85,4 +101,13 @@ library.add(
 );
 
 const showColorPicker = ref(false);
+
+onMounted(() => {
+  document
+    .querySelector(`.ql-size > option[size="${defaultTextSize}"]`)
+    ?.toggleAttribute('selected', true);
+  document
+    .querySelector(`.ql-font > option[font="${defaultFontFamily}"]`)
+    ?.toggleAttribute('selected', true);
+});
 </script>

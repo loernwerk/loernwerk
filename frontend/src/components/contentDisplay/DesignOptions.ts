@@ -22,3 +22,4 @@ export const fontFamilies = [
   'Courier New',
   'Brush Script MT',
 ];
+export const defaultFontFamily = 'Arial';
