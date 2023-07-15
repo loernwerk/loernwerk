@@ -14,25 +14,33 @@
 import ContainerComponent from '../ContainerComponent.vue';
 import ButtonComponent from '../ButtonComponent.vue';
 import { SequenceRestInterface } from '../../restInterfaces/SequenceRestInterface';
-import { ISequence } from '../../../../model/sequence/ISequence';
 import useEventsBus from "../../eventBus";
-
-const props = defineProps({
-  sequenceId: Object as () => ISequence,
-});
+import {toRaw, watch} from "vue";
+import { LoernwerkError } from "../../../../backend/loernwerkError";
 
 const { emit }=useEventsBus();
+const { bus } = useEventsBus();
+
+let sequenceToBeModified;
 
 /**
  * This Method deletes the desired Sequence
  */
-function deleteSequence(): void {
-  if (props.sequenceId?.code !== undefined) {
-    emit(
-      'delete',
-      SequenceRestInterface.deleteSequence(props.sequenceId.code)
-    );
-  }
+async function deleteSequence() {
+  if (sequenceToBeModified.code !== undefined) {
+    try{
+      //await SequenceRestInterface.deleteSequence(sequenceToBeModified.code);
+      emit('delete');
+    } catch(e) {
+      if (e instanceof LoernwerkError) {
+          alert('Something went wrong');
+        }
+      }
+    }
 }
+watch(()=>bus.value.get('sequence'), (sequence) => {
+    sequenceToBeModified = toRaw(sequence)[0];
+ });
+
 </script>
 <style scoped></style>

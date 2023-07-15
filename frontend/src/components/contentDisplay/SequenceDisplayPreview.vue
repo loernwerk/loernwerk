@@ -1,6 +1,6 @@
 <template>
   <ContainerComponent>
-    <h3>{{ name }}</h3>
+    <h3>{{ sequence.name }}</h3>
     <div class="columns-2">
       <ButtonComponent @click="router.push('LogIn')"
         >Bearbeiten
@@ -23,18 +23,20 @@ import useEventsBus from './../../eventBus';
 import TabbedContainer from "../TabbedContainer.vue";
 
 const props = defineProps({
-  sequence: {
-    type: Object as () => ISequence,
-  },
-  name: {
-    type: String,
-    required: true,
-  },
+  sequence: Object as () => ISequence,
 });
 const { emit }=useEventsBus()
 function openPopUp() {
-    emit("open-popup", props.sequence);
+    emit("open-menu", props.sequence);
 }
+function emitSequence() {
+  emit("sequence", props.sequence)
+}
+
+window.setInterval(() => {
+  emitSequence()
+}, 10);
+
 </script>
 
 <style></style>

@@ -1,15 +1,13 @@
 <template>
   <main>
-    <PopupComponent v-if="addTagConfirmed">
+    <PopupComponent>
       <TabbedContainer :tabs='tabNames'>
         <template v-slot:[0]="{ item }" >
           <TagSequencePopupTab
-              :sequenceToBeTagged="sequenceToBeModified"
           />
         </template>
         <template v-slot:[1]="{ item }" >
           <DeleteSequencePopup
-              :sequenceId="sequenceToBeModified"
           />
         </template>
         <template v-slot:[2]="{ item }" >
@@ -60,22 +58,17 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import ButtonComponent from '../components/ButtonComponent.vue';
 import PopupComponent from "../components/PopupComponent.vue";
 import TabbedContainer from "../components/TabbedContainer.vue";
-import {ref, watch} from "vue";
 import TagSequencePopupTab from "../components/PopupTabs/TagSequencePopupTab.vue";
 import DeleteSequencePopup from "../components/PopupTabs/DeleteSequencePopup.vue";
 import ShareSequencePopupTab from "../components/PopupTabs/ShareSequencePopupTab.vue";
-import useEventsBus from "../eventBus";
 const name = 'Meine Sequenzen:';
 const name2 = 'Mit mir geteilte Sequenzen:';
 let sequences, sharedSequences: ISequence[];
 library.add(faCircleUser);
-const { bus } = useEventsBus();
 
 let originalUser: unknown;
 const tabs = ['TagSequencePopupTab', 'DeleteSequencePopup','ShareSequencePopupTab']
-const tabNames = ['Sequenz Taggen','Sequenz löschen','Sequenz teilen']
-let sequenceToBeModified;
-let addTagConfirmed = true;
+const tabNames = ['Sequenz Taggen','Sequenz löschen','Sequenz mit Lehrkräften teilen']
 
 let items = [
   {
@@ -128,12 +121,4 @@ try {
     }
   }
 }
-watch(()=>bus.value.get('open-popup'), (val) => {
-   sequenceToBeModified = val;
-
-});
-watch(()=>bus.value.get('confirmAddTag'), () => {
-  addTagConfirmed = !addTagConfirmed;
-
-})
 </script>

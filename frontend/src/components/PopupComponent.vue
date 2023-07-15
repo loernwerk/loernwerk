@@ -11,10 +11,17 @@ import {ref, watch} from 'vue';
 import useEventsBus from './../eventBus';
 const { bus } = useEventsBus();
 let isOpen = ref(false);
-watch(()=>bus.value.get('open-popup'), () => {
-  isOpen.value = true
+//const emit = defineEmits(['closed']);
+
+watch(()=>bus.value.get('open-menu'), () => {
+  isOpen.value = true;
   console.log(isOpen)
 })
-const emit = defineEmits(['closed']);
+
+watch(()=>bus.value.get('delete'), () => {
+  isOpen.value = false;
+  console.log(isOpen);
+  //emit('closed');
+})
 
 </script>
