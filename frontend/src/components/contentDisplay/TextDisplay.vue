@@ -56,7 +56,6 @@ onMounted(() => {
   qlSizes.whitelist = sizes;
   qlFonts.whitelist = fontFamilies;
 
-  console.log(qlColors, qlSizes);
   Quill.register(qlColors, true);
   Quill.register(qlSizes, true);
   Quill.register(Quill.import('attributors/style/align'), true);

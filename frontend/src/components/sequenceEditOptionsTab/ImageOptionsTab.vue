@@ -74,7 +74,6 @@ function imageToBase64(file: File): void {
  * Updates the scale  of the image
  */
 function updateScale(): void {
-  console.log(refContent.value.scale);
   emits('update-content', refContent.value);
 }
 </script>

@@ -141,7 +141,6 @@ const tabs = ref(['Seite']);
  * @param slot Slot to select for
  */
 function selectEditingSlot(slot: LayoutSlot): void {
-  console.log('selecting slot', slot);
   currentEditingSlot.value = slot;
 }
 
@@ -161,7 +160,11 @@ function updateContent(slot: LayoutSlot, update: unknown): void {
  * @param index Index of the slide to delete
  */
 function deleteSlide(index: number): void {
+  if (sequence.value.slides.length == 1) {
+    return;
+  }
   sequence.value.slides.splice(index, 1);
+  sequence.value.slideCount--;
 }
 
 /**
@@ -170,10 +173,8 @@ function deleteSlide(index: number): void {
 function updateShownTabs(): void {
   const slot = currentEditingSlot.value;
   tabs.value = ['Seite'];
-  console.log('updating tabs', slot);
   if (slot != null) {
     const tabName = getTabNameForSlot(slot);
-    console.log(tabName);
     if (tabName) {
       tabs.value.push(tabName);
       editOptionsTabContainer.value?.selectTab(tabName);
