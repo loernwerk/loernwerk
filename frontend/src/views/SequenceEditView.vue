@@ -19,6 +19,7 @@
             :slide="selectedSlide"
             :sequence="sequence"
             @update-sequence="(val) => (sequence.name = val.name)"
+            @update-slide="(val) => updateSlide(val)"
             @save="save()"
           />
         </template>
@@ -69,7 +70,11 @@
 import { Ref, computed, ref, watch } from 'vue';
 import { ISequenceWithSlides } from '../../../model/sequence/ISequenceWithSlides';
 import SlideOverviewContainer from '../components/SlideOverviewContainer.vue';
-import { LayoutSlot, LayoutType } from '../../../model/slide/layout/Layout';
+import {
+  Layout,
+  LayoutSlot,
+  LayoutType,
+} from '../../../model/slide/layout/Layout';
 import TabbedContainer from '../components/TabbedContainer.vue';
 import { ContentType } from '../../../model/slide/content/Content';
 import EmbedOptionsTab from '../components/sequenceEditOptionsTab/EmbedOptionsTab.vue';
@@ -83,6 +88,7 @@ import { ImageContent } from '../../../model/slide/content/ImageContent';
 import { EmbedContent } from '../../../model/slide/content/EmbedContent';
 import { H5PContent } from '../../../model/slide/content/H5PContent';
 import Delta from 'quill-delta';
+import { ISlide } from '../../../model/slide/ISlide';
 
 defineProps({
   /**
@@ -172,6 +178,20 @@ function deleteSlide(index: number): void {
 }
 
 /**
+ * Updates the selected slide
+ * @param slide Slide to use for update
+ */
+function updateSlide(slide: ISlide): void {
+  if (Layout.hasHeader(slide.layout) && !slide.content[LayoutSlot.HEADER]) {
+    const header = new TextContent();
+    header.type = ContentType.TEXT;
+    header.delta = new Delta();
+    slide.content[LayoutSlot.HEADER] = header;
+  }
+  sequence.value.slides[selectedSlideIndex.value] = slide;
+}
+
+/**
  * Updates the tabs shown in the tab container
  */
 function updateShownTabs(): void {
@@ -201,14 +221,20 @@ function addSlide(): void {
     }
   });
 
-  sequence.value.slides.push({
-    layout: LayoutType.SINGLE_COLUMN,
+  const slide: ISlide = {
+    layout: LayoutType.SINGLE_COLUMN_WITH_HEADER,
     content: {},
     backgroundColor: '#ffffff',
     sequenceCode: sequence.value.code,
     order: sequence.value.slides.length,
     id: maxId + 1,
-  });
+  };
+  const header = new TextContent();
+  header.type = ContentType.TEXT;
+  header.delta = new Delta();
+  slide.content[LayoutSlot.HEADER] = header;
+
+  sequence.value.slides.push(slide);
   sequence.value.slideCount = sequence.value.slides.length;
 }
 
