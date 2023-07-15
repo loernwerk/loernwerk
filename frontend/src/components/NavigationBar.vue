@@ -1,26 +1,20 @@
 <template>
   <div class="w-full h-20 bg-gray-300 flex flex-row items-center gap-5">
     <img src="../assets/Logo.png" class="h-full mr-5" />
-    <ButtonComponent
-      class="text-2xl selected-menu-item"
-      v-if="currentViewLocalized !== ''"
-    >
+    <NavigationBarItem v-if="currentViewLocalized !== ''" :active="true">
       {{ currentViewLocalized }}
-    </ButtonComponent>
-    <ButtonComponent
-      class="text-2xl"
-      :class="{ 'selected-menu-item': isCurrentView('LogIn') }"
-    >
+    </NavigationBarItem>
+
+    <NavigationBarItem :active="isCurrentView('Main')" targetLink="LogIn">
       Sequenzübersicht
-    </ButtonComponent>
-    <ButtonComponent
-      class="text-2xl"
-      :class="{ 'selected-menu-item': isCurrentView('LogIn') }"
-      v-if="isAdmin"
-    >
+    </NavigationBarItem>
+
+    <NavigationBarItem :active="isCurrentView('Main')" targetLink="LogIn">
       Admin
-    </ButtonComponent>
+    </NavigationBarItem>
+
     <div class="flex-grow"></div>
+
     <FontAwesomeIcon
       icon="circle-user"
       size="3x"
@@ -30,7 +24,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import ButtonComponent from './ButtonComponent.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
@@ -38,6 +31,7 @@ import { RouteLocationNormalized, useRouter } from 'vue-router';
 import { ref } from 'vue';
 import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
 import { UserClass } from '../../../model/user/IUser';
+import NavigationBarItem from './NavigationBarItem.vue';
 
 library.add(faCircleUser);
 
@@ -83,11 +77,3 @@ function isCurrentView(viewName: string): boolean {
   return currentView.value === viewName;
 }
 </script>
-
-<style scoped>
-.selected-menu-item {
-  font-style: italic;
-  font-weight: bold;
-  cursor: not-allowed;
-}
-</style>
