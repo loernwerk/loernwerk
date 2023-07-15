@@ -107,7 +107,7 @@ export abstract class BaseRestInterface {
    * Returns the backend base URL.
    * @returns Base URL
    */
-  public static getBaseURL(): string {
+  protected static getBaseURL(): string {
     return window.location.hostname.includes('localhost') ||
       window.location.hostname.includes('127.0.0.1')
       ? 'http://localhost:5000/api'

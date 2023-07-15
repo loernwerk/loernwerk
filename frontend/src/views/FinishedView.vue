@@ -19,7 +19,6 @@
 
 <script setup lang="ts">
 import ButtonComponent from '../components/ButtonComponent.vue';
-import { BaseRestInterface } from '../restInterfaces/BaseRestInterface';
 import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
 import { ref } from 'vue';
 
@@ -41,12 +40,7 @@ const sequence = ref(
  * Opens a new tab and downloads certificate as pdf
  */
 function downloadCertificate(): void {
-  window.open(
-    BaseRestInterface.getBaseURL() +
-      '/sequence/' +
-      props.code +
-      '/view/certificate'
-  );
+  window.open(SequenceRestInterface.getUrlForCertificate(props.code));
 }
 </script>
 
