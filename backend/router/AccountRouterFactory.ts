@@ -110,11 +110,8 @@ export class AccountRouterFactory extends RouterFactory {
         );
 
         accountRouter.get('/', requireLogin, async (req, res) => {
-            let id = req.session.userId;
-            console.log(id);
+            let id = req.session.userId as number;
             if (req.query.id !== undefined) {
-                console.log('not undefined');
-                console.log(req.query.id);
                 id = parseInt(req.query.id as string);
                 if (req.session.isAdmin !== true) {
                     res.status(403);
