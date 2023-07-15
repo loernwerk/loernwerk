@@ -82,7 +82,12 @@ import ButtonComponent from './ButtonComponent.vue';
 import ContainerComponent from './ContainerComponent.vue';
 import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
 
-const emit = defineEmits(['create']);
+const emit = defineEmits([
+  /**
+   * emited, when an account is created
+   */
+  'create',
+]);
 
 const nameField = ref('');
 const mailField = ref('');
