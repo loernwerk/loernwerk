@@ -114,7 +114,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import TextInputComponent from './TextInputComponent.vue';
 import ButtonComponent from './ButtonComponent.vue';
 import ContainerComponent from './ContainerComponent.vue';
@@ -148,8 +148,7 @@ const disableInputShowSpinner = ref(false);
 const deleted = ref(false);
 const displayError = ref(false);
 const displaySuccess = ref(false);
-let originalUser = props.user as IUser;
-const isAdmin = ref(originalUser.type === UserClass.ADMIN);
+const isAdmin = ref(props.user.type === UserClass.ADMIN);
 const regexMail =
   '[a-zA-Z0-9]+(?:\\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:\\.[a-zA-Z0-9]+)+$';
 /**
@@ -172,7 +171,7 @@ async function updateInformation(): Promise<void> {
   displayError.value = false;
   disableInputShowSpinner.value = true;
 
-  const updateUser: Partial<IUser> = { id: originalUser.id };
+  const updateUser: Partial<IUser> = { id: props.user.id };
 
   updateUser.name = nameField.value;
   if (mailField.value?.match(regexMail)) {
@@ -208,11 +207,11 @@ async function updateInformation(): Promise<void> {
  */
 async function deleteAccount(): Promise<void> {
   disableInputShowSpinner.value = true;
-  if (originalUser.id === null) {
+  if (props.user.id === null) {
     console.log('user id is empty - should not happen');
     return;
   }
-  await AccountRestInterface.deleteAccount(originalUser.id as number);
+  await AccountRestInterface.deleteAccount(props.user.id as number);
   disableInputShowSpinner.value = false;
   deleted.value = true;
   emit('delete');
@@ -226,7 +225,16 @@ async function reset(): Promise<void> {
   }
   nameField.value = props.user.name;
   mailField.value = props.user.mail;
+  isAdmin.value = props.user.type === UserClass.ADMIN;
   pwField.value = '';
   pwFieldControl.value = '';
 }
+
+watch(
+  () => props.user.id,
+  () => {
+    reset();
+    deleted.value = false;
+  }
+);
 </script>
