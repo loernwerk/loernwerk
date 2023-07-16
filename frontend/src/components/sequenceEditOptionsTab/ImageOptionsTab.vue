@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, ref } from 'vue';
+import { PropType, ref, watch } from 'vue';
 import { ImageContent } from '../../../../model/slide/content/ImageContent';
 import ButtonComponent from '../ButtonComponent.vue';
 
@@ -76,4 +76,11 @@ function imageToBase64(file: File): void {
 function updateScale(): void {
   emits('update-content', refContent.value);
 }
+
+watch(
+  () => props.imageContent,
+  () => {
+    refContent.value = props.imageContent;
+  }
+);
 </script>

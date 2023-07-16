@@ -55,9 +55,12 @@ defineExpose({
   selectTab,
 });
 
-watch(props.shownTabs, (newValue) => {
-  if (!newValue.includes(selectedTab.value)) {
-    selectedTab.value = newValue[0];
+watch(
+  () => props.shownTabs,
+  (newValue) => {
+    if (!newValue.includes(selectedTab.value)) {
+      selectedTab.value = newValue[0];
+    }
   }
-});
+);
 </script>

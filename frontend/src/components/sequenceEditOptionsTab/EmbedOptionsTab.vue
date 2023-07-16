@@ -35,4 +35,12 @@ watch(url, () => {
   content.value.url = url.value;
   emits('update-content', content.value);
 });
+
+watch(
+  () => props.embedContent,
+  () => {
+    content.value = props.embedContent;
+    url.value = content.value.url;
+  }
+);
 </script>
