@@ -9,7 +9,9 @@
       class="cursor-pointer w-full placeholder:text-gray-500"
       :class="{ uppercase: uppercase }"
       :value="modelValue"
-      @input="emit('update:modelValue', $event.target?.value)"
+      @input="
+        emit('update:modelValue', (<HTMLTextAreaElement>$event.target).value)
+      "
     />
   </InteractableComponent>
 </template>
