@@ -123,10 +123,8 @@ async function createUser(): Promise<void> {
       password: pwField.value,
     });
     displaySuccess.value = true;
-    console.log('create');
     emit('create');
   } catch (e) {
-    console.log('server fault');
     displayError.value = true;
   }
   disableInputShowSpinner.value = false;
