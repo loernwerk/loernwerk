@@ -14,7 +14,7 @@
             <p>{{ index + 1 }}</p>
             <SlideOverviewContainerElement
               :slide="slide"
-              class="rounded-md"
+              class="rounded-md border-1"
               :class="{ 'border-4': index == selectedSlideIndex }"
               :style="{ 'border-color': slide.backgroundColor }"
               @click="$emit('selectionChanged', index)"
