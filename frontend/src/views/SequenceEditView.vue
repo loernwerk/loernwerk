@@ -3,6 +3,7 @@
   <div class="flex flex-row grow space-x-5">
     <SlideOverviewContainer
       :slides="sequence.slides"
+      :selected-slide-index="selectedSlideIndex"
       @selection-changed="(val) => changeSelectedSlide(val)"
       @add-slide="addSlide()"
       @delete-slide="(val) => deleteSlide(val)"
@@ -100,7 +101,6 @@ const props = defineProps({
   },
 });
 
-// TODO: replace with database request
 const sequence = ref<ISequenceWithSlides>(
   await SequenceRestInterface.getSequence(props.sequenceCode)
 );

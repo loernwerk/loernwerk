@@ -6,7 +6,7 @@
   >
     <img
       :src="imageContent.img"
-      class="w-auto h-auto block"
+      class="w-auto h-auto block absolute"
       :style="{
         maxHeight: `${imageContent.scale * 100}%`,
         maxWidth: `${imageContent.scale * 100}%`,
