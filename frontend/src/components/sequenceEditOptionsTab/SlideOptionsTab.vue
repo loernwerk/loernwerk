@@ -6,7 +6,7 @@
           <p>Name:</p>
           <TextInputComponent
             :start-text="sequence.name"
-            @input-changed="(val: string) => updateSequenceName(val)"
+            v-model="sequenceName"
           />
         </div>
       </div>
@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType } from 'vue';
+import { PropType, ref, watch } from 'vue';
 import { ISlide } from '../../../../model/slide/ISlide';
 import ButtonComponent from '../ButtonComponent.vue';
 import TextInputComponent from '../TextInputComponent.vue';
@@ -64,6 +64,9 @@ const props = defineProps({
 });
 
 const emits = defineEmits(['update-slide', 'update-sequence', 'save']);
+
+const sequenceName = ref(props.sequence.name);
+watch(sequenceName, () => updateSequenceName(sequenceName.value));
 
 /**
  * Sends the updated sequence
