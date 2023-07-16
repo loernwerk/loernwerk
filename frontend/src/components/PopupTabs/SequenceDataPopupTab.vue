@@ -10,15 +10,15 @@
 import useEventsBus from '../../eventBus';
 import ContainerComponent from '../ContainerComponent.vue';
 import ButtonComponent from '../ButtonComponent.vue';
-import {ISequence} from "../../../../model/sequence/ISequence";
+import { ISequence } from '../../../../model/sequence/ISequence';
 
 const { emit } = useEventsBus();
 
 const props = defineProps({
   sequence: Object as () => ISequence,
 });
-let code = props.sequence?.code
-let link = `somelink/${code}`
+let code = props.sequence?.code;
+let link = `somelink/${code}`;
 function closePopup() {
   emit('canBeClosed');
 }

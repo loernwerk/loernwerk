@@ -1,18 +1,27 @@
 <template>
   <div>
-    <PopupComponent v-if="popupOpen" @close="console.log('got close'); popupOpen = false">
+    <PopupComponent
+      v-if="popupOpen"
+      @close="
+        console.log('got close');
+        popupOpen = false;
+      "
+    >
       <TabbedContainer :tabs="tabNames">
         <template v-slot:[0]>
           <TagSequencePopupTab />
         </template>
         <template v-slot:[1]>
-          <DeleteSequencePopup :sequence="sequence" :allSequences="allSequences" />
+          <DeleteSequencePopup
+            :sequence="sequence"
+            :allSequences="allSequences"
+          />
         </template>
         <template v-slot:[2]>
           <ShareSequencePopupTab />
         </template>
         <template v-slot:[3]>
-          <SequenceDataPopupTab :sequence="sequence"/>
+          <SequenceDataPopupTab :sequence="sequence" />
         </template>
       </TabbedContainer>
     </PopupComponent>
@@ -21,10 +30,16 @@
       <h3>{{ sequence.name }}</h3>
       <div class="columns-2">
         <ButtonComponent @click="router.push('LogIn')"
-        >Bearbeiten
+          >Bearbeiten
         </ButtonComponent>
         <!--      <ButtonComponent @click="openPopUp">Menü</ButtonComponent>-->
-        <ButtonComponent @click="popupOpen = !popupOpen; console.log(popupOpen); ">Menü</ButtonComponent>
+        <ButtonComponent
+          @click="
+            popupOpen = !popupOpen;
+            console.log(popupOpen);
+          "
+          >Menü</ButtonComponent
+        >
       </div>
       <div class="Popup"></div>
     </ContainerComponent>
@@ -37,20 +52,20 @@ import { ISequence } from '../../../../model/sequence/ISequence';
 import ContainerComponent from '../ContainerComponent.vue';
 import { router } from '../../router';
 import PopupComponent from '../PopupComponent.vue';
-import {ref, watch} from 'vue';
+import { ref, watch } from 'vue';
 import useEventsBus from './../../eventBus';
 import TabbedContainer from '../TabbedContainer.vue';
-import SequenceDataPopupTab from "../PopupTabs/SequenceDataPopupTab.vue";
-import DeleteSequencePopup from "../PopupTabs/DeleteSequencePopup.vue";
-import ShareSequencePopupTab from "../PopupTabs/ShareSequencePopupTab.vue";
-import TagSequencePopupTab from "../PopupTabs/TagSequencePopupTab.vue";
+import SequenceDataPopupTab from '../PopupTabs/SequenceDataPopupTab.vue';
+import DeleteSequencePopup from '../PopupTabs/DeleteSequencePopup.vue';
+import ShareSequencePopupTab from '../PopupTabs/ShareSequencePopupTab.vue';
+import TagSequencePopupTab from '../PopupTabs/TagSequencePopupTab.vue';
 
 const props = defineProps({
   sequence: Object as () => ISequence,
-  allSequences: Object as () => ISequence[]
+  allSequences: Object as () => ISequence[],
 });
 
-let popupOpen = ref(false)
+let popupOpen = ref(false);
 
 const tabNames = [
   'Sequenz Taggen',
@@ -68,7 +83,6 @@ watch(
     popupOpen.value = false;
   }
 );
-
 </script>
 
 <style></style>

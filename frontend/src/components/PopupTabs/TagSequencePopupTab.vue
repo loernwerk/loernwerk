@@ -1,6 +1,6 @@
 <template>
   <ContainerComponent>
-    <TextInputComponent/>
+    <TextInputComponent />
     <div class="columns-2">
       <ButtonComponent>OK</ButtonComponent>
       <ButtonComponent @click="closePopup">Abbruch</ButtonComponent>
@@ -9,10 +9,10 @@
 </template>
 
 <script setup lang="ts">
-import TextInputComponent from "../TextInputComponent.vue";
-import ButtonComponent from "../ButtonComponent.vue";
-import ContainerComponent from "../ContainerComponent.vue";
-import useEventsBus from "../../eventBus";
+import TextInputComponent from '../TextInputComponent.vue';
+import ButtonComponent from '../ButtonComponent.vue';
+import ContainerComponent from '../ContainerComponent.vue';
+import useEventsBus from '../../eventBus';
 
 //to be implemented
 const { emit } = useEventsBus();
@@ -20,7 +20,6 @@ const { emit } = useEventsBus();
 function closePopup() {
   emit('canBeClosed');
 }
-
 </script>
 
 <style scoped></style>

@@ -4,7 +4,6 @@
     <div class="columns-2">
       <ButtonComponent @click="deleteSequence">Ja</ButtonComponent>
       <ButtonComponent @click="closePopup">Abbruch</ButtonComponent>
-
     </div>
   </ContainerComponent>
 </template>
@@ -15,13 +14,12 @@ import ButtonComponent from '../ButtonComponent.vue';
 import { SequenceRestInterface } from '../../restInterfaces/SequenceRestInterface';
 import useEventsBus from '../../eventBus';
 import { LoernwerkError } from '../../../../backend/loernwerkError';
-import {store} from "../../store/store";
-import {ISequence} from "../../../../model/sequence/ISequence";
+import { ISequence } from '../../../../model/sequence/ISequence';
 
 const { emit } = useEventsBus();
 const props = defineProps({
   sequence: Object as () => ISequence,
-  allSequences: Object as () => ISequence[]
+  allSequences: Object as () => ISequence[],
 });
 
 function closePopup() {
@@ -37,7 +35,9 @@ async function deleteSequence() {
     try {
       await SequenceRestInterface.deleteSequence(sequenceCode);
       let sequenceList = props.allSequences as ISequence[];
-      let deletedSequenceInstance = sequenceList.find(s => s.code === sequenceCode) as ISequence;
+      let deletedSequenceInstance = sequenceList.find(
+        (s) => s.code === sequenceCode
+      ) as ISequence;
       sequenceList.splice(sequenceList.indexOf(deletedSequenceInstance), 1);
       closePopup();
     } catch (e) {
@@ -47,6 +47,5 @@ async function deleteSequence() {
     }
   }
 }
-
 </script>
 <style scoped></style>

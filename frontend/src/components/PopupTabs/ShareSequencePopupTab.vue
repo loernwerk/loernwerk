@@ -1,8 +1,8 @@
 <template>
   <ContainerComponent>
     <h1>
-      Geben Sie die ID der Lehrkraft ein, mit der die Sequenz geteilt
-      werden soll:
+      Geben Sie die ID der Lehrkraft ein, mit der die Sequenz geteilt werden
+      soll:
     </h1>
     <TextInputComponent
       @input-changed="(text) => (userInfoField = text)"
@@ -51,8 +51,12 @@ async function confirmSharing() {
       for (let i = 0; i < accounts.length; i++) {
         if (accounts[i].id.toString() == userInfoField.value) {
           let accountId = accounts[i].id;
-          const accountToShareWith = await AccountRestInterface.getAccounts(accountId);
-          sequenceToBeShared.readAccess.push(Object.keys(accountToShareWith[0]));
+          const accountToShareWith = await AccountRestInterface.getAccounts(
+            accountId
+          );
+          sequenceToBeShared.readAccess.push(
+            Object.keys(accountToShareWith[0])
+          );
           closePopup();
         }
       }

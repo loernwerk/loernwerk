@@ -21,10 +21,6 @@ import ContainerComponent from '../ContainerComponent.vue';
 
 defineProps({
   sequences: Object as () => ISequence[],
-  // userId: {
-  //   type: String,
-  //   required: true,
-  // },
   name: {
     type: String,
     required: true,

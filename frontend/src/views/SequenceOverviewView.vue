@@ -5,7 +5,10 @@
         <!-- TODO navbar-->
       </div>
       <div class="absolute right-2.5 top-[96px]">
-        <SearchBarComponent class="mb-2"  @searchClicked="applySearch"></SearchBarComponent>
+        <SearchBarComponent
+          class="mb-2"
+          @searchClicked="applySearch"
+        ></SearchBarComponent>
       </div>
 
       <div class="flex pt-5 w-full h-full" style="height: 90%">
@@ -37,9 +40,9 @@ import DeleteSequencePopup from '../components/PopupTabs/DeleteSequencePopup.vue
 import ShareSequencePopupTab from '../components/PopupTabs/ShareSequencePopupTab.vue';
 import SearchBarComponent from '../components/SearchBarComponent.vue';
 import SequenceDataPopupTab from '../components/PopupTabs/SequenceDataPopupTab.vue';
-import { ref } from "vue";
-import {SequenceRestInterface} from "../restInterfaces/SequenceRestInterface";
-import {AccountRestInterface} from "../restInterfaces/AccountRestInterface";
+import { ref } from 'vue';
+import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
+import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
 
 const name = 'Meine Sequenzen:';
 const name2 = 'Mit mir geteilte Sequenzen:';
@@ -58,25 +61,25 @@ let allSharedSequences = ref({});
 let currentUser = ref({});
 
 try {
-  AccountRestInterface.getOwnAccount().then(data => {
+  AccountRestInterface.getOwnAccount().then((data) => {
     currentUser.value = data;
   });
 
-    SequenceRestInterface.getSequencesSharedWithYou().then(data => {
-      sharedSequences.value = data.slice(0);
-      allSharedSequences.value = data.slice(0);
-    })
+  SequenceRestInterface.getSequencesSharedWithYou().then((data) => {
+    sharedSequences.value = data.slice(0);
+    allSharedSequences.value = data.slice(0);
+  });
 
-  SequenceRestInterface.getOwnSequences().then(data => {
+  SequenceRestInterface.getOwnSequences().then((data) => {
     sequences.value = data.slice(0);
     allOwnSequences.value = data.slice(0);
   });
-} catch(e) {
+} catch (e) {
   if (e instanceof LoernwerkError) {
-        if (e.code === LoernwerkErrorCodes.UNAUTHORIZED) {
-          router.push('LogIn');
-        }
-      }
+    if (e.code === LoernwerkErrorCodes.UNAUTHORIZED) {
+      router.push('LogIn');
+    }
+  }
 }
 
 function applySearch(searchText) {
@@ -84,8 +87,10 @@ function applySearch(searchText) {
     sequences.value = allOwnSequences.value.slice(0);
     sharedSequences.value = allSharedSequences.value.slice(0);
   } else {
-    sequences.value = sequences.value.filter(s => s.name === searchText);
-    sharedSequences.value = sharedSequences.value.filter(s => s.name === searchText);
+    sequences.value = sequences.value.filter((s) => s.name === searchText);
+    sharedSequences.value = sharedSequences.value.filter(
+      (s) => s.name === searchText
+    );
   }
 }
 </script>
