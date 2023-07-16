@@ -14,7 +14,7 @@ import {
   defineElements,
   H5PEditorComponent,
 } from '@lumieducation/h5p-webcomponents';
-import { onMounted, Ref, ref, toRefs } from 'vue';
+import { onMounted, Ref, ref } from 'vue';
 import { H5PRestInterface } from '../../restInterfaces/H5PRestInterface';
 import ButtonComponent from '../ButtonComponent.vue';
 
@@ -36,7 +36,6 @@ const props = defineProps({
   },
 });
 
-const { contentId, sequenceCode } = toRefs(props);
 const currentlySaving = ref(false);
 
 const emits = defineEmits([
@@ -66,7 +65,7 @@ onMounted(() => {
     ): Promise<{ contentId: string; metadata: IContentMetadata }> => {
       if (contentId === undefined || contentId === 'undefined') {
         return await H5PRestInterface.createH5PContent(
-          sequenceCode.value,
+          props.sequenceCode as string,
           requestBody
         );
       } else {
@@ -89,7 +88,7 @@ async function save(): Promise<void> {
  * Closes the editor without prior saving.
  */
 function close(): void {
-  emits('closed', contentId.value);
+  emits('closed', undefined);
 }
 
 window.addEventListener('resize', () => {

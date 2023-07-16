@@ -123,6 +123,12 @@ function updateContent(slot: LayoutSlot, update: unknown): void {
   if (selectedSlide.value.content[slot]?.type == ContentType.TEXT) {
     (selectedSlide.value.content[slot] as TextContent).delta = update as Delta;
   }
+  if (selectedSlide.value.content[slot]?.type == ContentType.H5P) {
+    if (update !== undefined) {
+      (selectedSlide.value.content[slot] as H5PContent).h5pContentId =
+        update as string;
+    }
+  }
 }
 
 /**
@@ -155,7 +161,8 @@ function changeContent(slot: LayoutSlot, contentType: ContentType): void {
     case ContentType.H5P:
       content = new H5PContent();
       content.type = ContentType.H5P;
-      content.h5pContentId = '';
+      content.h5pContentId = 'new';
+      content.sequenceCode = props.sequenceCode;
       break;
   }
 

@@ -5,11 +5,11 @@
         <H5PEditor
           :content-id="h5pContent.h5pContentId"
           :sequence-code="h5pContent.sequenceCode"
-          @closed="isEditorOpen = false"
+          @closed="(id) => saveEditor(id)"
         />
       </div>
 
-      <div class="h-full cursor-pointer flex p-5" @click="openEditor()">
+      <div class="h-full cursor-pointer flex p-5" @click="openEditor()" v-else>
         <div class="w-full flex flex-col justify-center items-center">
           <img src="../../assets/h5p.png" class="w-3/4" />
           <p class="text-center text-2xl mt-5">
@@ -59,6 +59,19 @@ function openEditor(): void {
   if (props.editMode) {
     isEditorOpen.value = true;
     emits('editing');
+  }
+}
+
+/**
+ * Saves the editor and returns the new content id to the backend
+ * @param id ID to return. Is undefined, if the editor was closed without saving.
+ */
+function saveEditor(id: string | undefined): void {
+  if (props.editMode) {
+    isEditorOpen.value = false;
+    if (id !== undefined) {
+      emits('editing', id);
+    }
   }
 }
 </script>

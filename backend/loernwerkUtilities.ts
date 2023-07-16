@@ -68,43 +68,59 @@ export function requireBody(...data: string[]) {
 
 /**
  * Middleware for specifying the request attributes needed by the H5P library.
- * @param translationFunction function to use for translating error messages
- * @returns middleware to specify request attributes
+ * @param req Request object
+ * @param res Return object, not needed
+ * @param next Next handler function
  */
-export function buildH5PRequest(translationFunction: TFunction) {
-    return function (req: Request, res: Response, next: NextFunction): void {
-        if (req.session.userId === undefined) {
-            req.user = {
-                id: 'anonymous',
-                canCreateRestricted: false,
-                canInstallRecommended: false,
-                canUpdateAndInstallLibraries: false,
-                email: 'anonymous@loernwerk.de',
-                name: 'Anonymous student',
-                type: 'local',
-            };
-        } else {
-            req.user = {
-                id: req.session.userId?.toString(),
-                canCreateRestricted: true,
-                canInstallRecommended: true,
-                canUpdateAndInstallLibraries: true,
-                email: req.session.email,
-                name: req.session.username,
-                type: 'local',
-            };
-        }
+export function buildH5PRequest(
+    req: Request,
+    res: Response,
+    next: NextFunction
+): void {
+    if (req.session.userId === undefined) {
+        req.user = {
+            id: 'anonymous',
+            canCreateRestricted: false,
+            canInstallRecommended: true,
+            canUpdateAndInstallLibraries: false,
+            email: 'anonymous@loernwerk.de',
+            name: 'Anonymous student',
+            type: 'local',
+        };
+    } else {
+        req.user = {
+            id: req.session.userId?.toString(),
+            canCreateRestricted: true,
+            canInstallRecommended: true,
+            canUpdateAndInstallLibraries: true,
+            email: req.session.email,
+            name: req.session.username,
+            type: 'local',
+        };
+    }
+    if (translationFunction !== null) {
         req.t = translationFunction;
-        next();
-    };
+    } else {
+        // Fallback translation function
+        req.t = (
+            errorId: string,
+            replacements: { [key: string]: string }
+        ): string => {
+            void replacements;
+            return errorId;
+        };
+    }
+
+    next();
 }
 
+let translationFunction: TFunction | null = null;
+
 /**
- * Creates a translation function for the H5P library.
- * @returns Translation function
+ * Initializes a translation function for the H5P library.
  */
-export async function buildH5Pi18n(): Promise<TFunction> {
-    return await i18next
+export async function buildH5Pi18n(): Promise<void> {
+    translationFunction = await i18next
         .use(i18nextFsBackend)
         .use(i18nextHttpMiddleware.LanguageDetector)
         .init({
@@ -148,7 +164,7 @@ declare module 'express-serve-static-core' {
         // User object required by H5P library.
         user: IUser;
         // Translation function for error messages. Name forced by H5P library.
-        t: TFunction;
+        t: (errorId: string, replacements: { [key: string]: string }) => string;
         // Language used by the user.
         language: string;
     }
