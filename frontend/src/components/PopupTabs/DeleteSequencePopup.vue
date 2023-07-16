@@ -1,11 +1,10 @@
 <template>
   <ContainerComponent>
-    <h1>Sequenz löschen?</h1>
+    <h1>Sequenz '{{ sequence.name }}' löschen?</h1>
     <div class="columns-2">
       <ButtonComponent @click="deleteSequence">Ja</ButtonComponent>
-      <ButtonComponent @click="closePopup">Nein</ButtonComponent>
-      <!--@click=""-->
-      <!-- Somehow close the PopUp-->
+      <ButtonComponent @click="closePopup">Abbruch</ButtonComponent>
+
     </div>
   </ContainerComponent>
 </template>
@@ -15,26 +14,32 @@ import ContainerComponent from '../ContainerComponent.vue';
 import ButtonComponent from '../ButtonComponent.vue';
 import { SequenceRestInterface } from '../../restInterfaces/SequenceRestInterface';
 import useEventsBus from '../../eventBus';
-import { toRaw, watch } from 'vue';
 import { LoernwerkError } from '../../../../backend/loernwerkError';
+import {store} from "../../store/store";
+import {ISequence} from "../../../../model/sequence/ISequence";
 
 const { emit } = useEventsBus();
-const { bus } = useEventsBus();
-
-let sequenceToBeModified;
+const props = defineProps({
+  sequence: Object as () => ISequence,
+  allSequences: Object as () => ISequence[]
+});
 
 function closePopup() {
-  emit('close');
+  emit('canBeClosed');
 }
 
 /**
  * This Method deletes the desired Sequence
  */
 async function deleteSequence() {
-  if (sequenceToBeModified.code !== undefined) {
+  if (props.sequence?.code != undefined) {
+    const sequenceCode = props.sequence.code as string;
     try {
-      //await SequenceRestInterface.deleteSequence(sequenceToBeModified.code);
-      emit('close');
+      await SequenceRestInterface.deleteSequence(sequenceCode);
+      let sequenceList = props.allSequences as ISequence[];
+      let deletedSequenceInstance = sequenceList.find(s => s.code === sequenceCode) as ISequence;
+      sequenceList.splice(sequenceList.indexOf(deletedSequenceInstance), 1);
+      closePopup();
     } catch (e) {
       if (e instanceof LoernwerkError) {
         alert('Something went wrong');
@@ -42,11 +47,6 @@ async function deleteSequence() {
     }
   }
 }
-watch(
-  () => bus.value.get('sequence'),
-  (sequence) => {
-    sequenceToBeModified = toRaw(sequence)[0];
-  }
-);
+
 </script>
 <style scoped></style>

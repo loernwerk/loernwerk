@@ -11,7 +11,7 @@
     </TextInputComponent>
     <div class="columns-2">
       <ButtonComponent @click="confirmSharing">Teilen</ButtonComponent>
-      <ButtonComponent @click="closePopup">Schließen</ButtonComponent>
+      <ButtonComponent @click="closePopup">Abbruch</ButtonComponent>
     </div>
   </ContainerComponent>
 </template>
@@ -47,13 +47,13 @@ async function confirmSharing() {
     showRedBorder.value = true;
   } else {
     try {
-      //accounts = await AccountRestInterface.getAccountMetaDataList();
+      accounts = await AccountRestInterface.getAccountMetaDataList();
       for (let i = 0; i < accounts.length; i++) {
-        if (accounts[i].id == userInfoField.value) {
-          let accountId = [userInfoField.value];
-          //const accountToShareWith = await AccountRestInterface.getAccounts(accountId);
-          //sequenceToBeShared.readAccess.push(accountToShareWith[0]);
-          emit('close');
+        if (accounts[i].id.toString() == userInfoField.value) {
+          let accountId = accounts[i].id;
+          const accountToShareWith = await AccountRestInterface.getAccounts(accountId);
+          sequenceToBeShared.readAccess.push(Object.keys(accountToShareWith[0]));
+          closePopup();
         }
       }
     } catch (e) {

@@ -1,37 +1,26 @@
 <template>
   <ContainerComponent>
-    <TextInputComponent
-      @input-changed="(text) => (tagField = text)"
-      :class="{ 'border-red-600': showRedBorder }"
-    />
-    <ButtonComponent @click="confirmTagging()">Confirm</ButtonComponent>
+    <TextInputComponent/>
+    <div class="columns-2">
+      <ButtonComponent>OK</ButtonComponent>
+      <ButtonComponent @click="closePopup">Abbruch</ButtonComponent>
+    </div>
   </ContainerComponent>
 </template>
 
 <script setup lang="ts">
-import ContainerComponent from '../ContainerComponent.vue';
-import TextInputComponent from '../TextInputComponent.vue';
-import ButtonComponent from '../ButtonComponent.vue';
-import useEventsBus from '../../eventBus';
-import { ref } from 'vue';
-import { ISequence } from '../../../../model/sequence/ISequence';
+import TextInputComponent from "../TextInputComponent.vue";
+import ButtonComponent from "../ButtonComponent.vue";
+import ContainerComponent from "../ContainerComponent.vue";
+import useEventsBus from "../../eventBus";
+
+//to be implemented
 const { emit } = useEventsBus();
 
-const props = defineProps({
-  sequenceToBeTagged: Object as () => ISequence,
-});
-let tagField = ref('');
-let showRedBorder = ref(false);
-function confirmTagging() {
-  if (tagField.value.length == 0) {
-    emit('tagEmpty');
-    showRedBorder.value = true;
-  } else {
-    showRedBorder.value = false;
-    props.sequenceToBeTagged?.keywords.push(tagField.value);
-    emit('confirmAddTag');
-  }
+function closePopup() {
+  emit('canBeClosed');
 }
+
 </script>
 
 <style scoped></style>
