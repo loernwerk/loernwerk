@@ -12,3 +12,5 @@ export interface IConfigType {
      */
     options?: string[];
 }
+
+export type NumberOption = 'limited' | 'unlimited';

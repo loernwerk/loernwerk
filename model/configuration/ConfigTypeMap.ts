@@ -17,10 +17,10 @@ export class ConfigTypeMap {
     public static getType(key: ConfigKey): IConfigType {
         switch (key) {
             case ConfigKey.MAX_SEQUENCES_PER_USER:
-                return { type: 'number' };
+                return { type: 'number', options: ['limited'] };
 
             case ConfigKey.MAX_SLIDES_PER_SEQUENCE:
-                return { type: 'number' };
+                return { type: 'number', options: ['unlimited'] };
 
             default:
                 throw new LoernwerkError(
