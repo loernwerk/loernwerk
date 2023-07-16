@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { Ref, ref, watch } from 'vue';
 import ContainerComponent from './ContainerComponent.vue';
 
 const props = defineProps({
@@ -39,6 +39,7 @@ const props = defineProps({
 });
 
 const selectedTab = ref(props.shownTabs[0]);
+const nextTab: Ref<string | undefined> = ref(props.shownTabs[0]);
 
 /**
  * Switches to a tab
@@ -48,6 +49,8 @@ function selectTab(tabName: string): void {
   const index = props.shownTabs.indexOf(tabName);
   if (index !== -1) {
     selectedTab.value = tabName;
+  } else {
+    nextTab.value = tabName;
   }
 }
 
@@ -60,6 +63,10 @@ watch(
   (newValue) => {
     if (!newValue.includes(selectedTab.value)) {
       selectedTab.value = newValue[0];
+    }
+    if (nextTab.value && newValue.includes(nextTab.value)) {
+      selectedTab.value = nextTab.value;
+      nextTab.value = undefined;
     }
   }
 );
