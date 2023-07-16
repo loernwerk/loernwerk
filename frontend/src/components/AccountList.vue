@@ -1,8 +1,8 @@
 <template>
   <ContainerComponent class="w-1/4 flex flex-col">
     <template #Header>
-      <div class="flex flex-col p-0.5 z-10">
-        <ButtonComponent @click="emit('createUser')">
+      <div class="flex flex-col p-0.5">
+        <ButtonComponent @click="emit('createUser')" class="pb-1">
           Nutzer erstellen
         </ButtonComponent>
         <SearchBarComponent
@@ -11,6 +11,7 @@
               filterText = newInput;
             }
           "
+          class="p-0.5"
         />
       </div>
     </template>
@@ -33,6 +34,7 @@ import { PropType, computed, ref } from 'vue';
 import { IUser } from '../../../model/user/IUser';
 import ButtonComponent from './ButtonComponent.vue';
 import SearchBarComponent from './SearchBarComponent.vue';
+import ContainerComponent from './ContainerComponent.vue';
 
 const props = defineProps({
   accounts: {
