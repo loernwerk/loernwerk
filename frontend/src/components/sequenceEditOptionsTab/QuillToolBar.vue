@@ -105,6 +105,9 @@ library.add(
 );
 
 defineProps({
+  /**
+   * The id of the toolbar
+   */
   id: {
     type: String,
     required: true,

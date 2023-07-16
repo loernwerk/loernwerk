@@ -28,10 +28,16 @@ import { Ref, ref, watch } from 'vue';
 import ContainerComponent from './ContainerComponent.vue';
 
 const props = defineProps({
+  /**
+   * The tabs that can exist
+   */
   possibleTabs: {
     type: Array<string>,
     required: true,
   },
+  /**
+   * The tabs that are currently selecteble
+   */
   shownTabs: {
     type: Array<string>,
     required: true,

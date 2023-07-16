@@ -23,13 +23,23 @@ import { ImageContent } from '../../../../model/slide/content/ImageContent';
 import ButtonComponent from '../ButtonComponent.vue';
 
 const props = defineProps({
+  /**
+   * The image content to edit
+   */
   imageContent: {
     type: Object as PropType<ImageContent>,
     required: true,
   },
 });
 
-const emits = defineEmits(['update-content']);
+const emits = defineEmits([
+  /**
+   * Emitted when the content has been edited
+   *
+   * @param content the updated content
+   */
+  'update-content',
+]);
 
 const refContent = ref(props.imageContent);
 

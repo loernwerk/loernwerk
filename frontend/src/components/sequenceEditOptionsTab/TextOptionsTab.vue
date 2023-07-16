@@ -13,6 +13,9 @@ import QuillToolBar from './QuillToolBar.vue';
 import { LayoutSlot } from '../../../../model/slide/layout/Layout';
 
 defineProps({
+  /**
+   * The currently selected slot
+   */
   selectedSlot: {
     type: Number as PropType<LayoutSlot>,
     required: false,

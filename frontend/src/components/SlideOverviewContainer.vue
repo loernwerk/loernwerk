@@ -39,16 +39,42 @@ import SlideOverviewContainerElement from './SlideOverviewContainerElement.vue';
 import ButtonComponent from './ButtonComponent.vue';
 
 defineProps({
+  /**
+   * The slides to display
+   */
   slides: {
     type: Array<ISlide>,
     required: true,
   },
-
+  /**
+   * The index of the selected slide
+   */
   selectedSlideIndex: {
     type: Number,
     required: true,
   },
 });
 
-defineEmits(['selectionChanged', 'addSlide', 'deleteSlide', 'orderChanged']);
+defineEmits([
+  /**
+   * Emitted when the selection changes
+   *
+   * @param index the index of the selected slide
+   */
+  'selectionChanged',
+  /**
+   * Emitted when a slide is added
+   */
+  'addSlide',
+  /**
+   * Emitted when a slide is deleted
+   *
+   * @param index the index of the deleted slide
+   */
+  'deleteSlide',
+  /**
+   * Emitted when the order of the slides changes
+   */
+  'orderChanged',
+]);
 </script>

@@ -41,7 +41,14 @@ const props = defineProps({
   },
 });
 
-const emits = defineEmits(['editing']);
+const emits = defineEmits([
+  /**
+   * Emitted when the content is being edited
+   *
+   * @param val Content of the editor
+   */
+  'editing',
+]);
 const editorDiv: Ref<HTMLDivElement | null> = ref(null);
 const editor: Ref<Quill | null> = ref(null);
 

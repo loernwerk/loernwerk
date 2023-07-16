@@ -49,7 +49,20 @@ const props = defineProps({
   },
 });
 
-defineEmits(['editing', 'changeContent']);
+defineEmits([
+  /**
+   * Emitted when the user starts or stops editing a slide
+   *
+   * @param val Slot and value from component
+   */
+  'editing',
+  /**
+   * Emitted when the user changes the content of a slide
+   *
+   * @param val Slot and content to change to
+   */
+  'changeContent',
+]);
 
 interface GridSlot {
   gridRowStart: number;

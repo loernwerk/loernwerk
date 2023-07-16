@@ -52,18 +52,41 @@ import { LayoutType } from '../../../../model/slide/layout/Layout';
 import InteractableComponent from '../InteractableComponent.vue';
 
 const props = defineProps({
+  /**
+   * The slide being edited
+   */
   slide: {
     type: Object as PropType<ISlide>,
     required: true,
   },
 
+  /**
+   * The sequence being edited
+   */
   sequence: {
     type: Object as PropType<ISequence>,
     required: true,
   },
 });
 
-const emits = defineEmits(['update-slide', 'update-sequence', 'save']);
+const emits = defineEmits([
+  /**
+   * Emitted when the slide has been updated
+   *
+   * @param slide The updated slide
+   */
+  'update-slide',
+  /**
+   * Emitted when the sequence has been updated
+   *
+   * @param sequence The updated sequence
+   */
+  'update-sequence',
+  /**
+   * Emitted when the save button has been clicked
+   */
+  'save',
+]);
 
 const sequenceName = ref(props.sequence.name);
 watch(sequenceName, () => updateSequenceName(sequenceName.value));

@@ -36,4 +36,11 @@ defineProps({
     required: true,
   },
 });
+
+defineEmits([
+  /**
+   * Emitted when the content is being edited
+   */
+  'editing',
+]);
 </script>

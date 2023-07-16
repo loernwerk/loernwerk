@@ -27,11 +27,23 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 library.add(faCircleXmark);
 
 defineProps({
+  /**
+   * The slide to display
+   */
   slide: {
     type: Object as PropType<ISlide>,
     required: true,
   },
 });
 
-defineEmits(['click', 'delete']);
+defineEmits([
+  /**
+   * Emitted when the slide is clicked
+   */
+  'click',
+  /**
+   * Emitted when the slide is deleted
+   */
+  'delete',
+]);
 </script>

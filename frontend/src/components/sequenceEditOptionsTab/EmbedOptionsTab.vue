@@ -15,6 +15,9 @@ import { EmbedContent } from '../../../../model/slide/content/EmbedContent';
 import TextInputComponent from '../TextInputComponent.vue';
 
 const props = defineProps({
+  /**
+   * The embed content to edit
+   */
   embedContent: {
     type: Object as PropType<EmbedContent>,
     required: true,
@@ -23,7 +26,14 @@ const props = defineProps({
 
 const content = ref(props.embedContent);
 
-const emits = defineEmits(['update-content']);
+const emits = defineEmits([
+  /**
+   * Emitted when the content has been edited
+   *
+   * @param content the updated content
+   */
+  'update-content',
+]);
 
 const url = ref(content.value.url);
 

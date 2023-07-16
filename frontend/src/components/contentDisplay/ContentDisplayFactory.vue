@@ -86,7 +86,20 @@ const props = defineProps({
   },
 });
 
-defineEmits(['editing', 'changeContent']);
+defineEmits([
+  /**
+   * Emitted when the content is being edited
+   *
+   * @param val Information given from the display
+   */
+  'editing',
+  /**
+   * Emitted when the content is being changed
+   *
+   * @param content The new content
+   */
+  'changeContent',
+]);
 
 const possibleNewContentTypes = computed(() => {
   const contentTypes = [
