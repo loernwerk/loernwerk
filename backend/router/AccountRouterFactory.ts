@@ -51,8 +51,7 @@ export class AccountRouterFactory extends RouterFactory {
                         req.body
                     );
                     res.status(201).json({ id: user.id });
-                } catch (e) {
-                    console.log(e.message);
+                } catch {
                     res.sendStatus(400);
                 }
             }
@@ -102,8 +101,7 @@ export class AccountRouterFactory extends RouterFactory {
                 try {
                     await AccountController.deleteAccount(req.body.id);
                     res.sendStatus(204);
-                } catch (e) {
-                    console.log(e.message);
+                } catch {
                     res.sendStatus(404);
                     return;
                 }
@@ -122,7 +120,7 @@ export class AccountRouterFactory extends RouterFactory {
             let user: IUser;
             try {
                 user = await AccountController.getAccountById(id);
-            } catch (e) {
+            } catch {
                 res.status(404);
                 return;
             }
@@ -138,8 +136,6 @@ export class AccountRouterFactory extends RouterFactory {
             const listUsers = await AccountController.getAllAccounts();
             res.status(200).json(listUsers);
         });
-
-        return accountRouter;
 
         accountRouter.get('/:ids', async (req, res) => {
             const map = {};
@@ -161,5 +157,7 @@ export class AccountRouterFactory extends RouterFactory {
                 res.status(200).json(map);
             }
         });
+
+        return accountRouter;
     }
 }
