@@ -11,13 +11,13 @@
           </div>
           <div class="flex">
             <ButtonComponent @click="showSequence(sequence.code)">
-              anzeigen
+              Anzeigen
             </ButtonComponent>
             <div class="flex-grow text-red-500">
               <div v-if="showError">Löschen fehlgeschlagen</div>
             </div>
             <ButtonComponent @click="deleteSequence(sequence.code)">
-              löschen
+              Löschen
             </ButtonComponent>
           </div>
         </div>
