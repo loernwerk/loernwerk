@@ -1,14 +1,13 @@
-import { ref } from "vue";
+import { ref } from 'vue';
 const bus = ref(new Map());
 
-export default function useEventsBus(){
+export default function useEventsBus() {
+  function emit(event: string, ...args: unknown[]) {
+    bus.value.set(event, args);
+  }
 
-    function emit(event: string, ...args: unknown[]) {
-        bus.value.set(event, args);
-    }
-
-    return {
-        emit,
-        bus
-    }
+  return {
+    emit,
+    bus,
+  };
 }

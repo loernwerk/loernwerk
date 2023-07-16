@@ -20,10 +20,8 @@
       </div>
 
       <div v-for="(item, index) in tabs" :key="index">
-        <slot :name="`${index}`" v-if="activeTab==index">
-        </slot>
+        <slot :name="`${index}`" v-if="activeTab == index"> </slot>
       </div>
-
     </div>
   </ContainerComponent>
 </template>
@@ -31,7 +29,7 @@
 <script setup lang="ts">
 import ButtonComponent from './ButtonComponent.vue';
 import ContainerComponent from './ContainerComponent.vue';
-import {ref} from "vue";
+import { ref } from 'vue';
 
 let activeTab = ref(0);
 const props = defineProps({
@@ -43,8 +41,7 @@ const props = defineProps({
  */
 
 function changeTab(index) {
-
-  console.log('setting activeTab to ' + index)
+  console.log('setting activeTab to ' + index);
   activeTab.value = index;
 }
 /**
@@ -52,6 +49,5 @@ function changeTab(index) {
  * @param activeTab the Tab currently shown to the user
  * @returns the type of tab to be opened
  */
-
 </script>
 <style scoped></style>

@@ -1,56 +1,65 @@
 <template>
   <ContainerComponent>
-    <h1>Geben Sie den Nutzernamen der Lehrkraft ein, mit der die Sequenz geteilt werden soll:</h1>
+    <h1>
+      Geben Sie die ID der Lehrkraft ein, mit der die Sequenz geteilt
+      werden soll:
+    </h1>
     <TextInputComponent
-        @input-changed="(text) => (userInfoField = text)"
-        :class="{ 'border-red-600': showRedBorder }">
+      @input-changed="(text) => (userInfoField = text)"
+      :class="{ 'border-red-600': showRedBorder }"
+    >
     </TextInputComponent>
-    <ButtonComponent @click="confirmSharing">Teilen</ButtonComponent>
+    <div class="columns-2">
+      <ButtonComponent @click="confirmSharing">Teilen</ButtonComponent>
+      <ButtonComponent @click="closePopup">Schließen</ButtonComponent>
+    </div>
   </ContainerComponent>
 </template>
 
 <script setup lang="ts">
 import ContainerComponent from '../ContainerComponent.vue';
-import TextInputComponent from "../TextInputComponent.vue";
-import {toRaw, watch} from "vue";
-import useEventsBus from "../../eventBus";
-import {AccountRestInterface} from "../../restInterfaces/AccountRestInterface";
-import ButtonComponent from "../ButtonComponent.vue";
-import {ref} from "vue";
+import TextInputComponent from '../TextInputComponent.vue';
+import { toRaw, watch } from 'vue';
+import useEventsBus from '../../eventBus';
+import { AccountRestInterface } from '../../restInterfaces/AccountRestInterface';
+import ButtonComponent from '../ButtonComponent.vue';
+import { ref } from 'vue';
 const { bus } = useEventsBus();
-const { emit }=useEventsBus();
+const { emit } = useEventsBus();
 
 let userInfoField = ref('');
 let sequenceToBeShared;
 let accounts;
 let showRedBorder = ref(false);
 
-watch(()=>bus.value.get('sequence'), (sequence) => {
-  sequenceToBeShared = toRaw(sequence)[0];
-});
-
+watch(
+  () => bus.value.get('sequence'),
+  (sequence) => {
+    sequenceToBeShared = toRaw(sequence)[0];
+  }
+);
+function closePopup() {
+  emit('close');
+}
 async function confirmSharing() {
-  if(userInfoField.value.length == 0) {
+  if (userInfoField.value.length == 0) {
     emit('userInfoEmpty');
     showRedBorder.value = true;
-  }
-    else{
+  } else {
     try {
       //accounts = await AccountRestInterface.getAccountMetaDataList();
       for (let i = 0; i < accounts.length; i++) {
-        if (accounts[i] == userInfoField) {
-          let accountId = [userInfoField];
+        if (accounts[i].id == userInfoField.value) {
+          let accountId = [userInfoField.value];
           //const accountToShareWith = await AccountRestInterface.getAccounts(accountId);
-          //sequenceToBeShared.readAccess.push(accountToShareWith);
-          emit('')
+          //sequenceToBeShared.readAccess.push(accountToShareWith[0]);
+          emit('close');
         }
       }
-    }
-    catch(e) {
+    } catch (e) {
       alert('Something went wrong');
     }
-    }
-
+  }
 }
 </script>
 
