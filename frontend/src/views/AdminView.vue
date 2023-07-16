@@ -63,7 +63,7 @@ const sequencesOfUser: Ref<ISequence[]> = ref([]);
 const accounts: Ref<Partial<IUser>[]> = ref([]);
 try {
   accounts.value = await AccountRestInterface.getAccountMetaDataList();
-} catch (e) {
+} catch {
   router.push('/');
 }
 /**
