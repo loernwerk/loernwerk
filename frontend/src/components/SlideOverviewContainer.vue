@@ -5,7 +5,7 @@
     </template>
     <template #default>
       <div class="flex flex-col min-h-full pt-2">
-        <VueDraggableNext :list="slides" @change="updateOrder()">
+        <VueDraggableNext :list="slides" @change="$emit('orderChanged')">
           <div
             class="mb-2 mr-2 flex flex-row space-x-2 items-center"
             v-for="[index, slide] in slides.entries()"
@@ -38,7 +38,7 @@ import { VueDraggableNext } from 'vue-draggable-next';
 import SlideOverviewContainerElement from './SlideOverviewContainerElement.vue';
 import ButtonComponent from './ButtonComponent.vue';
 
-const props = defineProps({
+defineProps({
   slides: {
     type: Array<ISlide>,
     required: true,
@@ -50,17 +50,5 @@ const props = defineProps({
   },
 });
 
-console.log(props.slides);
-
-defineEmits(['selectionChanged', 'addSlide', 'deleteSlide']);
-
-/**
- * Updates the order of the slides after a drag and drop event
- */
-function updateOrder(): void {
-  for (let i = 0; i < props.slides.length; i++) {
-    // eslint-disable-next-line vue/no-mutating-props
-    props.slides[i].order = i;
-  }
-}
+defineEmits(['selectionChanged', 'addSlide', 'deleteSlide', 'orderChanged']);
 </script>

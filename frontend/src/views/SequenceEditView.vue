@@ -7,6 +7,7 @@
       @selection-changed="(val) => changeSelectedSlide(val)"
       @add-slide="addSlide()"
       @delete-slide="(val) => deleteSlide(val)"
+      @order-changed="updateSlideOrder()"
     />
     <div class="flex flex-col grow space-y-5">
       <TabbedContainer
@@ -206,6 +207,16 @@ function addSlide(): void {
 
   sequence.value.slides.push(slide);
   sequence.value.slideCount = sequence.value.slides.length;
+}
+
+/**
+ * Updates the order of the slides after a drag and drop event
+ */
+function updateSlideOrder(): void {
+  for (let i = 0; i < sequence.value.slides.length; i++) {
+    // eslint-disable-next-line vue/no-mutating-props
+    sequence.value.slides[i].order = i;
+  }
 }
 
 /**
