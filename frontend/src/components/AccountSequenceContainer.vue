@@ -35,7 +35,7 @@ import { router } from '../router';
 
 defineProps({
   sequences: {
-    type: Object as PropType<Array<ISequence>>,
+    type: Object as PropType<ISequence[]>,
     required: true,
   },
 });

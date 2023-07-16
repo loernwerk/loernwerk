@@ -1,5 +1,5 @@
 <template>
-  <div class="p-0.5 sticky top-9 z-10">
+  <div class="p-0.5 sticky top-0 z-10">
     <SearchBarComponent
       class=""
       @input-changed="
