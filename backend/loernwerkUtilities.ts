@@ -102,16 +102,29 @@ export function buildH5PRequest(
         req.t = translationFunction;
     } else {
         // Fallback translation function
-        req.t = (
-            errorId: string,
-            replacements: { [key: string]: string }
-        ): string => {
-            void replacements;
-            return errorId;
-        };
+        req.t = fallbackTranslation as TFunction<
+        string,
+        {
+            [key: string]: string;
+        }
+        >;
     }
 
     next();
+}
+
+/**
+ *
+ * @param errorId Id of the error
+ * @param replacements Replacements for the error message
+ * @returns The translation
+ */
+function fallbackTranslation(
+    errorId: string,
+    replacements: { [key: string]: string }
+): string {
+    void replacements;
+    return errorId;
 }
 
 let translationFunction: TFunction | null = null;
@@ -164,7 +177,7 @@ declare module 'express-serve-static-core' {
         // User object required by H5P library.
         user: IUser;
         // Translation function for error messages. Name forced by H5P library.
-        t: (errorId: string, replacements: { [key: string]: string }) => string;
+        t: TFunction;
         // Language used by the user.
         language: string;
     }
