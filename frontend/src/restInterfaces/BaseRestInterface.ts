@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios';
 import {
   LoernwerkError,
   LoernwerkErrorCodes,
-} from '../../../backend/loernwerkError';
+} from '../../../model/loernwerkError';
 
 /**
  * Base Class responsible for the interaction with the server. Implements different types of HTTP-Methods.
@@ -106,9 +106,8 @@ export abstract class BaseRestInterface {
   /**
    * Returns the backend base URL.
    * @returns Base URL
-   * @private
    */
-  private static getBaseURL(): string {
+  protected static getBaseURL(): string {
     return window.location.hostname.includes('localhost') ||
       window.location.hostname.includes('127.0.0.1')
       ? 'http://localhost:5000/api'

@@ -126,4 +126,19 @@ export class SequenceRestInterface extends BaseRestInterface {
       `${this.sequence_path}${sequenceCode}/view/${slideIndex}`
     );
   }
+
+  /**
+   * Builds the URL to download the certificate
+   * @param sequenceCode  code of the sequence for which certificate is requested
+   * @returns URL as string
+   */
+  public static getUrlForCertificate(sequenceCode: string): string {
+    return (
+      BaseRestInterface.getBaseURL() +
+      this.sequence_path +
+      '/' +
+      sequenceCode +
+      '/view/certificate'
+    );
+  }
 }
