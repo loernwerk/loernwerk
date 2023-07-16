@@ -1,11 +1,17 @@
 <template>
-  <h5p-editor ref="editor" :content-id="contentId" />
-  <div class="flex items-center">
-    <ButtonComponent class="w-fit" :loading="currentlySaving" @click="save"
-      >Save</ButtonComponent
-    >
-    <ButtonComponent class="w-fit ml-1" @click="close">Close</ButtonComponent>
-  </div>
+  <ContainerComponent class="fixed top-3 bottom-3 left-3 right-3 z-10">
+    <div class="flex flex-col space-y-5">
+      <h5p-editor ref="editor" :content-id="contentId" class="grow" />
+      <div class="flex items-center">
+        <ButtonComponent class="w-fit" :loading="currentlySaving" @click="save"
+          >Save</ButtonComponent
+        >
+        <ButtonComponent class="w-fit ml-1" @click="close"
+          >Close</ButtonComponent
+        >
+      </div>
+    </div>
+  </ContainerComponent>
 </template>
 
 <script setup lang="ts">
@@ -17,6 +23,7 @@ import {
 import { onMounted, Ref, ref } from 'vue';
 import { H5PRestInterface } from '../../restInterfaces/H5PRestInterface';
 import ButtonComponent from '../ButtonComponent.vue';
+import ContainerComponent from '../ContainerComponent.vue';
 
 const props = defineProps({
   /**
