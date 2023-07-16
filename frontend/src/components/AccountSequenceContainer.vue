@@ -26,7 +26,7 @@
   </ContainerComponent>
 </template>
 <script setup lang="ts">
-import { PropType, ref } from 'vue';
+import { ref } from 'vue';
 import { ISequence } from '../../../model/sequence/ISequence';
 import ContainerComponent from './ContainerComponent.vue';
 import ButtonComponent from './ButtonComponent.vue';
@@ -35,7 +35,7 @@ import { router } from '../router';
 
 defineProps({
   sequences: {
-    type: Object as PropType<ISequence[]>,
+    type: Array<ISequence>,
     required: true,
   },
 });
