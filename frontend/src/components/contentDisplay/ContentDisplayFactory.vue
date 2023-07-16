@@ -81,7 +81,7 @@ const props = defineProps({
    * The slot this display is in
    */
   layoutSlot: {
-    type: Object as PropType<LayoutSlot>,
+    type: Number as PropType<LayoutSlot>,
     required: true,
   },
 });

@@ -1,16 +1,18 @@
 <template>
-  <div
-    class="h-24 aspect-video cursor-pointer"
-    :style="{ backgroundColor: slide.backgroundColor }"
-    @click="(e) => $emit('click', e)"
-  ></div>
   <div class="relative">
-    <div class="absolute -top-14 right-0">
-      <FontAwesomeIcon
-        class="cursor-pointer"
-        :icon="['fas', 'circle-xmark']"
-        @click="$emit('delete')"
-      />
+    <div
+      class="h-24 aspect-video cursor-pointer"
+      :style="{ backgroundColor: slide.backgroundColor }"
+      @click="(e) => $emit('click', e)"
+    ></div>
+    <div class="relative">
+      <div class="absolute -top-[6.5rem] -right-1">
+        <FontAwesomeIcon
+          class="cursor-pointer"
+          :icon="['fas', 'circle-xmark']"
+          @click="$emit('delete')"
+        />
+      </div>
     </div>
   </div>
 </template>

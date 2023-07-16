@@ -43,6 +43,8 @@ const props = defineProps({
   },
 });
 
+console.log(props.slides);
+
 defineEmits(['selectionChanged', 'addSlide', 'deleteSlide']);
 
 /**

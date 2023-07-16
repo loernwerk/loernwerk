@@ -14,7 +14,7 @@ import { LayoutSlot } from '../../../../model/slide/layout/Layout';
 
 defineProps({
   selectedSlot: {
-    type: Object as PropType<LayoutSlot>,
+    type: Number as PropType<LayoutSlot>,
     required: false,
   },
 });
