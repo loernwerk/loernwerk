@@ -2,7 +2,7 @@ import { BaseRestInterface } from './BaseRestInterface';
 import { ISlide } from '../../../model/slide/ISlide';
 import { ISequence } from '../../../model/sequence/ISequence';
 import { ISequenceWithSlides } from '../../../model/sequence/ISequenceWithSlides';
-import { ContentFactory } from '../../frame/ContentFactory';
+import { ContentFactory } from '../factories/ContentFactory';
 import { LayoutSlot } from '../../../model/slide/layout/Layout';
 
 /**

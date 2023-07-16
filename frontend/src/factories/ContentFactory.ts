@@ -6,7 +6,7 @@ import { TextContentFactory } from './TextContentFactory';
 import {
   LoernwerkError,
   LoernwerkErrorCodes,
-} from '../../../backend/loernwerkError';
+} from '../../../model/loernwerkError';
 
 /**
  * Base Class to convert JSON to Content objects
