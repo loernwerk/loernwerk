@@ -15,6 +15,8 @@
             <SlideOverviewContainerElement
               :slide="slide"
               class="rounded-md"
+              :class="{ 'border-4': index == selectedSlideIndex }"
+              :style="{ 'border-color': slide.backgroundColor }"
               @click="$emit('selectionChanged', index)"
               @delete="$emit('deleteSlide', index)"
             />
@@ -39,6 +41,11 @@ import ButtonComponent from './ButtonComponent.vue';
 const props = defineProps({
   slides: {
     type: Array<ISlide>,
+    required: true,
+  },
+
+  selectedSlideIndex: {
+    type: Number,
     required: true,
   },
 });
