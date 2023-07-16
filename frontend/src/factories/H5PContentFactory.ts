@@ -1,4 +1,4 @@
-import { H5PContent } from '../../model/slide/content/H5PContent';
+import { H5PContent } from '../../../model/slide/content/H5PContent';
 import { ContentFactory } from './ContentFactory';
 
 /**
@@ -8,7 +8,7 @@ export class H5PContentFactory extends ContentFactory {
   /**
    * @inheritDoc
    * @param json the JSON
-   * @returns the h5pContent as H5PContent type
+   * @returns json as H5PContent
    * @protected
    */
   public buildContent(json: unknown): H5PContent {

@@ -1,6 +1,6 @@
-import { TextContent } from '../../model/slide/content/TextContent';
+import { TextContent } from '../../../model/slide/content/TextContent';
 import { ContentFactory } from './ContentFactory';
-import { TextSnippet } from '../../model/slide/content/TextSnippet';
+import { TextSnippet } from '../../../model/slide/content/TextSnippet';
 
 /**
  * Class which transforms JSON to TextContent Object
@@ -9,7 +9,7 @@ export class TextContentFactory extends ContentFactory {
   /**
    * @inheritDoc
    * @param json the JSON
-   * @returns the textContent as TextContent type
+   * @returns json as TextContent
    * @protected
    */
   public buildContent(json: unknown): TextContent {

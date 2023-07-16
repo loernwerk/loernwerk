@@ -1,8 +1,12 @@
-import { Content, ContentType } from '../../model/slide/content/Content';
+import { Content, ContentType } from '../../../model/slide/content/Content';
 import { EmbedContentFactory } from './EmbedContentFactory';
 import { H5PContentFactory } from './H5PContentFactory';
 import { ImageContentFactory } from './ImageContentFactory';
 import { TextContentFactory } from './TextContentFactory';
+import {
+  LoernwerkError,
+  LoernwerkErrorCodes,
+} from '../../../backend/loernwerkError';
 
 /**
  * Base Class to convert JSON to Content objects
@@ -28,7 +32,10 @@ export abstract class ContentFactory {
         return new TextContentFactory().buildContent(json);
 
       default:
-        throw new Error(`Not supported content type ${(json as Content).type}`);
+        throw new LoernwerkError(
+          `Not supported content type ${(json as Content).type}`,
+          LoernwerkErrorCodes.NOT_FOUND
+        );
     }
   }
 
