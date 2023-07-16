@@ -37,6 +37,7 @@
         "memorystore": "^1.6.7",
         "quill": "^1.3.7",
         "quill-delta": "^5.1.0",
+        "pdfjs": "^2.5.0",
         "reflect-metadata": "^0.1.13",
         "sqlite3": "^5.1.6",
         "typeorm": "^0.3.17",

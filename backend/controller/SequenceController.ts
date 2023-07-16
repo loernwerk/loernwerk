@@ -10,6 +10,9 @@ import {
 import { DBUser } from '../../model/user/DBUser';
 import { DBH5PContent } from '../../model/h5p/DBH5PContent';
 import { H5PServer } from '../h5p/H5PServer';
+import { readFile } from 'fs/promises';
+import { Document, ExternalDocument } from 'pdfjs';
+
 /**
  * Manages the sequence data in the database and handles inquiries requests regarding these
  */
@@ -292,6 +295,42 @@ export class SequenceController {
             );
         }
         return slide;
+    }
+
+    /**
+     * Generates a pdf certificate for the specified sequence.
+     * @param code Code of the sequence
+     * @returns Certifcate PDF as Buffer
+     */
+    public static async getCertificatePDF(code: string): Promise<Buffer> {
+        const sequence = await DBSequence.findOne({
+            select: ['code', 'name'],
+            where: { code: code },
+        });
+        if (sequence === null) {
+            throw new LoernwerkError(
+                'Sequence not found',
+                LoernwerkErrorCodes.NOT_FOUND
+            );
+        }
+
+        const srcPDF = await readFile('assets/certificate_de.pdf');
+        const templatePDF = new ExternalDocument(srcPDF);
+
+        const generatedPDF = new Document();
+        generatedPDF.setTemplate(templatePDF);
+        generatedPDF
+            .cell({ x: 0, y: 385 })
+            .text(sequence.name, { alignment: 'center', fontSize: 30 });
+        generatedPDF
+            .cell({ x: 0, y: 305 })
+            .text(sequence.code, { alignment: 'center', fontSize: 30 });
+        generatedPDF.cell({ x: 0, y: 225 }).text(new Date().toLocaleString(), {
+            alignment: 'center',
+            fontSize: 30,
+        });
+
+        return await generatedPDF.asBuffer();
     }
 
     /**
