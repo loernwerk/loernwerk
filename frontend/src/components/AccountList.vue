@@ -1,23 +1,31 @@
 <template>
-  <div class="p-0.5 sticky top-0 z-10">
-    <SearchBarComponent
-      class=""
-      @input-changed="
-        (newInput) => {
-          filterText = newInput;
-        }
-      "
-    />
-  </div>
-  <div class="">
-    <div v-for="user in filteredAccountList" :key="user.id">
-      <div class="p-0.5">
-        <ButtonComponent @click="emit('selected', user.id)">
-          {{ user.name }}
+  <ContainerComponent class="w-1/4 flex flex-col">
+    <template #Header>
+      <div class="flex flex-col p-0.5 z-10">
+        <ButtonComponent @click="emit('createUser')">
+          Nutzer erstellen
         </ButtonComponent>
+        <SearchBarComponent
+          @input-changed="
+            (newInput) => {
+              filterText = newInput;
+            }
+          "
+        />
       </div>
-    </div>
-  </div>
+    </template>
+    <template #default>
+      <div class="flex flex-col">
+        <div v-for="user in filteredAccountList" :key="user.id">
+          <div class="p-0.5">
+            <ButtonComponent @click="emit('selected', user.id)">
+              {{ user.name }}
+            </ButtonComponent>
+          </div>
+        </div>
+      </div>
+    </template>
+  </ContainerComponent>
 </template>
 
 <script setup lang="ts">
@@ -39,6 +47,7 @@ const emit = defineEmits([
    * @param userId the userId of the user clicked on
    */
   'selected',
+  'createUser',
 ]);
 
 const filterText = ref('');

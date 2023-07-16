@@ -1,26 +1,19 @@
 <template>
   <div class="w-full flex h-[calc(100vh-2.5rem)]">
-    <ContainerComponent class="w-1/4 overflow-hidden flex flex-col">
-      <ButtonComponent
-        @click="
-          selectedUser = null;
-          displayCreateUser = true;
-        "
-        class="p-0.5 sticky top-0 z-10"
-      >
-        Nutzer erstellen
-      </ButtonComponent>
-      <AccountList
-        class=""
-        :accounts="accounts"
-        @selected="
-          (id) => {
-            displayCreateUser = false;
-            updateUser(id);
-          }
-        "
-      />
-    </ContainerComponent>
+    <AccountList
+      class=""
+      :accounts="accounts"
+      @selected="
+        (id) => {
+          displayCreateUser = false;
+          updateUser(id);
+        }
+      "
+      @createUser="
+        selectedUser = null;
+        displayCreateUser = true;
+      "
+    />
     <div class="flex flex-grow">
       <div v-if="selectedUser !== null" class="w-full flex">
         <AccountDetailsEditContainer
@@ -49,8 +42,6 @@ import { IUser } from '../../../model/user/IUser';
 import AccountDetailsEditContainer from '../components/AccountDetailsEditContainer.vue';
 import AccountList from '../components/AccountList.vue';
 import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
-import ContainerComponent from '../components/ContainerComponent.vue';
-import ButtonComponent from '../components/ButtonComponent.vue';
 import AccountCreationContainer from '../components/AccountCreationContainer.vue';
 import AccountSequenceContainer from '../components/AccountSequenceContainer.vue';
 import { ISequence } from '../../../model/sequence/ISequence';
