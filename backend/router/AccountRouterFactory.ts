@@ -3,7 +3,7 @@ import { RouterFactory } from './RouterFactory';
 import { AccountController } from '../controller/AccountController';
 import { UserClass } from '../../model/user/IUser';
 import { requireAdmin, requireBody, requireLogin } from '../loernwerkUtilities';
-import { LoernwerkErrorCodes } from '../loernwerkError';
+import { LoernwerkErrorCodes } from '../../model/loernwerkError';
 
 /**
  * Builds router for request regarding Account management
@@ -27,6 +27,8 @@ export class AccountRouterFactory extends RouterFactory {
                     );
                     req.session.userId = user.id;
                     req.session.isAdmin = user.type === UserClass.ADMIN;
+                    req.session.username = user.name;
+                    req.session.email = user.mail;
                 } catch {
                     res.sendStatus(400);
                     return;
@@ -112,8 +114,9 @@ export class AccountRouterFactory extends RouterFactory {
             );
             res.status(200).json({
                 id: user.id,
-                username: user.name,
-                email: user.mail,
+                name: user.name,
+                mail: user.mail,
+                type: user.type,
             });
         });
 

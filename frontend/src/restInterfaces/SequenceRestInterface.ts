@@ -2,6 +2,8 @@ import { BaseRestInterface } from './BaseRestInterface';
 import { ISlide } from '../../../model/slide/ISlide';
 import { ISequence } from '../../../model/sequence/ISequence';
 import { ISequenceWithSlides } from '../../../model/sequence/ISequenceWithSlides';
+import { ContentFactory } from '../factories/ContentFactory';
+import { LayoutSlot } from '../../../model/slide/layout/Layout';
 
 /**
  * Implements communication with the Server concerning all Sequence-requests
@@ -50,10 +52,20 @@ export class SequenceRestInterface extends BaseRestInterface {
   public static async getSequence(
     sequenceCode: string
   ): Promise<ISequenceWithSlides> {
-    //TODO check on implementing needed factories
-    return BaseRestInterface.get<ISequenceWithSlides>(
+    const respond = await BaseRestInterface.get<ISequenceWithSlides>(
       `${this.sequence_path}${sequenceCode}/edit`
     );
+
+    respond.slides.forEach((slide) => {
+      for (const key in slide.content) {
+        const enumKey = parseInt(key) as LayoutSlot;
+        slide.content[enumKey] = ContentFactory.createContent(
+          slide.content[enumKey]
+        );
+      }
+    });
+
+    return respond;
   }
 
   /**
@@ -112,6 +124,21 @@ export class SequenceRestInterface extends BaseRestInterface {
   ): Promise<ISlide> {
     return await BaseRestInterface.get<ISlide>(
       `${this.sequence_path}${sequenceCode}/view/${slideIndex}`
+    );
+  }
+
+  /**
+   * Builds the URL to download the certificate
+   * @param sequenceCode  code of the sequence for which certificate is requested
+   * @returns URL as string
+   */
+  public static getUrlForCertificate(sequenceCode: string): string {
+    return (
+      BaseRestInterface.getBaseURL() +
+      this.sequence_path +
+      '/' +
+      sequenceCode +
+      '/view/certificate'
     );
   }
 }

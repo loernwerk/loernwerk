@@ -1,7 +1,10 @@
 import { H5PConfig, H5PEditor, H5PPlayer } from '@lumieducation/h5p-server';
 import { H5PContentStorage } from './H5PContentStorage';
 import { H5PLibraryStorage } from './H5PLibraryStorage';
-import { LoernwerkError, LoernwerkErrorCodes } from '../loernwerkError';
+import {
+    LoernwerkError,
+    LoernwerkErrorCodes,
+} from '../../model/loernwerkError';
 import DirectoryTemporaryFileStorage from '@lumieducation/h5p-server/build/src/implementation/fs/DirectoryTemporaryFileStorage';
 import CachedKeyValueStorage from '@lumieducation/h5p-server/build/src/implementation/cache/CachedKeyValueStorage';
 import axios from 'axios';

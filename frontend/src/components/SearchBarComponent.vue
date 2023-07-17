@@ -10,12 +10,7 @@
       <TextInputComponent
         class="flex-1 !border-none !bg-transparent"
         :placeHolder="placeHolder"
-        @input-changed="
-          (value) => {
-            searchText = value;
-            $emit('input-changed', value);
-          }
-        "
+        v-model="searchText"
       />
     </div>
   </InteractableComponent>
@@ -27,7 +22,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import TextInputComponent from './TextInputComponent.vue';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 library.add(faMagnifyingGlass);
 
@@ -42,7 +37,7 @@ defineProps({
   },
 });
 
-defineEmits([
+const emit = defineEmits([
   /**
    * Event for when the search button is clicked
    *
@@ -58,4 +53,8 @@ defineEmits([
 ]);
 
 const searchText = ref('');
+
+watch(searchText, (newSearch) => {
+  emit('input-changed', newSearch);
+});
 </script>
