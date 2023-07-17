@@ -1,6 +1,8 @@
 <template>
-  <div class="w-full h-20 bg-gray-300 flex flex-row items-center gap-5">
-    <img src="../assets/Logo.png" class="h-full mr-5" />
+  <div
+    class="w-full h-20 bg-navbar flex flex-row items-center gap-5 drop-shadow"
+  >
+    <img src="../assets/logo_navbar.png" class="h-10 mx-5" />
     <NavigationBarItem v-if="currentViewLocalized !== ''" :active="true">
       {{ currentViewLocalized }}
     </NavigationBarItem>

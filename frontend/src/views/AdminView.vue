@@ -1,7 +1,6 @@
 <template>
   <div class="w-full flex h-full">
     <AccountList
-      class=""
       :accounts="accounts"
       @selected="
         (id) => {
