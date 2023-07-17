@@ -38,19 +38,13 @@
 </template>
 
 <script setup lang="ts">
-import { router } from '../router';
 import { Ref, ref } from 'vue';
 import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
-import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
 import SearchBarComponent from '../components/SearchBarComponent.vue';
 import ButtonComponent from '../components/ButtonComponent.vue';
 import PopupNewSequence from '../components/PopupNewSequence.vue';
 import SequenceDisplayContainer from '../components/contentDisplay/SequenceDisplayContainer.vue';
 import { ISequence } from '../../../model/sequence/ISequence';
-import {
-  LoernwerkError,
-  LoernwerkErrorCodes,
-} from '../../../model/loernwerkError';
 
 const showPopupNewSequence = ref(false);
 
@@ -58,21 +52,8 @@ const sequences: Ref<ISequence[]> = ref([]);
 const allOwnSequences: Ref<ISequence[]> = ref([]);
 const sharedSequences: Ref<ISequence[]> = ref([]);
 const allSharedSequences: Ref<ISequence[]> = ref([]);
-let currentUser = ref({});
 
-try {
-  AccountRestInterface.getOwnAccount().then((data) => {
-    currentUser.value = data;
-  });
-
-  await reloadSequences();
-} catch (e) {
-  if (e instanceof LoernwerkError) {
-    if (e.code === LoernwerkErrorCodes.UNAUTHORIZED) {
-      router.push('LogIn');
-    }
-  }
-}
+await reloadSequences();
 
 /**
  * Searches a sequence with given name
