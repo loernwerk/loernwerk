@@ -103,10 +103,10 @@ export function buildH5PRequest(
     } else {
         // Fallback translation function
         req.t = fallbackTranslation as TFunction<
-        string,
-        {
-            [key: string]: string;
-        }
+            string,
+            {
+                [key: string]: string;
+            }
         >;
     }
 
