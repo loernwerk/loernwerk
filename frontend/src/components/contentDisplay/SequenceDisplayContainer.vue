@@ -20,12 +20,19 @@ import { ISequence } from '../../../../model/sequence/ISequence';
 import ContainerComponent from '../ContainerComponent.vue';
 
 defineProps({
-  sequences: Object as () => ISequence[],
+  /**
+   * Array of all sequences which should be displayed in the overview
+   */
+  sequences: {
+    type: Array<ISequence>,
+    required: true,
+  },
+  /**
+   * Title to describe the overview
+   */
   name: {
     type: String,
     required: true,
   },
 });
 </script>
-
-<style></style>

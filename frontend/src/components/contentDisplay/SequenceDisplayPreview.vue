@@ -1,12 +1,6 @@
 <template>
   <div>
-    <PopupComponent
-      v-if="popupOpen"
-      @close="
-        console.log('got close');
-        popupOpen = false;
-      "
-    >
+    <PopupComponent v-if="popupOpen" @close="popupOpen = false">
       <TabbedContainer :tabs="tabNames">
         <template v-slot:[0]>
           <TagSequencePopupTab />
@@ -28,16 +22,11 @@
 
     <ContainerComponent>
       <h3>{{ sequence.name }}</h3>
-      <div class="columns-2">
-        <ButtonComponent @click="router.push('LogIn')"
+      <div class="flex flex-row">
+        <ButtonComponent class="basis-1/2 mr-2" @click="router.push('LogIn')"
           >Bearbeiten
         </ButtonComponent>
-        <!--      <ButtonComponent @click="openPopUp">Menü</ButtonComponent>-->
-        <ButtonComponent
-          @click="
-            popupOpen = !popupOpen;
-            console.log(popupOpen);
-          "
+        <ButtonComponent class="basis-1/2" @click="popupOpen = !popupOpen"
           >Menü</ButtonComponent
         >
       </div>
@@ -68,13 +57,16 @@ defineProps({
     type: Object as PropType<ISequence>,
     required: true,
   },
+  /**
+   * All sequences which should be displayed
+   */
   allSequences: {
     type: Array<ISequence>,
     required: true,
   },
 });
 
-let popupOpen = ref(false);
+const popupOpen = ref(false);
 
 const tabNames = [
   'Sequenz Taggen',
@@ -92,5 +84,3 @@ watch(
   }
 );
 </script>
-
-<style></style>
