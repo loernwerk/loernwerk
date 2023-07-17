@@ -1,6 +1,7 @@
 <template>
   <div class="flex flex-row items-center space-x-5 w-full pt-5">
     <ButtonComponent @click="selectImage()">Bild ändern</ButtonComponent>
+    <div class="text-red-600">{{ errorMessage }}</div>
     <div class="space-x-2 flex flex-row items-center w-96">
       <p>Skalierung:</p>
       <input
@@ -42,6 +43,7 @@ const emits = defineEmits([
 ]);
 
 const refContent = ref(props.imageContent);
+const errorMessage = ref('');
 
 /**
  * Opens a file dialog to select a new image.
@@ -58,8 +60,15 @@ function selectImage(): void {
     }
     const file = files.item(0);
     if (!file) {
+      errorMessage.value = 'Es wurde keine Datei ausgewählt.';
       return;
     }
+    // Limits the file size to 2MB
+    if (file.size > 2097152) {
+      errorMessage.value = 'Die Datei darf nicht größer als 2MB sein.';
+      return;
+    }
+    errorMessage.value = '';
     imageToBase64(file);
   };
   input.click();
