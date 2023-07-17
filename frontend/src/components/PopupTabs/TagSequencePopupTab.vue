@@ -1,9 +1,18 @@
 <template>
   <ContainerComponent>
-    <TextInputComponent />
-    <div class="columns-2">
-      <ButtonComponent>OK</ButtonComponent>
-      <ButtonComponent @click="closePopup">Abbruch</ButtonComponent>
+    <TextInputComponent 
+      class="my-2"
+    >
+    </TextInputComponent>
+    <div class="flex flex-row">
+      <ButtonComponent
+        class="basis-1/2 mr-2"
+      >OK</ButtonComponent>
+      <ButtonComponent 
+        class="basis-1/2"
+        @click="closePopup()"
+      >Abbruch
+      </ButtonComponent>
     </div>
   </ContainerComponent>
 </template>

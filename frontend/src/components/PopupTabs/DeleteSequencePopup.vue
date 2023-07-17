@@ -1,9 +1,17 @@
 <template>
   <ContainerComponent>
-    <h1>Sequenz '{{ sequence.name }}' löschen?</h1>
-    <div class="columns-2">
-      <ButtonComponent @click="deleteSequence">Ja</ButtonComponent>
-      <ButtonComponent @click="closePopup">Abbruch</ButtonComponent>
+    <h1>Sequenz "{{ sequence.name }}" löschen?</h1>
+    <div class="flex flex-row">
+      <ButtonComponent 
+        class="basis-1/2 mr-2"
+        @click="deleteSequence()"
+      >Ja
+      </ButtonComponent>
+      <ButtonComponent 
+        class="basis-1/2"
+        @click="closePopup()"
+      >Abbruch
+      </ButtonComponent>
     </div>
   </ContainerComponent>
 </template>
@@ -15,11 +23,19 @@ import { SequenceRestInterface } from '../../restInterfaces/SequenceRestInterfac
 import useEventsBus from '../../eventBus';
 import { LoernwerkError } from '../../../../backend/loernwerkError';
 import { ISequence } from '../../../../model/sequence/ISequence';
+import { PropType } from 'vue';
 
 const { emit } = useEventsBus();
 const props = defineProps({
-  sequence: Object as () => ISequence,
-  allSequences: Object as () => ISequence[],
+  sequence: {
+  type: Object as PropType<ISequence>,
+  required: true
+  },
+  
+  allSequences: {
+  type: Array<ISequence>,
+  required: true
+}
 });
 
 function closePopup() {

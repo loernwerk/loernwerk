@@ -5,13 +5,22 @@
       soll:
     </h1>
     <TextInputComponent
+      class="my-2"
       @input-changed="(text) => (userInfoField = text)"
       :class="{ 'border-red-600': showRedBorder }"
     >
     </TextInputComponent>
-    <div class="columns-2">
-      <ButtonComponent @click="confirmSharing">Teilen</ButtonComponent>
-      <ButtonComponent @click="closePopup">Abbruch</ButtonComponent>
+    <div class="flex flex-row">
+      <ButtonComponent 
+        class="basis-1/2 mr-2"
+        @click="confirmSharing()"
+      >Teilen
+      </ButtonComponent>
+      <ButtonComponent 
+        class="basis-1/2"
+        @click="closePopup()"
+      >Abbruch
+      </ButtonComponent>
     </div>
   </ContainerComponent>
 </template>

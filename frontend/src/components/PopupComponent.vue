@@ -1,8 +1,8 @@
 <template>
   <div
-    class="fixed z-[99] bg-[rgba(0,0,0,0.2)] flex items-center justify-center inset-0"
+    class="fixed z-50 bg-black bg-opacity-20 flex items-center justify-center inset-0"
   >
-    <div class="popupcontent">
+    <div>
       <slot></slot>
     </div>
   </div>

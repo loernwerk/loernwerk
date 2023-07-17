@@ -2,7 +2,7 @@
   <ContainerComponent>
     <h3>Der Code der ausgewählten Sequenz ist : {{ code }}</h3>
     <h3>Der Link zur momentan ausgewählten Sequenz ist: {{ link }}</h3>
-    <ButtonComponent @click="closePopup">Schließen</ButtonComponent>
+    <ButtonComponent @click="closePopup()">Schließen</ButtonComponent>
   </ContainerComponent>
 </template>
 
@@ -19,6 +19,7 @@ const props = defineProps({
 });
 let code = props.sequence?.code;
 let link = `somelink/${code}`;
+
 function closePopup() {
   emit('canBeClosed');
 }
