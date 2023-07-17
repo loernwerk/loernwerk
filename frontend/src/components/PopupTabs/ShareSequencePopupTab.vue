@@ -18,6 +18,9 @@
         >Abbruch
       </ButtonComponent>
     </div>
+    <div class="text-red-500" v-if="error">
+      Es ist ein Fehler beim Freigeben der Sequenz aufgetreten.
+    </div>
   </ContainerComponent>
 </template>
 
@@ -28,13 +31,15 @@ import { ref, toRaw, watch } from 'vue';
 import useEventsBus from '../../eventBus';
 import { AccountRestInterface } from '../../restInterfaces/AccountRestInterface';
 import ButtonComponent from '../ButtonComponent.vue';
+
 const { bus } = useEventsBus();
 const { emit } = useEventsBus();
 
-let userInfoField = ref('');
+const userInfoField = ref('');
 let sequenceToBeShared;
 let accounts;
 let showRedBorder = ref(false);
+const error = ref(false);
 
 watch(
   () => bus.value.get('sequence'),
@@ -54,6 +59,8 @@ function closePopup(): void {
  * Process sharing of a sequences
  */
 async function confirmSharing(): Promise<void> {
+  error.value = false;
+
   if (userInfoField.value.length == 0) {
     emit('userInfoEmpty');
     showRedBorder.value = true;
@@ -73,10 +80,8 @@ async function confirmSharing(): Promise<void> {
         }
       }
     } catch (e) {
-      alert('Something went wrong');
+      error.value = true;
     }
   }
 }
 </script>
-
-<style scoped></style>

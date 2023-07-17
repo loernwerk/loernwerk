@@ -9,6 +9,9 @@
         >Abbruch
       </ButtonComponent>
     </div>
+    <div class="text-red-500" v-if="error">
+      Es ist ein Fehler beim Löschen der Sequenz aufgetreten.
+    </div>
   </ContainerComponent>
 </template>
 
@@ -17,17 +20,24 @@ import ContainerComponent from '../ContainerComponent.vue';
 import ButtonComponent from '../ButtonComponent.vue';
 import { SequenceRestInterface } from '../../restInterfaces/SequenceRestInterface';
 import useEventsBus from '../../eventBus';
-import { LoernwerkError } from '../../../../backend/loernwerkError';
 import { ISequence } from '../../../../model/sequence/ISequence';
-import { PropType } from 'vue';
+import { PropType, ref } from 'vue';
+import { LoernwerkError } from '../../../../model/loernwerkError';
 
+const error = ref(false);
 const { emit } = useEventsBus();
 const props = defineProps({
+  /**
+   * Sequence to delete
+   */
   sequence: {
     type: Object as PropType<ISequence>,
     required: true,
   },
 
+  /**
+   * List of all existing sequences
+   */
   allSequences: {
     type: Array<ISequence>,
     required: true,
@@ -45,6 +55,8 @@ function closePopup(): void {
  * This Method deletes the desired Sequence
  */
 async function deleteSequence(): Promise<void> {
+  error.value = false;
+
   if (props.sequence?.code != undefined) {
     const sequenceCode = props.sequence.code as string;
     try {
@@ -57,10 +69,9 @@ async function deleteSequence(): Promise<void> {
       closePopup();
     } catch (e) {
       if (e instanceof LoernwerkError) {
-        alert('Something went wrong');
+        error.value = true;
       }
     }
   }
 }
 </script>
-<style scoped></style>
