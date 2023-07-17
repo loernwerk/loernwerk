@@ -19,6 +19,11 @@ const router = createRouter({
       component: import('../views/AccountView.vue'),
     },
     {
+      path: '/admin',
+      name: 'Admin',
+      component: import('../views/AdminView.vue'),
+    },
+    {
       path: '/:code',
       name: 'Slide',
       component: import('../views/SlideView.vue'),

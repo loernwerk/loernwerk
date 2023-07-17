@@ -58,11 +58,12 @@ export class AccountController {
                 LoernwerkErrorCodes.ALREADY_EXISTS
             );
         }
-
         if (
-            this.isValidMail(data.mail, false) ||
-            this.isValidUsername(data.name, false) ||
-            this.isValidPassword(data.password)
+            !(
+                this.isValidMail(data.mail, false) &&
+                this.isValidUsername(data.name, false) &&
+                this.isValidPassword(data.password)
+            )
         ) {
             throw new LoernwerkError(
                 'Given information do not satisfy the requirements',
@@ -153,7 +154,11 @@ export class AccountController {
     public static async deleteAccount(id: number): Promise<void> {
         const user = await DBUser.findOne({
             where: { id: id },
-            select: ['sharedSequencesReadAccess', 'sharedSequencesWriteAccess'],
+            select: [
+                'id',
+                'sharedSequencesReadAccess',
+                'sharedSequencesWriteAccess',
+            ],
         });
         if (user === null) {
             throw new LoernwerkError(
