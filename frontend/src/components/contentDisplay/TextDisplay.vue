@@ -1,12 +1,7 @@
 <!-- Displays a text content -->
 <template>
   <div class="h-full">
-    <div
-      id="editor"
-      class="h-full"
-      ref="editorDiv"
-      @click="emitEditing()"
-    ></div>
+    <div id="editor" class="h-full" ref="editorDiv"></div>
   </div>
 </template>
 
@@ -50,18 +45,7 @@ const emits = defineEmits([
   'editing',
 ]);
 const editorDiv: Ref<HTMLDivElement | null> = ref(null);
-const editor: Ref<Quill | null> = ref(null);
-
-/**
- * Emits the editing event
- */
-function emitEditing(): void {
-  if (editor.value === null) {
-    emits('editing', props.textContent.delta);
-  } else {
-    emits('editing', editor.value?.getContents());
-  }
-}
+const Delta = Quill.import('delta');
 
 onMounted(() => {
   const qlColors = Quill.import('attributors/style/color');
@@ -81,7 +65,7 @@ onMounted(() => {
     return;
   }
 
-  editor.value = new Quill(realEditorDiv, {
+  const quill = new Quill(realEditorDiv, {
     modules: {
       toolbar: {
         container: `#q-toolbar-${props.layoutSlot.toString()}`,
@@ -90,32 +74,27 @@ onMounted(() => {
     readOnly: !props.editMode,
   });
 
-  // requiere vs import is an issue here
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  editor.value.setContents(props.textContent.delta, 'api');
+  quill.setContents(new Delta(props.textContent.delta), 'api');
 
-  editor.value.on('text-change', () => {
-    emits('editing', editor.value?.getContents());
+  quill.on('text-change', () => {
+    emits('editing', quill.getContents());
   });
+
+  watch(
+    () => props.textContent,
+    () => {
+      if (props.textContent.delta == quill.getContents()) {
+        return;
+      }
+
+      quill.setContents(new Delta(props.textContent.delta), 'api');
+    }
+  );
+
+  realEditorDiv.onclick = (): void => {
+    emits('editing', quill.getContents());
+  };
 });
-
-watch(
-  () => props.textContent,
-  () => {
-    if (editor.value === null) {
-      return;
-    }
-    if (props.textContent.delta == editor.value.getContents()) {
-      return;
-    }
-
-    // requiere vs import is an issue here
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    editor.value.setContents(props.textContent.delta, 'api');
-  }
-);
 </script>
 
 <style>
@@ -126,5 +105,14 @@ watch(
 .ql-container {
   font-size: 14px;
   font-family: Arial;
+}
+
+/* Weird element that Quill adds, style fetched from quills snow-theme */
+.ql-clipboard {
+  left: -100000px;
+  height: 1px;
+  overflow-y: hidden;
+  position: absolute;
+  top: 50%;
 }
 </style>

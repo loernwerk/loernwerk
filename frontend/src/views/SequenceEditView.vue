@@ -44,6 +44,7 @@
 
         <template #Text>
           <TextOptionsTab
+            :key="selectedSlideIndex"
             :selected-slot="
               currentEditingSlot != null ? currentEditingSlot : undefined
             "
@@ -52,6 +53,7 @@
       </TabbedContainer>
       <div class="grow flex items-center justify-center">
         <SlideDisplayFactory
+          :key="selectedSlideIndex"
           :slide="selectedSlide"
           :edit-mode="true"
           class="h-[100%]"
