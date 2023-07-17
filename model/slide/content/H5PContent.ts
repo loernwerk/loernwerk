@@ -9,7 +9,7 @@ export class H5PContent extends Content {
 
     /** Code of sequence this content belongs to */
     sequenceCode: string;
-  
+
     /**
      * @inheritDoc
      */

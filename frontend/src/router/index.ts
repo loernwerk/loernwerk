@@ -35,6 +35,12 @@ const router = createRouter({
       component: import('../views/FinishedView.vue'),
       props: true,
     },
+    {
+      path: '/edit/:sequenceCode',
+      name: 'SequenceEdit',
+      component: import('../views/SequenceEditView.vue'),
+      props: true,
+    },
   ],
 });
 

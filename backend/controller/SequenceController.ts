@@ -325,12 +325,10 @@ export class SequenceController {
         generatedPDF
             .cell({ x: 0, y: 305 })
             .text(sequence.code, { alignment: 'center', fontSize: 30 });
-        generatedPDF
-            .cell({ x: 0, y: 225 })
-            .text(new Date().toLocaleString(), {
-                alignment: 'center',
-                fontSize: 30,
-            });
+        generatedPDF.cell({ x: 0, y: 225 }).text(new Date().toLocaleString(), {
+            alignment: 'center',
+            fontSize: 30,
+        });
 
         return await generatedPDF.asBuffer();
     }
