@@ -1,4 +1,4 @@
-import { Content } from './Content';
+import { Content, ContentType } from './Content';
 import Delta from 'quill-delta';
 
 /**
@@ -7,4 +7,11 @@ import Delta from 'quill-delta';
 export class TextContent extends Content {
     /** Quill content */
     delta: Delta;
+
+    /**
+     * @inheritDoc
+     */
+    constructor() {
+        super(ContentType.TEXT);
+    }
 }
