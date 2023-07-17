@@ -1,7 +1,11 @@
 <template>
   <div>
     <PopupComponent v-if="popupOpen" @closed="popupOpen = false">
-      <TabbedContainer :tabs="tabNames" class="py-5 px-8">
+      <TabbedContainer
+        :tabs="tabNames"
+        class="py-5 px-8"
+        v-if="!showRestrictedMenu"
+      >
         <template v-slot:[0]>
           <TagSequencePopupTab :tags="[]" @confirmed="popupOpen = false" />
         </template>
@@ -15,6 +19,11 @@
           <ShareSequencePopupTab :sequence="sequence" />
         </template>
         <template v-slot:[3]>
+          <SequenceDataPopupTab :sequence="sequence" />
+        </template>
+      </TabbedContainer>
+      <TabbedContainer :tabs="[tabNames[3]]" class="py-5 px-8" v-else>
+        <template v-slot:[0]>
           <SequenceDataPopupTab :sequence="sequence" />
         </template>
       </TabbedContainer>
@@ -55,6 +64,15 @@ defineProps({
   sequence: {
     type: Object as PropType<ISequence>,
     required: true,
+  },
+
+  /**
+   * Whether to show the restricted menu (only share with participants) for a sequence
+   */
+  showRestrictedMenu: {
+    type: Boolean,
+    required: false,
+    default: false,
   },
 });
 

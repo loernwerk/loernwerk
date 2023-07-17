@@ -20,7 +20,7 @@
     <div class="flex pt-5 w-full h-full">
       <div class="flex-1 mr-1 ml-2">
         <SequenceDisplayContainer
-          :name="name"
+          name="Meine Sequenzen:"
           :sequences="sequences"
           @reload-sequences="reloadSequences()"
         >
@@ -28,9 +28,9 @@
       </div>
       <div class="flex-1 ml-1 mr-2">
         <SequenceDisplayContainer
-          :name="name2"
+          name="Mit mir geteilte Sequenzen:"
           :sequences="sharedSequences"
-          userId="originalUser"
+          :show-restricted-menu="true"
         ></SequenceDisplayContainer>
       </div>
     </div>
@@ -52,8 +52,6 @@ import {
   LoernwerkErrorCodes,
 } from '../../../model/loernwerkError';
 
-const name = 'Meine Sequenzen:';
-const name2 = 'Mit mir geteilte Sequenzen:';
 const showPopupNewSequence = ref(false);
 
 const sequences: Ref<ISequence[]> = ref([]);
