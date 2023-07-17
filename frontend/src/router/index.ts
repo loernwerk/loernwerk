@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import MainView from '../views/MainView.vue';
 import LoginView from '../views/LogInView.vue';
 import AccountView from '../views/AccountView.vue';
+import AdminView from '../views/AdminView.vue';
 import SlideView from '../views/SlideView.vue';
 import FinishedView from '../views/FinishedView.vue';
 
@@ -12,7 +13,6 @@ const router = createRouter({
       path: '/',
       name: 'Main',
       component: MainView,
-      meta: { hasNavBar: true },
     },
     {
       path: '/login',
@@ -28,7 +28,8 @@ const router = createRouter({
     {
       path: '/admin',
       name: 'Admin',
-      component: import('../views/AdminView.vue'),
+      component: AdminView,
+      meta: { hasNavBar: true },
     },
     {
       path: '/:code',

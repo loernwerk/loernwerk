@@ -5,11 +5,11 @@
       {{ currentViewLocalized }}
     </NavigationBarItem>
 
-    <NavigationBarItem :active="isCurrentView('Main')" targetLink="LogIn">
+    <NavigationBarItem :active="isCurrentView('Main')" targetLink="login">
       Sequenzübersicht
     </NavigationBarItem>
 
-    <NavigationBarItem :active="isCurrentView('Main')" targetLink="LogIn">
+    <NavigationBarItem :active="isCurrentView('Admin')" targetLink="admin">
       Admin
     </NavigationBarItem>
 
@@ -19,7 +19,7 @@
       icon="circle-user"
       size="3x"
       class="float-right mr-5 cursor-pointer"
-      @click="router.push('Account')"
+      @click="router.push({ name: 'Account' })"
     ></FontAwesomeIcon>
   </div>
 </template>
@@ -60,7 +60,6 @@ function updateNavBar(newView: RouteLocationNormalized): void {
   // Localizing the current view
   currentViewLocalized.value = '';
   switch (currentView.value) {
-    // Template
     case 'Account':
       currentViewLocalized.value = 'Account';
       break;
