@@ -1,6 +1,6 @@
 import { TextContent } from '../../../model/slide/content/TextContent';
 import { ContentFactory } from './ContentFactory';
-import { TextSnippet } from '../../../model/slide/content/TextSnippet';
+import Delta from 'quill-delta';
 
 /**
  * Class which transforms JSON to TextContent Object
@@ -14,16 +14,7 @@ export class TextContentFactory extends ContentFactory {
    */
   public buildContent(json: unknown): TextContent {
     const textContent = new TextContent();
-    textContent.alignmentHorizontal = (json as TextContent).alignmentHorizontal;
-    textContent.alignmentVertical = (json as TextContent).alignmentVertical;
-    textContent.textSnippets = [];
-
-    (json as TextContent).textSnippets.forEach((snippet) => {
-      const textSnippet = new TextSnippet();
-      textSnippet.text = snippet.text;
-      textSnippet.options = snippet.options;
-      textContent.textSnippets.push(textSnippet);
-    });
+    textContent.delta = new Delta((json as TextContent).delta.ops);
     return textContent;
   }
 }
