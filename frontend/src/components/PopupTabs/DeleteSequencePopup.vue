@@ -2,15 +2,11 @@
   <ContainerComponent>
     <h1>Sequenz "{{ sequence.name }}" löschen?</h1>
     <div class="flex flex-row">
-      <ButtonComponent 
-        class="basis-1/2 mr-2"
-        @click="deleteSequence()"
-      >Ja
+      <ButtonComponent class="basis-1/2 mr-2" @click="deleteSequence()"
+        >Ja
       </ButtonComponent>
-      <ButtonComponent 
-        class="basis-1/2"
-        @click="closePopup()"
-      >Abbruch
+      <ButtonComponent class="basis-1/2" @click="closePopup()"
+        >Abbruch
       </ButtonComponent>
     </div>
   </ContainerComponent>
@@ -28,24 +24,27 @@ import { PropType } from 'vue';
 const { emit } = useEventsBus();
 const props = defineProps({
   sequence: {
-  type: Object as PropType<ISequence>,
-  required: true
+    type: Object as PropType<ISequence>,
+    required: true,
   },
-  
+
   allSequences: {
-  type: Array<ISequence>,
-  required: true
-}
+    type: Array<ISequence>,
+    required: true,
+  },
 });
 
-function closePopup() {
+/**
+ * Closes this popup
+ */
+function closePopup(): void {
   emit('canBeClosed');
 }
 
 /**
  * This Method deletes the desired Sequence
  */
-async function deleteSequence() {
+async function deleteSequence(): Promise<void> {
   if (props.sequence?.code != undefined) {
     const sequenceCode = props.sequence.code as string;
     try {

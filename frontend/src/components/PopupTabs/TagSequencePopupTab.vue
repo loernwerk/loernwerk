@@ -1,17 +1,10 @@
 <template>
   <ContainerComponent>
-    <TextInputComponent 
-      class="my-2"
-    >
-    </TextInputComponent>
+    <TextInputComponent class="my-2"> </TextInputComponent>
     <div class="flex flex-row">
-      <ButtonComponent
-        class="basis-1/2 mr-2"
-      >OK</ButtonComponent>
-      <ButtonComponent 
-        class="basis-1/2"
-        @click="closePopup()"
-      >Abbruch
+      <ButtonComponent class="basis-1/2 mr-2">OK</ButtonComponent>
+      <ButtonComponent class="basis-1/2" @click="closePopup()"
+        >Abbruch
       </ButtonComponent>
     </div>
   </ContainerComponent>
@@ -26,9 +19,10 @@ import useEventsBus from '../../eventBus';
 //to be implemented
 const { emit } = useEventsBus();
 
-function closePopup() {
+/**
+ * Closes this popup
+ */
+function closePopup(): void {
   emit('canBeClosed');
 }
 </script>
-
-<style scoped></style>

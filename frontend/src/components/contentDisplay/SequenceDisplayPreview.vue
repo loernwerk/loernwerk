@@ -52,7 +52,7 @@ import { ISequence } from '../../../../model/sequence/ISequence';
 import ContainerComponent from '../ContainerComponent.vue';
 import { router } from '../../router';
 import PopupComponent from '../PopupComponent.vue';
-import { ref, watch } from 'vue';
+import { PropType, ref, watch } from 'vue';
 import useEventsBus from './../../eventBus';
 import TabbedContainer from '../TabbedContainer.vue';
 import SequenceDataPopupTab from '../PopupTabs/SequenceDataPopupTab.vue';
@@ -60,9 +60,18 @@ import DeleteSequencePopup from '../PopupTabs/DeleteSequencePopup.vue';
 import ShareSequencePopupTab from '../PopupTabs/ShareSequencePopupTab.vue';
 import TagSequencePopupTab from '../PopupTabs/TagSequencePopupTab.vue';
 
-const props = defineProps({
-  sequence: Object as () => ISequence,
-  allSequences: Object as () => ISequence[],
+defineProps({
+  /**
+   * Sequence which should be previewed
+   */
+  sequence: {
+    type: Object as PropType<ISequence>,
+    required: true,
+  },
+  allSequences: {
+    type: Array<ISequence>,
+    required: true,
+  },
 });
 
 let popupOpen = ref(false);
@@ -74,7 +83,6 @@ const tabNames = [
   'Sequenz mit Teilnehmern teilen',
 ];
 
-const { emit } = useEventsBus();
 const { bus } = useEventsBus();
 
 watch(

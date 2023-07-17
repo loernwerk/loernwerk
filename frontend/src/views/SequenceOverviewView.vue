@@ -1,17 +1,14 @@
 <template>
-    <PopupNewSequence
-      v-if="showPopupNewSequence" 
-      >
-      </PopupNewSequence>
+  <PopupNewSequence v-if="showPopupNewSequence"> </PopupNewSequence>
 
   <div class="absolute top-0 bottom-0 left-0 right-0 flex flex-col">
     <div class="w-full h-full pt-[60px]">
       <div class="flex items-center h-fit">
         <div>
-          <ButtonComponent 
+          <ButtonComponent
             class="px-4 w-fit h-full"
-            @click="(showPopupNewSequence=true)"
-            >
+            @click="showPopupNewSequence = true"
+          >
             Sequenz erstellen
           </ButtonComponent>
         </div>
@@ -22,7 +19,7 @@
           ></SearchBarComponent>
         </div>
       </div>
-      
+
       <div class="flex pt-5 w-full h-full" style="height: 90%">
         <div class="flex-1 mr-1 ml-2">
           <SequenceDisplayContainer :name="name" :sequences="sequences">
@@ -41,37 +38,22 @@
 </template>
 
 <script setup lang="ts">
-import SequenceDisplayContainer from '../components/contentDisplay/SequenceDisplayContainer.vue';
 import { router } from '../router';
-import {
-  LoernwerkError,
-  LoernwerkErrorCodes,
-} from '../../../backend/loernwerkError';
-import TagSequencePopupTab from '../components/PopupTabs/TagSequencePopupTab.vue';
-import DeleteSequencePopup from '../components/PopupTabs/DeleteSequencePopup.vue';
-import ShareSequencePopupTab from '../components/PopupTabs/ShareSequencePopupTab.vue';
-import SearchBarComponent from '../components/SearchBarComponent.vue';
-import SequenceDataPopupTab from '../components/PopupTabs/SequenceDataPopupTab.vue';
 import { ref } from 'vue';
 import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
 import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
+import SearchBarComponent from '../components/SearchBarComponent.vue';
 import ButtonComponent from '../components/ButtonComponent.vue';
-import { ISlide } from '../../../model/slide/ISlide';
-import PopupComponent from '../components/PopupComponent.vue';
 import PopupNewSequence from '../components/PopupNewSequence.vue';
-import ContainerComponent from '../components/ContainerComponent.vue';
-
+import SequenceDisplayContainer from '../components/contentDisplay/SequenceDisplayContainer.vue';
+import {
+  LoernwerkError,
+  LoernwerkErrorCodes,
+} from '../../../model/loernwerkError';
 
 const name = 'Meine Sequenzen:';
 const name2 = 'Mit mir geteilte Sequenzen:';
 const showPopupNewSequence = ref(false);
-
-const tabs = [
-  'TagSequencePopupTab',
-  'DeleteSequencePopup',
-  'ShareSequencePopupTab',
-  'SequenceDataPopupTab',
-];
 
 const sequences = ref([]);
 let allOwnSequences = ref({});
@@ -101,7 +83,11 @@ try {
   }
 }
 
-function applySearch(searchText) {
+/**
+ * Searches a sequence with given name
+ * @param searchText given name of the sequence which is searched
+ */
+function applySearch(searchText: string): void {
   if (searchText.length === 0) {
     sequences.value = allOwnSequences.value.slice(0);
     sharedSequences.value = allSharedSequences.value.slice(0);
@@ -112,5 +98,4 @@ function applySearch(searchText) {
     );
   }
 }
-
 </script>

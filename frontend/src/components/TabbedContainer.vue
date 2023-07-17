@@ -32,22 +32,23 @@ import ContainerComponent from './ContainerComponent.vue';
 import { ref } from 'vue';
 
 let activeTab = ref(0);
-const props = defineProps({
-  tabs: Object as () => string[],
+
+defineProps({
+  /**
+   * Possible tabs to open
+   */
+  tabs: {
+    type: Array<string>,
+    required: true,
+  },
 });
 
 /**
- * @returns the tabs which the container has
+ * Changes active tab
+ * @param index index of chosen tab
  */
-
-function changeTab(index) {
+function changeTab(index: number): void {
   console.log('setting activeTab to ' + index);
   activeTab.value = index;
 }
-/**
- * Gets the currently active tab
- * @param activeTab the Tab currently shown to the user
- * @returns the type of tab to be opened
- */
 </script>
-<style scoped></style>

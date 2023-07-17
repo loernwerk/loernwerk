@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { ref } from 'vue';
 const bus = ref(new Map());
 
