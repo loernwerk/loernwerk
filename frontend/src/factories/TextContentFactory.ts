@@ -1,11 +1,11 @@
 import { TextContent } from '../../../model/slide/content/TextContent';
-import { ContentFactory } from './ContentFactory';
 import Delta from 'quill-delta';
+import { AbstractContentFactory } from './AbstractContentFactory';
 
 /**
  * Class which transforms JSON to TextContent Object
  */
-export class TextContentFactory extends ContentFactory {
+export class TextContentFactory extends AbstractContentFactory {
   /**
    * @inheritDoc
    * @param json the JSON
