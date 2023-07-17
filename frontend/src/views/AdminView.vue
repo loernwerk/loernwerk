@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full flex h-[calc(100vh-2.5rem)]">
+  <div class="w-full flex h-full">
     <AccountList
       class=""
       :accounts="accounts"
