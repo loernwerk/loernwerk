@@ -8,16 +8,18 @@
       :disabled="disabled"
       class="cursor-pointer w-full placeholder:text-gray-500"
       :class="{ uppercase: uppercase }"
-      v-model="inputRef"
+      :value="modelValue"
+      @input="
+        emit('update:modelValue', (<HTMLTextAreaElement>$event.target).value)
+      "
     />
   </InteractableComponent>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
 import InteractableComponent from './InteractableComponent.vue';
 
-const props = defineProps({
+defineProps({
   /**
    * The placeholder text for the input
    */
@@ -77,10 +79,4 @@ const emit = defineEmits([
    */
   'update:modelValue',
 ]);
-
-const inputRef = ref(props.modelValue);
-
-watch(inputRef, (newInput) => {
-  emit('update:modelValue', newInput);
-});
 </script>

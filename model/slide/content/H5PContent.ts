@@ -1,4 +1,4 @@
-import { Content } from './Content';
+import { Content, ContentType } from './Content';
 
 /**
  * H5P content as object.
@@ -9,4 +9,11 @@ export class H5PContent extends Content {
 
     /** Code of sequence this content belongs to */
     sequenceCode: string;
+  
+    /**
+     * @inheritDoc
+     */
+    constructor() {
+        super(ContentType.H5P);
+    }
 }

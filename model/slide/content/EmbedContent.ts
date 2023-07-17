@@ -1,4 +1,4 @@
-import { Content } from './Content';
+import { Content, ContentType } from './Content';
 
 /**
  * Embeded html content as object
@@ -6,4 +6,11 @@ import { Content } from './Content';
 export class EmbedContent extends Content {
     /** URL link to embed content */
     url: string;
+
+    /**
+     * @inheritDoc
+     */
+    constructor() {
+        super(ContentType.EMBED);
+    }
 }

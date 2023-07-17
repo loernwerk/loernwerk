@@ -26,6 +26,11 @@ const router = createRouter({
       meta: { hasNavBar: true },
     },
     {
+      path: '/admin',
+      name: 'Admin',
+      component: import('../views/AdminView.vue'),
+    },
+    {
       path: '/:code',
       name: 'Slide',
       component: SlideView,
