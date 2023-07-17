@@ -6,20 +6,16 @@
     </h1>
     <TextInputComponent
       class="my-2"
-      @input-changed="(text) => (userInfoField = text)"
+      v-model="userInfoField"
       :class="{ 'border-red-600': showRedBorder }"
     >
     </TextInputComponent>
     <div class="flex flex-row">
-      <ButtonComponent 
-        class="basis-1/2 mr-2"
-        @click="confirmSharing()"
-      >Teilen
+      <ButtonComponent class="basis-1/2 mr-2" @click="confirmSharing()"
+        >Teilen
       </ButtonComponent>
-      <ButtonComponent 
-        class="basis-1/2"
-        @click="closePopup()"
-      >Abbruch
+      <ButtonComponent class="basis-1/2" @click="closePopup()"
+        >Abbruch
       </ButtonComponent>
     </div>
   </ContainerComponent>
@@ -28,11 +24,10 @@
 <script setup lang="ts">
 import ContainerComponent from '../ContainerComponent.vue';
 import TextInputComponent from '../TextInputComponent.vue';
-import { toRaw, watch } from 'vue';
+import { ref, toRaw, watch } from 'vue';
 import useEventsBus from '../../eventBus';
 import { AccountRestInterface } from '../../restInterfaces/AccountRestInterface';
 import ButtonComponent from '../ButtonComponent.vue';
-import { ref } from 'vue';
 const { bus } = useEventsBus();
 const { emit } = useEventsBus();
 
@@ -47,10 +42,18 @@ watch(
     sequenceToBeShared = toRaw(sequence)[0];
   }
 );
-function closePopup() {
+
+/**
+ * Closes this Popup
+ */
+function closePopup(): void {
   emit('close');
 }
-async function confirmSharing() {
+
+/**
+ * Process sharing of a sequences
+ */
+async function confirmSharing(): Promise<void> {
   if (userInfoField.value.length == 0) {
     emit('userInfoEmpty');
     showRedBorder.value = true;

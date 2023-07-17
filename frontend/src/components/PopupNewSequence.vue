@@ -1,23 +1,22 @@
 <template>
   <PopupComponent>
     <ContainerComponent>
-        <h1 class="underline text-xl">Name der neuen Sequenz:</h1>    
-        
-        <TextInputComponent
-            class="w-full my-4"
-            :disabled="disableInputShowSpinner"
-            placeHolder="Name der Sequenz"
-            @input-changed="(val) => (nameField = val)"
-        />
-        
-        <ButtonComponent
-            class="w-fit float-right"
-            :loading="disableInputShowSpinner"
-            @click="newSequence()"
-        >
-        Sequenz erstellen
-        </ButtonComponent>
+      <h1 class="underline text-xl">Name der neuen Sequenz:</h1>
 
+      <TextInputComponent
+        class="w-full my-4"
+        :disabled="disableInputShowSpinner"
+        placeHolder="Name der Sequenz"
+        v-model="nameField"
+      />
+
+      <ButtonComponent
+        class="w-fit float-right"
+        :loading="disableInputShowSpinner"
+        @click="newSequence()"
+      >
+        Sequenz erstellen
+      </ButtonComponent>
     </ContainerComponent>
   </PopupComponent>
 </template>
@@ -30,19 +29,21 @@ import ContainerComponent from './ContainerComponent.vue';
 import TextInputComponent from '../components/TextInputComponent.vue';
 import ButtonComponent from './ButtonComponent.vue';
 
-
 const disableInputShowSpinner = ref(false);
 const nameField = ref('');
 
-async function newSequence() : Promise<void> {
-    disableInputShowSpinner.value = true
+/**
+ * Create a new sequence with given name
+ */
+async function newSequence(): Promise<void> {
+  disableInputShowSpinner.value = true;
   try {
     const code = await SequenceRestInterface.addSequence(nameField.value);
-    alert('SequenceEditView')
+    void code;
+    //TODO: Redirect SequenceEditView
   } catch {
-    alert('Error')
+    //TODO: Error handling
   }
   disableInputShowSpinner.value = false;
 }
-
 </script>
