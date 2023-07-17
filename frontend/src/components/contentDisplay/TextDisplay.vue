@@ -51,13 +51,15 @@ onMounted(() => {
   const qlColors = Quill.import('attributors/style/color');
   const qlSizes = Quill.import('attributors/style/size');
   const qlFonts = Quill.import('attributors/style/font');
+  const qlAlign = Quill.import('attributors/style/align');
   qlColors.whitelist = colors;
   qlSizes.whitelist = sizes;
   qlFonts.whitelist = fontFamilies;
+  qlAlign.whitelist = ['left', 'center', 'right'];
 
   Quill.register(qlColors, true);
   Quill.register(qlSizes, true);
-  Quill.register(Quill.import('attributors/style/align'), true);
+  Quill.register(qlAlign, true);
   Quill.register(qlFonts, true);
 
   const realEditorDiv = editorDiv.value;

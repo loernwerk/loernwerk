@@ -59,7 +59,7 @@
     </span>
 
     <span class="flex space-x-2">
-      <button class="ql-align interactable h-fit" value="" type="button">
+      <button class="ql-align interactable h-fit" value="left" type="button">
         <FontAwesomeIcon :icon="['fas', 'align-left']" />
       </button>
       <button class="ql-align interactable h-fit" value="center" type="button">
