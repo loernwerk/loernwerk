@@ -31,14 +31,14 @@ import { ref, toRaw, watch } from 'vue';
 import useEventsBus from '../../eventBus';
 import { AccountRestInterface } from '../../restInterfaces/AccountRestInterface';
 import ButtonComponent from '../ButtonComponent.vue';
+import { ISequence } from '../../../../model/sequence/ISequence';
 
 const { bus } = useEventsBus();
 const { emit } = useEventsBus();
 
 const userInfoField = ref('');
-let sequenceToBeShared;
-let accounts;
-let showRedBorder = ref(false);
+let sequenceToBeShared: ISequence;
+const showRedBorder = ref(false);
 const error = ref(false);
 
 watch(
@@ -66,15 +66,16 @@ async function confirmSharing(): Promise<void> {
     showRedBorder.value = true;
   } else {
     try {
-      accounts = await AccountRestInterface.getAccountMetaDataList();
+      const accounts = await AccountRestInterface.getAccountMetaDataList();
+
       for (let i = 0; i < accounts.length; i++) {
-        if (accounts[i].id.toString() == userInfoField.value) {
+        if (accounts[i].id?.toString() === userInfoField.value) {
           let accountId = accounts[i].id;
-          const accountToShareWith = await AccountRestInterface.getAccounts(
-            accountId
-          );
+          const accountToShareWith = await AccountRestInterface.getAccounts([
+            accountId as number,
+          ]);
           sequenceToBeShared.readAccess.push(
-            Object.keys(accountToShareWith[0])
+            parseInt(Object.keys(accountToShareWith)[0])
           );
           closePopup();
         }
