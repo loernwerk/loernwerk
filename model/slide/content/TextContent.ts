@@ -1,4 +1,4 @@
-import { Content } from './Content';
+import { Content, ContentType } from './Content';
 import { TextSnippet } from './TextSnippet';
 
 /**
@@ -12,4 +12,11 @@ export class TextContent extends Content {
     alignmentHorizontal: 'left' | 'center' | 'right';
     /** Vertical text alignment */
     alignmentVertical: 'top' | 'center' | 'bottom';
+
+    /**
+     * @inheritDoc
+     */
+    constructor() {
+        super(ContentType.TEXT);
+    }
 }

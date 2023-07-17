@@ -4,6 +4,15 @@
 export abstract class Content {
     /** Type of this content */
     type: ContentType;
+
+    /**
+     * Constructor that sets the ContentType
+     * @param type the ContentType
+     * @protected
+     */
+    protected constructor(type: ContentType) {
+        this.type = type;
+    }
 }
 
 /**

@@ -1,4 +1,4 @@
-import { Content } from './Content';
+import { Content, ContentType } from './Content';
 
 /**
  * Image content as object
@@ -8,4 +8,11 @@ export class ImageContent extends Content {
     img: string;
     /** Image scaling */
     scale: number;
+
+    /**
+     * @inheritDoc
+     */
+    constructor() {
+        super(ContentType.IMAGE);
+    }
 }
