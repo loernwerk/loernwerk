@@ -1,12 +1,15 @@
 <template>
   <ContainerComponent>
-    <TextInputComponent class="my-2"> </TextInputComponent>
-    <div class="flex flex-row">
-      <ButtonComponent class="basis-1/2 mr-2">OK</ButtonComponent>
-      <ButtonComponent class="basis-1/2" @click="closePopup()"
-        >Abbruch
-      </ButtonComponent>
-    </div>
+    Schlüsselwörter der Sequenz (mit ";" getrennt):
+    <TextInputComponent
+      class="my-2"
+      placeHolder="Schlüsselwörter"
+      v-model="tagsField"
+    >
+    </TextInputComponent>
+    <ButtonComponent class="w-fit float-right" @click="confimChanges"
+      >Bestätigen</ButtonComponent
+    >
   </ContainerComponent>
 </template>
 
@@ -14,15 +17,32 @@
 import TextInputComponent from '../TextInputComponent.vue';
 import ButtonComponent from '../ButtonComponent.vue';
 import ContainerComponent from '../ContainerComponent.vue';
-import useEventsBus from '../../eventBus';
+import { ref } from 'vue';
 
-//to be implemented
-const { emit } = useEventsBus();
+const props = defineProps({
+  /**
+   * All existing tags as an string
+   */
+  tags: {
+    type: Array<string>,
+    required: true,
+  },
+});
+
+const tagsField = ref(props.tags.join(';'));
+
+const emits = defineEmits([
+  /**
+   * Emitted when user confirms input
+   * @param tags existing tags for the sequence
+   */
+  'confirmed',
+]);
 
 /**
- * Closes this popup
+ * Save inputted tags
  */
-function closePopup(): void {
-  emit('canBeClosed');
+function confimChanges(): void {
+  emits('confirmed', tagsField.value.split(';'));
 }
 </script>

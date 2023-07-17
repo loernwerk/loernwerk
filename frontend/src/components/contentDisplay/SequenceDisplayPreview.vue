@@ -1,18 +1,18 @@
 <template>
   <div>
-    <PopupComponent v-if="popupOpen" @close="popupOpen = false">
-      <TabbedContainer :tabs="tabNames">
+    <PopupComponent v-if="popupOpen" @closed="popupOpen = false">
+      <TabbedContainer :tabs="tabNames" class="py-5 px-8">
         <template v-slot:[0]>
-          <TagSequencePopupTab />
+          <TagSequencePopupTab :tags="[]" @confirmed="popupOpen = false" />
         </template>
         <template v-slot:[1]>
           <DeleteSequencePopup
+            @deleted="confirmDeletion()"
             :sequence="sequence"
-            :allSequences="allSequences"
           />
         </template>
         <template v-slot:[2]>
-          <ShareSequencePopupTab />
+          <ShareSequencePopupTab :sequence="sequence" />
         </template>
         <template v-slot:[3]>
           <SequenceDataPopupTab :sequence="sequence" />
@@ -41,8 +41,7 @@ import { ISequence } from '../../../../model/sequence/ISequence';
 import ContainerComponent from '../ContainerComponent.vue';
 import { router } from '../../router';
 import PopupComponent from '../PopupComponent.vue';
-import { PropType, ref, watch } from 'vue';
-import useEventsBus from './../../eventBus';
+import { PropType, ref } from 'vue';
 import TabbedContainer from '../TabbedContainer.vue';
 import SequenceDataPopupTab from '../PopupTabs/SequenceDataPopupTab.vue';
 import DeleteSequencePopup from '../PopupTabs/DeleteSequencePopup.vue';
@@ -57,14 +56,14 @@ defineProps({
     type: Object as PropType<ISequence>,
     required: true,
   },
-  /**
-   * All sequences which should be displayed
-   */
-  allSequences: {
-    type: Array<ISequence>,
-    required: true,
-  },
 });
+
+const emits = defineEmits([
+  /**
+   * Triggers SequenceOverview to reload sequences
+   */
+  'reloadSequences',
+]);
 
 const popupOpen = ref(false);
 
@@ -75,12 +74,11 @@ const tabNames = [
   'Sequenz mit Teilnehmern teilen',
 ];
 
-const { bus } = useEventsBus();
-
-watch(
-  () => bus.value.get('canBeClosed'),
-  () => {
-    popupOpen.value = false;
-  }
-);
+/**
+ * Closes popup after deletion and emits event for sequence reloading
+ */
+function confirmDeletion(): void {
+  popupOpen.value = false;
+  emits('reloadSequences');
+}
 </script>

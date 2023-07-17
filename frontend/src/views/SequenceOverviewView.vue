@@ -1,6 +1,10 @@
 <!-- View to overview and edit own sequences and shared sequences -->
 <template>
-  <PopupNewSequence v-if="showPopupNewSequence"> </PopupNewSequence>
+  <PopupNewSequence
+    v-if="showPopupNewSequence"
+    @closed="showPopupNewSequence = false"
+  >
+  </PopupNewSequence>
 
   <div class="w-full h-full">
     <div class="flex items-center h-fit">
@@ -15,7 +19,11 @@
 
     <div class="flex pt-5 w-full h-full">
       <div class="flex-1 mr-1 ml-2">
-        <SequenceDisplayContainer :name="name" :sequences="sequences">
+        <SequenceDisplayContainer
+          :name="name"
+          :sequences="sequences"
+          @reload-sequences="reloadSequences()"
+        >
         </SequenceDisplayContainer>
       </div>
       <div class="flex-1 ml-1 mr-2">
@@ -31,13 +39,14 @@
 
 <script setup lang="ts">
 import { router } from '../router';
-import { ref } from 'vue';
+import { Ref, ref } from 'vue';
 import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
 import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
 import SearchBarComponent from '../components/SearchBarComponent.vue';
 import ButtonComponent from '../components/ButtonComponent.vue';
 import PopupNewSequence from '../components/PopupNewSequence.vue';
 import SequenceDisplayContainer from '../components/contentDisplay/SequenceDisplayContainer.vue';
+import { ISequence } from '../../../model/sequence/ISequence';
 import {
   LoernwerkError,
   LoernwerkErrorCodes,
@@ -47,10 +56,10 @@ const name = 'Meine Sequenzen:';
 const name2 = 'Mit mir geteilte Sequenzen:';
 const showPopupNewSequence = ref(false);
 
-const sequences = ref([]);
-let allOwnSequences = ref({});
-let sharedSequences = ref({});
-let allSharedSequences = ref({});
+const sequences: Ref<ISequence[]> = ref([]);
+const allOwnSequences: Ref<ISequence[]> = ref([]);
+const sharedSequences: Ref<ISequence[]> = ref([]);
+const allSharedSequences: Ref<ISequence[]> = ref([]);
 let currentUser = ref({});
 
 try {
@@ -58,15 +67,7 @@ try {
     currentUser.value = data;
   });
 
-  SequenceRestInterface.getSequencesSharedWithYou().then((data) => {
-    sharedSequences.value = data.slice(0);
-    allSharedSequences.value = data.slice(0);
-  });
-
-  SequenceRestInterface.getOwnSequences().then((data) => {
-    sequences.value = data.slice(0);
-    allOwnSequences.value = data.slice(0);
-  });
+  await reloadSequences();
 } catch (e) {
   if (e instanceof LoernwerkError) {
     if (e.code === LoernwerkErrorCodes.UNAUTHORIZED) {
@@ -88,6 +89,25 @@ function applySearch(searchText: string): void {
     sharedSequences.value = sharedSequences.value.filter(
       (s) => s.name === searchText
     );
+  }
+}
+
+/**
+ * Reloads sequences in overview
+ */
+async function reloadSequences(): Promise<void> {
+  try {
+    SequenceRestInterface.getSequencesSharedWithYou().then((data) => {
+      sharedSequences.value = data.slice(0);
+      allSharedSequences.value = data.slice(0);
+    });
+
+    SequenceRestInterface.getOwnSequences().then((data) => {
+      sequences.value = data.slice(0);
+      allOwnSequences.value = data.slice(0);
+    });
+  } catch {
+    //TODO: error handling
   }
 }
 </script>

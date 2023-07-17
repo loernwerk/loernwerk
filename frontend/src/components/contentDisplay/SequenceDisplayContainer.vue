@@ -8,8 +8,7 @@
       <div class="mt-2" v-for="sequence in sequences" :key="sequence.name">
         <SequenceDisplayPreview
           :sequence="sequence"
-          :allSequences="sequences"
-          name="sequence.name"
+          @reload-sequences="$emit('reloadSequences')"
         ></SequenceDisplayPreview>
       </div>
     </template>
@@ -37,4 +36,11 @@ defineProps({
     required: true,
   },
 });
+
+defineEmits([
+  /**
+   * Triggers SequenceOverview to reload sequences
+   */
+  'reloadSequences',
+]);
 </script>

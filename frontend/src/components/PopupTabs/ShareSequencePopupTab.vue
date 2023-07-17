@@ -1,21 +1,43 @@
 <template>
   <ContainerComponent>
-    <h1>
-      Geben Sie die ID der Lehrkraft ein, mit der die Sequenz geteilt werden
-      soll:
-    </h1>
+    Lehrkräfte mit Lesezugriff:
+    <ul>
+      <li
+        class="text-sm"
+        v-for="(user, index) in sharedUsersReadAccess"
+        :key="index"
+      >
+        {{ user }}
+      </li>
+    </ul>
+    Lehrkräfte mit Schreibzugriff:
+    <ul>
+      <li
+        class="text-sm"
+        v-for="(user, index) in sharedUsersWriteAccess"
+        :key="index"
+      >
+        {{ user }}
+      </li>
+    </ul>
+
     <TextInputComponent
-      class="my-2"
+      class="mb-2 mt-4"
       v-model="userInfoField"
+      place-holder="Nutzername der Lehrkraft"
       :class="{ 'border-red-600': showRedBorder }"
     >
     </TextInputComponent>
     <div class="flex flex-row">
-      <ButtonComponent class="basis-1/2 mr-2" @click="confirmSharing()"
+      <select
+        class="border-solid border-1 bg-interactable border-interactable-border rounded basis-1/2 mr-2 pl-2"
+        v-model="writeAccess"
+      >
+        <option :value="false">Lesezugriff</option>
+        <option :value="true">Schreibzugriff</option>
+      </select>
+      <ButtonComponent class="basis-1/2" @click="confirmSharing()"
         >Teilen
-      </ButtonComponent>
-      <ButtonComponent class="basis-1/2" @click="closePopup()"
-        >Abbruch
       </ButtonComponent>
     </div>
     <div class="text-red-500" v-if="error">
@@ -27,33 +49,30 @@
 <script setup lang="ts">
 import ContainerComponent from '../ContainerComponent.vue';
 import TextInputComponent from '../TextInputComponent.vue';
-import { ref, toRaw, watch } from 'vue';
-import useEventsBus from '../../eventBus';
-import { AccountRestInterface } from '../../restInterfaces/AccountRestInterface';
+import { PropType, Ref, ref } from 'vue';
 import ButtonComponent from '../ButtonComponent.vue';
 import { ISequence } from '../../../../model/sequence/ISequence';
 
-const { bus } = useEventsBus();
-const { emit } = useEventsBus();
+defineProps({
+  /**
+   * Sequence to share
+   */
+  sequence: {
+    type: Object as PropType<ISequence>,
+    required: true,
+  },
+});
 
 const userInfoField = ref('');
-let sequenceToBeShared: ISequence;
 const showRedBorder = ref(false);
 const error = ref(false);
-
-watch(
-  () => bus.value.get('sequence'),
-  (sequence) => {
-    sequenceToBeShared = toRaw(sequence)[0];
-  }
-);
-
-/**
- * Closes this Popup
+/*
+ * const sharedUsersReadAccess = ref(props.sequence.readAccess);
+ * const sharedUsersWriteAccess = ref(props.sequence.writeAccess);
  */
-function closePopup(): void {
-  emit('close');
-}
+const sharedUsersReadAccess: Ref<string[]> = ref([]);
+const sharedUsersWriteAccess: Ref<string[]> = ref([]);
+const writeAccess = ref(false);
 
 /**
  * Process sharing of a sequences
@@ -62,27 +81,15 @@ async function confirmSharing(): Promise<void> {
   error.value = false;
 
   if (userInfoField.value.length == 0) {
-    emit('userInfoEmpty');
     showRedBorder.value = true;
   } else {
-    try {
-      const accounts = await AccountRestInterface.getAccountMetaDataList();
-
-      for (let i = 0; i < accounts.length; i++) {
-        if (accounts[i].id?.toString() === userInfoField.value) {
-          let accountId = accounts[i].id;
-          const accountToShareWith = await AccountRestInterface.getAccounts([
-            accountId as number,
-          ]);
-          sequenceToBeShared.readAccess.push(
-            parseInt(Object.keys(accountToShareWith)[0])
-          );
-          closePopup();
-        }
-      }
-    } catch (e) {
-      error.value = true;
+    //TODO Save shared sequences and users
+    if (writeAccess.value) {
+      sharedUsersWriteAccess.value.push(userInfoField.value);
+    } else {
+      sharedUsersReadAccess.value.push(userInfoField.value);
     }
+    userInfoField.value = '';
   }
 }
 </script>

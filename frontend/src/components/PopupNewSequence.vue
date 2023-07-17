@@ -1,7 +1,9 @@
 <template>
-  <PopupComponent>
-    <ContainerComponent>
-      <h1 class="underline text-xl">Name der neuen Sequenz:</h1>
+  <PopupComponent @closed="$emit('closed')">
+    <ContainerComponent class="px-8 py-6">
+      <template #Header>
+        <h1 class="text-xl">Sequenz erstellen:</h1>
+      </template>
 
       <TextInputComponent
         class="w-full my-4"
@@ -11,11 +13,11 @@
       />
 
       <ButtonComponent
-        class="w-fit float-right"
+        class="w-fit mb-4 float-right"
         :loading="disableInputShowSpinner"
         @click="newSequence()"
       >
-        Sequenz erstellen
+        Bestätigen
       </ButtonComponent>
     </ContainerComponent>
   </PopupComponent>
@@ -25,9 +27,16 @@
 import { ref } from 'vue';
 import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
 import PopupComponent from './PopupComponent.vue';
-import ContainerComponent from './ContainerComponent.vue';
 import TextInputComponent from '../components/TextInputComponent.vue';
 import ButtonComponent from './ButtonComponent.vue';
+import ContainerComponent from './ContainerComponent.vue';
+
+defineEmits([
+  /**
+   * Emitted when the popup is closed
+   */
+  'closed',
+]);
 
 const disableInputShowSpinner = ref(false);
 const nameField = ref('');
