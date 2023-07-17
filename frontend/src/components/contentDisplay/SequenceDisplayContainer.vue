@@ -2,7 +2,9 @@
   <ContainerComponent class="h-full">
     <template #Header>
       <h1 class="underline text-xl">{{ name }}</h1>
+    </template>
 
+    <template #default>
       <div class="mt-2" v-for="sequence in sequences" :key="sequence.name">
         <SequenceDisplayPreview
           :sequence="sequence"

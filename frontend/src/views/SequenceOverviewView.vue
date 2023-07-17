@@ -1,37 +1,29 @@
+<!-- View to overview and edit own sequences and shared sequences -->
 <template>
   <PopupNewSequence v-if="showPopupNewSequence"> </PopupNewSequence>
 
-  <div class="absolute top-0 bottom-0 left-0 right-0 flex flex-col">
-    <div class="w-full h-full pt-[60px]">
-      <div class="flex items-center h-fit">
-        <div>
-          <ButtonComponent
-            class="px-4 w-fit h-full"
-            @click="showPopupNewSequence = true"
-          >
-            Sequenz erstellen
-          </ButtonComponent>
-        </div>
-        <div class="">
-          <SearchBarComponent
-            class=""
-            @searchClicked="applySearch"
-          ></SearchBarComponent>
-        </div>
-      </div>
+  <div class="w-full h-full">
+    <div class="flex items-center h-fit">
+      <ButtonComponent
+        class="px-4 w-fit h-full"
+        @click="showPopupNewSequence = true"
+      >
+        Sequenz erstellen
+      </ButtonComponent>
+      <SearchBarComponent @searchClicked="(val: string) => applySearch(val)" />
+    </div>
 
-      <div class="flex pt-5 w-full h-full" style="height: 90%">
-        <div class="flex-1 mr-1 ml-2">
-          <SequenceDisplayContainer :name="name" :sequences="sequences">
-          </SequenceDisplayContainer>
-        </div>
-        <div class="flex-1 ml-1 mr-2">
-          <SequenceDisplayContainer
-            :name="name2"
-            :sequences="sharedSequences"
-            userId="originalUser"
-          ></SequenceDisplayContainer>
-        </div>
+    <div class="flex pt-5 w-full h-full">
+      <div class="flex-1 mr-1 ml-2">
+        <SequenceDisplayContainer :name="name" :sequences="sequences">
+        </SequenceDisplayContainer>
+      </div>
+      <div class="flex-1 ml-1 mr-2">
+        <SequenceDisplayContainer
+          :name="name2"
+          :sequences="sharedSequences"
+          userId="originalUser"
+        ></SequenceDisplayContainer>
       </div>
     </div>
   </div>
