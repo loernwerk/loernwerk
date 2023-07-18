@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full flex h-[calc(100vh-2.5rem)]">
+  <div class="w-full flex h-[calc(100vh-2.5rem)] relative">
     <AccountList
       class=""
       :accounts="accounts"
@@ -34,6 +34,9 @@
         @create="refresh()"
       />
     </div>
+    <ButtonComponent class="absolute -top-2 -right-2 text-2xl">
+      <FontAwesomeIcon :icon="['fas', 'gear']" />
+    </ButtonComponent>
   </div>
 </template>
 <script setup lang="ts">
@@ -47,6 +50,12 @@ import AccountSequenceContainer from '../components/AccountSequenceContainer.vue
 import { ISequence } from '../../../model/sequence/ISequence';
 import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
 import { router } from '../router';
+import ButtonComponent from '../components/ButtonComponent.vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faGear } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faGear);
 
 const displayCreateUser = ref(false);
 const selectedUser: Ref<Partial<IUser>> | Ref<null> = ref(null);

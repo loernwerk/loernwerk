@@ -1,6 +1,9 @@
 import { ConfigKey } from '../../model/configuration/ConfigKey';
 import { DBConfigEntry } from '../../model/configuration/DBConfigEntry';
-import { LoernwerkError, LoernwerkErrorCodes } from '../loernwerkError';
+import {
+    LoernwerkError,
+    LoernwerkErrorCodes,
+} from '../../model/loernwerkError';
 
 /**
  * Manages configuration data in the database and handles requests for config requests
