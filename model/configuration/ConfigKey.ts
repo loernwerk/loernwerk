@@ -5,9 +5,9 @@ export enum ConfigKey {
     /**
      * Maximum number of sequences a user can create
      */
-    MAX_SEQUENCES_PER_USER,
+    MAX_SEQUENCES_PER_USER = 'max_sequences_per_user',
     /**
      * Maximum number of slides a sequence can contain
      */
-    MAX_SLIDES_PER_SEQUENCE,
+    MAX_SLIDES_PER_SEQUENCE = 'max_slides_per_sequence',
 }

@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import { RouterFactory } from './RouterFactory';
-import { requireAdmin, requireBody } from '../loernwerkUtilities';
+import { ConfigController } from '../controller/ConfigController';
+import { requireAdmin, requireBody, requireLogin } from '../loernwerkUtilities';
+import { ConfigKey } from '../../model/configuration/ConfigKey';
 
 /**
  * Builds router for requests regarding configuration (by admin).
@@ -19,12 +21,10 @@ export class ConfigRouterFactory extends RouterFactory {
             requireBody('value'),
             async (req, res) => {
                 try {
-                    /*
-                     *await ConfigController.changeConig(
-                     *  req.params.key,
-                     *  req.body.value
-                     *);
-                     */
+                    await ConfigController.setConfigEntry(
+                        req.params.key as ConfigKey,
+                        req.body.value
+                    );
                     res.sendStatus(204);
                 } catch {
                     res.sendStatus(404);
@@ -33,21 +33,19 @@ export class ConfigRouterFactory extends RouterFactory {
         );
 
         configRouter.get('/', requireAdmin, async (req, res) => {
-            /*const config = await ConfigController.loadConfig(); */
-            res.sendStatus(200);
+            const allConfigEntries =
+                await ConfigController.getAllConfigEntries();
+            res.status(200).json(allConfigEntries);
         });
 
-        configRouter.get('/:key', async (req, res) => {
-            //TODO Überpfrüfe ob berechtigungen
+        configRouter.get('/:key', requireLogin, async (req, res) => {
             try {
-                /*
-                 *const value = await ConfigController.loadSingeConfig(
-                 *req.params.key
-                 *)
-                 */
+                const value = await ConfigController.getConfigEntry(
+                    req.params.key as ConfigKey
+                );
                 res.status(200).json(value);
             } catch {
-                res.sendStatus(400);
+                res.sendStatus(404);
             }
         });
 
