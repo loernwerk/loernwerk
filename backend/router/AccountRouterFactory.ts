@@ -117,13 +117,25 @@ export class AccountRouterFactory extends RouterFactory {
                     return;
                 }
             }
+
             let user: IUser;
             try {
-                user = await AccountController.getAccountById(id);
+                if (req.query.name !== undefined) {
+                    user = await AccountController.getAccountByUsername(
+                        req.query.name as string
+                    );
+                } else if (req.query.mail !== undefined) {
+                    user = await AccountController.getAccountByEmail(
+                        req.query.name as string
+                    );
+                } else {
+                    user = await AccountController.getAccountById(id);
+                }
             } catch {
                 res.status(404);
                 return;
             }
+
             res.status(200).json({
                 id: user.id,
                 name: user.name,

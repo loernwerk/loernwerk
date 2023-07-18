@@ -139,6 +139,39 @@ export class AccountController {
         }
         return user;
     }
+
+    /**
+     * Searches for an Account with corresponding username in the database and returns it. Throws an error if no account was found.
+     * @param username the username of the account
+     * @returns the found user
+     */
+    public static async getAccountByUsername(username: string): Promise<IUser> {
+        const user = await DBUser.findOneBy({ name: username });
+        if (user === null) {
+            throw new LoernwerkError(
+                'No existing User with given name',
+                LoernwerkErrorCodes.NOT_FOUND
+            );
+        }
+        return user;
+    }
+
+    /**
+     * Searches for an Account with corresponding mail in the database and returns it. Throws an error if no account was found.
+     * @param email the mail of the account
+     * @returns the found user
+     */
+    public static async getAccountByEmail(email: string): Promise<IUser> {
+        const user = await DBUser.findOneBy({ mail: email });
+        if (user === null) {
+            throw new LoernwerkError(
+                'No existing User with given mail',
+                LoernwerkErrorCodes.NOT_FOUND
+            );
+        }
+        return user;
+    }
+
     /**
      * Returns all users of the database in an array in reduced form.
      * @returns A reduced version of all accounts
