@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-grow text-center">
     <div class="text-red-500 italic text-center flex-grow" v-if="showerror">
-      Account nicht verfügbar
+      {{ $t('notAvailable', { object: 'Account' }) }}
     </div>
   </div>
   <div class="w-full mt-auto mb-auto ml-3 mr-3">
