@@ -3,15 +3,15 @@
     class="w-full h-20 bg-navbar flex flex-row items-center gap-5 drop-shadow"
   >
     <img src="../assets/logo_navbar.png" class="h-10 mx-5" />
-    <NavigationBarItem v-if="currentViewLocalized !== ''" :active="true">
-      {{ currentViewLocalized }}
-    </NavigationBarItem>
-
     <NavigationBarItem
       :active="isCurrentView('Overview')"
       targetLink="/overview"
     >
       Sequenzübersicht
+    </NavigationBarItem>
+
+    <NavigationBarItem v-if="currentViewLocalized !== ''" :active="true">
+      {{ currentViewLocalized }}
     </NavigationBarItem>
 
     <NavigationBarItem
@@ -69,9 +69,6 @@ function updateNavBar(newView: RouteLocationNormalized): void {
   // Localizing the current view
   currentViewLocalized.value = '';
   switch (currentView.value) {
-    case 'Account':
-      currentViewLocalized.value = 'Account';
-      break;
     case 'SequenceEdit':
       currentViewLocalized.value = 'Sequenzbearbeitung';
       break;
