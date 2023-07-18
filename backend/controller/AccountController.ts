@@ -12,8 +12,8 @@ import { SequenceController } from './SequenceController';
  * Manages account data in the database and handles requests for account requests regarding account data
  */
 export class AccountController {
-    static defaultUsername = 'admin';
-    static defaultMail = 'admin@loernwerk.de';
+    static defaultAdminName = 'admin';
+    static defaultMailSuffix = '@loernwerk.de';
 
     /**
      * Creates a new account with given mail, name, password (ignoring the other values existing in the Partial<IUser>) in the database
@@ -139,6 +139,39 @@ export class AccountController {
         }
         return user;
     }
+
+    /**
+     * Searches for an Account with corresponding username in the database and returns it. Throws an error if no account was found.
+     * @param username the username of the account
+     * @returns the found user
+     */
+    public static async getAccountByUsername(username: string): Promise<IUser> {
+        const user = await DBUser.findOneBy({ name: username });
+        if (user === null) {
+            throw new LoernwerkError(
+                'No existing User with given name',
+                LoernwerkErrorCodes.NOT_FOUND
+            );
+        }
+        return user;
+    }
+
+    /**
+     * Searches for an Account with corresponding mail in the database and returns it. Throws an error if no account was found.
+     * @param email the mail of the account
+     * @returns the found user
+     */
+    public static async getAccountByEmail(email: string): Promise<IUser> {
+        const user = await DBUser.findOneBy({ mail: email });
+        if (user === null) {
+            throw new LoernwerkError(
+                'No existing User with given mail',
+                LoernwerkErrorCodes.NOT_FOUND
+            );
+        }
+        return user;
+    }
+
     /**
      * Returns all users of the database in an array in reduced form.
      * @returns A reduced version of all accounts
@@ -199,20 +232,29 @@ export class AccountController {
      */
     public static async ensureAdminAccount(): Promise<void> {
         const user = await DBUser.findOneBy({ type: UserClass.ADMIN });
-        if (user === null) {
-            const adminUser = new DBUser();
-            adminUser.type = UserClass.ADMIN;
-            adminUser.name = this.defaultUsername;
-            adminUser.mail = this.defaultMail;
-            const pw = crypto.randomBytes(16).toString('hex');
-            adminUser.password = await this.hashPW(pw);
-            adminUser.sharedSequencesReadAccess = [];
-            adminUser.sharedSequencesWriteAccess = [];
-            await adminUser.save();
-            console.log(
-                `Admin account created, username: ${adminUser.name} ,mail: ${adminUser.mail}, password: ${pw}`
-            );
+        if (user !== null) {
+            return;
         }
+        const adminUser = new DBUser();
+        adminUser.type = UserClass.ADMIN;
+        adminUser.name = this.defaultAdminName;
+        adminUser.mail = adminUser.mail + this.defaultMailSuffix;
+        while (
+            (await DBUser.findOneBy({ name: adminUser.name })) !== null ||
+            (await DBUser.findOneBy({ mail: adminUser.mail })) !== null
+        ) {
+            const rand = Math.floor(Math.random() * 10); // getting a random number between 0 and 9
+            adminUser.name += rand;
+            adminUser.mail = adminUser.name + this.defaultMailSuffix;
+        }
+        const pw = crypto.randomBytes(16).toString('hex');
+        adminUser.password = await this.hashPW(pw);
+        adminUser.sharedSequencesReadAccess = [];
+        adminUser.sharedSequencesWriteAccess = [];
+        await adminUser.save();
+        console.log(
+            `Admin account created, username: ${adminUser.name} ,mail: ${adminUser.mail}, password: ${pw}`
+        );
     }
 
     /**
@@ -256,7 +298,7 @@ export class AccountController {
         if (data.mail != null) {
             if (
                 !this.isValidMail(
-                    data.name,
+                    data.mail,
                     data.type === UserClass.ADMIN ||
                         dbuser.type === UserClass.ADMIN
                 )
@@ -269,7 +311,7 @@ export class AccountController {
             dbuser.mail = data.mail;
         }
         if (data.password != null) {
-            if (!this.isValidPassword(data.name)) {
+            if (!this.isValidPassword(data.password)) {
                 throw new LoernwerkError(
                     'Given information do not satisfy the requirements',
                     LoernwerkErrorCodes.BAD_REQUEST
@@ -318,7 +360,7 @@ export class AccountController {
         if (skipFurtherChecks) {
             return true;
         }
-        if (name.toLowerCase() == this.defaultUsername) {
+        if (name.toLowerCase().includes(this.defaultAdminName)) {
             return false;
         }
         return true;
@@ -340,7 +382,7 @@ export class AccountController {
         if (skipFurtherChecks) {
             return true;
         }
-        if (mail.toLowerCase() == this.defaultMail) {
+        if (mail.toLowerCase().includes(this.defaultAdminName)) {
             return false;
         }
         return true;

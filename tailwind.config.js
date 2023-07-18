@@ -15,6 +15,7 @@ export default {
                 interactable: {
                     DEFAULT: 'hsl(0, 0%, 100%)',
                     border: 'hsl(0, 0%, 75%)',
+                    selected: 'hsl(0, 0%, 95%)'
                 },
                 scrollbar: {
                     backgorund: colors.slate[100],
