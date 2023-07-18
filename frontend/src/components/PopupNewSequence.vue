@@ -1,26 +1,29 @@
 <template>
   <PopupComponent @closed="$emit('closed')">
-    <ContainerComponent class="px-8 py-6">
+    <ContainerComponent class="px-10 py-10 w-96">
       <template #Header>
         <h1 class="text-xl">Sequenz erstellen:</h1>
       </template>
-
-      <TextInputComponent
-        class="w-full my-4"
-        :disabled="disableInputShowSpinner"
-        placeHolder="Name der Sequenz"
-        v-model="nameField"
-      />
-      <div class="text-red-500" v-if="error">
-        Es ist ein Fehler beim Erstellen der Sequenz aufgetreten.
-      </div>
-      <ButtonComponent
-        class="w-fit mb-4 float-right"
-        :loading="disableInputShowSpinner"
-        @click="newSequence()"
-      >
-        Bestätigen
-      </ButtonComponent>
+      <template #default>
+        <div class="space-y-2">
+          <TextInputComponent
+            class="w-full"
+            :disabled="disableInputShowSpinner"
+            placeHolder="Name der Sequenz"
+            v-model="nameField"
+          />
+          <div class="text-red-500" v-if="error">
+            Es ist ein Fehler beim Erstellen der Sequenz aufgetreten.
+          </div>
+          <ButtonComponent
+            class="w-fit float-right"
+            :loading="disableInputShowSpinner"
+            @click="newSequence()"
+          >
+            Bestätigen
+          </ButtonComponent>
+        </div>
+      </template>
     </ContainerComponent>
   </PopupComponent>
 </template>
