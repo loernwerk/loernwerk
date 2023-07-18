@@ -36,4 +36,7 @@ export class DBSequence extends BaseEntity implements ISequence {
 
     @Column()
     slideCount: number;
+
+    @Column('simple-json')
+    tags: string[];
 }
