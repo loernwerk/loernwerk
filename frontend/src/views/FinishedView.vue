@@ -26,21 +26,21 @@ const props = defineProps({
   /**
    * Sequence code to get meta data
    */
-  code: {
+  sequenceCode: {
     type: String,
     required: true,
   },
 });
 
 const sequence = ref(
-  await SequenceRestInterface.getMetadataForStudent(props.code)
+  await SequenceRestInterface.getMetadataForStudent(props.sequenceCode)
 );
 
 /**
  * Opens a new tab and downloads certificate as pdf
  */
 function downloadCertificate(): void {
-  window.open(SequenceRestInterface.getUrlForCertificate(props.code));
+  window.open(SequenceRestInterface.getUrlForCertificate(props.sequenceCode));
 }
 </script>
 

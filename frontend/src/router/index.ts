@@ -40,19 +40,19 @@ const router = createRouter({
       meta: { hasNavBar: true },
     },
     {
-      path: '/:code',
+      path: '/:sequenceCode',
       name: 'Slide',
       component: SlideView,
       props: true,
     },
     {
-      path: '/:code/finished',
+      path: '/:sequenceCode/finished',
       name: 'Finished',
       component: FinishedView,
       props: true,
     },
     {
-      path: '/edit/:code',
+      path: '/edit/:sequenceCode',
       name: 'SequenceEdit',
       component: SequenceEditView,
       meta: { hasNavBar: true },
