@@ -24,6 +24,11 @@ const router = createRouter({
       component: import('../views/AccountView.vue'),
     },
     {
+      path: '/admin',
+      name: 'Admin',
+      component: import('../views/AdminView.vue'),
+    },
+    {
       path: '/:code',
       name: 'Slide',
       component: import('../views/SlideView.vue'),
@@ -33,6 +38,12 @@ const router = createRouter({
       path: '/:code/finished',
       name: 'Finished',
       component: import('../views/FinishedView.vue'),
+      props: true,
+    },
+    {
+      path: '/edit/:sequenceCode',
+      name: 'SequenceEdit',
+      component: import('../views/SequenceEditView.vue'),
       props: true,
     },
   ],

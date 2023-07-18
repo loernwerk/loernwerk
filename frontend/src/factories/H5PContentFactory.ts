@@ -1,10 +1,10 @@
 import { H5PContent } from '../../../model/slide/content/H5PContent';
-import { ContentFactory } from './ContentFactory';
+import { AbstractContentFactory } from './AbstractContentFactory';
 
 /**
  * Class which transforms JSON to H5PContent Object
  */
-export class H5PContentFactory extends ContentFactory {
+export class H5PContentFactory extends AbstractContentFactory {
   /**
    * @inheritDoc
    * @param json the JSON

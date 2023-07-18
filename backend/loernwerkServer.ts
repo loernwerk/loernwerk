@@ -44,7 +44,7 @@ class loernwerkServer {
         );
 
         // Setting up parsers to parse HTTP bodies
-        app.use(json());
+        app.use(json({ limit: '500mb' }));
         app.use(urlencoded({ extended: true }));
         // Setting up file upload for h5p
         app.use(
@@ -77,7 +77,7 @@ class loernwerkServer {
         );
 
         // Setting up H5P Localization
-        const h5pTranslateFunction = await buildH5Pi18n();
+        await buildH5Pi18n();
 
         // Setting up routers
         app.use('/api/account', new AccountRouterFactory().buildRouter());
@@ -85,7 +85,7 @@ class loernwerkServer {
         app.use('/api/h5p', new H5PRouterFactory().buildRouter());
         app.use(
             '/h5p',
-            buildH5PRequest(h5pTranslateFunction),
+            buildH5PRequest,
             h5pAjaxExpressRouter(
                 H5PServer.getInstance().getH5PEditor(),
                 resolve('h5p/core'),

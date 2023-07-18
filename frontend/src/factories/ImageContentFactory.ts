@@ -1,9 +1,9 @@
 import { ImageContent } from '../../../model/slide/content/ImageContent';
-import { ContentFactory } from './ContentFactory';
+import { AbstractContentFactory } from './AbstractContentFactory';
 /**
  * Class which transforms JSON to ImageContent Object
  */
-export class ImageContentFactory extends ContentFactory {
+export class ImageContentFactory extends AbstractContentFactory {
   /**
    * @inheritDoc
    * @param json the JSON

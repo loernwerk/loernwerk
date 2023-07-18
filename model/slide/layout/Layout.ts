@@ -56,6 +56,15 @@ export class Layout {
                 throw new Error('Unknown LayoutType');
         }
     }
+
+    /**
+     * Checks whether a slot has a header.
+     * @param layout Layout to check
+     * @returns Whether the given layout has a header
+     */
+    public static hasHeader(layout: LayoutType): boolean {
+        return Layout.getLayoutSlots(layout).includes(LayoutSlot.HEADER);
+    }
 }
 
 /**

@@ -1,11 +1,17 @@
 <template>
-  <h5p-editor ref="editor" :content-id="contentId" />
-  <div class="flex items-center">
-    <ButtonComponent class="w-fit" :loading="currentlySaving" @click="save"
-      >Save</ButtonComponent
-    >
-    <ButtonComponent class="w-fit ml-1" @click="close">Close</ButtonComponent>
-  </div>
+  <ContainerComponent class="fixed top-3 bottom-3 left-3 right-3 z-10">
+    <div class="flex flex-col space-y-5">
+      <h5p-editor ref="editor" :content-id="contentId" class="grow" />
+      <div class="flex items-center">
+        <ButtonComponent class="w-fit" :loading="currentlySaving" @click="save"
+          >Save</ButtonComponent
+        >
+        <ButtonComponent class="w-fit ml-1" @click="close"
+          >Close</ButtonComponent
+        >
+      </div>
+    </div>
+  </ContainerComponent>
 </template>
 
 <script setup lang="ts">
@@ -14,9 +20,10 @@ import {
   defineElements,
   H5PEditorComponent,
 } from '@lumieducation/h5p-webcomponents';
-import { onMounted, Ref, ref, toRefs } from 'vue';
+import { onMounted, Ref, ref } from 'vue';
 import { H5PRestInterface } from '../../restInterfaces/H5PRestInterface';
 import ButtonComponent from '../ButtonComponent.vue';
+import ContainerComponent from '../ContainerComponent.vue';
 
 const props = defineProps({
   /**
@@ -36,7 +43,6 @@ const props = defineProps({
   },
 });
 
-const { contentId, sequenceCode } = toRefs(props);
 const currentlySaving = ref(false);
 
 const emits = defineEmits([
@@ -66,7 +72,7 @@ onMounted(() => {
     ): Promise<{ contentId: string; metadata: IContentMetadata }> => {
       if (contentId === undefined || contentId === 'undefined') {
         return await H5PRestInterface.createH5PContent(
-          sequenceCode.value,
+          props.sequenceCode as string,
           requestBody
         );
       } else {
@@ -89,7 +95,7 @@ async function save(): Promise<void> {
  * Closes the editor without prior saving.
  */
 function close(): void {
-  emits('closed', contentId.value);
+  emits('closed', undefined);
 }
 
 window.addEventListener('resize', () => {

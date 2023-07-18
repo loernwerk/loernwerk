@@ -1,54 +1,79 @@
 <template>
   <ContainerComponent>
-    <div class="max-w-lg mx-auto">
-      <div class="border-b border-gray-200">
-        <nav class="-mb-px flex">
-          <ButtonComponent
-            v-for="(tab, index) in tabs"
-            :key="index"
-            @click="changeTab(index)"
-            :class="{
-              'border-blue-500 text-blue-600': activeTab == index,
-              'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300':
-                activeTab !== index,
-            }"
-            class="w-1/2 py-4 px-4 font-medium text-sm leading-5 focus:outline-none"
-          >
-            {{ tab }}
-          </ButtonComponent>
-        </nav>
+    <template #Header>
+      <div
+        class="w-full flex flex-row border-b-1 border-container-border space-x-6"
+      >
+        <h1
+          class="text-2xl mb-2 border-container-border"
+          v-for="tab in shownTabs"
+          :key="tab"
+          @click="selectedTab = tab"
+          :class="{ 'border-b-1': selectedTab === tab }"
+        >
+          {{ tab }}
+        </h1>
       </div>
-
-      <div v-for="(item, index) in tabs" :key="index">
-        <slot :name="`${index}`" v-if="activeTab == index"> </slot>
+    </template>
+    <template #default>
+      <div v-for="tab in possibleTabs" :key="tab" v-show="tab == selectedTab">
+        <slot :name="tab"></slot>
       </div>
-    </div>
+    </template>
   </ContainerComponent>
 </template>
 
 <script setup lang="ts">
-import ButtonComponent from './ButtonComponent.vue';
+import { Ref, ref, watch } from 'vue';
 import ContainerComponent from './ContainerComponent.vue';
-import { ref } from 'vue';
 
-let activeTab = ref(0);
-
-defineProps({
+const props = defineProps({
   /**
-   * Possible tabs to open
+   * The tabs that can exist
    */
-  tabs: {
+  possibleTabs: {
+    type: Array<string>,
+    required: true,
+  },
+  /**
+   * The tabs that are currently selecteble
+   */
+  shownTabs: {
     type: Array<string>,
     required: true,
   },
 });
 
+const selectedTab = ref(props.shownTabs[0]);
+const nextTab: Ref<string | undefined> = ref(props.shownTabs[0]);
+
 /**
- * Changes active tab
- * @param index index of chosen tab
+ * Switches to a tab
+ * @param tabName name of the tab to switch to
  */
-function changeTab(index: number): void {
-  console.log('setting activeTab to ' + index);
-  activeTab.value = index;
+function selectTab(tabName: string): void {
+  const index = props.shownTabs.indexOf(tabName);
+  if (index !== -1) {
+    selectedTab.value = tabName;
+  } else {
+    nextTab.value = tabName;
+  }
 }
+
+defineExpose({
+  selectTab,
+});
+
+watch(
+  () => props.shownTabs,
+  (newValue) => {
+    if (!newValue.includes(selectedTab.value)) {
+      selectedTab.value = newValue[0];
+    }
+    if (nextTab.value && newValue.includes(nextTab.value)) {
+      selectedTab.value = nextTab.value;
+      nextTab.value = undefined;
+    }
+  }
+);
 </script>

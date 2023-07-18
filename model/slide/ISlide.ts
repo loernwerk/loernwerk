@@ -9,7 +9,7 @@ export interface ISlide {
     layout: LayoutType;
 
     /** Content of each slot from the layout of the slide */
-    content: Record<LayoutSlot, Content>;
+    content: Partial<Record<LayoutSlot, Content>>;
 
     /** Background color of this slide */
     backgroundColor: string;

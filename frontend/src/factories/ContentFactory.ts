@@ -38,11 +38,4 @@ export abstract class ContentFactory {
         );
     }
   }
-
-  /**
-   * Converts JSON to Content Object
-   * @param json the JSON
-   * @protected
-   */
-  protected abstract buildContent(json: unknown): Content;
 }
