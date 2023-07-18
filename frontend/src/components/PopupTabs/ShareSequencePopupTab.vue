@@ -19,7 +19,8 @@
     <div class="text-red-500" v-if="error">
       Es ist ein Fehler beim Freigeben der Sequenz aufgetreten.
     </div>
-    <div v-if="readAccessArray.length > 0">Lehrkräfte mit Lesezugriff:</div>
+
+    <div v-if="displayReadAccess.length > 0">Lehrkräfte mit Lesezugriff:</div>
     <table class="table-auto text-sm">
       <tbody>
         <tr v-for="(user, index) in displayReadAccess" :key="index">
@@ -35,7 +36,9 @@
       </tbody>
     </table>
 
-    <div v-if="writeAccessArray.length > 0">Lehrkräfte mit Schreibzugriff:</div>
+    <div v-if="displayWriteAccess.length > 0">
+      Lehrkräfte mit Schreibzugriff:
+    </div>
     <table class="table-auto text-sm">
       <tbody>
         <tr v-for="(user, index) in displayWriteAccess" :key="index">

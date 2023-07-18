@@ -32,7 +32,7 @@
         <h3 class="text-3xl text-center">{{ sequence.name }}</h3>
         <div
           class="flex flex-row space-x-2 flex-wrap"
-          v-if="!displayIsRestricted"
+          v-if="sequence.authorId === ownId"
         >
           <div
             v-for="(tag, index) in sequence.tags"
@@ -105,15 +105,6 @@ const props = defineProps({
   },
 
   /**
-   * Whether to show the restricted menu (only share with participants) and no tags for the sequences
-   */
-  displayIsRestricted: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
-
-  /**
    * Id of account that displays the sequence
    */
   ownId: {
@@ -139,10 +130,10 @@ const tabNames = [
 ];
 
 const shownTabs = computed(() => {
-  if (props.displayIsRestricted) {
-    return [tabNames[3]];
-  } else {
+  if (props.sequence?.authorId === props.ownId) {
     return tabNames;
+  } else {
+    return [tabNames[3]];
   }
 });
 

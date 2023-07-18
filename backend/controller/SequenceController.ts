@@ -185,10 +185,7 @@ export class SequenceController {
             if (user == null) {
                 continue;
             }
-            user.sharedSequencesReadAccess = this.removeFromUserList(
-                user.sharedSequencesReadAccess,
-                code
-            );
+            this.removeFromUserList(user.sharedSequencesReadAccess, code);
             await user.save();
         }
         for (const uId of dbSequence.writeAccess) {
@@ -196,10 +193,7 @@ export class SequenceController {
             if (user == null) {
                 continue;
             }
-            user.sharedSequencesWriteAccess = this.removeFromUserList(
-                user.sharedSequencesWriteAccess,
-                code
-            );
+            this.removeFromUserList(user.sharedSequencesWriteAccess, code);
             await user.save();
         }
         await dbSequence.remove();
@@ -389,13 +383,12 @@ export class SequenceController {
         );
     }
     /**
-     * removing the given code from the given list. used on read/write access lists
+     * removing the given code from the given list in place. used on read/write access lists
      * @param list the list
      * @param code the code
-     * @returns the list wihtout the code
      */
-    private static removeFromUserList(list: string[], code: string): string[] {
-        return list.splice(list.indexOf(code), 1);
+    private static removeFromUserList(list: string[], code: string): void {
+        list.splice(list.indexOf(code), 1);
     }
 
     /**
@@ -432,7 +425,7 @@ export class SequenceController {
             if (user === null) {
                 continue; //this should be fine, right?
             }
-            user[accessList] = this.removeFromUserList(user[accessList], code);
+            this.removeFromUserList(user[accessList], code);
             await user.save();
         }
     }
