@@ -1,4 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import MainView from '../views/MainView.vue';
+import LoginView from '../views/LogInView.vue';
+import AccountView from '../views/AccountView.vue';
+import AdminView from '../views/AdminView.vue';
+import SlideView from '../views/SlideView.vue';
+import FinishedView from '../views/FinishedView.vue';
+import SequenceOverviewView from '../views/SequenceOverviewView.vue';
+import SequenceEditView from '../views/SequenceEditView.vue';
 
 const router = createRouter({
   history: createWebHistory(''),
@@ -6,39 +14,48 @@ const router = createRouter({
     {
       path: '/',
       name: 'Main',
-      component: import('../views/MainView.vue'),
+      component: MainView,
     },
     {
       path: '/login',
       name: 'LogIn',
-      component: import('../views/LogInView.vue'),
+      component: LoginView,
+    },
+    {
+      path: '/overview',
+      name: 'Overview',
+      component: SequenceOverviewView,
+      meta: { hasNavBar: true },
     },
     {
       path: '/account',
       name: 'Account',
-      component: import('../views/AccountView.vue'),
+      component: AccountView,
+      meta: { hasNavBar: true },
     },
     {
       path: '/admin',
       name: 'Admin',
-      component: import('../views/AdminView.vue'),
+      component: AdminView,
+      meta: { hasNavBar: true },
     },
     {
-      path: '/:code',
+      path: '/:sequenceCode',
       name: 'Slide',
-      component: import('../views/SlideView.vue'),
+      component: SlideView,
       props: true,
     },
     {
-      path: '/:code/finished',
+      path: '/:sequenceCode/finished',
       name: 'Finished',
-      component: import('../views/FinishedView.vue'),
+      component: FinishedView,
       props: true,
     },
     {
       path: '/edit/:sequenceCode',
       name: 'SequenceEdit',
-      component: import('../views/SequenceEditView.vue'),
+      component: SequenceEditView,
+      meta: { hasNavBar: true },
       props: true,
     },
   ],
