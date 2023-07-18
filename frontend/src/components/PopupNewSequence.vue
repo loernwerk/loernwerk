@@ -11,7 +11,9 @@
         placeHolder="Name der Sequenz"
         v-model="nameField"
       />
-
+      <div class="text-red-500" v-if="error">
+        Es ist ein Fehler beim Erstellen der Sequenz aufgetreten.
+      </div>
       <ButtonComponent
         class="w-fit mb-4 float-right"
         :loading="disableInputShowSpinner"
@@ -30,6 +32,7 @@ import PopupComponent from './PopupComponent.vue';
 import TextInputComponent from '../components/TextInputComponent.vue';
 import ButtonComponent from './ButtonComponent.vue';
 import ContainerComponent from './ContainerComponent.vue';
+import { useRouter } from 'vue-router';
 
 defineEmits([
   /**
@@ -40,18 +43,20 @@ defineEmits([
 
 const disableInputShowSpinner = ref(false);
 const nameField = ref('');
+const error = ref(false);
+const router = useRouter();
 
 /**
  * Create a new sequence with given name
  */
 async function newSequence(): Promise<void> {
+  error.value = false;
   disableInputShowSpinner.value = true;
   try {
     const code = await SequenceRestInterface.addSequence(nameField.value);
-    void code;
-    //TODO: Redirect SequenceEditView
+    router.push({ name: 'SequenceEdit', params: { sequenceCode: code } });
   } catch {
-    //TODO: Error handling
+    error.value = true;
   }
   disableInputShowSpinner.value = false;
 }

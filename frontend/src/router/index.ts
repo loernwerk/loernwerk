@@ -14,8 +14,8 @@ const router = createRouter({
       component: import('../views/LogInView.vue'),
     },
     {
-      path: '/sequence',
-      name: 'Sequence',
+      path: '/overview',
+      name: 'Overview',
       component: import('../views/SequenceOverviewView.vue'),
     },
     {

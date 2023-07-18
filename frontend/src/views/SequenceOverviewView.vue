@@ -79,18 +79,11 @@ function applySearch(searchText: string): void {
  * Reloads sequences in overview
  */
 async function reloadSequences(): Promise<void> {
-  try {
-    SequenceRestInterface.getSequencesSharedWithYou().then((data) => {
-      sharedSequences.value = data.slice(0);
-      allSharedSequences.value = data.slice(0);
-    });
+  sharedSequences.value =
+    await SequenceRestInterface.getSequencesSharedWithYou();
+  allSharedSequences.value = sharedSequences.value;
 
-    SequenceRestInterface.getOwnSequences().then((data) => {
-      sequences.value = data.slice(0);
-      allOwnSequences.value = data.slice(0);
-    });
-  } catch {
-    //TODO: error handling
-  }
+  sequences.value = await SequenceRestInterface.getOwnSequences();
+  allOwnSequences.value = sequences.value;
 }
 </script>

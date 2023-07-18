@@ -96,7 +96,7 @@ async function checkLogIn(): Promise<void> {
   );
 
   if (success) {
-    router.push('/sequence');
+    router.push('/overview');
   } else {
     displayError.value = true;
   }

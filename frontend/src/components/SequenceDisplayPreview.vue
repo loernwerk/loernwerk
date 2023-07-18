@@ -39,7 +39,14 @@
         </div>
       </div>
       <div class="flex flex-row">
-        <ButtonComponent class="basis-1/2 mr-2" @click="router.push('LogIn')"
+        <ButtonComponent
+          class="basis-1/2 mr-2"
+          @click="
+            router.push({
+              name: 'SequenceEdit',
+              params: { sequenceCode: sequence.code },
+            })
+          "
           >Bearbeiten
         </ButtonComponent>
         <ButtonComponent class="basis-1/2" @click="popupOpen = !popupOpen"
