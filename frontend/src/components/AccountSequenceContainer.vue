@@ -48,7 +48,7 @@ const showError = ref(false);
  * @param code the code of the sequence
  */
 function showSequence(code: string): void {
-  router.push('/'.concat(code));
+  router.push({ name: 'Slide', params: { sequenceCode: code } });
 }
 
 /**

@@ -1,7 +1,6 @@
 <template>
-  <div class="w-full flex h-[calc(100vh-2.5rem)]">
+  <div class="w-full flex h-full">
     <AccountList
-      class=""
       :accounts="accounts"
       @selected="
         (id) => {
@@ -55,7 +54,7 @@ const accounts: Ref<Partial<IUser>[]> = ref([]);
 try {
   accounts.value = await AccountRestInterface.getAccountMetaDataList();
 } catch {
-  router.push('/');
+  router.push({ name: 'Main' });
 }
 /**
  * Requests the user with the given id from the backend (currently not)
