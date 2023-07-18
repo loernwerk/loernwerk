@@ -1,20 +1,22 @@
 <template>
-  <h1 class="mt-4">Schlüsselwörter der Sequenz (mit "," getrennt):</h1>
-  <TextInputComponent
-    class="my-2"
-    placeHolder="Schlüsselwörter"
-    v-model="tagsField"
-  >
-  </TextInputComponent>
-  <div class="flex flex-row">
-    <div class="flex-grow text-red-500">
-      <div v-if="error">
-        Es ist ein Fehler beim Speichern der Schlüsselwörter aufgetreten.
-      </div>
-    </div>
-    <ButtonComponent class="w-fit float-right" @click="confimChanges"
-      >Bestätigen</ButtonComponent
+  <div class="mt-4 space-y-2 flex flex-col">
+    <h1>Schlüsselwörter der Sequenz (mit "," getrennt):</h1>
+    <TextInputComponent
+      class="my-2 grow"
+      placeHolder="Schlüsselwörter"
+      v-model="tagsField"
     >
+    </TextInputComponent>
+    <div class="flex flex-row">
+      <div class="flex-grow text-red-500">
+        <div v-if="error">
+          Es ist ein Fehler beim Speichern der Schlüsselwörter aufgetreten.
+        </div>
+      </div>
+      <ButtonComponent class="w-fit float-right" @click="confimChanges"
+        >Bestätigen</ButtonComponent
+      >
+    </div>
   </div>
 </template>
 
