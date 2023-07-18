@@ -8,7 +8,6 @@
       <div class="mt-2" v-for="sequence in sequences" :key="sequence.name">
         <SequenceDisplayPreview
           :sequence="sequence"
-          :display-is-restricted="displayIsRestricted"
           :own-id="ownId"
           @reload-sequences="$emit('reloadSequences')"
         ></SequenceDisplayPreview>
@@ -37,15 +36,6 @@ defineProps({
     type: String,
     required: true,
   },
-  /**
-   * Whether to show the restricted menu (only share with participants) and no tags for the sequences
-   */
-  displayIsRestricted: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
-
   /**
    * Id of account that displays the sequences
    */

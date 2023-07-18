@@ -35,7 +35,6 @@
           <SequenceDisplayContainer
             name="Mit mir geteilte Sequenzen:"
             :sequences="sharedSequences"
-            :display-is-restricted="true"
             :own-id="ownId"
           ></SequenceDisplayContainer>
         </div>

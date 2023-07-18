@@ -19,13 +19,13 @@
     <div class="text-red-500" v-if="error">
       Es ist ein Fehler beim Freigeben der Sequenz aufgetreten.
     </div>
-    <div v-if="sequence.readAccess.length > 0">Lehrkräfte mit Lesezugriff:</div>
+    <div v-if="displayReadAccess.length > 0">Lehrkräfte mit Lesezugriff:</div>
     <table class="table-auto text-sm">
       <tbody>
         <tr v-for="(user, index) in displayReadAccess" :key="index">
           <td>
             <FontAwesomeIcon
-              :icon="['fas', 'user']"
+              :icon="['fas', 'user-large-slash']"
               class="cursor-pointer mx-3"
               @click="deleteSharingByUserIndex(index, false)"
             />
@@ -35,7 +35,7 @@
       </tbody>
     </table>
 
-    <div v-if="sequence.writeAccess.length > 0">
+    <div v-if="displayWriteAccess.length > 0">
       Lehrkräfte mit Schreibzugriff:
     </div>
     <table class="table-auto text-sm">
@@ -43,7 +43,7 @@
         <tr v-for="(user, index) in displayWriteAccess" :key="index">
           <td>
             <FontAwesomeIcon
-              :icon="['fas', 'user']"
+              :icon="['fas', 'user-large-slash']"
               class="cursor-pointer mx-3"
               @click="deleteSharingByUserIndex(index, true)"
             />
@@ -65,9 +65,9 @@ import { IUser } from '../../../../model/user/IUser';
 import { SequenceRestInterface } from '../../restInterfaces/SequenceRestInterface';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { faUserLargeSlash } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faUser);
+library.add(faUserLargeSlash);
 
 const props = defineProps({
   /**
