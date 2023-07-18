@@ -126,7 +126,7 @@ export class AccountRouterFactory extends RouterFactory {
                     );
                 } else if (req.query.mail !== undefined) {
                     user = await AccountController.getAccountByEmail(
-                        req.query.name as string
+                        req.query.mail as string
                     );
                 } else {
                     user = await AccountController.getAccountById(id);
