@@ -4,7 +4,7 @@
       <TabbedContainer
         :possible-tabs="tabNames"
         :shown-tabs="shownTabs"
-        class="py-5 px-8"
+        class="py-10 px-10 h-80"
       >
         <template v-slot:[tabName(0)]>
           <TagSequencePopupTab
@@ -53,9 +53,9 @@
             "
             >Bearbeiten
           </ButtonComponent>
-          <ButtonComponent class="flex-1" @click="popupOpen = !popupOpen"
-            >Menü</ButtonComponent
-          >
+          <ButtonComponent class="" @click="popupOpen = !popupOpen">
+            <FontAwesomeIcon :icon="['fas', 'ellipsis']" />
+          </ButtonComponent>
         </div>
       </div>
     </ContainerComponent>
@@ -74,6 +74,11 @@ import DeleteSequencePopupTab from './PopupTabs/DeleteSequencePopupTab.vue';
 import DataSequencePopupTab from './PopupTabs/DataSequencePopupTab.vue';
 import ShareSequencePopupTab from './PopupTabs/ShareSequencePopupTab.vue';
 import TagSequencePopupTab from './PopupTabs/TagSequencePopupTab.vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faEllipsis);
 
 const props = defineProps({
   /**
@@ -104,7 +109,7 @@ const emits = defineEmits([
 const popupOpen = ref(false);
 
 const tabNames = [
-  'Schlüsselwörter verwalten',
+  'Schlüsselwörter',
   'Löschen',
   'Mit Lehrkräften teilen',
   'Mit Teilnehmern teilen',

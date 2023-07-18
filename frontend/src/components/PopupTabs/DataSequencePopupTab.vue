@@ -1,8 +1,14 @@
 <template>
-  <h3 class="mt-4">Code der ausgewählten Sequenz:</h3>
-  <TextInputComponent :disabled="true" v-model="code" />
-  <h3>Link zur momentan ausgewählten Sequenz:</h3>
-  <TextInputComponent :disabled="true" v-model="link" />
+  <div class="mt-4 space-y-2">
+    <div class="flex space-x-2 items-center">
+      <h3>Code der Sequenz:</h3>
+      <TextInputComponent :disabled="true" v-model="code" class="grow" />
+    </div>
+    <div class="flex space-x-2 items-center">
+      <h3>Link zur Sequenz:</h3>
+      <TextInputComponent :disabled="true" v-model="link" class="grow" />
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">

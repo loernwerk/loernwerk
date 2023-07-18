@@ -1,57 +1,55 @@
 <template>
-  <div class="mt-4">Lehrkräfte mit Lesezugriff:</div>
-  <table class="table-auto text-sm">
-    <tbody>
-      <tr v-for="(user, index) in displayReadAccess" :key="index">
-        <td>
-          <FontAwesomeIcon
-            icon="user-minus"
-            class="cursor-pointer mx-3"
-            @click="deleteSharingByUserIndex(index, false)"
-          />
-        </td>
-        <td>{{ user }}</td>
-      </tr>
-    </tbody>
-  </table>
-
-  Lehrkräfte mit Schreibzugriff:
-  <table class="table-auto text-sm">
-    <tbody>
-      <tr v-for="(user, index) in displayWriteAccess" :key="index">
-        <td>
-          <FontAwesomeIcon
-            icon="user-minus"
-            class="cursor-pointer mx-3"
-            @click="deleteSharingByUserIndex(index, true)"
-          />
-        </td>
-        <td>{{ user }}</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <TextInputComponent
-    class="mb-2 mt-4"
-    v-model="userInfoField"
-    place-holder="Nutzername der Lehrkraft"
-    :class="{ 'border-red-600': showRedBorder }"
-  >
-  </TextInputComponent>
-  <div class="flex flex-row">
-    <select
-      class="border-solid border-1 bg-interactable border-interactable-border rounded basis-1/2 mr-2 pl-2"
-      v-model="setWriteAccess"
+  <div class="mt-4">
+    <TextInputComponent
+      class="mb-2 mt-4"
+      v-model="userInfoField"
+      place-holder="Nutzername der Lehrkraft"
+      :class="{ 'border-red-600': showRedBorder }"
     >
-      <option :value="false">Lesezugriff</option>
-      <option :value="true">Schreibzugriff</option>
-    </select>
-    <ButtonComponent class="basis-1/2" @click="confirmSharing()"
-      >Teilen
-    </ButtonComponent>
-  </div>
-  <div class="text-red-500" v-if="error">
-    Es ist ein Fehler beim Freigeben der Sequenz aufgetreten.
+    </TextInputComponent>
+    <div class="flex flex-row space-x-2">
+      <select class="interactable" v-model="setWriteAccess">
+        <option :value="false">Lesezugriff</option>
+        <option :value="true">Schreibzugriff</option>
+      </select>
+      <ButtonComponent class="flex-1" @click="confirmSharing()"
+        >Teilen
+      </ButtonComponent>
+    </div>
+    <div class="text-red-500" v-if="error">
+      Es ist ein Fehler beim Freigeben der Sequenz aufgetreten.
+    </div>
+    <div>Lehrkräfte mit Lesezugriff:</div>
+    <table class="table-auto text-sm">
+      <tbody>
+        <tr v-for="(user, index) in displayReadAccess" :key="index">
+          <td>
+            <FontAwesomeIcon
+              :icon="['fas', 'user']"
+              class="cursor-pointer mx-3"
+              @click="deleteSharingByUserIndex(index, false)"
+            />
+          </td>
+          <td>{{ user }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    Lehrkräfte mit Schreibzugriff:
+    <table class="table-auto text-sm">
+      <tbody>
+        <tr v-for="(user, index) in displayWriteAccess" :key="index">
+          <td>
+            <FontAwesomeIcon
+              :icon="['fas', 'user']"
+              class="cursor-pointer mx-3"
+              @click="deleteSharingByUserIndex(index, true)"
+            />
+          </td>
+          <td>{{ user }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
@@ -65,9 +63,9 @@ import { IUser } from '../../../../model/user/IUser';
 import { SequenceRestInterface } from '../../restInterfaces/SequenceRestInterface';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faUserMinus } from '@fortawesome/free-solid-svg-icons';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faUserMinus);
+library.add(faUser);
 
 const props = defineProps({
   /**
