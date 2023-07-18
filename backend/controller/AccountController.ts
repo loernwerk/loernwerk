@@ -12,8 +12,8 @@ import { SequenceController } from './SequenceController';
  * Manages account data in the database and handles requests for account requests regarding account data
  */
 export class AccountController {
-    static defaultUsername = 'admin';
-    static defaultMail = 'admin@loernwerk.de';
+    static defaultAdminName = 'admin';
+    static defaultMailSuffix = '@loernwerk.de';
 
     /**
      * Creates a new account with given mail, name, password (ignoring the other values existing in the Partial<IUser>) in the database
@@ -200,19 +200,28 @@ export class AccountController {
     public static async ensureAdminAccount(): Promise<void> {
         const user = await DBUser.findOneBy({ type: UserClass.ADMIN });
         if (user === null) {
-            const adminUser = new DBUser();
-            adminUser.type = UserClass.ADMIN;
-            adminUser.name = this.defaultUsername;
-            adminUser.mail = this.defaultMail;
-            const pw = crypto.randomBytes(16).toString('hex');
-            adminUser.password = await this.hashPW(pw);
-            adminUser.sharedSequencesReadAccess = [];
-            adminUser.sharedSequencesWriteAccess = [];
-            await adminUser.save();
-            console.log(
-                `Admin account created, username: ${adminUser.name} ,mail: ${adminUser.mail}, password: ${pw}`
-            );
+            return;
         }
+        const adminUser = new DBUser();
+        adminUser.type = UserClass.ADMIN;
+        adminUser.name = this.defaultAdminName;
+        adminUser.mail = adminUser.mail + this.defaultMailSuffix;
+        while (
+            (await DBUser.findOneBy({ name: adminUser.name })) !== null ||
+            (await DBUser.findOneBy({ mail: adminUser.mail })) !== null
+        ) {
+            const rand = Math.floor(Math.random() * 10); // getting a random number between 0 and 9
+            adminUser.name += rand;
+            adminUser.mail = adminUser.name + this.defaultMailSuffix;
+        }
+        const pw = crypto.randomBytes(16).toString('hex');
+        adminUser.password = await this.hashPW(pw);
+        adminUser.sharedSequencesReadAccess = [];
+        adminUser.sharedSequencesWriteAccess = [];
+        await adminUser.save();
+        console.log(
+            `Admin account created, username: ${adminUser.name} ,mail: ${adminUser.mail}, password: ${pw}`
+        );
     }
 
     /**
@@ -318,7 +327,7 @@ export class AccountController {
         if (skipFurtherChecks) {
             return true;
         }
-        if (name.toLowerCase() == this.defaultUsername) {
+        if (name.toLowerCase() == this.defaultAdminName) {
             return false;
         }
         return true;
@@ -340,7 +349,10 @@ export class AccountController {
         if (skipFurtherChecks) {
             return true;
         }
-        if (mail.toLowerCase() == this.defaultMail) {
+        if (
+            mail.toLowerCase() ==
+            this.defaultAdminName + this.defaultMailSuffix
+        ) {
             return false;
         }
         return true;
