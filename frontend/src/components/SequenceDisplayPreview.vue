@@ -28,32 +28,36 @@
     </PopupComponent>
 
     <ContainerComponent>
-      <h3>{{ sequence.name }}</h3>
-      <div class="flex flex-row gap-1 mb-2 ml-2" v-if="!displayIsRestricted">
+      <div class="space-y-2">
+        <h3 class="text-3xl text-center">{{ sequence.name }}</h3>
         <div
-          v-for="(tag, index) in sequence.tags"
-          class="border-1 rounded bg-green-200 px-1"
-          :key="index"
+          class="flex flex-row space-x-2 flex-wrap"
+          v-if="!displayIsRestricted"
         >
-          {{ tag }}
+          <div
+            v-for="(tag, index) in sequence.tags"
+            class="border-1 rounded bg-green-200 px-1 box-border"
+            :key="index"
+          >
+            {{ tag }}
+          </div>
+        </div>
+        <div class="flex flex-row space-x-2">
+          <ButtonComponent
+            class="flex-1"
+            @click="
+              router.push({
+                name: 'SequenceEdit',
+                params: { sequenceCode: sequence.code },
+              })
+            "
+            >Bearbeiten
+          </ButtonComponent>
+          <ButtonComponent class="flex-1" @click="popupOpen = !popupOpen"
+            >Menü</ButtonComponent
+          >
         </div>
       </div>
-      <div class="flex flex-row">
-        <ButtonComponent
-          class="basis-1/2 mr-2"
-          @click="
-            router.push({
-              name: 'SequenceEdit',
-              params: { sequenceCode: sequence.code },
-            })
-          "
-          >Bearbeiten
-        </ButtonComponent>
-        <ButtonComponent class="basis-1/2" @click="popupOpen = !popupOpen"
-          >Menü</ButtonComponent
-        >
-      </div>
-      <div class="Popup"></div>
     </ContainerComponent>
   </div>
 </template>

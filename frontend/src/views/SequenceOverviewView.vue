@@ -1,37 +1,42 @@
 <!-- View to overview and edit own sequences and shared sequences -->
 <template>
-  <PopupNewSequence
-    v-if="showPopupNewSequence"
-    @closed="showPopupNewSequence = false"
-  >
-  </PopupNewSequence>
+  <div class="w-full">
+    <PopupNewSequence
+      v-if="showPopupNewSequence"
+      @closed="showPopupNewSequence = false"
+    >
+    </PopupNewSequence>
 
-  <div class="w-full h-full">
-    <div class="flex items-center h-fit">
-      <ButtonComponent
-        class="px-4 w-fit h-full"
-        @click="showPopupNewSequence = true"
-      >
-        Sequenz erstellen
-      </ButtonComponent>
-      <SearchBarComponent @input-changed="(val: string) => applySearch(val)" />
-    </div>
-
-    <div class="flex pt-5 w-full h-full">
-      <div class="flex-1 mr-1 ml-2">
-        <SequenceDisplayContainer
-          name="Meine Sequenzen:"
-          :sequences="sequences"
-          @reload-sequences="reloadSequences()"
-        >
-        </SequenceDisplayContainer>
+    <div class="w-full h-full flex flex-col grow">
+      <div class="h-fit flex space-x-5">
+        <div class="flex items-center h-fit flex-1 space-x-2">
+          <ButtonComponent class="w-fit" @click="showPopupNewSequence = true">
+            Sequenz erstellen
+          </ButtonComponent>
+          <SearchBarComponent
+            @input-changed="(val: string) => applySearch(val)"
+            class="grow"
+          />
+        </div>
+        <div class="flex-1"><!-- Empty div to fill remaining space --></div>
       </div>
-      <div class="flex-1 ml-1 mr-2">
-        <SequenceDisplayContainer
-          name="Mit mir geteilte Sequenzen:"
-          :sequences="sharedSequences"
-          :display-is-restricted="true"
-        ></SequenceDisplayContainer>
+
+      <div class="flex pt-5 w-full grow space-x-5">
+        <div class="flex-1">
+          <SequenceDisplayContainer
+            name="Meine Sequenzen:"
+            :sequences="sequences"
+            @reload-sequences="reloadSequences()"
+          >
+          </SequenceDisplayContainer>
+        </div>
+        <div class="flex-1">
+          <SequenceDisplayContainer
+            name="Mit mir geteilte Sequenzen:"
+            :sequences="sharedSequences"
+            :display-is-restricted="true"
+          ></SequenceDisplayContainer>
+        </div>
       </div>
     </div>
   </div>
