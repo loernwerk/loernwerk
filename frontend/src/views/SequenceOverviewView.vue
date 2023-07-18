@@ -14,7 +14,7 @@
       >
         Sequenz erstellen
       </ButtonComponent>
-      <SearchBarComponent @searchClicked="(val: string) => applySearch(val)" />
+      <SearchBarComponent @input-changed="(val: string) => applySearch(val)" />
     </div>
 
     <div class="flex pt-5 w-full h-full">
@@ -30,7 +30,7 @@
         <SequenceDisplayContainer
           name="Mit mir geteilte Sequenzen:"
           :sequences="sharedSequences"
-          :show-restricted-menu="true"
+          :display-is-restricted="true"
         ></SequenceDisplayContainer>
       </div>
     </div>
@@ -61,12 +61,16 @@ await reloadSequences();
  */
 function applySearch(searchText: string): void {
   if (searchText.length === 0) {
-    sequences.value = allOwnSequences.value.slice(0);
-    sharedSequences.value = allSharedSequences.value.slice(0);
+    sequences.value = allOwnSequences.value;
+    sharedSequences.value = allSharedSequences.value;
   } else {
-    sequences.value = sequences.value.filter((s) => s.name === searchText);
-    sharedSequences.value = sharedSequences.value.filter(
-      (s) => s.name === searchText
+    sequences.value = allOwnSequences.value.filter(
+      (s) =>
+        s.name.includes(searchText) ||
+        s.tags.some((tag) => tag.includes(searchText))
+    );
+    sharedSequences.value = allSharedSequences.value.filter((s) =>
+      s.name.includes(searchText)
     );
   }
 }

@@ -29,7 +29,7 @@
 
     <ContainerComponent>
       <h3>{{ sequence.name }}</h3>
-      <div class="flex flex-row gap-1 mb-2 ml-2">
+      <div class="flex flex-row gap-1 mb-2 ml-2" v-if="!displayIsRestricted">
         <div
           v-for="(tag, index) in sequence.tags"
           class="border-1 rounded bg-green-200 px-1"
@@ -74,9 +74,9 @@ const props = defineProps({
   },
 
   /**
-   * Whether to show the restricted menu (only share with participants) for a sequence
+   * Whether to show the restricted menu (only share with participants) and no tags for the sequences
    */
-  showRestrictedMenu: {
+  displayIsRestricted: {
     type: Boolean,
     required: false,
     default: false,
@@ -100,7 +100,7 @@ const tabNames = [
 ];
 
 const shownTabs = computed(() => {
-  if (props.showRestrictedMenu) {
+  if (props.displayIsRestricted) {
     return [tabNames[3]];
   } else {
     return tabNames;

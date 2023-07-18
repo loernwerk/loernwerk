@@ -8,7 +8,7 @@
       <div class="mt-2" v-for="sequence in sequences" :key="sequence.name">
         <SequenceDisplayPreview
           :sequence="sequence"
-          :show-restricted-menu="showRestrictedMenu"
+          :display-is-restricted="displayIsRestricted"
           @reload-sequences="$emit('reloadSequences')"
         ></SequenceDisplayPreview>
       </div>
@@ -37,9 +37,9 @@ defineProps({
     required: true,
   },
   /**
-   * Whether to show the restricted menu (only share with participants) for a sequence
+   * Whether to show the restricted menu (only share with participants) and no tags for the sequences
    */
-  showRestrictedMenu: {
+  displayIsRestricted: {
     type: Boolean,
     required: false,
     default: false,
