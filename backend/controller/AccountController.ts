@@ -265,7 +265,7 @@ export class AccountController {
         if (data.mail != null) {
             if (
                 !this.isValidMail(
-                    data.name,
+                    data.mail,
                     data.type === UserClass.ADMIN ||
                         dbuser.type === UserClass.ADMIN
                 )
@@ -278,7 +278,7 @@ export class AccountController {
             dbuser.mail = data.mail;
         }
         if (data.password != null) {
-            if (!this.isValidPassword(data.name)) {
+            if (!this.isValidPassword(data.password)) {
                 throw new LoernwerkError(
                     'Given information do not satisfy the requirements',
                     LoernwerkErrorCodes.BAD_REQUEST
