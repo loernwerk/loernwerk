@@ -14,7 +14,7 @@
               <TextInputComponent
                 :disabled="disableInputShowSpinner"
                 placeHolder="Nutzername/Email"
-                @input-changed="(val) => (mailField = val)"
+                v-model="mailField"
               />
             </td>
           </tr>
@@ -25,7 +25,7 @@
                 :disabled="disableInputShowSpinner"
                 :hidden="true"
                 placeHolder="Passwort"
-                @input-changed="(val) => (passwordField = val)"
+                v-model="passwordField"
               />
             </td>
           </tr>
@@ -88,7 +88,6 @@ function disableCheckBox(): void {
 async function checkLogIn(): Promise<void> {
   disableInputShowSpinner.value = true;
   displayError.value = false;
-
   const success = await AccountRestInterface.verifyLogin(
     mailField.value,
     passwordField.value,

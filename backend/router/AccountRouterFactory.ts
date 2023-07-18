@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import { RouterFactory } from './RouterFactory';
 import { AccountController } from '../controller/AccountController';
-import { UserClass } from '../../model/user/IUser';
+import { IUser, UserClass } from '../../model/user/IUser';
 import { requireAdmin, requireBody, requireLogin } from '../loernwerkUtilities';
-import { LoernwerkErrorCodes } from '../loernwerkError';
+import { LoernwerkErrorCodes } from '../../model/loernwerkError';
 
 /**
  * Builds router for request regarding Account management
@@ -27,6 +27,8 @@ export class AccountRouterFactory extends RouterFactory {
                     );
                     req.session.userId = user.id;
                     req.session.isAdmin = user.type === UserClass.ADMIN;
+                    req.session.username = user.name;
+                    req.session.email = user.mail;
                 } catch {
                     res.sendStatus(400);
                     return;
@@ -42,7 +44,7 @@ export class AccountRouterFactory extends RouterFactory {
         accountRouter.put(
             '/',
             requireAdmin,
-            requireBody('username', 'email', 'password'),
+            requireBody('name', 'mail', 'password'),
             async (req, res) => {
                 try {
                     const user = await AccountController.createNewAccount(
@@ -107,14 +109,32 @@ export class AccountRouterFactory extends RouterFactory {
         );
 
         accountRouter.get('/', requireLogin, async (req, res) => {
-            const user = await AccountController.getAccountById(
-                req.session.userId as number
-            );
+            let id = req.session.userId as number;
+            if (req.query.id !== undefined) {
+                id = parseInt(req.query.id as string);
+                if (req.session.isAdmin !== true) {
+                    res.status(403);
+                    return;
+                }
+            }
+            let user: IUser;
+            try {
+                user = await AccountController.getAccountById(id);
+            } catch {
+                res.status(404);
+                return;
+            }
             res.status(200).json({
                 id: user.id,
-                username: user.name,
-                email: user.mail,
+                name: user.name,
+                mail: user.mail,
+                type: user.type,
             });
+        });
+
+        accountRouter.get('/list', requireAdmin, async (req, res) => {
+            const listUsers = await AccountController.getAllAccounts();
+            res.status(200).json(listUsers);
         });
 
         accountRouter.get('/:ids', async (req, res) => {
@@ -136,11 +156,6 @@ export class AccountRouterFactory extends RouterFactory {
             } else {
                 res.status(200).json(map);
             }
-        });
-
-        accountRouter.get('/list', requireAdmin, async (req, res) => {
-            const listUsers = await AccountController.getAllAccounts();
-            res.status(200).json({ listUsers });
         });
 
         return accountRouter;

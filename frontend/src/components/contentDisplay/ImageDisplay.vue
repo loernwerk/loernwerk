@@ -1,15 +1,17 @@
 <!-- Displays an image content. -->
 <template>
-  <div class="flex justify-center items-center h-full overflow-hidden">
+  <div
+    class="flex justify-center items-center h-full w-full overflow-hidden"
+    @click="$emit('editing')"
+  >
     <img
       :src="imageContent.img"
-      class="w-auto h-auto block max-h-0"
+      class="w-auto h-auto block absolute"
       :style="{
         maxHeight: `${imageContent.scale * 100}%`,
         maxWidth: `${imageContent.scale * 100}%`,
       }"
       :class="{ 'cursor-pointer': editMode }"
-      @click="$emit('editing')"
     />
   </div>
 </template>
@@ -34,4 +36,11 @@ defineProps({
     required: true,
   },
 });
+
+defineEmits([
+  /**
+   * Emitted when the content is being edited
+   */
+  'editing',
+]);
 </script>

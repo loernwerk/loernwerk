@@ -3,8 +3,16 @@ import { ISlide } from '../../model/slide/ISlide';
 import { ISequenceWithSlides } from '../../model/sequence/ISequenceWithSlides';
 import { DBSequence } from '../../model/sequence/DBSequence';
 import { DBSlide } from '../../model/slide/DBSlide';
-import { LoernwerkError, LoernwerkErrorCodes } from '../loernwerkError';
+import {
+    LoernwerkError,
+    LoernwerkErrorCodes,
+} from '../../model/loernwerkError';
 import { DBUser } from '../../model/user/DBUser';
+import { DBH5PContent } from '../../model/h5p/DBH5PContent';
+import { H5PServer } from '../h5p/H5PServer';
+import { readFile } from 'fs/promises';
+import { Document, ExternalDocument } from 'pdfjs';
+
 /**
  * Manages the sequence data in the database and handles inquiries requests regarding these
  */
@@ -19,7 +27,7 @@ export class SequenceController {
         name: string,
         userId: number
     ): Promise<ISequence> {
-        if (!this.isValidUser(userId)) {
+        if (!(await this.isValidUser(userId))) {
             throw new LoernwerkError(
                 'user not found',
                 LoernwerkErrorCodes.NOT_FOUND
@@ -29,7 +37,12 @@ export class SequenceController {
         let newCode = '';
         do {
             newCode = this.generateCode();
-        } while ((await DBSequence.findOneBy({ code: newCode })) !== null);
+        } while (
+            (await DBSequence.findOne({
+                where: { code: newCode },
+                select: ['code'],
+            })) !== null
+        );
         dbSequence.code = newCode;
         dbSequence.authorId = userId;
         dbSequence.name = name;
@@ -136,7 +149,10 @@ export class SequenceController {
      * @param code the code of the sequence
      */
     public static async deleteSequence(code: string): Promise<void> {
-        const dbSequence = await DBSequence.findOneBy({ code: code });
+        const dbSequence = await DBSequence.findOne({
+            where: { code: code },
+            select: ['readAccess', 'writeAccess'],
+        });
         if (dbSequence === null) {
             throw new LoernwerkError(
                 'Sequence not Found',
@@ -147,7 +163,15 @@ export class SequenceController {
         for (const s of slides) {
             await s.remove();
         }
-        // TODO: Remove H5P Content
+        const h5pContent = await DBH5PContent.find({
+            select: ['h5pContentId'],
+            where: { ownerSequence: code },
+        });
+        for (const h5p of h5pContent) {
+            await H5PServer.getInstance()
+                .getH5PEditor()
+                .deleteContent(h5p.h5pContentId, undefined);
+        }
         for (const uId of dbSequence.readAccess) {
             const user = await DBUser.findOneBy({ id: uId });
             if (user == null) {
@@ -198,7 +222,10 @@ export class SequenceController {
     public static async getSharedSequencesOfUser(
         userId: number
     ): Promise<ISequence[]> {
-        const user = await DBUser.findOneBy({ id: userId });
+        const user = await DBUser.findOne({
+            where: { id: userId },
+            select: ['sharedSequencesWriteAccess', 'sharedSequencesReadAccess'],
+        });
         if (user === null) {
             throw new LoernwerkError(
                 'User doesnt exists',
@@ -271,6 +298,42 @@ export class SequenceController {
     }
 
     /**
+     * Generates a pdf certificate for the specified sequence.
+     * @param code Code of the sequence
+     * @returns Certifcate PDF as Buffer
+     */
+    public static async getCertificatePDF(code: string): Promise<Buffer> {
+        const sequence = await DBSequence.findOne({
+            select: ['code', 'name'],
+            where: { code: code },
+        });
+        if (sequence === null) {
+            throw new LoernwerkError(
+                'Sequence not found',
+                LoernwerkErrorCodes.NOT_FOUND
+            );
+        }
+
+        const srcPDF = await readFile('assets/certificate_de.pdf');
+        const templatePDF = new ExternalDocument(srcPDF);
+
+        const generatedPDF = new Document();
+        generatedPDF.setTemplate(templatePDF);
+        generatedPDF
+            .cell({ x: 0, y: 385 })
+            .text(sequence.name, { alignment: 'center', fontSize: 30 });
+        generatedPDF
+            .cell({ x: 0, y: 305 })
+            .text(sequence.code, { alignment: 'center', fontSize: 30 });
+        generatedPDF.cell({ x: 0, y: 225 }).text(new Date().toLocaleString(), {
+            alignment: 'center',
+            fontSize: 30,
+        });
+
+        return await generatedPDF.asBuffer();
+    }
+
+    /**
      * stores the slides in the database
      * @param slides the slides to store
      */
@@ -312,7 +375,12 @@ export class SequenceController {
      * @returns true if the user exists
      */
     private static async isValidUser(userId: number): Promise<boolean> {
-        return (await DBUser.findOneBy({ id: userId })) !== null;
+        return (
+            (await DBUser.findOne({
+                where: { id: userId },
+                select: ['id'],
+            })) !== null
+        );
     }
     /**
      * removing the given code from the given list. used on read/write access lists

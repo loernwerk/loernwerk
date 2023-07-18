@@ -13,7 +13,7 @@ import { AccountController } from './controller/AccountController';
 import { SequenceRouterFactory } from './router/SequenceRouterFactory';
 import { H5PServer } from './h5p/H5PServer';
 import { H5PRouterFactory } from './router/H5PRouterFactory';
-import { buildH5PRequest } from './loernwerkUtilities';
+import { buildH5Pi18n, buildH5PRequest } from './loernwerkUtilities';
 import { h5pAjaxExpressRouter } from '@lumieducation/h5p-express';
 import { resolve } from 'node:path';
 import fileUpload from 'express-fileupload';
@@ -45,7 +45,7 @@ class loernwerkServer {
         );
 
         // Setting up parsers to parse HTTP bodies
-        app.use(json());
+        app.use(json({ limit: '500mb' }));
         app.use(urlencoded({ extended: true }));
         // Setting up file upload for h5p
         app.use(
@@ -77,7 +77,10 @@ class loernwerkServer {
             })
         );
 
-        // Setting up routers, TODO
+        // Setting up H5P Localization
+        await buildH5Pi18n();
+
+        // Setting up routers
         app.use('/api/account', new AccountRouterFactory().buildRouter());
         app.use('/api/sequence', new SequenceRouterFactory().buildRouter());
         app.use('/api/h5p', new H5PRouterFactory().buildRouter());

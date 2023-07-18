@@ -30,7 +30,12 @@ const props = defineProps({
   },
 });
 
-const emits = defineEmits(['editing']);
+const emits = defineEmits([
+  /**
+   * Emitted when the content is being edited
+   */
+  'editing',
+]);
 
 /**
  * Emits an editing event

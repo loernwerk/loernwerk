@@ -1,48 +1,16 @@
 <!-- Displays a text content -->
 <template>
-  <div v-if="editMode" class="h-full">
-    <textarea
-      v-model="changableContent.textSnippets[0].text"
-      @input="$emit('editing', changableContent)"
-      class="w-full h-full resize-none bg-transparent border-none"
-    />
-  </div>
-  <div
-    v-else
-    class="h-full overflow-hidden flex flex-col"
-    :class="{ textAlign, justify, items }"
-  >
-    <p
-      v-for="[index, line] in lines.entries()"
-      :key="index"
-      class="flex flex-row items-center"
-    >
-      <span
-        v-for="[index2, snippet] in line.entries()"
-        :key="index2"
-        :class="{
-          bold: snippet.options.bold,
-          italic: snippet.options.italic,
-          underline: snippet.options.underlined,
-        }"
-        class="break-normal whitespace-pre-wrap overflow-hidden"
-        :style="{
-          color: snippet.options.color,
-          fontSize: `${Math.round(snippet.options.size * pxPerPoint)}px`,
-          fontFamily: snippet.options.font,
-        }"
-        :id="`edit-${index}-${index2}`"
-      >
-        {{ snippet.text }}
-      </span>
-    </p>
+  <div class="h-full">
+    <div id="editor" class="h-full" ref="editorDiv"></div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { PropType, Ref, watch, inject, ref } from 'vue';
+import { PropType, Ref, onMounted, ref, watch } from 'vue';
 import { TextContent } from '../../../../model/slide/content/TextContent';
-import { TextSnippet } from '../../../../model/slide/content/TextSnippet';
+import Quill from 'quill';
+import { colors, sizes, fontFamilies } from './DesignOptions';
+import { LayoutSlot } from '../../../../model/slide/layout/Layout';
 
 const props = defineProps({
   /**
@@ -59,90 +27,94 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
+  /**
+   * The slot this display is in
+   */
+  layoutSlot: {
+    type: Number as PropType<LayoutSlot>,
+    required: true,
+  },
 });
 
-defineEmits(['editing']);
+const emits = defineEmits([
+  /**
+   * Emitted when the content is being edited
+   *
+   * @param val Content of the editor
+   */
+  'editing',
+]);
+const editorDiv: Ref<HTMLDivElement | null> = ref(null);
+const Delta = Quill.import('delta');
 
-const changableContent = ref(props.textContent);
-if (changableContent.value.textSnippets.length == 0) {
-  changableContent.value.textSnippets.push({
-    text: '',
-    options: {
-      bold: false,
-      italic: false,
-      underlined: false,
-      color: '#000000',
-      size: 12,
-      font: 'Arial',
+onMounted(() => {
+  const qlColors = Quill.import('attributors/style/color');
+  const qlSizes = Quill.import('attributors/style/size');
+  const qlFonts = Quill.import('attributors/style/font');
+  const qlAlign = Quill.import('attributors/style/align');
+  qlColors.whitelist = colors;
+  qlSizes.whitelist = sizes;
+  qlFonts.whitelist = fontFamilies;
+  qlAlign.whitelist = ['left', 'center', 'right'];
+
+  Quill.register(qlColors, true);
+  Quill.register(qlSizes, true);
+  Quill.register(qlAlign, true);
+  Quill.register(qlFonts, true);
+
+  const realEditorDiv = editorDiv.value;
+  if (!realEditorDiv) {
+    return;
+  }
+
+  const quill = new Quill(realEditorDiv, {
+    modules: {
+      toolbar: {
+        container: `#q-toolbar-${props.layoutSlot.toString()}`,
+      },
     },
+    readOnly: !props.editMode,
   });
-}
 
-// responsive font size
-const slideHeight = inject('slideHeight') as Ref<number>;
-const pxPerPoint = ref(0);
-watch(slideHeight, () => {
-  pxPerPoint.value = slideHeight.value / 350;
-});
+  quill.setContents(new Delta(props.textContent.delta), 'api');
 
-// calculate alignment of text
-const textAlign = ref('text-left');
-const justify = ref('justify-start');
-const items = ref('items-start');
-switch (props.textContent.alignmentHorizontal) {
-  case 'left':
-    textAlign.value = 'text-left';
-    justify.value = 'justify-start';
-    break;
-  case 'center':
-    textAlign.value = 'text-center';
-    justify.value = 'justify-center';
-    break;
-  case 'right':
-    textAlign.value = 'text-right';
-    justify.value = 'justify-end';
-    break;
-}
-switch (props.textContent.alignmentVertical) {
-  case 'top':
-    items.value = 'items-start';
-    break;
-  case 'center':
-    items.value = 'items-center';
-    break;
-  case 'bottom':
-    items.value = 'items-end';
-    break;
-}
+  quill.on('text-change', () => {
+    emits('editing', quill.getContents());
+  });
 
-// split content into lines
-const lines: TextSnippet[][] = [[]];
-// split text into lines
-for (const snippet of props.textContent.textSnippets) {
-  if (snippet.text.includes('\n')) {
-    const splits = snippet.text.split('\n');
-    for (let i = 0; i < splits.length - 1; i++) {
-      lines[lines.length - 1].push({
-        text: splits[i],
-        options: snippet.options,
-      });
-      lines.push([]);
+  watch(
+    () => props.textContent,
+    () => {
+      if (props.textContent.delta == quill.getContents()) {
+        return;
+      }
+
+      quill.setContents(new Delta(props.textContent.delta), 'api');
     }
-    lines[lines.length - 1].push({
-      text: splits[splits.length - 1],
-      options: snippet.options,
-    });
-  } else {
-    lines[lines.length - 1].push(snippet);
-  }
-}
-// clean up empty texts and print empty lines
-for (const line of lines) {
-  if (line.length > 1 && line[0].text === '') {
-    line.shift();
-  }
-  if (line.length === 1 && line[0].text === '') {
-    line[0].text = ' ';
-  }
-}
+  );
+
+  realEditorDiv.onclick = (): void => {
+    emits('editing', quill.getContents());
+  };
+});
 </script>
+
+<style>
+.ql-editor {
+  height: 100%;
+}
+
+.ql-container {
+  font-size: 14px;
+  font-family: Arial;
+}
+
+/* Weird element that Quill adds, style fetched from quills snow-theme */
+.ql-clipboard {
+  left: -100000px;
+  height: 1px;
+  overflow-y: hidden;
+  position: absolute;
+  top: 50%;
+}
+</style>

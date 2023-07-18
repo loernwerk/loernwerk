@@ -21,6 +21,7 @@
     >
       Anmelden
     </ButtonComponent>
+    <a class="absolute bottom-5 m-auto" href="/imprint.html">Impressum</a>
   </div>
 </template>
 
@@ -45,8 +46,7 @@ async function checkCode(code: string): Promise<void> {
 
   try {
     await SequenceRestInterface.getMetadataForStudent(code);
-    alert('Right Code');
-    //router.push('SlideView');
+    router.push({ name: 'Slide', params: { code: code } });
   } catch {
     showRedBorder.value = true;
   }

@@ -82,6 +82,7 @@ export class SequenceRouterFactory extends RouterFactory {
                     }
                 } catch {
                     res.sendStatus(404);
+                    return;
                 }
 
                 try {
@@ -152,6 +153,21 @@ export class SequenceRouterFactory extends RouterFactory {
                     slideCount: sequence.slideCount,
                     code: sequence.code,
                 });
+            } catch {
+                res.sendStatus(404);
+            }
+        });
+
+        sequenceRouter.get('/:code/view/certificate', async (req, res) => {
+            try {
+                const pdf = await SequenceController.getCertificatePDF(
+                    req.params.code
+                );
+                res.set(
+                    'Content-Disposition',
+                    'attachment;filename=Teilnahmezertifikat.pdf'
+                );
+                res.status(200).send(pdf);
             } catch {
                 res.sendStatus(404);
             }
