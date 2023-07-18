@@ -1,9 +1,11 @@
 <template>
   <div class="flex flex-row items-center space-x-5 w-full pt-5">
-    <ButtonComponent @click="selectImage()">Bild ändern</ButtonComponent>
+    <ButtonComponent @click="selectImage()">{{
+      $t('change', { object: $t('content.image') })
+    }}</ButtonComponent>
     <div class="text-red-600">{{ errorMessage }}</div>
     <div class="space-x-2 flex flex-row items-center w-96">
-      <p>Skalierung:</p>
+      <p>{{ $t('content.scale') }}:</p>
       <input
         type="range"
         min="0"
@@ -19,9 +21,10 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, ref, watch } from 'vue';
+import { PropType, computed, ref, watch } from 'vue';
 import { ImageContent } from '../../../../model/slide/content/ImageContent';
 import ButtonComponent from '../ButtonComponent.vue';
+import { i18n } from '../../i18n';
 
 const props = defineProps({
   /**
@@ -43,7 +46,25 @@ const emits = defineEmits([
 ]);
 
 const refContent = ref(props.imageContent);
-const errorMessage = ref('');
+
+enum ErrorCodes {
+  NONE,
+  NoFileSelected,
+  FileTooLarge,
+}
+
+const errorCode = ref(ErrorCodes.NONE);
+const errorMessage = computed(() => {
+  switch (errorCode.value) {
+    case ErrorCodes.NoFileSelected:
+      return i18n.global.t('content.fileNotFound');
+    case ErrorCodes.FileTooLarge:
+      return i18n.global.t('content.fileTooLarge', { size: '2MB' });
+    case ErrorCodes.NONE:
+    default:
+      return '';
+  }
+});
 
 /**
  * Opens a file dialog to select a new image.
@@ -60,15 +81,15 @@ function selectImage(): void {
     }
     const file = files.item(0);
     if (!file) {
-      errorMessage.value = 'Es wurde keine Datei ausgewählt.';
+      errorCode.value = ErrorCodes.NoFileSelected;
       return;
     }
     // Limits the file size to 2MB
     if (file.size > 2097152) {
-      errorMessage.value = 'Die Datei darf nicht größer als 2MB sein.';
+      errorCode.value = ErrorCodes.FileTooLarge;
       return;
     }
-    errorMessage.value = '';
+    errorCode.value = ErrorCodes.NONE;
     imageToBase64(file);
   };
   input.click();

@@ -3,7 +3,7 @@
     <div class="flex flex-row space-x-5 grow items-start">
       <div class="border-r-1 pr-2 border-container-border items-start">
         <div class="flex items-center space-x-2">
-          <p>Name:</p>
+          <p>{{ $t('content.sequenceName') }}:</p>
           <TextInputComponent
             :start-text="sequence.name"
             v-model="sequenceName"
@@ -11,7 +11,7 @@
         </div>
       </div>
       <div class="flex space-x-2 items-center">
-        <p>Hintergrundfarbe:</p>
+        <p>{{ $t('content.backgorund') }}:</p>
         <input
           type="color"
           :value="slide.backgroundColor"
@@ -19,7 +19,7 @@
         />
       </div>
       <div class="flex space-x-2 items-start">
-        <p class="flex items-center h-10">Anordnung:</p>
+        <p class="flex items-center h-10">{{ $t('content.layout') }}:</p>
         <div class="flex flex-wrap flex-col h-28">
           <InteractableComponent
             v-for="layout in layouts"
@@ -36,9 +36,9 @@
         </div>
       </div>
     </div>
-    <ButtonComponent @click="$emit('save')" class="h-fit"
-      >Speichern</ButtonComponent
-    >
+    <ButtonComponent @click="$emit('save')" class="h-fit">{{
+      $t('save')
+    }}</ButtonComponent>
   </div>
 </template>
 

@@ -17,6 +17,8 @@ const messages = {
     change: '{object} ändern',
     saved: '{object} gespeichert',
     deleted: '{object} gelöscht',
+    show: 'Anzeigen',
+    failed: '{object} fehlgeschlagen',
     account: {
       login: 'Anmelden',
       name: 'Benutzername',
@@ -26,6 +28,7 @@ const messages = {
       keepLoggedIn: 'Angemeldet bleiben',
       wrongLoginData: 'Falscher Benutzername/E-Mail oder Passwort',
       isAdmin: 'Administrator',
+      sequencesOfUser: 'Lernsequenzen vom Benutzer',
     },
     finished: {
       youDidIt: 'Du hast es geschafft',
@@ -36,6 +39,15 @@ const messages = {
       enterCode: 'Code eingeben',
       imprint: 'Impressum',
     },
+    content: {
+      image: 'Bild',
+      scale: 'Skalierung',
+      sequenceName: 'Name der Lernsequenz',
+      background: 'Hintergrund',
+      layout: 'Anordnung',
+      fileTooLarge: 'Datei ist größer als {size}',
+      fileNotFound: 'Datei nicht gefunden',
+    },
   },
   en: {
     save: 'Save',
@@ -43,7 +55,7 @@ const messages = {
     delete: 'Delete',
     notAvailable: '{object} not available',
     next: 'Next',
-    slide: 'Slide',
+    slide: 'Slide | Slides',
     reloadPage: 'Please reload the page',
     create: 'Create {object}',
     createAction: 'Create',
@@ -53,6 +65,8 @@ const messages = {
     change: 'Change {object}',
     saved: '{object} saved',
     deleted: '{object} deleted',
+    show: 'Show',
+    failed: '{object} failed',
     account: {
       login: 'Login',
       name: 'Username',
@@ -62,6 +76,7 @@ const messages = {
       keepLoggedIn: 'Keep me logged in',
       wrongLoginData: 'Wrong username/E-Mail or password',
       isAdmin: 'is admin',
+      sequencesOfUser: 'Sequences of user',
     },
     finished: {
       youDidIt: 'You did it',
@@ -71,6 +86,15 @@ const messages = {
     main: {
       enterCode: 'Enter code',
       imprint: 'Imprint',
+    },
+    content: {
+      image: 'Image',
+      scale: 'Scale',
+      sequenceName: 'Name of the learning sequence',
+      background: 'Background',
+      layout: 'Layout',
+      fileTooLarge: 'File is larger than {size}',
+      fileNotFound: 'File not found',
     },
   },
 };

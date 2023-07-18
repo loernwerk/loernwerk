@@ -105,7 +105,18 @@ const props = defineProps({
 });
 
 const sequence = ref<ISequenceWithSlides>(
-  await SequenceRestInterface.getSequence(props.sequenceCode)
+  //await SequenceRestInterface.getSequence(props.sequenceCode)
+  {
+    code: 'test',
+    name: 'Test',
+    slideCount: 0,
+    slides: [],
+    creationDate: new Date(),
+    modificationDate: new Date(),
+    readAccess: [],
+    writeAccess: [],
+    authorId: 0,
+  }
 );
 
 if (sequence.value.slides.length == 0) {
