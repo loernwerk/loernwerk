@@ -355,16 +355,14 @@ export class SequenceController {
 
     /**
      * Generates a random code for a sequence.
-     * @returns  the generated sequence
+     * @returns the generated sequence
      */
     private static generateCode(): string {
         const codechar = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
-        const charactersLength = codechar.length;
+        const CODE_LENGTH = 6;
         let result = '';
-        for (let i = 0; i < charactersLength; i++) {
-            result += codechar.charAt(
-                Math.floor(Math.random() * charactersLength)
-            );
+        for (let i = 0; i < CODE_LENGTH; i++) {
+            result += codechar.charAt(Math.floor(Math.random() * CODE_LENGTH));
         }
         return result;
     }
