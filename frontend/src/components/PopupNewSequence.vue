@@ -57,7 +57,7 @@ async function newSequence(): Promise<void> {
   disableInputShowSpinner.value = true;
   try {
     const code = await SequenceRestInterface.addSequence(nameField.value);
-    router.push({ name: 'SequenceEdit', params: { sequenceCode: code } });
+    router.push({ name: 'SequenceEdit', params: { code: code } });
   } catch {
     error.value = true;
   }
