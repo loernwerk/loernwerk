@@ -41,7 +41,7 @@ const router = createRouter({
       props: true,
     },
     {
-      path: '/edit/:sequenceCode',
+      path: '/edit/:code',
       name: 'SequenceEdit',
       component: import('../views/SequenceEditView.vue'),
       props: true,
