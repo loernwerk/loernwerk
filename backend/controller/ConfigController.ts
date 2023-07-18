@@ -52,4 +52,24 @@ export class ConfigController {
         }
         return rec;
     }
+
+    /**
+     * Sets a default value for non existing configentries
+     */
+    public static async ensureConfig(): Promise<void> {
+        const nullInitialized = [
+            ConfigKey.MAX_SEQUENCES_PER_USER,
+            ConfigKey.MAX_SLIDES_PER_SEQUENCE,
+        ];
+        for (const x of nullInitialized) {
+            const entry = await DBConfigEntry.findOneBy({ key: x });
+            if (entry === null) {
+                continue;
+            }
+            const newEntry = new DBConfigEntry();
+            newEntry.key = x;
+            newEntry.value = 0;
+            await newEntry.save();
+        }
+    }
 }
