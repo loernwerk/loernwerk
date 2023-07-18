@@ -349,7 +349,7 @@ export class AccountController {
         if (skipFurtherChecks) {
             return true;
         }
-        if (mail.toLowerCase().includes(this.defaultMailSuffix)) {
+        if (mail.toLowerCase().includes(this.defaultAdminName)) {
             return false;
         }
         return true;
