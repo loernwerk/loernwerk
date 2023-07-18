@@ -199,7 +199,7 @@ export class AccountController {
      */
     public static async ensureAdminAccount(): Promise<void> {
         const user = await DBUser.findOneBy({ type: UserClass.ADMIN });
-        if (user === null) {
+        if (user !== null) {
             return;
         }
         const adminUser = new DBUser();
