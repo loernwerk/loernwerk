@@ -7,11 +7,14 @@
       {{ currentViewLocalized }}
     </NavigationBarItem>
 
-    <NavigationBarItem :active="isCurrentView('Main')" targetLink="login">
+    <NavigationBarItem
+      :active="isCurrentView('Overview')"
+      targetLink="/overview"
+    >
       Sequenzübersicht
     </NavigationBarItem>
 
-    <NavigationBarItem :active="isCurrentView('Admin')" targetLink="admin">
+    <NavigationBarItem :active="isCurrentView('Admin')" targetLink="/admin">
       Admin
     </NavigationBarItem>
 
@@ -64,6 +67,9 @@ function updateNavBar(newView: RouteLocationNormalized): void {
   switch (currentView.value) {
     case 'Account':
       currentViewLocalized.value = 'Account';
+      break;
+    case 'SequenceEdit':
+      currentViewLocalized.value = 'Sequenzbearbeitung';
       break;
   }
 }

@@ -5,6 +5,8 @@ import AccountView from '../views/AccountView.vue';
 import AdminView from '../views/AdminView.vue';
 import SlideView from '../views/SlideView.vue';
 import FinishedView from '../views/FinishedView.vue';
+import SequenceOverviewView from '../views/SequenceOverviewView.vue';
+import SequenceEditView from '../views/SequenceEditView.vue';
 
 const router = createRouter({
   history: createWebHistory(''),
@@ -22,7 +24,8 @@ const router = createRouter({
     {
       path: '/overview',
       name: 'Overview',
-      component: import('../views/SequenceOverviewView.vue'),
+      component: SequenceOverviewView,
+      meta: { hasNavBar: true },
     },
     {
       path: '/account',
@@ -51,7 +54,8 @@ const router = createRouter({
     {
       path: '/edit/:code',
       name: 'SequenceEdit',
-      component: import('../views/SequenceEditView.vue'),
+      component: SequenceEditView,
+      meta: { hasNavBar: true },
       props: true,
     },
   ],
