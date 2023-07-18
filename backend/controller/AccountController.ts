@@ -238,7 +238,7 @@ export class AccountController {
         const adminUser = new DBUser();
         adminUser.type = UserClass.ADMIN;
         adminUser.name = this.defaultAdminName;
-        adminUser.mail = adminUser.mail + this.defaultMailSuffix;
+        adminUser.mail = adminUser.name + this.defaultMailSuffix;
         while (
             (await DBUser.findOneBy({ name: adminUser.name })) !== null ||
             (await DBUser.findOneBy({ mail: adminUser.mail })) !== null
