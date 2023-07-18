@@ -1,14 +1,11 @@
 <template>
-  <ContainerComponent>
-    <h3>Code der ausgewählten Sequenz:</h3>
-    <TextInputComponent :disabled="true" v-model="code" />
-    <h3>Link zur momentan ausgewählten Sequenz:</h3>
-    <TextInputComponent :disabled="true" v-model="link" />
-  </ContainerComponent>
+  <h3 class="mt-4">Code der ausgewählten Sequenz:</h3>
+  <TextInputComponent :disabled="true" v-model="code" />
+  <h3>Link zur momentan ausgewählten Sequenz:</h3>
+  <TextInputComponent :disabled="true" v-model="link" />
 </template>
 
 <script setup lang="ts">
-import ContainerComponent from '../ContainerComponent.vue';
 import { ISequence } from '../../../../model/sequence/ISequence';
 import { PropType, computed } from 'vue';
 import TextInputComponent from '../TextInputComponent.vue';

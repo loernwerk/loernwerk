@@ -1,22 +1,19 @@
 <template>
-  <ContainerComponent>
-    Schlüsselwörter der Sequenz (mit ";" getrennt):
-    <TextInputComponent
-      class="my-2"
-      placeHolder="Schlüsselwörter"
-      v-model="tagsField"
-    >
-    </TextInputComponent>
-    <ButtonComponent class="w-fit float-right" @click="confimChanges"
-      >Bestätigen</ButtonComponent
-    >
-  </ContainerComponent>
+  <h1 class="mt-4">Schlüsselwörter der Sequenz (mit ";" getrennt):</h1>
+  <TextInputComponent
+    class="my-2"
+    placeHolder="Schlüsselwörter"
+    v-model="tagsField"
+  >
+  </TextInputComponent>
+  <ButtonComponent class="w-fit float-right" @click="confimChanges"
+    >Bestätigen</ButtonComponent
+  >
 </template>
 
 <script setup lang="ts">
 import TextInputComponent from '../TextInputComponent.vue';
 import ButtonComponent from '../ButtonComponent.vue';
-import ContainerComponent from '../ContainerComponent.vue';
 import { ref } from 'vue';
 
 const props = defineProps({

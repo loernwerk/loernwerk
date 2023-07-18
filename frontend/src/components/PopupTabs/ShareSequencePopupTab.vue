@@ -1,53 +1,50 @@
 <template>
-  <ContainerComponent>
-    Lehrkräfte mit Lesezugriff:
-    <ul>
-      <li
-        class="text-sm"
-        v-for="(user, index) in sharedUsersReadAccess"
-        :key="index"
-      >
-        {{ user }}
-      </li>
-    </ul>
-    Lehrkräfte mit Schreibzugriff:
-    <ul>
-      <li
-        class="text-sm"
-        v-for="(user, index) in sharedUsersWriteAccess"
-        :key="index"
-      >
-        {{ user }}
-      </li>
-    </ul>
-
-    <TextInputComponent
-      class="mb-2 mt-4"
-      v-model="userInfoField"
-      place-holder="Nutzername der Lehrkraft"
-      :class="{ 'border-red-600': showRedBorder }"
+  <div class="mt-4">Lehrkräfte mit Lesezugriff:</div>
+  <ul>
+    <li
+      class="text-sm"
+      v-for="(user, index) in sharedUsersReadAccess"
+      :key="index"
     >
-    </TextInputComponent>
-    <div class="flex flex-row">
-      <select
-        class="border-solid border-1 bg-interactable border-interactable-border rounded basis-1/2 mr-2 pl-2"
-        v-model="writeAccess"
-      >
-        <option :value="false">Lesezugriff</option>
-        <option :value="true">Schreibzugriff</option>
-      </select>
-      <ButtonComponent class="basis-1/2" @click="confirmSharing()"
-        >Teilen
-      </ButtonComponent>
-    </div>
-    <div class="text-red-500" v-if="error">
-      Es ist ein Fehler beim Freigeben der Sequenz aufgetreten.
-    </div>
-  </ContainerComponent>
+      {{ user }}
+    </li>
+  </ul>
+  Lehrkräfte mit Schreibzugriff:
+  <ul>
+    <li
+      class="text-sm"
+      v-for="(user, index) in sharedUsersWriteAccess"
+      :key="index"
+    >
+      {{ user }}
+    </li>
+  </ul>
+
+  <TextInputComponent
+    class="mb-2 mt-4"
+    v-model="userInfoField"
+    place-holder="Nutzername der Lehrkraft"
+    :class="{ 'border-red-600': showRedBorder }"
+  >
+  </TextInputComponent>
+  <div class="flex flex-row">
+    <select
+      class="border-solid border-1 bg-interactable border-interactable-border rounded basis-1/2 mr-2 pl-2"
+      v-model="writeAccess"
+    >
+      <option :value="false">Lesezugriff</option>
+      <option :value="true">Schreibzugriff</option>
+    </select>
+    <ButtonComponent class="basis-1/2" @click="confirmSharing()"
+      >Teilen
+    </ButtonComponent>
+  </div>
+  <div class="text-red-500" v-if="error">
+    Es ist ein Fehler beim Freigeben der Sequenz aufgetreten.
+  </div>
 </template>
 
 <script setup lang="ts">
-import ContainerComponent from '../ContainerComponent.vue';
 import TextInputComponent from '../TextInputComponent.vue';
 import { PropType, Ref, ref } from 'vue';
 import ButtonComponent from '../ButtonComponent.vue';
