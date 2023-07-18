@@ -327,7 +327,7 @@ export class AccountController {
         if (skipFurtherChecks) {
             return true;
         }
-        if (name.toLowerCase() == this.defaultAdminName) {
+        if (name.toLowerCase().includes(this.defaultAdminName)) {
             return false;
         }
         return true;
@@ -349,10 +349,7 @@ export class AccountController {
         if (skipFurtherChecks) {
             return true;
         }
-        if (
-            mail.toLowerCase() ==
-            this.defaultAdminName + this.defaultMailSuffix
-        ) {
+        if (mail.toLowerCase().includes(this.defaultMailSuffix)) {
             return false;
         }
         return true;
