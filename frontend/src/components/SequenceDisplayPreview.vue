@@ -42,16 +42,31 @@
             {{ tag }}
           </div>
         </div>
+        <div v-if="sequence.authorId != ownId" class="text-xs">
+          {{
+            sequence.readAccess.includes(ownId)
+              ? 'Lesezugriff'
+              : 'Schreibzugriff'
+          }}
+        </div>
         <div class="flex flex-row space-x-2">
           <ButtonComponent
             class="flex-1"
             @click="
               router.push({
-                name: 'SequenceEdit',
-                params: { sequenceCode: sequence.code },
+                name:
+                  sequence.authorId == ownId ||
+                  sequence.writeAccess.includes(ownId)
+                    ? 'SequenceEdit'
+                    : 'Slide',
+                params: { code: sequence.code },
               })
             "
-            >Bearbeiten
+            >{{
+              sequence.authorId == ownId || sequence.writeAccess.includes(ownId)
+                ? 'Bearbeiten'
+                : 'Ansehen'
+            }}
           </ButtonComponent>
           <ButtonComponent class="" @click="popupOpen = !popupOpen">
             <FontAwesomeIcon :icon="['fas', 'ellipsis']" />
@@ -96,6 +111,14 @@ const props = defineProps({
     type: Boolean,
     required: false,
     default: false,
+  },
+
+  /**
+   * Id of account that displays the sequence
+   */
+  ownId: {
+    type: Number,
+    required: true,
   },
 });
 

@@ -9,6 +9,7 @@
         <SequenceDisplayPreview
           :sequence="sequence"
           :display-is-restricted="displayIsRestricted"
+          :own-id="ownId"
           @reload-sequences="$emit('reloadSequences')"
         ></SequenceDisplayPreview>
       </div>
@@ -43,6 +44,14 @@ defineProps({
     type: Boolean,
     required: false,
     default: false,
+  },
+
+  /**
+   * Id of account that displays the sequences
+   */
+  ownId: {
+    type: Number,
+    required: true,
   },
 });
 

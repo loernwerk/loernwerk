@@ -26,6 +26,7 @@
           <SequenceDisplayContainer
             name="Meine Sequenzen:"
             :sequences="sequences"
+            :own-id="ownId"
             @reload-sequences="reloadSequences()"
           >
           </SequenceDisplayContainer>
@@ -35,6 +36,7 @@
             name="Mit mir geteilte Sequenzen:"
             :sequences="sharedSequences"
             :display-is-restricted="true"
+            :own-id="ownId"
           ></SequenceDisplayContainer>
         </div>
       </div>
@@ -50,6 +52,7 @@ import ButtonComponent from '../components/ButtonComponent.vue';
 import PopupNewSequence from '../components/PopupNewSequence.vue';
 import SequenceDisplayContainer from '../components/SequenceDisplayContainer.vue';
 import { ISequence } from '../../../model/sequence/ISequence';
+import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
 
 const showPopupNewSequence = ref(false);
 
@@ -59,6 +62,12 @@ const sharedSequences: Ref<ISequence[]> = ref([]);
 const allSharedSequences: Ref<ISequence[]> = ref([]);
 
 await reloadSequences();
+
+const ownId = ref(-1);
+const ownAccount = await AccountRestInterface.getOwnAccount();
+if (ownAccount.id !== undefined) {
+  ownId.value = ownAccount.id;
+}
 
 /**
  * Searches a sequence with given name

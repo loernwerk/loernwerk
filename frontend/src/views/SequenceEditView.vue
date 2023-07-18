@@ -99,14 +99,14 @@ const props = defineProps({
   /**
    * The code of the sequence to edit
    */
-  sequenceCode: {
+  code: {
     type: String,
     required: true,
   },
 });
 
 const sequence = ref<ISequenceWithSlides>(
-  await SequenceRestInterface.getSequence(props.sequenceCode)
+  await SequenceRestInterface.getSequence(props.code)
 );
 
 if (sequence.value.slides.length == 0) {
@@ -167,7 +167,7 @@ function changeContent(slot: LayoutSlot, contentType: ContentType): void {
       content = new H5PContent();
       content.type = ContentType.H5P;
       content.h5pContentId = 'new';
-      content.sequenceCode = props.sequenceCode;
+      content.sequenceCode = props.code;
       break;
   }
 
