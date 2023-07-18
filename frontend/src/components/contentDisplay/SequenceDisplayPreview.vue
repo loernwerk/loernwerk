@@ -1,17 +1,17 @@
 <template>
   <div>
-    <PopupComponent v-if="popupOpen" @closed="popupOpen = false">
+    <PopupComponent v-if="popupOpen" @closed="closeAndReload()">
       <TabbedContainer
         :possible-tabs="tabNames"
         :shown-tabs="shownTabs"
         class="py-5 px-8"
       >
         <template v-slot:[tabName(0)]>
-          <TagSequencePopupTab :tags="[]" @confirmed="popupOpen = false" />
+          <TagSequencePopupTab :tags="[]" @confirmed="closeAndReload()" />
         </template>
         <template v-slot:[tabName(1)]>
           <DeleteSequencePopup
-            @deleted="confirmDeletion()"
+            @deleted="closeAndReload()"
             :sequence="sequence"
           />
         </template>
@@ -89,7 +89,7 @@ const tabNames = [
 
 const shownTabs = computed(() => {
   if (props.showRestrictedMenu) {
-    return [tabNames[4]];
+    return [tabNames[3]];
   } else {
     return tabNames;
   }
@@ -105,9 +105,9 @@ function tabName(index: number): string {
 }
 
 /**
- * Closes popup after deletion and emits event for sequence reloading
+ * Closes popup and emits event for sequence reloading
  */
-function confirmDeletion(): void {
+function closeAndReload(): void {
   popupOpen.value = false;
   emits('reloadSequences');
 }

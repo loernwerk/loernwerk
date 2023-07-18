@@ -123,7 +123,8 @@ export class SequenceController {
             await this.updateSharedAccessList(
                 dbSequence.readAccess,
                 sequence.readAccess,
-                dbSequence.code
+                dbSequence.code,
+                'sharedSequencesReadAccess'
             );
             dbSequence.readAccess = sequence.readAccess;
         }
@@ -132,7 +133,8 @@ export class SequenceController {
             await this.updateSharedAccessList(
                 dbSequence.writeAccess,
                 sequence.writeAccess,
-                dbSequence.code
+                dbSequence.code,
+                'sharedSequencesWriteAccess'
             );
             dbSequence.writeAccess = sequence.writeAccess;
         }
@@ -151,7 +153,7 @@ export class SequenceController {
     public static async deleteSequence(code: string): Promise<void> {
         const dbSequence = await DBSequence.findOne({
             where: { code: code },
-            select: ['readAccess', 'writeAccess'],
+            select: ['code', 'readAccess', 'writeAccess'],
         });
         if (dbSequence === null) {
             throw new LoernwerkError(
@@ -395,11 +397,13 @@ export class SequenceController {
      * @param oldAccessList the old access list
      * @param newAccessList the new access list to fullfill
      * @param code the code of the sequence
+     * @param accessList the access list attribute of the user to modify
      */
     private static async updateSharedAccessList(
         oldAccessList: number[],
         newAccessList: number[],
-        code: string
+        code: string,
+        accessList: 'sharedSequencesReadAccess' | 'sharedSequencesWriteAccess'
     ): Promise<void> {
         for (const uId of newAccessList) {
             const user = await DBUser.findOneBy({ id: uId });
@@ -409,8 +413,8 @@ export class SequenceController {
                     LoernwerkErrorCodes.NOT_FOUND
                 );
             }
-            if (!user.sharedSequencesReadAccess.includes(code)) {
-                user.sharedSequencesReadAccess.push(code);
+            if (!user[accessList].includes(code)) {
+                user[accessList].push(code);
                 await user.save();
             }
         }
@@ -422,10 +426,7 @@ export class SequenceController {
             if (user === null) {
                 continue; //this should be fine, right?
             }
-            user.sharedSequencesReadAccess = this.removeFromUserList(
-                user.sharedSequencesReadAccess,
-                code
-            );
+            user[accessList] = this.removeFromUserList(user[accessList], code);
             await user.save();
         }
     }

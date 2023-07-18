@@ -132,7 +132,7 @@ export class AccountRouterFactory extends RouterFactory {
                     user = await AccountController.getAccountById(id);
                 }
             } catch {
-                res.status(404);
+                res.sendStatus(404);
                 return;
             }
 

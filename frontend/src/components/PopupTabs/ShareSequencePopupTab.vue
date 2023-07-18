@@ -1,20 +1,35 @@
 <template>
   <div class="mt-4">Lehrkräfte mit Lesezugriff:</div>
-  <ul>
-    <li class="text-sm" v-for="(user, index) in displayReadAccess" :key="index">
-      {{ user }}
-    </li>
-  </ul>
+  <table class="table-auto text-sm">
+    <tbody>
+      <tr v-for="(user, index) in displayReadAccess" :key="index">
+        <td>
+          <FontAwesomeIcon
+            icon="user-minus"
+            class="cursor-pointer mx-3"
+            @click="deleteSharingByUserIndex(index, false)"
+          />
+        </td>
+        <td>{{ user }}</td>
+      </tr>
+    </tbody>
+  </table>
+
   Lehrkräfte mit Schreibzugriff:
-  <ul>
-    <li
-      class="text-sm"
-      v-for="(user, index) in displayWriteAccess"
-      :key="index"
-    >
-      {{ user }}
-    </li>
-  </ul>
+  <table class="table-auto text-sm">
+    <tbody>
+      <tr v-for="(user, index) in displayWriteAccess" :key="index">
+        <td>
+          <FontAwesomeIcon
+            icon="user-minus"
+            class="cursor-pointer mx-3"
+            @click="deleteSharingByUserIndex(index, true)"
+          />
+        </td>
+        <td>{{ user }}</td>
+      </tr>
+    </tbody>
+  </table>
 
   <TextInputComponent
     class="mb-2 mt-4"
@@ -48,6 +63,11 @@ import { ISequence } from '../../../../model/sequence/ISequence';
 import { AccountRestInterface } from '../../restInterfaces/AccountRestInterface';
 import { IUser } from '../../../../model/user/IUser';
 import { SequenceRestInterface } from '../../restInterfaces/SequenceRestInterface';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faUserMinus } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faUserMinus);
 
 const props = defineProps({
   /**
@@ -159,8 +179,6 @@ async function confirmSharing(): Promise<void> {
  * Updates displayed list of sharing
  */
 async function updateDisplayedListOfSharing(): Promise<void> {
-  console.log(readAccessArray.value);
-  console.log(writeAccessArray.value);
   const allUserNames = await AccountRestInterface.getAccounts(
     readAccessArray.value.concat(writeAccessArray.value)
   );
@@ -170,5 +188,34 @@ async function updateDisplayedListOfSharing(): Promise<void> {
   displayWriteAccess.value = writeAccessArray.value.map(
     (id) => allUserNames[id] || 'Unbekannter Benutzer'
   );
+}
+
+/**
+ * Deletes sharing with user by given index
+ * @param index index of user to remove
+ * @param hasWriteAccess if user had write access
+ */
+async function deleteSharingByUserIndex(
+  index: number,
+  hasWriteAccess: boolean
+): Promise<void> {
+  if (hasWriteAccess) {
+    writeAccessArray.value.splice(index, 1);
+  } else {
+    readAccessArray.value.splice(index, 1);
+  }
+
+  try {
+    await SequenceRestInterface.updateSequence({
+      code: props.sequence.code,
+      writeAccess: writeAccessArray.value,
+      readAccess: readAccessArray.value,
+    });
+  } catch {
+    error.value = true;
+    return;
+  }
+
+  await updateDisplayedListOfSharing();
 }
 </script>
