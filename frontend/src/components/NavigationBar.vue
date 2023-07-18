@@ -14,7 +14,11 @@
       Sequenzübersicht
     </NavigationBarItem>
 
-    <NavigationBarItem :active="isCurrentView('Admin')" targetLink="/admin">
+    <NavigationBarItem
+      :active="isCurrentView('Admin')"
+      targetLink="/admin"
+      v-if="isAdmin"
+    >
       Admin
     </NavigationBarItem>
 
@@ -52,7 +56,7 @@ try {
   const user = await AccountRestInterface.getOwnAccount();
   isAdmin.value = user.type === UserClass.ADMIN;
 } catch {
-  router.push('LogIn');
+  router.push({ name: 'LogIn' });
 }
 
 /**

@@ -303,6 +303,6 @@ function getTabNameForSlot(slot: LayoutSlot): string | undefined {
  */
 async function save(): Promise<void> {
   await SequenceRestInterface.updateSequence(sequence.value);
-  router.push('/overview');
+  await router.push({ name: 'Overview' });
 }
 </script>

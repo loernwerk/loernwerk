@@ -54,7 +54,7 @@ const accounts: Ref<Partial<IUser>[]> = ref([]);
 try {
   accounts.value = await AccountRestInterface.getAccountMetaDataList();
 } catch {
-  router.push('/');
+  router.push({ name: 'Main' });
 }
 /**
  * Requests the user with the given id from the backend (currently not)

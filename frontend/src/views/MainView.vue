@@ -17,7 +17,7 @@
     </ContainerComponent>
     <ButtonComponent
       class="absolute right-5 bottom-5 h-fit"
-      @click="router.push('LogIn')"
+      @click="router.push({ name: 'LogIn' })"
     >
       Anmelden
     </ButtonComponent>
