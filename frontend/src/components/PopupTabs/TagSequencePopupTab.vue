@@ -1,5 +1,5 @@
 <template>
-  <h1 class="mt-4">Schlüsselwörter der Sequenz (mit ";" getrennt):</h1>
+  <h1 class="mt-4">Schlüsselwörter der Sequenz (mit "," getrennt):</h1>
   <TextInputComponent
     class="my-2"
     placeHolder="Schlüsselwörter"
@@ -35,7 +35,7 @@ const props = defineProps({
   },
 });
 
-const tagsField = ref(props.sequence.tags.join(';'));
+const tagsField = ref(props.sequence.tags.join(', '));
 const error = ref(false);
 
 const emits = defineEmits([
@@ -51,7 +51,7 @@ const emits = defineEmits([
 async function confimChanges(): Promise<void> {
   error.value = false;
   const tags = tagsField.value
-    .split(';')
+    .split(',')
     .filter((tag) => tag !== '')
     .map((tag) => tag.trim());
   try {
