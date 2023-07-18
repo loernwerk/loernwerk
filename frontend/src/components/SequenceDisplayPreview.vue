@@ -7,10 +7,13 @@
         class="py-5 px-8"
       >
         <template v-slot:[tabName(0)]>
-          <TagSequencePopupTab :tags="[]" @confirmed="closeAndReload()" />
+          <TagSequencePopupTab
+            :sequence="sequence"
+            @confirmed="closeAndReload()"
+          />
         </template>
         <template v-slot:[tabName(1)]>
-          <DeleteSequencePopup
+          <DeleteSequencePopupTab
             @deleted="closeAndReload()"
             :sequence="sequence"
           />
@@ -19,13 +22,22 @@
           <ShareSequencePopupTab :sequence="sequence" />
         </template>
         <template v-slot:[tabName(3)]>
-          <SequenceDataPopupTab :sequence="sequence" />
+          <DataSequencePopupTab :sequence="sequence" />
         </template>
       </TabbedContainer>
     </PopupComponent>
 
     <ContainerComponent>
       <h3>{{ sequence.name }}</h3>
+      <div class="flex flex-row gap-1 mb-2 ml-2">
+        <div
+          v-for="(tag, index) in sequence.tags"
+          class="border-1 rounded bg-green-200 px-1"
+          :key="index"
+        >
+          {{ tag }}
+        </div>
+      </div>
       <div class="flex flex-row">
         <ButtonComponent class="basis-1/2 mr-2" @click="router.push('LogIn')"
           >Bearbeiten
@@ -40,17 +52,17 @@
 </template>
 
 <script setup lang="ts">
-import ButtonComponent from '../ButtonComponent.vue';
-import { ISequence } from '../../../../model/sequence/ISequence';
-import ContainerComponent from '../ContainerComponent.vue';
-import { router } from '../../router';
-import PopupComponent from '../PopupComponent.vue';
+import ButtonComponent from './ButtonComponent.vue';
+import { ISequence } from '../../../model/sequence/ISequence';
+import ContainerComponent from './ContainerComponent.vue';
+import { router } from '../router';
+import PopupComponent from './PopupComponent.vue';
 import { PropType, computed, ref } from 'vue';
-import TabbedContainer from '../TabbedContainer.vue';
-import SequenceDataPopupTab from '../PopupTabs/SequenceDataPopupTab.vue';
-import DeleteSequencePopup from '../PopupTabs/DeleteSequencePopup.vue';
-import ShareSequencePopupTab from '../PopupTabs/ShareSequencePopupTab.vue';
-import TagSequencePopupTab from '../PopupTabs/TagSequencePopupTab.vue';
+import TabbedContainer from './TabbedContainer.vue';
+import DeleteSequencePopupTab from './PopupTabs/DeleteSequencePopupTab.vue';
+import DataSequencePopupTab from './PopupTabs/DataSequencePopupTab.vue';
+import ShareSequencePopupTab from './PopupTabs/ShareSequencePopupTab.vue';
+import TagSequencePopupTab from './PopupTabs/TagSequencePopupTab.vue';
 
 const props = defineProps({
   /**

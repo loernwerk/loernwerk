@@ -17,9 +17,9 @@
 </template>
 
 <script setup lang="ts">
-import SequenceDisplayPreview from '../contentDisplay/SequenceDisplayPreview.vue';
-import { ISequence } from '../../../../model/sequence/ISequence';
-import ContainerComponent from '../ContainerComponent.vue';
+import SequenceDisplayPreview from './SequenceDisplayPreview.vue';
+import { ISequence } from '../../../model/sequence/ISequence';
+import ContainerComponent from './ContainerComponent.vue';
 
 defineProps({
   /**

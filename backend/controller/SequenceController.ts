@@ -49,6 +49,7 @@ export class SequenceController {
         dbSequence.slideCount = 0;
         dbSequence.writeAccess = [];
         dbSequence.readAccess = [];
+        dbSequence.tags = [];
         await dbSequence.save();
         return dbSequence;
     }
@@ -143,6 +144,11 @@ export class SequenceController {
             dbSequence.slideCount = sequence.slides.length;
             await this.saveSlides(sequence.slides);
         }
+
+        if (sequence.tags !== undefined) {
+            dbSequence.tags = sequence.tags;
+        }
+
         await dbSequence.save();
     }
 

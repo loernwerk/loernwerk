@@ -43,7 +43,7 @@ import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
 import SearchBarComponent from '../components/SearchBarComponent.vue';
 import ButtonComponent from '../components/ButtonComponent.vue';
 import PopupNewSequence from '../components/PopupNewSequence.vue';
-import SequenceDisplayContainer from '../components/contentDisplay/SequenceDisplayContainer.vue';
+import SequenceDisplayContainer from '../components/SequenceDisplayContainer.vue';
 import { ISequence } from '../../../model/sequence/ISequence';
 
 const showPopupNewSequence = ref(false);
