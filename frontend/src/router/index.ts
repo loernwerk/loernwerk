@@ -25,19 +25,19 @@ const router = createRouter({
       path: '/overview',
       name: 'Overview',
       component: SequenceOverviewView,
-      meta: { hasNavBar: true },
+      meta: { hasNavBar: true, requiresLogin: true },
     },
     {
       path: '/account',
       name: 'Account',
       component: AccountView,
-      meta: { hasNavBar: true },
+      meta: { hasNavBar: true, requiresLogin: true },
     },
     {
       path: '/admin',
       name: 'Admin',
       component: AdminView,
-      meta: { hasNavBar: true },
+      meta: { hasNavBar: true, requiresLogin: true },
     },
     {
       path: '/:sequenceCode',
@@ -55,11 +55,21 @@ const router = createRouter({
       path: '/edit/:sequenceCode',
       name: 'SequenceEdit',
       component: SequenceEditView,
-      meta: { hasNavBar: true },
+      meta: { hasNavBar: true, requiresLogin: true },
       props: true,
     },
   ],
 });
+
+// Possible route meta fields
+declare module 'vue-router' {
+  interface RouteMeta {
+    // Whether the View requires the user to be logged in
+    requiresLogin?: boolean;
+    // Whether the View should display the navbar
+    hasNavBar?: boolean;
+  }
+}
 
 /**
  * Router to use for switching views.
