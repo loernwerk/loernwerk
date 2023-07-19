@@ -42,8 +42,8 @@
     <PopupComponent v-if="showConfigEditor" @closed="showConfigEditor = false">
       <ContainerComponent class="px-10 py-10">
         <ConfigEditor
-          :config="(configs as Record<ConfigKey, unknown>)"
-          @save="(val) => saveCofig(val)"
+          :entries="(configs as Record<ConfigKey, unknown>)"
+          @save="(val) => saveConfig(val)"
         />
       </ContainerComponent>
     </PopupComponent>
@@ -113,12 +113,13 @@ async function refreshSequence(): Promise<void> {
 
 /**
  * Saves the configs to the backend
- * @param configs the configs to save
+ * @param configsToSave the configs to save
  */
-async function saveCofig(configs: IConfigEntry[]): Promise<void> {
-  for (const entry of configs) {
+async function saveConfig(configsToSave: IConfigEntry[]): Promise<void> {
+  for (const entry of configsToSave) {
     await ConfigRestInterface.setValue(entry.key, entry.value);
   }
   showConfigEditor.value = false;
+  configs.value = await ConfigRestInterface.getAllValue();
 }
 </script>

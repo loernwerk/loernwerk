@@ -8,9 +8,7 @@
             v-if="ConfigTypeMap.getType(key).type === 'number'"
             class="flex space-x-2 items-center"
           >
-            <InteractableComponent>
-              <input type="number" v-model="model[key]" min="0" />
-            </InteractableComponent>
+            <TextInputComponent v-model="model[key]" />
             <i>Leer lassen für unbegrenzte Menge</i>
           </div>
 
@@ -48,12 +46,11 @@ import { ConfigKey } from '../../../../model/configuration/ConfigKey';
 import { IConfigEntry } from '../../../../model/configuration/IConfigEntry';
 import { ConfigTypeMap } from '../../../../model/configuration/ConfigTypeMap';
 import { PropType, ref } from 'vue';
-import InteractableComponent from '../InteractableComponent.vue';
 import ButtonComponent from '../ButtonComponent.vue';
 import TextInputComponent from '../TextInputComponent.vue';
 
 const props = defineProps({
-  config: {
+  entries: {
     type: Object as PropType<Record<ConfigKey, unknown>>,
     required: true,
   },
@@ -76,13 +73,13 @@ function getConfigRecord(): Record<ConfigKey, string> {
   for (const entry of configKeys) {
     const type = ConfigTypeMap.getType(entry);
     if (type.type === 'number') {
-      if (props.config[entry] == -1) {
+      if (props.entries[entry] == -1) {
         result[entry] = '';
       } else {
-        result[entry] = props.config[entry] + '';
+        result[entry] = props.entries[entry] + '';
       }
     } else {
-      result[entry] = props.config[entry] as string;
+      result[entry] = props.entries[entry] as string;
     }
   }
   return result as Record<ConfigKey, string>;
@@ -109,7 +106,7 @@ function checkValidInput(key: ConfigKey): boolean {
   const type = ConfigTypeMap.getType(key);
   switch (type.type) {
     case 'number':
-      if (!(model.value[key] + '').match(/[0-9]*/)) {
+      if (!(model.value[key] + '').match(/^[0-9]*$/)) {
         return false;
       }
       return !(
