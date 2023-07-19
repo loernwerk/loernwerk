@@ -1,9 +1,6 @@
 import { ConfigKey } from './ConfigKey';
 import { IConfigType } from './IConfigType';
-import {
-    LoernwerkError,
-    LoernwerkErrorCodes,
-} from '../../backend/loernwerkError';
+import { LoernwerkError, LoernwerkErrorCodes } from '../loernwerkError';
 
 /**
  * Utility class to get the type of a configuration setting.
