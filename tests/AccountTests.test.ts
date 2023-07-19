@@ -14,7 +14,7 @@ beforeAll(async () => {
         type: 'sqlite',
         database: ':memory:',
         dropSchema: true,
-        entities: [DBUser, DBSequence, DBSlide],
+        entities: [DBUser, DBSequence],
         synchronize: true,
         logging: false,
     });
