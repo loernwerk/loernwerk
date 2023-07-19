@@ -106,7 +106,7 @@ function checkValidInput(key: ConfigKey): boolean {
   const type = ConfigTypeMap.getType(key);
   switch (type.type) {
     case 'number':
-      if (!(model.value[key] + '').match(/[0-9]*/)) {
+      if (!(model.value[key] + '').match(/^[0-9]*$/)) {
         return false;
       }
       return !(
