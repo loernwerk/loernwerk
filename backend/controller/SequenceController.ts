@@ -12,6 +12,8 @@ import { DBH5PContent } from '../../model/h5p/DBH5PContent';
 import { H5PServer } from '../h5p/H5PServer';
 import { readFile } from 'fs/promises';
 import { Document, ExternalDocument } from 'pdfjs';
+import { ConfigController } from './ConfigController';
+import { ConfigKey } from '../../model/configuration/ConfigKey';
 
 /**
  * Manages the sequence data in the database and handles inquiries requests regarding these
@@ -31,6 +33,19 @@ export class SequenceController {
             throw new LoernwerkError(
                 'user not found',
                 LoernwerkErrorCodes.NOT_FOUND
+            );
+        }
+        const userSequenceLimit = (await ConfigController.getConfigEntry(
+            ConfigKey.MAX_SEQUENCES_PER_USER
+        )) as number;
+        const sequencesOfUser = await DBSequence.find({
+            where: { authorId: userId },
+            select: { code: true },
+        });
+        if (sequencesOfUser.length >= userSequenceLimit) {
+            throw new LoernwerkError(
+                'no more sequences creatable',
+                LoernwerkErrorCodes.FORBIDDEN
             );
         }
         const dbSequence = new DBSequence();
