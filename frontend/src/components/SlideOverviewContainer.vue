@@ -23,7 +23,11 @@
           </div>
         </VueDraggableNext>
         <div class="flex-grow"></div>
-        <ButtonComponent @click="$emit('addSlide')" class="w-full text-center">
+        <ButtonComponent
+          @click="$emit('addSlide')"
+          class="w-full text-center"
+          v-if="slides.length < maxSlides"
+        >
           +
         </ButtonComponent>
       </div>
@@ -37,6 +41,9 @@ import ContainerComponent from './ContainerComponent.vue';
 import { VueDraggableNext } from 'vue-draggable-next';
 import SlideOverviewContainerElement from './SlideOverviewContainerElement.vue';
 import ButtonComponent from './ButtonComponent.vue';
+import { ConfigRestInterface } from '../restInterfaces/ConfigRestInterface';
+import { ConfigKey } from '../../../model/configuration/ConfigKey';
+import { ref } from 'vue';
 
 defineProps({
   /**
@@ -77,4 +84,13 @@ defineEmits([
    */
   'orderChanged',
 ]);
+
+const maxSlides = ref(-1);
+try {
+  maxSlides.value = (await ConfigRestInterface.getValue(
+    ConfigKey.MAX_SLIDES_PER_SEQUENCE
+  )) as number;
+} catch (e) {
+  // dont allow adding new slides
+}
 </script>
