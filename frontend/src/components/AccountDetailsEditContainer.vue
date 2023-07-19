@@ -80,10 +80,8 @@
             Abbrechen
           </ButtonComponent>
           <div class="flex-grow text-center">
-            <div class="text-red-500 italic" v-if="displayError">
-              Ungültige Eingabe
-            </div>
-            <div class="text-green-500 italic" v-if="displaySuccess">
+            <div class="text-error" v-if="displayError">Ungültige Eingabe</div>
+            <div class="text-success" v-if="displaySuccess">
               Account gespeichert
             </div>
           </div>
@@ -97,9 +95,7 @@
         </div>
         <div class="flex items-center pt-1" v-if="showadminview">
           <div class="flex-grow text-center">
-            <div class="text-green-500 italic" v-if="deleted">
-              Account gelöscht
-            </div>
+            <div class="text-success" v-if="deleted">Account gelöscht</div>
           </div>
           <ButtonComponent
             class="w-fit p-1"

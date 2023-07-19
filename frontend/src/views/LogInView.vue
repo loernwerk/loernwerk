@@ -43,7 +43,7 @@
             >
           </div>
           <div class="flex-grow text-center">
-            <div class="text-red-500 italic" v-if="displayError">
+            <div class="text-error" v-if="displayError">
               Falscher Nutzername/Email oder Passwort.
             </div>
           </div>
