@@ -4,10 +4,13 @@ import { UserClass } from '../model/user/IUser';
 import { DBUser } from '../model/user/DBUser';
 import { LoernwerkError, LoernwerkErrorCodes } from '../model/loernwerkError';
 import bcrypt from 'bcrypt';
+import { DBSequence } from '../model/sequence/DBSequence';
+import { SequenceController } from '../backend/controller/SequenceController';
 
-let mockDb;
+let mockDbUser;
+let mockDbSequences;
 beforeAll(async () => {
-    mockDb = new DataSource({
+    mockDbUser = new DataSource({
         type: 'sqlite',
         database: ':memory:',
         dropSchema: true,
@@ -15,7 +18,8 @@ beforeAll(async () => {
         synchronize: true,
         logging: false,
     });
-    await mockDb.initialize();
+
+    await mockDbUser.initialize();
     const mockUser = new DBUser();
     mockUser.mail = 'magnus@carlsen.de';
     mockUser.id = 12345;
@@ -25,9 +29,37 @@ beforeAll(async () => {
     mockUser.sharedSequencesReadAccess = [];
     mockUser.sharedSequencesWriteAccess = [];
     await mockUser.save();
+
+    const toBeDeleted = new DBUser();
+    toBeDeleted.mail = 'bobby@fischer.de';
+    toBeDeleted.id = 931943;
+    toBeDeleted.type = UserClass.REGULAR;
+    toBeDeleted.password = await bcrypt.hash('verySecurePW', 13);
+    toBeDeleted.name = 'bobby';
+    toBeDeleted.sharedSequencesReadAccess = [];
+    toBeDeleted.sharedSequencesWriteAccess = [];
+    await toBeDeleted.save();
+
+    mockDbSequences = new DataSource({
+        type: 'sqlite',
+        database: ':memory:',
+        dropSchema: true,
+        entities: [DBSequence],
+        synchronize: true,
+        logging: false,
+    });
+
+    const sequenceByDeletedAccount = new DBSequence();
+    sequenceByDeletedAccount.code = 'code66';
+    sequenceByDeletedAccount.authorId = 931943;
+    sequenceByDeletedAccount.name = 'Sequence66';
+    sequenceByDeletedAccount.slideCount = 0;
+    sequenceByDeletedAccount.writeAccess = [];
+    sequenceByDeletedAccount.readAccess = [];
 });
 afterAll(async () => {
-    await mockDb.destroy();
+    await mockDbUser.destroy();
+    await mockDbSequences.destroy();
 });
 describe('AccountController Tests', () => {
     const doubledName = {
@@ -176,5 +208,53 @@ describe('AccountController Tests', () => {
         expect(allAccounts[0]).toBeInstanceOf(DBUser);
         expect(allAccounts[0].name).not.toBe(null);
         expect(allAccounts[0].id).not.toBe(null);
+    });
+
+    /**
+     * deleteAccount function
+     *TODO figure out why this test fails
+     */
+    xit('delete a correct account', async () => {
+        const accountToBeDeleted = await DBUser.findBy({ name: 'bobby' });
+        await AccountController.deleteAccount(accountToBeDeleted[0].id);
+        await expect(() =>
+            SequenceController.getSequenceByCode('code66')
+        ).rejects.toThrow(
+            new LoernwerkError(
+                'No matching sequence',
+                LoernwerkErrorCodes.NOT_FOUND
+            )
+        );
+    });
+
+    /**
+     * ensureAdminExists function
+     *NOTE: Admin email returns undefined@loernwerk.de, intended?
+     */
+    it('create Admin, because no admin exists', async () => {
+        await AccountController.ensureAdminAccount();
+        const admin = await DBUser.findBy({ type: UserClass.ADMIN });
+        expect(admin[0]).toBeInstanceOf(DBUser);
+        expect(admin[0]).toHaveProperty('type', UserClass.ADMIN);
+    });
+
+    /**
+     * should undefined be returned if admin already exists?
+     * NOTE: This test only runs in suite, because admin was created in prior test
+     */
+    it('create Admin, admin already exists', async () => {
+        const existingAdmin = await DBUser.findBy({ type: UserClass.ADMIN });
+        expect(existingAdmin[0]).toHaveProperty('type', UserClass.ADMIN);
+        const admin = await AccountController.ensureAdminAccount();
+        expect(admin === undefined).toBe(true);
+    });
+
+    //saveAccount function
+    it('valid account changes', async () => {
+        const user = await DBUser.findBy({ name: 'magnus' });
+        user[0].name = 'mugnus';
+        await AccountController.saveAccount(user[0]);
+        const newUser = await DBUser.findBy({ id: 12345 });
+        expect(newUser[0]).toHaveProperty('name', 'mugnus');
     });
 });
