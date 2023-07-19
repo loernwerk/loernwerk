@@ -15,7 +15,14 @@ export class ConfigController {
      * @returns the value of the entry
      */
     public static async getConfigEntry(key: ConfigKey): Promise<unknown> {
-        return await DBConfigEntry.findOneBy({ key: key });
+        const entry = await DBConfigEntry.findOneBy({ key: key });
+        if (entry === null) {
+            throw new LoernwerkError(
+                'Config key not found',
+                LoernwerkErrorCodes.NOT_FOUND
+            );
+        }
+        return entry.value;
     }
 
     /**
@@ -35,7 +42,7 @@ export class ConfigController {
             );
         }
         entry.value = value;
-        entry.save();
+        await entry.save();
     }
 
     /**

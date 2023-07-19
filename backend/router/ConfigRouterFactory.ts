@@ -43,7 +43,7 @@ export class ConfigRouterFactory extends RouterFactory {
                 const value = await ConfigController.getConfigEntry(
                     req.params.key as ConfigKey
                 );
-                res.status(200).json(value);
+                res.status(200).json({ value });
             } catch {
                 res.sendStatus(404);
             }

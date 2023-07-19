@@ -42,7 +42,10 @@ export class SequenceController {
             where: { authorId: userId },
             select: { code: true },
         });
-        if (sequencesOfUser.length >= userSequenceLimit) {
+        if (
+            userSequenceLimit > 0 &&
+            sequencesOfUser.length >= userSequenceLimit
+        ) {
             throw new LoernwerkError(
                 'no more sequences creatable',
                 LoernwerkErrorCodes.BAD_REQUEST
@@ -136,6 +139,7 @@ export class SequenceController {
         )) as number;
         const sequenceSlideCount = sequence.slides?.length;
         if (
+            userSlideLimit > 0 &&
             sequenceSlideCount !== undefined &&
             sequenceSlideCount >= userSlideLimit
         ) {
