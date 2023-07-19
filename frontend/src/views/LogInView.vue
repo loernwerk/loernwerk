@@ -61,18 +61,29 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import ButtonComponent from '../components/ButtonComponent.vue';
 import ContainerComponent from '../components/ContainerComponent.vue';
 import TextInputComponent from '../components/TextInputComponent.vue';
 import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
-import { router } from '../router';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const mailField = ref('');
 const passwordField = ref('');
 const keepLoggedIn = ref(false);
 const disableInputShowSpinner = ref(false);
 const displayError = ref(false);
+
+onMounted(async () => {
+  // Checks if the user is already logged in
+  try {
+    await AccountRestInterface.getOwnAccount();
+    await router.push({ name: 'Overview' });
+  } catch {
+    // User isn't logged in, do nothing and show the login
+  }
+});
 
 /**
  * Locks the Checkbox while checking Login data

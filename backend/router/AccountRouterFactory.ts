@@ -41,6 +41,12 @@ export class AccountRouterFactory extends RouterFactory {
             }
         );
 
+        accountRouter.post('/logout', requireLogin, (req, res) => {
+            req.session.destroy(() => {
+                res.sendStatus(204);
+            });
+        });
+
         accountRouter.put(
             '/',
             requireAdmin,
