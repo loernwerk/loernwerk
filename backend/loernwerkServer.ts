@@ -95,7 +95,7 @@ class loernwerkServer {
 
         // Serving built vue app
         app.use(history());
-        app.use(staticRouter('build/dist'));
+        app.use(staticRouter('dist'));
 
         // Graceful shutdown listener
         process.on('SIGINT', () => {

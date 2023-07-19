@@ -40,7 +40,7 @@
         v-for="[content, image] in possibleNewContentTypes"
         :key="content"
         class="h-3 cursor-pointer"
-        :src="`/src/assets/icons/${image}`"
+        :src="getIconUrl(image)"
         @click="$emit('changeContent', content)"
       />
     </div>
@@ -100,6 +100,15 @@ defineEmits([
    */
   'changeContent',
 ]);
+
+/**
+ * Returns the url of the icon-asset with the supplied name.
+ * @param image icon image to return
+ * @returns url to the icon
+ */
+function getIconUrl(image: string): string {
+  return new URL(`../../assets/icons/${image}`, import.meta.url).href;
+}
 
 const possibleNewContentTypes = computed(() => {
   const contentTypes = [
