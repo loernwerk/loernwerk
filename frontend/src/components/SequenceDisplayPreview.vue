@@ -36,7 +36,7 @@
         >
           <div
             v-for="(tag, index) in sequence.tags"
-            class="border-1 rounded bg-green-200 px-1 box-border"
+            class="border-1 rounded bg-green-200 px-1 box-border dark:bg-green-800 border-green-200 dark:border-green-800"
             :key="index"
           >
             {{ tag }}
