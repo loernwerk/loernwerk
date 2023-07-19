@@ -45,7 +45,7 @@ export class SequenceController {
         if (sequencesOfUser.length >= userSequenceLimit) {
             throw new LoernwerkError(
                 'no more sequences creatable',
-                LoernwerkErrorCodes.FORBIDDEN
+                LoernwerkErrorCodes.BAD_REQUEST
             );
         }
         const dbSequence = new DBSequence();
@@ -128,6 +128,20 @@ export class SequenceController {
             throw new LoernwerkError(
                 'No Sequence Found',
                 LoernwerkErrorCodes.NOT_FOUND
+            );
+        }
+
+        const userSlideLimit = (await ConfigController.getConfigEntry(
+            ConfigKey.MAX_SLIDES_PER_SEQUENCE
+        )) as number;
+        const sequenceSlideCount = sequence.slides?.length;
+        if (
+            sequenceSlideCount !== undefined &&
+            sequenceSlideCount >= userSlideLimit
+        ) {
+            throw new LoernwerkError(
+                'to much slides in sequences',
+                LoernwerkErrorCodes.BAD_REQUEST
             );
         }
 
