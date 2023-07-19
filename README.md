@@ -17,16 +17,18 @@ Alternatively, a Dockerfile is also available to build the platform to a docker 
 
 Some basic settings of the platform can be configured via environment variables. These are:
 
-| Variable        | Description                                                                             | Default     |
-|-----------------|-----------------------------------------------------------------------------------------|-------------|
-| `PORT`          | Port of the application.                                                                | `5000`      |
-| `HOSTNAME`      | Hostname of the application.                                                            | `localhost` |
-| `DATABASE_FILE` | Database file for the SQLite database.                                                  | `dev.db`    |
-| `SSL_KEYFILE`   | File containing the key used for SSL encryption. Required for the HTTPS server.         |             |
-| `SSL_CERTFILE`  | File containing the certificate used for SSL encryption. Required for the HTTPS server. |             |
-| `SSL_PORT`      | Port for the HTTPS server.                                                              | `5443`      |
-| `SSL_CAFILE`    | CA File used for SSL encryption. Optional.                                              |             |
-| `DISABLE_HTTP`  | If set, will disable the HTTP server.                                                   |             |
+| Variable        | Description                                                                             | Default        |
+|-----------------|-----------------------------------------------------------------------------------------|----------------|
+| `PORT`          | Port of the application.                                                                | `5000`         |
+| `HOSTNAME`      | Hostname of the application.                                                            | `localhost`    |
+| `DATABASE_FILE` | Database file for the SQLite database.                                                  | `loernwerk.db` |
+| `SSL_KEYFILE`   | File containing the key used for SSL encryption. Required for the HTTPS server.         |                |
+| `SSL_CERTFILE`  | File containing the certificate used for SSL encryption. Required for the HTTPS server. |                |
+| `SSL_PORT`      | Port for the HTTPS server.                                                              | `5443`         |
+| `SSL_CAFILE`    | CA File used for SSL encryption. Optional.                                              |                |
+| `DISABLE_HTTP`  | If set, will disable the HTTP server.                                                   |                |
+
+`.env` files can also be used to set these variables.
 
 ## Adding a custom imprint
 The imprint file is located inside the `dist/imprint.html`. The content of this file can be changed to your liking to add your custom imprint.

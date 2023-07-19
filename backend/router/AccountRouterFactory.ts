@@ -34,7 +34,6 @@ export class AccountRouterFactory extends RouterFactory {
                     return;
                 }
                 if (req.body.stayLoggedIn) {
-                    //TODO: unklar ob das so geht
                     req.session.cookie.maxAge = undefined;
                 }
                 res.sendStatus(204);
