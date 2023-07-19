@@ -71,7 +71,7 @@ export class ConfigController {
             }
             const newEntry = new DBConfigEntry();
             newEntry.key = x;
-            newEntry.value = 0;
+            newEntry.value = -1;
             await newEntry.save();
         }
     }

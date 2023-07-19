@@ -74,8 +74,16 @@ function getConfigRecord(): Record<ConfigKey, string> {
   const result: Partial<Record<ConfigKey, string>> = {};
 
   for (const entry of configKeys) {
-    console.log(props.config[entry]);
-    result[entry] = props.config[entry] as string;
+    const type = ConfigTypeMap.getType(entry);
+    if (type.type === 'number') {
+      if (props.config[entry] == -1) {
+        result[entry] = '';
+      } else {
+        result[entry] = props.config[entry] + '';
+      }
+    } else {
+      result[entry] = props.config[entry] as string;
+    }
   }
   return result as Record<ConfigKey, string>;
 }
@@ -121,6 +129,24 @@ function checkValidInput(key: ConfigKey): boolean {
 const errorMessage = ref('');
 
 /**
+ * Gets the save value for the given key
+ * @param key Key to get the save value for
+ * @returns Save value for the given key
+ */
+function getSaveValue(key: ConfigKey): unknown {
+  const type = ConfigTypeMap.getType(key);
+  switch (type.type) {
+    case 'number':
+      if (model.value[key] == '') {
+        return -1;
+      }
+      return parseInt(model.value[key]);
+    default:
+      return model.value[key] + '';
+  }
+}
+
+/**
  * Saves the current configuration
  */
 function save(): void {
@@ -135,7 +161,7 @@ function save(): void {
   for (const key of keyOrder) {
     result.push({
       key: key,
-      value: model.value[key],
+      value: getSaveValue(key),
     });
   }
 
