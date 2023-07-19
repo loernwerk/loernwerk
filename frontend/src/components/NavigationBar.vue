@@ -24,6 +24,10 @@
 
     <div class="flex-grow"></div>
 
+    <div>
+      <LightDarkSwitch />
+    </div>
+
     <FontAwesomeIcon
       icon="circle-user"
       size="3x"
@@ -41,6 +45,7 @@ import { ref } from 'vue';
 import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
 import { UserClass } from '../../../model/user/IUser';
 import NavigationBarItem from './NavigationBarItem.vue';
+import LightDarkSwitch from './LightDarkSwitch.vue';
 
 library.add(faCircleUser);
 
