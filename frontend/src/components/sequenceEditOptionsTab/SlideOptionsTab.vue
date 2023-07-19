@@ -28,10 +28,7 @@
             @click="updateSlideLayout(layout)"
             class="mb-2 mr-2"
           >
-            <img
-              :src="`/src/assets/layouts/${layoutImageMap[layout]}`"
-              class="h-8"
-            />
+            <img :src="getLayoutImageUrl(layoutImageMap[layout])" class="h-8" />
           </InteractableComponent>
         </div>
       </div>
@@ -135,6 +132,15 @@ function updateSlideLayout(layout: LayoutType): void {
   const tempSlide = props.slide;
   tempSlide.layout = layout;
   updateSlide(tempSlide);
+}
+
+/**
+ * Returns the url to the image of the supplied layout
+ * @param image Image to fetch url for
+ * @returns url to the supplied image
+ */
+function getLayoutImageUrl(image: string): string {
+  return new URL(`../../assets/layouts/${image}`, import.meta.url).href;
 }
 
 const layoutImageMap: Record<LayoutType, string> = {

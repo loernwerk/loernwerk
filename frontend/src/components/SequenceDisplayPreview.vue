@@ -59,7 +59,7 @@
                   sequence.writeAccess.includes(ownId)
                     ? 'SequenceEdit'
                     : 'Slide',
-                params: { code: sequence.code },
+                params: { sequenceCode: sequence.code },
               })
             "
             >{{
