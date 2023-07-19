@@ -13,10 +13,10 @@
       <TabbedContainer
         class="h-48"
         :shown-tabs="tabs"
-        :possible-tabs="['Seite', 'Embed', 'Bild', 'Text']"
+        :possible-tabs="allTabs"
         ref="editOptionsTabContainer"
       >
-        <template #Seite>
+        <template v-slot:[getTab(0)]>
           <SlideOptionsTab
             :slide="selectedSlide"
             :sequence="sequence"
@@ -26,7 +26,7 @@
           />
         </template>
 
-        <template #Embed>
+        <template v-slot:[getTab(3)]>
           <EmbedOptionsTab
             v-if="currentEditingSlot"
             :embedContent="(selectedSlide.content[currentEditingSlot] as EmbedContent)"
@@ -34,7 +34,7 @@
           />
         </template>
 
-        <template #Bild>
+        <template v-slot:[getTab(2)]>
           <ImageOptionsTab
             v-if="currentEditingSlot"
             :imageContent="(selectedSlide.content[currentEditingSlot] as ImageContent)"
@@ -42,7 +42,7 @@
           />
         </template>
 
-        <template #Text>
+        <template v-slot:[getTab(1)]>
           <TextOptionsTab
             :key="selectedSlideIndex"
             :selected-slot="
@@ -71,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { Ref, computed, ref, watch } from 'vue';
+import { Ref, computed, ref } from 'vue';
 import { ISequenceWithSlides } from '../../../model/sequence/ISequenceWithSlides';
 import SlideOverviewContainer from '../components/SlideOverviewContainer.vue';
 import {
@@ -94,6 +94,7 @@ import { H5PContent } from '../../../model/slide/content/H5PContent';
 import Delta from 'quill-delta';
 import { ISlide } from '../../../model/slide/ISlide';
 import { useRouter } from 'vue-router';
+import { i18n } from '../i18n';
 
 const props = defineProps({
   /**
@@ -172,7 +173,6 @@ function changeContent(slot: LayoutSlot, contentType: ContentType): void {
   }
 
   sequence.value.slides[selectedSlideIndex.value].content[slot] = content;
-  updateShownTabs();
 }
 
 /**
@@ -250,7 +250,27 @@ function updateSlide(slide: ISlide): void {
 }
 
 const currentEditingSlot: Ref<LayoutSlot | null> = ref(null);
-const tabs = ref(['Seite']);
+const allTabs = computed(() => {
+  return [
+    i18n.global.t('slide'),
+    i18n.global.t('content.text'),
+    i18n.global.t('content.image'),
+    i18n.global.t('content.embed'),
+  ];
+});
+
+const tabs = computed(() => {
+  console.log('refreshing tabs');
+  const slot = currentEditingSlot.value;
+  let tabs = [i18n.global.t('slide')];
+  if (slot != null) {
+    const tabName = getTabNameForSlot(slot);
+    if (tabName) {
+      tabs.push(tabName);
+    }
+  }
+  return tabs;
+});
 const editOptionsTabContainer: Ref<typeof TabbedContainer | null> = ref(null);
 
 /**
@@ -262,40 +282,30 @@ function selectEditingSlot(slot: LayoutSlot): void {
 }
 
 /**
- * Updates the tabs shown in the tab container
- */
-function updateShownTabs(): void {
-  const slot = currentEditingSlot.value;
-  tabs.value = ['Seite'];
-  if (slot != null) {
-    const tabName = getTabNameForSlot(slot);
-    if (tabName) {
-      tabs.value.push(tabName);
-      editOptionsTabContainer.value?.selectTab(tabName);
-    }
-  }
-}
-
-watch(currentEditingSlot, () => {
-  updateShownTabs();
-});
-
-/**
  * Returns the name of the tab for the given slot
  * @param slot Slot to get the name for
  * @returns Name of the tab for the given slot or null if the slot does not have a coreesponding tab
  */
 function getTabNameForSlot(slot: LayoutSlot): string | undefined {
   const tabNameMap = {
-    [ContentType.TEXT]: 'Text',
-    [ContentType.IMAGE]: 'Bild',
-    [ContentType.EMBED]: 'Embed',
+    [ContentType.TEXT]: i18n.global.t('content.text'),
+    [ContentType.IMAGE]: i18n.global.t('content.image'),
+    [ContentType.EMBED]: i18n.global.t('content.embed'),
   };
   const type = selectedSlide.value.content[slot]?.type;
   if (type != undefined && type != ContentType.H5P) {
     return tabNameMap[type];
   }
   return undefined;
+}
+
+/**
+ * Gets the tab name for the given content type
+ * @param index index in the tab array
+ * @returns The tab for the given content type
+ */
+function getTab(index: number): string {
+  return allTabs.value[index];
 }
 
 /**

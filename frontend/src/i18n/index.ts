@@ -50,6 +50,8 @@ const messages = {
       layout: 'Anordnung',
       fileTooLarge: 'Datei ist größer als {size}',
       fileNotFound: 'Datei nicht gefunden',
+      text: 'Text',
+      embed: 'Einbetten',
     },
     sequence: {
       sequence: 'Lernsequenz',
@@ -123,6 +125,8 @@ const messages = {
       layout: 'Layout',
       fileTooLarge: 'File is larger than {size}',
       fileNotFound: 'File not found',
+      text: 'Text',
+      embed: 'Embed',
     },
     sequence: {
       sequence: 'Learning sequence',

@@ -11,7 +11,7 @@
         </div>
       </div>
       <div class="flex space-x-2 items-center">
-        <p>{{ $t('content.backgorund') }}:</p>
+        <p>{{ $t('content.background') }}:</p>
         <input
           type="color"
           :value="slide.backgroundColor"
