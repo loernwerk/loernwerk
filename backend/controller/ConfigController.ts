@@ -48,7 +48,7 @@ export class ConfigController {
         const config = await DBConfigEntry.find();
         const rec: Record<ConfigKey, unknown> = Object.assign(
             {},
-            ...Object.keys(ConfigKey).map((x) => ({ [x]: 'not present' }))
+            ...Object.values(ConfigKey).map((x) => ({ [x]: 'not present' }))
         );
         for (const x of config) {
             rec[x.key] = x.value;
@@ -66,7 +66,7 @@ export class ConfigController {
         ];
         for (const x of nullInitialized) {
             const entry = await DBConfigEntry.findOneBy({ key: x });
-            if (entry === null) {
+            if (entry !== null) {
                 continue;
             }
             const newEntry = new DBConfigEntry();

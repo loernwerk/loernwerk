@@ -74,6 +74,7 @@ function getConfigRecord(): Record<ConfigKey, string> {
   const result: Partial<Record<ConfigKey, string>> = {};
 
   for (const entry of configKeys) {
+    console.log(props.config[entry]);
     result[entry] = props.config[entry] as string;
   }
   return result as Record<ConfigKey, string>;
