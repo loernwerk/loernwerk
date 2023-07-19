@@ -12,7 +12,7 @@
             placeHolder="Name der Sequenz"
             v-model="nameField"
           />
-          <div class="text-red-500" v-if="error">
+          <div class="text-error" v-if="error">
             Es ist ein Fehler beim Erstellen der Sequenz aufgetreten.
           </div>
           <ButtonComponent

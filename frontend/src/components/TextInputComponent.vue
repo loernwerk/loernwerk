@@ -6,7 +6,7 @@
       :maxLength="maxLength"
       :placeholder="placeHolder"
       :disabled="disabled"
-      class="cursor-pointer w-full placeholder:text-gray-500"
+      class="cursor-pointer w-full placeholder:text-gray-500 bg-transparent border-none outline-none"
       :class="{ uppercase: uppercase }"
       :value="modelValue"
       @input="
