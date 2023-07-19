@@ -92,6 +92,7 @@ import TagSequencePopupTab from './PopupTabs/TagSequencePopupTab.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
+import { i18n } from '../i18n';
 
 library.add(faEllipsis);
 
@@ -122,18 +123,24 @@ const emits = defineEmits([
 
 const popupOpen = ref(false);
 
-const tabNames = [
-  'Schlüsselwörter',
-  'Löschen',
-  'Mit Lehrkräften teilen',
-  'Mit Teilnehmern teilen',
-];
+const tabNames = computed(() => {
+  return [
+    i18n.global.tc('sequence.tag', 2),
+    i18n.global.t('delete'),
+    i18n.global.t('sequence.shareWith', {
+      object: i18n.global.t('sequence.teacher'),
+    }),
+    i18n.global.t('sequence.shareWith', {
+      object: i18n.global.t('sequence.student'),
+    }),
+  ] as string[];
+});
 
 const shownTabs = computed(() => {
   if (props.sequence?.authorId === props.ownId) {
-    return tabNames;
+    return tabNames.value;
   } else {
-    return [tabNames[3]];
+    return [tabNames.value[3]];
   }
 });
 
@@ -143,7 +150,7 @@ const shownTabs = computed(() => {
  * @returns tab name
  */
 function tabName(index: number): string {
-  return tabNames[index];
+  return tabNames.value[index];
 }
 
 /**

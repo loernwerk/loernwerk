@@ -69,6 +69,9 @@ const messages = {
       tag: 'Schlüsselwort | Schlüsselwörter',
       tagAddError: 'Fehler beim Hinzufügen der Schlüsselwörter',
       tagIntro: 'Schlüsselwörter der Sequenz (mit "," getrennt):',
+      shareWith: 'Mit {object} teilen',
+      teacher: 'Lehrkraft',
+      student: 'Teilnehmenden',
     },
   },
   en: {
@@ -139,6 +142,9 @@ const messages = {
       tag: 'Tag | Tags',
       tagAddError: 'Error while adding tags',
       tagIntro: 'Tags of sequence (separated by ","):',
+      shareWith: 'Share with {object}',
+      teacher: 'Teacher',
+      student: 'Students',
     },
   },
 };
