@@ -11,7 +11,7 @@
       <div class="h-fit flex space-x-5">
         <div class="flex items-center h-fit flex-1 space-x-2">
           <ButtonComponent class="w-fit" @click="showPopupNewSequence = true">
-            Sequenz erstellen
+            {{ $t('create', { object: $t('sequence.sequence') }) }}
           </ButtonComponent>
           <SearchBarComponent
             @input-changed="(val: string) => applySearch(val)"
@@ -24,7 +24,7 @@
       <div class="flex pt-5 w-full grow space-x-5">
         <div class="flex-1">
           <SequenceDisplayContainer
-            name="Meine Sequenzen:"
+            :name="`${$t('sequence.mySequences')}:`"
             :sequences="sequences"
             :own-id="ownId"
             @reload-sequences="reloadSequences()"
@@ -33,7 +33,7 @@
         </div>
         <div class="flex-1">
           <SequenceDisplayContainer
-            name="Mit mir geteilte Sequenzen:"
+            :name="`${$t('sequence.sharedSequences')}:`"
             :sequences="sharedSequences"
             :own-id="ownId"
           ></SequenceDisplayContainer>

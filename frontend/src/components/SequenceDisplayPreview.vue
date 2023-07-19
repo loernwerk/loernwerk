@@ -45,8 +45,8 @@
         <div v-if="sequence.authorId != ownId" class="text-xs">
           {{
             sequence.readAccess.includes(ownId)
-              ? 'Lesezugriff'
-              : 'Schreibzugriff'
+              ? $t('sequence.readAccess')
+              : $t('sequence.writeAccess')
           }}
         </div>
         <div class="flex flex-row space-x-2">
@@ -64,8 +64,8 @@
             "
             >{{
               sequence.authorId == ownId || sequence.writeAccess.includes(ownId)
-                ? 'Bearbeiten'
-                : 'Ansehen'
+                ? $t('edit')
+                : $t('view')
             }}
           </ButtonComponent>
           <ButtonComponent class="" @click="popupOpen = !popupOpen">
