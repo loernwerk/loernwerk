@@ -2,7 +2,7 @@
   <div
     class="w-full h-20 bg-navbar flex flex-row items-center gap-5 drop-shadow"
   >
-    <img src="../assets/logo_navbar.png" class="h-10 mx-5" />
+    <img src="../../assets/logo_navbar.png" class="h-10 mx-5" />
     <NavigationBarItem
       :active="isCurrentView('Overview')"
       targetLink="/overview"
@@ -24,10 +24,14 @@
 
     <div class="flex-grow"></div>
 
+    <div>
+      <LightDarkSwitch v-model="isDarkMode" class="text-white" />
+    </div>
+
     <FontAwesomeIcon
       icon="circle-user"
       size="3x"
-      class="float-right mr-5 cursor-pointer"
+      class="float-right mr-5 cursor-pointer text-white"
       @click="router.push({ name: 'Account' })"
     ></FontAwesomeIcon>
   </div>
@@ -37,12 +41,33 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import { RouteLocationNormalized, useRouter } from 'vue-router';
-import { ref } from 'vue';
-import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
-import { UserClass } from '../../../model/user/IUser';
+import { ref, watch } from 'vue';
+import { AccountRestInterface } from '../../restInterfaces/AccountRestInterface';
+import { UserClass } from '../../../../model/user/IUser';
 import NavigationBarItem from './NavigationBarItem.vue';
+import LightDarkSwitch from './LightDarkSwitch.vue';
 
 library.add(faCircleUser);
+
+const props = defineProps({
+  darkMode: {
+    type: Boolean,
+    required: true,
+  },
+});
+
+const emits = defineEmits(['update:darkMode']);
+
+const isDarkMode = ref(props.darkMode);
+watch(
+  () => props.darkMode,
+  (newVal) => {
+    isDarkMode.value = newVal;
+  }
+);
+watch(isDarkMode, (newVal) => {
+  emits('update:darkMode', newVal);
+});
 
 const router = useRouter();
 const currentView = ref('');

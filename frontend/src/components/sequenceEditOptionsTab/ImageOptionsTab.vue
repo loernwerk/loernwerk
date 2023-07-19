@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-row items-center space-x-5 w-full pt-5">
     <ButtonComponent @click="selectImage()">Bild ändern</ButtonComponent>
-    <div class="text-red-600">{{ errorMessage }}</div>
+    <div class="text-error">{{ errorMessage }}</div>
     <div class="space-x-2 flex flex-row items-center w-96">
       <p>Skalierung:</p>
       <input

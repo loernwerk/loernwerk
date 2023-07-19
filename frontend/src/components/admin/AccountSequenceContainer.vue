@@ -13,7 +13,7 @@
             <ButtonComponent @click="showSequence(sequence.code)">
               Anzeigen
             </ButtonComponent>
-            <div class="flex-grow text-red-500">
+            <div class="flex-grow text-error">
               <div v-if="showError">Löschen fehlgeschlagen</div>
             </div>
             <ButtonComponent @click="deleteSequence(sequence.code)">
@@ -27,11 +27,11 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
-import { ISequence } from '../../../model/sequence/ISequence';
-import ContainerComponent from './ContainerComponent.vue';
-import ButtonComponent from './ButtonComponent.vue';
-import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
-import { router } from '../router';
+import { ISequence } from '../../../../model/sequence/ISequence';
+import ContainerComponent from '../ContainerComponent.vue';
+import ButtonComponent from '../ButtonComponent.vue';
+import { SequenceRestInterface } from '../../restInterfaces/SequenceRestInterface';
+import { useRouter } from 'vue-router';
 
 defineProps({
   sequences: {
@@ -40,7 +40,8 @@ defineProps({
   },
 });
 
-const emit = defineEmits(['sequenceDelete']);
+const router = useRouter();
+const emit = defineEmits(['delete']);
 
 const showError = ref(false);
 /**
@@ -58,7 +59,7 @@ function showSequence(code: string): void {
 async function deleteSequence(code: string): Promise<void> {
   try {
     await SequenceRestInterface.deleteSequence(code);
-    emit('sequenceDelete');
+    emit('delete');
   } catch {
     showError.value = true;
   }

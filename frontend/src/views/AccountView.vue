@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-grow text-center">
-    <div class="text-red-500 italic text-center flex-grow" v-if="showerror">
+    <div class="text-error text-center flex-grow" v-if="showerror">
       Account nicht verfügbar
     </div>
   </div>

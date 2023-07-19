@@ -9,7 +9,7 @@
         :key="index"
       >
       </SlideDisplayFactory>
-      <div class="text-red-500" v-if="error">
+      <div class="text-error" v-if="error">
         Es ist ein Fehler bei der Folien Ansicht aufgetreten. Bitte laden sie
         die Seite erneut.
       </div>

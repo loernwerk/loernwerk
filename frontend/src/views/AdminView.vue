@@ -24,7 +24,7 @@
         <AccountSequenceContainer
           :sequences="sequencesOfUser"
           class="flex-grow"
-          @sequence-delete="refreshSequence()"
+          @delete="refreshSequence()"
         />
       </div>
       <AccountCreationContainer
@@ -53,10 +53,10 @@
 import { Ref, ref } from 'vue';
 import { IUser } from '../../../model/user/IUser';
 import AccountDetailsEditContainer from '../components/AccountDetailsEditContainer.vue';
-import AccountList from '../components/AccountList.vue';
+import AccountList from '../components/admin/AccountList.vue';
 import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
-import AccountCreationContainer from '../components/AccountCreationContainer.vue';
-import AccountSequenceContainer from '../components/AccountSequenceContainer.vue';
+import AccountCreationContainer from '../components/admin/AccountCreationContainer.vue';
+import AccountSequenceContainer from '../components/admin/AccountSequenceContainer.vue';
 import { ISequence } from '../../../model/sequence/ISequence';
 import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
 import { router } from '../router';

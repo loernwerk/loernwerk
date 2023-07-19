@@ -2,7 +2,7 @@
   <div class="flex items-center mt-4 space-x-2">
     <h1>Sequenz "{{ sequence.name }}" löschen?</h1>
     <div class="grow">
-      <div class="text-red-500" v-if="error">
+      <div class="text-error" v-if="error">
         Es ist ein Fehler beim Löschen der Sequenz aufgetreten.
       </div>
     </div>
@@ -33,7 +33,7 @@ const emits = defineEmits([
   /**
    * Emitted when sequence is deleted
    */
-  'deleted',
+  'delete',
 ]);
 
 /**
@@ -44,7 +44,7 @@ async function deleteSequence(): Promise<void> {
   const sequenceCode = props.sequence.code as string;
   try {
     await SequenceRestInterface.deleteSequence(sequenceCode);
-    emits('deleted');
+    emits('delete');
   } catch {
     error.value = true;
   }

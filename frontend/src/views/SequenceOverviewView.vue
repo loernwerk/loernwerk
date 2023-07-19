@@ -30,7 +30,7 @@
           <SequenceDisplayContainer
             name="Meine Sequenzen:"
             :sequences="sequences"
-            :own-id="ownId"
+            :user-id="ownId"
             @reload-sequences="reloadSequences()"
           >
           </SequenceDisplayContainer>
@@ -39,7 +39,7 @@
           <SequenceDisplayContainer
             name="Mit mir geteilte Sequenzen:"
             :sequences="sharedSequences"
-            :own-id="ownId"
+            :user-id="ownId"
           ></SequenceDisplayContainer>
         </div>
       </div>
