@@ -57,6 +57,10 @@
         @apply border-interactable-border-light dark:border-interactable-border-dark;
     }
 
+    .bg-navbar {
+        @apply bg-navbar-light dark:bg-navbar-dark;
+    }
+
     .container {
         @apply p-2 border-1 rounded-md bg-container border-container box-border shadow overflow-hidden flex flex-col;
     }

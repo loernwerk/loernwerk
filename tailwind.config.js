@@ -2,6 +2,7 @@ import colors from 'tailwindcss/colors';
 
 /** @type {import('tailwindcss').Config} */
 export default {
+    darkMode: 'class',
     content: ['./frontend/index.html', './frontend/src/**/*.{js,ts,vue}'],
     theme: {
         extend: {
@@ -53,7 +54,8 @@ export default {
                     }
                 },
                 navbar: {
-                    DEFAULT: '#006634'
+                    light: '#006634',
+                    dark: '#003317',
                 }
             },
             borderWidth: {
