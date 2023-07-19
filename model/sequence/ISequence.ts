@@ -25,4 +25,7 @@ export interface ISequence {
 
     /** Amount of slides in this sequence */
     slideCount: number;
+
+    /** Contains tags, set by the author of the sequence */
+    tags: string[];
 }

@@ -14,7 +14,7 @@
               <TextInputComponent
                 :disabled="disableInputShowSpinner"
                 placeHolder="Nutzername/Email"
-                @input-changed="(val) => (mailField = val)"
+                v-model="mailField"
               />
             </td>
           </tr>
@@ -25,7 +25,7 @@
                 :disabled="disableInputShowSpinner"
                 :hidden="true"
                 placeHolder="Passwort"
-                @input-changed="(val) => (passwordField = val)"
+                v-model="passwordField"
               />
             </td>
           </tr>
@@ -66,6 +66,7 @@ import ButtonComponent from '../components/ButtonComponent.vue';
 import ContainerComponent from '../components/ContainerComponent.vue';
 import TextInputComponent from '../components/TextInputComponent.vue';
 import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
+import { router } from '../router';
 
 const mailField = ref('');
 const passwordField = ref('');
@@ -88,7 +89,6 @@ function disableCheckBox(): void {
 async function checkLogIn(): Promise<void> {
   disableInputShowSpinner.value = true;
   displayError.value = false;
-
   const success = await AccountRestInterface.verifyLogin(
     mailField.value,
     passwordField.value,
@@ -96,7 +96,7 @@ async function checkLogIn(): Promise<void> {
   );
 
   if (success) {
-    alert('SequenceOverView');
+    await router.push({ name: 'Overview' });
   } else {
     displayError.value = true;
   }

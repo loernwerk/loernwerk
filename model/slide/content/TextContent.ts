@@ -1,15 +1,17 @@
-import { Content } from './Content';
-import { TextSnippet } from './TextSnippet';
+import { Content, ContentType } from './Content';
+import Delta from 'quill-delta';
 
 /**
  * Text content as an object.
  */
 export class TextContent extends Content {
-    /** Array of text parts in specified format and style */
-    textSnippets: TextSnippet[];
+    /** Quill content */
+    delta: Delta;
 
-    /** Horizontal text alignement */
-    alignmentHorizontal: 'left' | 'center' | 'right';
-    /** Vertical text alignment */
-    alignmentVertical: 'top' | 'center' | 'bottom';
+    /**
+     * @inheritDoc
+     */
+    constructor() {
+        super(ContentType.TEXT);
+    }
 }

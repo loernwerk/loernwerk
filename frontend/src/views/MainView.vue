@@ -17,10 +17,11 @@
     </ContainerComponent>
     <ButtonComponent
       class="absolute right-5 bottom-5 h-fit"
-      @click="router.push('LogIn')"
+      @click="router.push({ name: 'LogIn' })"
     >
       Anmelden
     </ButtonComponent>
+    <a class="absolute bottom-5 m-auto" href="/imprint.html">Impressum</a>
   </div>
 </template>
 
@@ -45,8 +46,7 @@ async function checkCode(code: string): Promise<void> {
 
   try {
     await SequenceRestInterface.getMetadataForStudent(code);
-    alert('Right Code');
-    //router.push('SlideView');
+    await router.push({ name: 'Slide', params: { sequenceCode: code } });
   } catch {
     showRedBorder.value = true;
   }

@@ -67,6 +67,17 @@ export class AccountRestInterface extends BaseRestInterface {
   }
 
   /**
+   * Sends request to backend to get account of the user with the given id
+   * @param id the id of the requested user
+   * @returns  the requested user
+   */
+  public static async getAccount(id: number): Promise<Partial<IUser>> {
+    return await BaseRestInterface.get<Partial<IUser>>(
+      this.account_path.concat('?id=').concat(id.toString())
+    );
+  }
+
+  /**
    * Sends request to backend to get Usernames to given Account-IDs
    * @param accountIds the id of the accounts
    * @returns the names of the requested Accounts
@@ -87,6 +98,32 @@ export class AccountRestInterface extends BaseRestInterface {
   public static async getAccountMetaDataList(): Promise<Partial<IUser>[]> {
     return await BaseRestInterface.get<Partial<IUser>[]>(
       `${this.account_path}list`
+    );
+  }
+
+  /**
+   * Sends request to backend to get account of the user with the given username
+   * @param username the username of the requested user
+   * @returns  the requested user
+   */
+  public static async getAccountByUserName(
+    username: string
+  ): Promise<Partial<IUser>> {
+    return await BaseRestInterface.get<Partial<IUser>>(
+      this.account_path.concat('?name=').concat(username)
+    );
+  }
+
+  /**
+   * Sends request to backend to get account of the user with the given email
+   * @param email the email of the requested user
+   * @returns  the requested user
+   */
+  public static async getAccountByEmail(
+    email: string
+  ): Promise<Partial<IUser>> {
+    return await BaseRestInterface.get<Partial<IUser>>(
+      this.account_path.concat('?mail=').concat(email)
     );
   }
 }

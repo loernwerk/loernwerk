@@ -44,4 +44,12 @@
     .border-interactable {
         @apply border-interactable-border-light dark:border-interactable-border-dark;
     }
+
+    .container {
+        @apply p-2 border-1 rounded-md bg-container border-container-border box-border shadow overflow-hidden flex flex-col;
+    }
+
+    .interactable {
+        @apply container bg-interactable border-interactable-border cursor-pointer !shadow-none !max-h-fit py-1;
+    }
 }
