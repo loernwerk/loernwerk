@@ -26,7 +26,7 @@
         <ButtonComponent
           @click="$emit('addSlide')"
           class="w-full text-center"
-          v-if="slides.length < maxSlides"
+          v-if="slides.length < maxSlides || maxSlides < 0"
         >
           +
         </ButtonComponent>
@@ -91,6 +91,6 @@ try {
     ConfigKey.MAX_SLIDES_PER_SEQUENCE
   )) as number;
 } catch (e) {
-  // dont allow adding new slides
+  // allow unlimited slides
 }
 </script>

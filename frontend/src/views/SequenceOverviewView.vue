@@ -13,7 +13,7 @@
           <ButtonComponent
             class="w-fit"
             @click="showPopupNewSequence = true"
-            v-if="allOwnSequences.length < maxSequnces"
+            v-if="allOwnSequences.length < maxSequnces || maxSequnces < 0"
           >
             Sequenz erstellen
           </ButtonComponent>
@@ -112,6 +112,6 @@ try {
     ConfigKey.MAX_SEQUENCES_PER_USER
   )) as number;
 } catch (e) {
-  // dont allow new sequences
+  // allow unlimited sequences
 }
 </script>
