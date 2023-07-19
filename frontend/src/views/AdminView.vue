@@ -33,14 +33,19 @@
         @create="refresh()"
       />
     </div>
-    <ButtonComponent class="absolute -top-2 -right-2 text-2xl">
+    <ButtonComponent
+      class="absolute top-2 right-2 text-2xl"
+      @click="showConfigEditor = true"
+    >
       <FontAwesomeIcon :icon="['fas', 'gear']" />
     </ButtonComponent>
     <PopupComponent v-if="showConfigEditor" @closed="showConfigEditor = false">
-      <ConfigEditor
-        :config="(configs as Record<ConfigKey, unknown>)"
-        @save="(val) => saveCofig(val)"
-      />
+      <ContainerComponent class="px-10 py-10">
+        <ConfigEditor
+          :config="(configs as Record<ConfigKey, unknown>)"
+          @save="(val) => saveCofig(val)"
+        />
+      </ContainerComponent>
     </PopupComponent>
   </div>
 </template>
@@ -64,6 +69,7 @@ import ConfigEditor from '../components/admin/ConfigEditor.vue';
 import { ConfigRestInterface } from '../restInterfaces/ConfigRestInterface';
 import { ConfigKey } from '../../../model/configuration/ConfigKey';
 import { IConfigEntry } from '../../../model/configuration/IConfigEntry';
+import ContainerComponent from '../components/ContainerComponent.vue';
 
 library.add(faGear);
 
@@ -113,5 +119,6 @@ async function saveCofig(configs: IConfigEntry[]): Promise<void> {
   for (const entry of configs) {
     await ConfigRestInterface.setValue(entry.key, entry.value);
   }
+  showConfigEditor.value = false;
 }
 </script>
