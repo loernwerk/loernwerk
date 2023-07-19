@@ -22,7 +22,15 @@
 
 @layer components {
     .text-color {
-        @apply text-black dark:text-white;
+        @apply text-font-light dark:text-font-dark; 
+    }
+
+    .text-error {
+        @apply text-font-error-light dark:text-font-error-dark italic;
+    }
+
+    .text-success {
+        @apply text-font-success-light dark:text-font-success-dark italic;
     }
 
     .bg-background {
@@ -41,15 +49,19 @@
         @apply bg-interactable-light dark:bg-interactable-dark;
     }
 
+    .bg-interactable-selected {
+        @apply bg-interactable-selected-light dark:bg-interactable-selected-dark;
+    }
+
     .border-interactable {
         @apply border-interactable-border-light dark:border-interactable-border-dark;
     }
 
     .container {
-        @apply p-2 border-1 rounded-md bg-container border-container-border box-border shadow overflow-hidden flex flex-col;
+        @apply p-2 border-1 rounded-md bg-container border-container box-border shadow overflow-hidden flex flex-col;
     }
 
     .interactable {
-        @apply container bg-interactable border-interactable-border cursor-pointer !shadow-none !max-h-fit py-1;
+        @apply container bg-interactable border-interactable cursor-pointer !shadow-none !max-h-fit py-1;
     }
 }

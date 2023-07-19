@@ -8,7 +8,7 @@
     >
     </TextInputComponent>
     <div class="flex flex-row">
-      <div class="flex-grow text-red-500">
+      <div class="flex-grow text-error">
         <div v-if="error">
           Es ist ein Fehler beim Speichern der Schlüsselwörter aufgetreten.
         </div>

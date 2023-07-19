@@ -56,10 +56,8 @@
         </table>
         <div class="flex items-center pt-4">
           <div class="flex-grow text-center">
-            <div class="text-red-500 italic" v-if="displayError">
-              Ungültige Eingabe
-            </div>
-            <div class="text-green-500 italic" v-if="displaySuccess">
+            <div class="text-error" v-if="displayError">Ungültige Eingabe</div>
+            <div class="text-success" v-if="displaySuccess">
               Account erstellt
             </div>
           </div>
