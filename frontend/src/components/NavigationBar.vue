@@ -28,6 +28,8 @@
       <LightDarkSwitch v-model="isDarkMode" class="text-white" />
     </div>
 
+    <LanguageSelector />
+
     <FontAwesomeIcon
       icon="circle-user"
       size="3x"
@@ -46,6 +48,7 @@ import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
 import { UserClass } from '../../../model/user/IUser';
 import NavigationBarItem from './NavigationBarItem.vue';
 import LightDarkSwitch from './LightDarkSwitch.vue';
+import LanguageSelector from './LanguageSelector.vue';
 
 library.add(faCircleUser);
 
