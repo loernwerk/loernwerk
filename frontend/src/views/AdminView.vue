@@ -42,7 +42,7 @@
     <PopupComponent v-if="showConfigEditor" @closed="showConfigEditor = false">
       <ContainerComponent class="px-10 py-10">
         <ConfigEditor
-          :config="(configs as Record<ConfigKey, unknown>)"
+          :entries="(configs as Record<ConfigKey, unknown>)"
           @save="(val) => saveCofig(val)"
         />
       </ContainerComponent>
