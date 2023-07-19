@@ -36,6 +36,12 @@
     <ButtonComponent class="absolute -top-2 -right-2 text-2xl">
       <FontAwesomeIcon :icon="['fas', 'gear']" />
     </ButtonComponent>
+    <PopupComponent v-if="showConfigEditor" @closed="showConfigEditor = false">
+      <ConfigEditor
+        :config="(configs as Record<ConfigKey, unknown>)"
+        @save="(val) => saveCofig(val)"
+      />
+    </PopupComponent>
   </div>
 </template>
 <script setup lang="ts">
@@ -53,15 +59,23 @@ import ButtonComponent from '../components/ButtonComponent.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
+import PopupComponent from '../components/PopupComponent.vue';
+import ConfigEditor from '../components/admin/ConfigEditor.vue';
+import { ConfigRestInterface } from '../restInterfaces/ConfigRestInterface';
+import { ConfigKey } from '../../../model/configuration/ConfigKey';
+import { IConfigEntry } from '../../../model/configuration/IConfigEntry';
 
 library.add(faGear);
 
+const showConfigEditor = ref(false);
+const configs = ref({});
 const displayCreateUser = ref(false);
 const selectedUser: Ref<Partial<IUser>> | Ref<null> = ref(null);
 const sequencesOfUser: Ref<ISequence[]> = ref([]);
 const accounts: Ref<Partial<IUser>[]> = ref([]);
 try {
   accounts.value = await AccountRestInterface.getAccountMetaDataList();
+  configs.value = await ConfigRestInterface.getAllValue();
 } catch {
   router.push({ name: 'Main' });
 }
@@ -89,5 +103,15 @@ async function refreshSequence(): Promise<void> {
   sequencesOfUser.value = await SequenceRestInterface.getSequenceByUser(
     selectedUser.value?.id as number
   );
+}
+
+/**
+ * Saves the configs to the backend
+ * @param configs the configs to save
+ */
+async function saveCofig(configs: IConfigEntry[]): Promise<void> {
+  for (const entry of configs) {
+    await ConfigRestInterface.setValue(entry.key, entry.value);
+  }
 }
 </script>

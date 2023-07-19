@@ -17,7 +17,6 @@
 </template>
 
 <script setup lang="ts">
-import { PropType } from 'vue';
 import InteractableComponent from './InteractableComponent.vue';
 
 defineProps({
@@ -69,7 +68,7 @@ defineProps({
   /**
    * The variable for the v-model option
    */
-  modelValue: Object as PropType<unknown>,
+  modelValue: String,
 });
 
 const emit = defineEmits([

@@ -47,36 +47,39 @@
 import { ConfigKey } from '../../../../model/configuration/ConfigKey';
 import { IConfigEntry } from '../../../../model/configuration/IConfigEntry';
 import { ConfigTypeMap } from '../../../../model/configuration/ConfigTypeMap';
-import { ref } from 'vue';
+import { PropType, ref } from 'vue';
 import InteractableComponent from '../InteractableComponent.vue';
 import ButtonComponent from '../ButtonComponent.vue';
 import TextInputComponent from '../TextInputComponent.vue';
 
 const props = defineProps({
   config: {
-    type: Array<IConfigEntry>,
+    type: Object as PropType<Record<ConfigKey, unknown>>,
     required: true,
   },
 });
 
 const emits = defineEmits(['save', 'cancel']);
 
+const configKeys = [
+  ConfigKey.MAX_SEQUENCES_PER_USER,
+  ConfigKey.MAX_SLIDES_PER_SEQUENCE,
+];
+
 /**
  * Returns a record of the current config
  * @returns Record of the current config
  */
-function getConfigRecord(): Record<ConfigKey, unknown> {
-  const result: Partial<Record<ConfigKey, unknown>> = {};
+function getConfigRecord(): Record<ConfigKey, string> {
+  const result: Partial<Record<ConfigKey, string>> = {};
 
-  for (const entry of props.config) {
-    result[entry.key] = entry.value;
+  for (const entry of configKeys) {
+    result[entry] = props.config[entry] as string;
   }
-  return result as Record<ConfigKey, unknown>;
+  return result as Record<ConfigKey, string>;
 }
 
 const model = ref(getConfigRecord());
-
-console.log(model.value);
 
 const keyOrder: ConfigKey[] = [
   ConfigKey.MAX_SEQUENCES_PER_USER,
