@@ -8,9 +8,7 @@
             v-if="ConfigTypeMap.getType(key).type === 'number'"
             class="flex space-x-2 items-center"
           >
-            <InteractableComponent>
-              <input type="number" v-model="model[key]" min="0" />
-            </InteractableComponent>
+            <TextInputComponent v-model="model[key]" />
             <i>Leer lassen für unbegrenzte Menge</i>
           </div>
 
@@ -48,7 +46,6 @@ import { ConfigKey } from '../../../../model/configuration/ConfigKey';
 import { IConfigEntry } from '../../../../model/configuration/IConfigEntry';
 import { ConfigTypeMap } from '../../../../model/configuration/ConfigTypeMap';
 import { PropType, ref } from 'vue';
-import InteractableComponent from '../InteractableComponent.vue';
 import ButtonComponent from '../ButtonComponent.vue';
 import TextInputComponent from '../TextInputComponent.vue';
 
