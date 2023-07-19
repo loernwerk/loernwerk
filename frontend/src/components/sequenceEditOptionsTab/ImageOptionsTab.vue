@@ -3,7 +3,7 @@
     <ButtonComponent @click="selectImage()">{{
       $t('change', { object: $t('content.image') })
     }}</ButtonComponent>
-    <div class="text-red-600">{{ errorMessage }}</div>
+    <div class="text-error">{{ errorMessage }}</div>
     <div class="space-x-2 flex flex-row items-center w-96">
       <p>{{ $t('content.scale') }}:</p>
       <input

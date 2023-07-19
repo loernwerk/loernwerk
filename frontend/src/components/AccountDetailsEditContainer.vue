@@ -82,10 +82,10 @@
             Abbrechen
           </ButtonComponent>
           <div class="flex-grow text-center">
-            <div class="text-red-500 italic" v-if="displayError">
+            <div class="text-error" v-if="displayError">
               {{ $t('invalidInput') }}
             </div>
-            <div class="text-green-500 italic" v-if="displaySuccess">
+            <div class="text-success" v-if="displaySuccess">
               {{ $t('save', { object: $t('user') }) }}
             </div>
           </div>
@@ -99,7 +99,7 @@
         </div>
         <div class="flex items-center pt-1" v-if="showadminview">
           <div class="flex-grow text-center">
-            <div class="text-green-500 italic" v-if="deleted">
+            <div class="text-success" v-if="deleted">
               {{ $t('deleted', { object: $t('user') }) }}
             </div>
           </div>

@@ -13,7 +13,7 @@
             <ButtonComponent @click="showSequence(sequence.code)">
               {{ $t('show') }}
             </ButtonComponent>
-            <div class="flex-grow text-red-500">
+            <div class="flex-grow text-error">
               <div v-if="showError">
                 {{ $t('failed', { object: $t('delete') }) }}
               </div>

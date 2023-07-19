@@ -9,7 +9,7 @@
         :key="index"
       >
       </SlideDisplayFactory>
-      <div class="text-red-500" v-if="error">
+      <div class="text-error" v-if="error">
         {{ $t('notAvailable', { object: $t('slide') }) }} {{ $t('reloadPage') }}
       </div>
     </div>

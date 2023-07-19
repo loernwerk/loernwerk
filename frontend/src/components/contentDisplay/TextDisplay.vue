@@ -107,6 +107,7 @@ onMounted(() => {
 .ql-container {
   font-size: 14px;
   font-family: Arial;
+  color: black;
 }
 
 /* Weird element that Quill adds, style fetched from quills snow-theme */
