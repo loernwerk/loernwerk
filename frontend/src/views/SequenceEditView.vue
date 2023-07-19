@@ -93,6 +93,7 @@ import { EmbedContent } from '../../../model/slide/content/EmbedContent';
 import { H5PContent } from '../../../model/slide/content/H5PContent';
 import Delta from 'quill-delta';
 import { ISlide } from '../../../model/slide/ISlide';
+import { useRouter } from 'vue-router';
 
 const props = defineProps({
   /**
@@ -127,6 +128,7 @@ const selectedSlideIndex = ref(0);
 const selectedSlide = computed(
   () => sequence.value.slides[selectedSlideIndex.value]
 );
+const router = useRouter();
 
 /**
  * Updates the content in the given slot
@@ -312,5 +314,6 @@ function getTabNameForSlot(slot: LayoutSlot): string | undefined {
  */
 async function save(): Promise<void> {
   await SequenceRestInterface.updateSequence(sequence.value);
+  await router.push({ name: 'Overview' });
 }
 </script>

@@ -42,7 +42,7 @@ const props = defineProps({
   /**
    * Sequence code to get meta data
    */
-  code: {
+  sequenceCode: {
     type: String,
     required: true,
   },
@@ -57,7 +57,9 @@ const error = ref(false);
 
 let sequence: Partial<ISequence>;
 try {
-  sequence = await SequenceRestInterface.getMetadataForStudent(props.code);
+  sequence = await SequenceRestInterface.getMetadataForStudent(
+    props.sequenceCode
+  );
   await nextSlideToExecute();
 } catch {
   router.push({ name: 'Main' });
@@ -70,7 +72,10 @@ async function nextSlideToExecute(): Promise<void> {
   displaySpinner.value = true;
 
   if (index.value == sequence.slideCount) {
-    router.push({ name: 'Finished', params: { code: sequence.code } });
+    await router.push({
+      name: 'Finished',
+      params: { sequenceCode: sequence.code },
+    });
     return;
   }
   try {

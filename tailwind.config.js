@@ -25,6 +25,9 @@ export default {
                     DEFAULT: '#be1622',
                     dark: '#7F0F18',
                 },
+                navbar: {
+                    DEFAULT: '#006634'
+                }
             },
             borderWidth: {
                 1: '1px',

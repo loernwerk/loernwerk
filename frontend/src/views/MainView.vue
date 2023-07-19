@@ -17,7 +17,7 @@
     </ContainerComponent>
     <ButtonComponent
       class="absolute right-5 bottom-5 h-fit"
-      @click="router.push('LogIn')"
+      @click="router.push({ name: 'LogIn' })"
     >
       {{ $t('account.login') }}
     </ButtonComponent>
@@ -48,7 +48,7 @@ async function checkCode(code: string): Promise<void> {
 
   try {
     await SequenceRestInterface.getMetadataForStudent(code);
-    router.push({ name: 'Slide', params: { code: code } });
+    await router.push({ name: 'Slide', params: { sequenceCode: code } });
   } catch {
     showRedBorder.value = true;
   }

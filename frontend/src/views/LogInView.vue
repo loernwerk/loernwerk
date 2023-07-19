@@ -68,6 +68,7 @@ import ButtonComponent from '../components/ButtonComponent.vue';
 import ContainerComponent from '../components/ContainerComponent.vue';
 import TextInputComponent from '../components/TextInputComponent.vue';
 import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
+import { router } from '../router';
 
 const mailField = ref('');
 const passwordField = ref('');
@@ -97,7 +98,7 @@ async function checkLogIn(): Promise<void> {
   );
 
   if (success) {
-    alert('SequenceOverView');
+    await router.push({ name: 'Overview' });
   } else {
     displayError.value = true;
   }
