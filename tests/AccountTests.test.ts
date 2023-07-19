@@ -7,19 +7,19 @@ import bcrypt from 'bcrypt';
 import { DBSequence } from '../model/sequence/DBSequence';
 import { SequenceController } from '../backend/controller/SequenceController';
 
-let mockDbUser;
+let mockDb;
 let mockDbSequences;
 beforeAll(async () => {
-    mockDbUser = new DataSource({
+    mockDb = new DataSource({
         type: 'sqlite',
         database: ':memory:',
         dropSchema: true,
-        entities: [DBUser],
+        entities: [DBUser, DBSequence, DBSlide],
         synchronize: true,
         logging: false,
     });
 
-    await mockDbUser.initialize();
+    await mockDb.initialize();
     const mockUser = new DBUser();
     mockUser.mail = 'magnus@carlsen.de';
     mockUser.id = 12345;
@@ -40,15 +40,6 @@ beforeAll(async () => {
     toBeDeleted.sharedSequencesWriteAccess = [];
     await toBeDeleted.save();
 
-    mockDbSequences = new DataSource({
-        type: 'sqlite',
-        database: ':memory:',
-        dropSchema: true,
-        entities: [DBSequence],
-        synchronize: true,
-        logging: false,
-    });
-
     const sequenceByDeletedAccount = new DBSequence();
     sequenceByDeletedAccount.code = 'code66';
     sequenceByDeletedAccount.authorId = 931943;
@@ -58,7 +49,7 @@ beforeAll(async () => {
     sequenceByDeletedAccount.readAccess = [];
 });
 afterAll(async () => {
-    await mockDbUser.destroy();
+    await mockDb.destroy();
     await mockDbSequences.destroy();
 });
 describe('AccountController Tests', () => {
@@ -210,11 +201,8 @@ describe('AccountController Tests', () => {
         expect(allAccounts[0].id).not.toBe(null);
     });
 
-    /**
-     * deleteAccount function
-     *TODO figure out why this test fails
-     */
-    xit('delete a correct account', async () => {
+    //deleteAccount function
+    it('delete a correct account', async () => {
         const accountToBeDeleted = await DBUser.findBy({ name: 'bobby' });
         await AccountController.deleteAccount(accountToBeDeleted[0].id);
         await expect(() =>
