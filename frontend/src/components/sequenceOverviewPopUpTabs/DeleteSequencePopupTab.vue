@@ -33,7 +33,7 @@ const emits = defineEmits([
   /**
    * Emitted when sequence is deleted
    */
-  'deleted',
+  'delete',
 ]);
 
 /**
@@ -44,7 +44,7 @@ async function deleteSequence(): Promise<void> {
   const sequenceCode = props.sequence.code as string;
   try {
     await SequenceRestInterface.deleteSequence(sequenceCode);
-    emits('deleted');
+    emits('delete');
   } catch {
     error.value = true;
   }

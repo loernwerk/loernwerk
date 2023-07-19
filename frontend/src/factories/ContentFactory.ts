@@ -18,7 +18,7 @@ export abstract class ContentFactory {
    * @returns a contentObject of the specified type
    */
   public static createContent(json: unknown): Content {
-    switch ((json as Content).type) {
+    switch ((json as Content).contentType) {
       case ContentType.EMBED:
         return new EmbedContentFactory().buildContent(json);
 
@@ -33,7 +33,7 @@ export abstract class ContentFactory {
 
       default:
         throw new LoernwerkError(
-          `Not supported content type ${(json as Content).type}`,
+          `Not supported content type ${(json as Content).contentType}`,
           LoernwerkErrorCodes.NOT_FOUND
         );
     }
