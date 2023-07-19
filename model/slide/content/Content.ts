@@ -3,7 +3,7 @@
  */
 export abstract class Content {
     /** Type of this content */
-    type: ContentType;
+    contentType: ContentType;
 
     /**
      * Constructor that sets the ContentType
@@ -11,7 +11,7 @@ export abstract class Content {
      * @protected
      */
     protected constructor(type: ContentType) {
-        this.type = type;
+        this.contentType = type;
     }
 }
 

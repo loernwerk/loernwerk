@@ -24,11 +24,11 @@
 
 <script setup lang="ts">
 import { RouterView, useRouter } from 'vue-router';
-import NavigationBar from './components/NavigationBar.vue';
 import { ref, Ref } from 'vue';
 import { IUser } from '../../model/user/IUser';
 import { AccountRestInterface } from './restInterfaces/AccountRestInterface';
-import LightDarkSwitch from './components/LightDarkSwitch.vue';
+import NavigationBar from './components/navBar/NavigationBar.vue';
+import LightDarkSwitch from './components/navBar/LightDarkSwitch.vue';
 
 const router = useRouter();
 const isDarkMode = ref(false);
