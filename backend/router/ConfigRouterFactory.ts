@@ -41,7 +41,7 @@ export class ConfigRouterFactory extends RouterFactory {
         configRouter.get('/:key', async (req, res) => {
             if (
                 req.session.userId === undefined &&
-                (req.params.key as ConfigKey) !== ConfigKey.OPEN_REGISTRATION
+                (req.params.key as ConfigKey) !== ConfigKey.REGISTRATION_TYPE
             ) {
                 res.sendStatus(401);
                 return;

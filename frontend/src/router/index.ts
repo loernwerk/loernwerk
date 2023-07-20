@@ -7,7 +7,6 @@ import SlideView from '../views/SlideView.vue';
 import FinishedView from '../views/FinishedView.vue';
 import SequenceOverviewView from '../views/SequenceOverviewView.vue';
 import SequenceEditView from '../views/SequenceEditView.vue';
-import RegistrationView from '../views/RegistrationView.vue';
 
 const router = createRouter({
   history: createWebHistory(''),
@@ -39,11 +38,6 @@ const router = createRouter({
       name: 'Admin',
       component: AdminView,
       meta: { hasNavBar: true },
-    },
-    {
-      path: '/register',
-      name: 'Register',
-      component: RegistrationView,
     },
     {
       path: '/:sequenceCode',

@@ -6,6 +6,7 @@ import { requireAdmin, requireBody, requireLogin } from '../loernwerkUtilities';
 import { LoernwerkErrorCodes } from '../../model/loernwerkError';
 import { ConfigController } from '../controller/ConfigController';
 import { ConfigKey } from '../../model/configuration/ConfigKey';
+import { RegistrationType } from '../../model/configuration/RegistrationType';
 
 /**
  * Builds router for request regarding Account management
@@ -49,9 +50,9 @@ export class AccountRouterFactory extends RouterFactory {
             async (req, res) => {
                 if (
                     !req.session.isAdmin &&
-                    !(await ConfigController.getConfigEntry(
-                        ConfigKey.OPEN_REGISTRATION
-                    ))
+                    (await ConfigController.getConfigEntry(
+                        ConfigKey.REGISTRATION_TYPE
+                    )) !== RegistrationType.OPEN //need to change for invite
                 ) {
                     res.sendStatus(401);
                     return;

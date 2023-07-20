@@ -2,7 +2,10 @@
 <template>
   <div>
     <img src="../assets/Logo.png" class="w-1/3 mx-auto" />
-    <ContainerComponent class="w-1/2 mx-auto my-auto h-fit">
+    <ContainerComponent
+      class="w-1/2 mx-auto my-auto h-fit"
+      v-if="!registrationFormVisible"
+    >
       <template #Header>
         <h1 class="underline text-xl">Anmelden:</h1>
       </template>
@@ -57,12 +60,18 @@
         </div>
       </template>
     </ContainerComponent>
-    <ButtonComponent
-      v-if="registrationVisible"
-      class="absolute right-5 bottom-5 h-fit"
-      @click="router.push({ name: 'Register' })"
+    <div
+      class="w-full mt-auto mb-auto ml-3 mr-3"
+      v-if="registrationFormVisible"
     >
-      Registrieren
+      <AccountCreationContainer />
+    </div>
+    <ButtonComponent
+      v-if="registrationButtonVisible"
+      class="absolute right-5 bottom-5 h-fit"
+      @click="registrationFormVisible = !registrationFormVisible"
+    >
+      {{ registrationFormVisible ? 'Login' : 'Registrieren' }}
     </ButtonComponent>
   </div>
 </template>
@@ -72,6 +81,7 @@ import { ref } from 'vue';
 import ButtonComponent from '../components/ButtonComponent.vue';
 import ContainerComponent from '../components/ContainerComponent.vue';
 import TextInputComponent from '../components/TextInputComponent.vue';
+import AccountCreationContainer from '../components/admin/AccountCreationContainer.vue';
 import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
 import { router } from '../router';
 import { ConfigRestInterface } from '../restInterfaces/ConfigRestInterface';
@@ -82,9 +92,10 @@ const passwordField = ref('');
 const keepLoggedIn = ref(false);
 const disableInputShowSpinner = ref(false);
 const displayError = ref(false);
-const registrationVisible = ref(false);
+const registrationButtonVisible = ref(false);
+const registrationFormVisible = ref(false);
 
-registrationVisible.value = (await ConfigRestInterface.getValue(
+registrationButtonVisible.value = (await ConfigRestInterface.getValue(
   ConfigKey.REGISTRATION_TYPE
 )) as boolean;
 
