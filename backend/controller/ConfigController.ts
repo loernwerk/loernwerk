@@ -71,6 +71,8 @@ export class ConfigController {
      */
     public static async isValidInviteCode(code:string) : Promise<boolean> {
         const codes = (await this.getConfigEntry(ConfigKey.REGISTRATION_CODES) as string).split(',')
+        console.log(codes)
+        console.log(code)
         for (const c of codes) {
             if (c === code) {
                 return true

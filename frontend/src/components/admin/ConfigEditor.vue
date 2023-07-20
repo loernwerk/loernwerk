@@ -105,6 +105,7 @@ const keyOrder: ConfigKey[] = [
   ConfigKey.MAX_SLIDES_PER_SEQUENCE,
   ConfigKey.REGISTRATION_TYPE,
   ConfigKey.REGISTRATION_CODES,
+  ConfigKey.REGISTRATION_CODES_EXPIRES_AFTER_USE
 ];
 
 const keyDescribtion: Record<ConfigKey, string> = {

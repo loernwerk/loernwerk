@@ -98,7 +98,7 @@ const emit = defineEmits([
   'create',
 ]);
 
-defineProps({
+const props = defineProps({
   requiresInviteCode: {
     type: Boolean,
     required: false,
@@ -139,7 +139,7 @@ async function createUser(): Promise<void> {
       name: nameField.value,
       mail: mailField.value,
       password: pwField.value,
-    });
+    }, (props.requiresInviteCode === true)?inviteCode.value:undefined);
     displaySuccess.value = true;
     emit('create');
   } catch (e) {
