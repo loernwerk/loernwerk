@@ -14,6 +14,11 @@ const router = createRouter({
       component: import('../views/LogInView.vue'),
     },
     {
+      path: '/overview',
+      name: 'Overview',
+      component: import('../views/SequenceOverviewView.vue'),
+    },
+    {
       path: '/account',
       name: 'Account',
       component: import('../views/AccountView.vue'),
@@ -36,7 +41,7 @@ const router = createRouter({
       props: true,
     },
     {
-      path: '/edit/:sequenceCode',
+      path: '/edit/:code',
       name: 'SequenceEdit',
       component: import('../views/SequenceEditView.vue'),
       props: true,

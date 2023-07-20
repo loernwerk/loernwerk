@@ -93,19 +93,20 @@ import { EmbedContent } from '../../../model/slide/content/EmbedContent';
 import { H5PContent } from '../../../model/slide/content/H5PContent';
 import Delta from 'quill-delta';
 import { ISlide } from '../../../model/slide/ISlide';
+import { useRouter } from 'vue-router';
 
 const props = defineProps({
   /**
    * The code of the sequence to edit
    */
-  sequenceCode: {
+  code: {
     type: String,
     required: true,
   },
 });
 
 const sequence = ref<ISequenceWithSlides>(
-  await SequenceRestInterface.getSequence(props.sequenceCode)
+  await SequenceRestInterface.getSequence(props.code)
 );
 
 if (sequence.value.slides.length == 0) {
@@ -116,6 +117,7 @@ const selectedSlideIndex = ref(0);
 const selectedSlide = computed(
   () => sequence.value.slides[selectedSlideIndex.value]
 );
+const router = useRouter();
 
 /**
  * Updates the content in the given slot
@@ -165,7 +167,7 @@ function changeContent(slot: LayoutSlot, contentType: ContentType): void {
       content = new H5PContent();
       content.type = ContentType.H5P;
       content.h5pContentId = 'new';
-      content.sequenceCode = props.sequenceCode;
+      content.sequenceCode = props.code;
       break;
   }
 
@@ -301,5 +303,6 @@ function getTabNameForSlot(slot: LayoutSlot): string | undefined {
  */
 async function save(): Promise<void> {
   await SequenceRestInterface.updateSequence(sequence.value);
+  router.push('/overview');
 }
 </script>

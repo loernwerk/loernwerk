@@ -1,4 +1,4 @@
-<!-- Component for inputing text -->
+<!-- Component for inputting text -->
 <template>
   <InteractableComponent class="!cursor-default">
     <input
