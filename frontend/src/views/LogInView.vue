@@ -84,9 +84,11 @@ const disableInputShowSpinner = ref(false);
 const displayError = ref(false);
 const registrationVisible = ref(false);
 
+console.log(await ConfigRestInterface.getValue(ConfigKey.OPEN_REGISTRATION));
 registrationVisible.value = (await ConfigRestInterface.getValue(
   ConfigKey.OPEN_REGISTRATION
 )) as boolean;
+console.log(registrationVisible.value);
 
 /**
  * Locks the Checkbox while checking Login data
