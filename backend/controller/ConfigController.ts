@@ -75,7 +75,7 @@ export class ConfigController {
                     ConfigKey.MAX_SLIDES_PER_SEQUENCE,
                 ],
             ],
-            [false as unknown, [ConfigKey.OPEN_REGISTRATION]],
+            [false as unknown, [ConfigKey.REGISTRATION_TYPE]],
         ]);
         for (const [defaultValue, keys] of defaultValueMap) {
             for (const k of keys) {

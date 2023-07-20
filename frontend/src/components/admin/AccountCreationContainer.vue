@@ -53,6 +53,17 @@
               />
             </td>
           </tr>
+          <tr v-if="requiresInviteCode">
+            <td class="p-1">Einladungscode:</td>
+            <td class="p-1">
+              <TextInputComponent
+                :disabled="disableInputShowSpinner"
+                place-holder="Einladungscode"
+                :max-length="128"
+                v-model="inviteCode"
+              />
+            </td>
+          </tr>
         </table>
         <div class="flex items-center pt-4">
           <div class="flex-grow text-center">
@@ -87,10 +98,19 @@ const emit = defineEmits([
   'create',
 ]);
 
+defineProps({
+  requiresInviteCode: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+});
+
 const nameField = ref('');
 const mailField = ref('');
 const pwField = ref('');
 const pwFieldControl = ref('');
+const inviteCode = ref('');
 const disableInputShowSpinner = ref(false);
 const displayError = ref(false);
 const displaySuccess = ref(false);
