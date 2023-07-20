@@ -88,6 +88,9 @@ const messages = {
       registrationCodes: 'Einladungscodes (getrennt durch Kommas)',
       registrationCodesExpirations:
         'Einladungscodes verliert nach Verwendung Gültigkeit',
+      open: 'Offene Registrierung',
+      closed: 'Registrierung durch Admin',
+      invite: 'Registrierung durch Einladungscodes',
     },
     navBar: {
       overview: 'Sequenzübersicht',
@@ -181,6 +184,9 @@ const messages = {
       registrationType: 'Registrationtype',
       registrationCodes: 'Registrationcode (seperated by comma)',
       registrationCodesExpirations: 'Registrationcode expires after use',
+      open: 'Open registration',
+      closed: 'Only admins can add new users',
+      invite: 'Registration through invitecodes',
     },
     navBar: {
       overview: 'Sequenceoverview',

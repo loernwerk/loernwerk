@@ -33,7 +33,7 @@
               :key="option"
               :value="option"
             >
-              {{ option }}
+              {{ $t('config.' + option) }}
             </option>
           </select>
           <div v-if="ConfigTypeMap.getType(key).type === 'codes'">
