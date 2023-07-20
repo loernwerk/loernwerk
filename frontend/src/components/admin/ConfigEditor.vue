@@ -30,6 +30,14 @@
               {{ option }}
             </option>
           </select>
+          <select
+            v-if="ConfigTypeMap.getType(key).type === 'boolean'"
+            v-model="model[key]"
+            class="w-full"
+          >
+            <option :value="true">Wahr</option>
+            <option :value="false">Falsch</option>
+          </select>
         </td>
       </tr>
     </table>
