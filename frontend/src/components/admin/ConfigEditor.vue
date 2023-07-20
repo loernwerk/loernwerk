@@ -2,7 +2,7 @@
   <div class="flex flex-col">
     <table class="h-fit">
       <tr v-for="key in keyOrder" :key="key">
-        <td class="p-2">{{ keyDescribtion[key] }}:</td>
+        <td class="p-2">{{ keyDescription[key] }}:</td>
         <td class="p-2">
           <div
             v-if="ConfigTypeMap.getType(key).type === 'number'"
@@ -39,7 +39,7 @@
       }}</ButtonComponent>
       <div class="grow text-center text-red-500">
         <div v-if="errorKey">
-          {{ $t('config.invalidInput', { object: keyDescribtion[errorKey] }) }}
+          {{ $t('config.invalidInput', { object: keyDescription[errorKey] }) }}
         </div>
       </div>
       <ButtonComponent @click="save()">{{ $t('save') }}</ButtonComponent>
@@ -99,7 +99,7 @@ const keyOrder: ConfigKey[] = [
   ConfigKey.MAX_SLIDES_PER_SEQUENCE,
 ];
 
-const keyDescribtion: ComputedRef<Record<ConfigKey, string>> = computed(() => {
+const keyDescription: ComputedRef<Record<ConfigKey, string>> = computed(() => {
   return {
     [ConfigKey.MAX_SEQUENCES_PER_USER]: i18n.global.t('config.maxSequences'),
     [ConfigKey.MAX_SLIDES_PER_SEQUENCE]: i18n.global.t('config.maxSlides'),
