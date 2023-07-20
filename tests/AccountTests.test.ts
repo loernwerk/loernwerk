@@ -224,6 +224,8 @@ describe('AccountController Tests', () => {
      *NOTE: Admin email returns undefined@loernwerk.de, intended?
      */
     it('create Admin, because no admin exists', async () => {
+        const noAdmin = await DBUser.findBy({ type: UserClass.ADMIN });
+        expect(noAdmin.length).toEqual(0);
         await AccountController.ensureAdminAccount();
         const admin = await DBUser.findBy({ type: UserClass.ADMIN });
         expect(admin[0]).toBeInstanceOf(DBUser);
