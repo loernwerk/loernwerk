@@ -25,6 +25,7 @@ const messages = {
     failed: '{object} fehlgeschlagen',
     account: {
       login: 'Anmelden',
+      register: 'Registrieren',
       name: 'Benutzername',
       mail: 'E-Mail',
       password: 'Passwort',
@@ -118,6 +119,7 @@ const messages = {
     failed: '{object} failed',
     account: {
       login: 'Login',
+      register: 'Register',
       name: 'Username',
       mail: 'E-Mail',
       password: 'Password',

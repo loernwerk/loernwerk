@@ -49,7 +49,7 @@
           </div>
           <div class="flex-grow text-center">
             <div class="text-error" v-if="displayError">
-              {{ $t('account.wrongInputData') }}
+              {{ $t('account.wrongLoginData') }}
             </div>
           </div>
           <ButtonComponent
@@ -75,7 +75,9 @@
       class="absolute right-5 bottom-5 h-fit"
       @click="registrationFormVisible = !registrationFormVisible"
     >
-      {{ registrationFormVisible ? 'Login' : 'Registrieren' }}
+      {{
+        registrationFormVisible ? $t('account.login') : $t('account.register')
+      }}
     </ButtonComponent>
   </div>
 </template>
