@@ -71,12 +71,12 @@ export class H5PServer {
             config
         );
 
-        // Clean up temporary files every 5 minutes
+        // Clean up temporary files every 5 minutes, as suggested by h5p library
         setInterval(() => {
             this.editor.temporaryFileManager.cleanUp();
         }, 1000 * 60 * 5);
 
-        // Update content types every 12 hours
+        // Update content types every 12 hours, as suggested by h5p library
         setInterval(() => {
             this.editor.contentTypeCache.updateIfNecessary();
         }, 1000 * 60 * 60 * 12);

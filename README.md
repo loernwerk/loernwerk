@@ -6,7 +6,7 @@ A web app for creating learning sequences.
 Setting up the platform is as easy as it gets:
 1. Obtain a built version of the platform
     1. Either download a prebuilt release
-    2. Alternatively, build from source
+    2. Alternatively, [build from source](#building-the-platform-from-source)
 2. Install the required dependencies by running `npm i`
 3. Start the platform by running `npm run start`
 4. Enjoy! The platform will download some required files, and create a default admin at first launch, whose credentials will be displayed in the terminal. The platform will serve at `http://localhost:5000` by default.
@@ -36,7 +36,7 @@ The imprint file is located inside the `dist/imprint.html`. The content of this 
 Alternatively, the imprint can be changed in the source files at `frontend/public/imprint.html`, after which the platform needs to be recompiled.
 
 ## Security warning - automatic file download
-The platform automatically downloads & served the required H5P libraries.
+The platform automatically downloads & serves the required H5P libraries.
 The libraries are downloaded upon server start, if they aren't found on the filesystem.
 This poses a possible security risk, if the H5P libraries contain malicious code, or the automatic download is redirected to malicious files.
 To avoid the automatic download and unpacking of the libraries, you can manually download the [H5P library](https://github.com/h5p/h5p-php-library/archive/1.24.0.zip) and [H5P editor library](https://github.com/h5p/h5p-editor-php-library/archive/1.24.1.zip) and place them in the `/h5p/core` and `/h5p/editor` directories respectively.
