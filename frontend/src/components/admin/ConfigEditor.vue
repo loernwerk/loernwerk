@@ -37,7 +37,6 @@
           </select>
           <div v-if="ConfigTypeMap.getType(key).type === 'codes'">
             <TextInputComponent v-model="model[key]" />
-            <ButtonComponent @click=""> Generiere </ButtonComponent>
           </div>
         </td>
       </tr>
