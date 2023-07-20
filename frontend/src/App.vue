@@ -9,8 +9,9 @@
             v-model:dark-mode="isDarkMode"
             class="flex-shrink-0"
           />
-          <div v-else class="absolute top-5 right-5 z-50">
+          <div v-else class="absolute top-5 right-5 z-50 flex space-x-5">
             <LightDarkSwitch v-model="isDarkMode" />
+            <LanguageSelector :border-color="isDarkMode ? 'white' : 'black'" />
           </div>
         </Suspense>
         <div
@@ -32,6 +33,7 @@ import { IUser } from '../../model/user/IUser';
 import { AccountRestInterface } from './restInterfaces/AccountRestInterface';
 import NavigationBar from './components/navBar/NavigationBar.vue';
 import LightDarkSwitch from './components/navBar/LightDarkSwitch.vue';
+import LanguageSelector from './components/navBar/LanguageSelector.vue';
 
 const router = useRouter();
 const isDarkMode = ref(false);

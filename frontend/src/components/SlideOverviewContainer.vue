@@ -1,7 +1,7 @@
 <template>
   <ContainerComponent>
     <template #Header>
-      <h1 class="text-3xl">Seiten</h1>
+      <h1 class="text-3xl">{{ $t('slide') }}</h1>
     </template>
     <template #default>
       <div class="flex flex-col min-h-full pt-2">

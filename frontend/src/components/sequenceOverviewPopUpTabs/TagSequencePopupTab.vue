@@ -1,21 +1,21 @@
 <template>
   <div class="mt-4 space-y-2 flex flex-col">
-    <h1>Schlüsselwörter der Sequenz (mit "," getrennt):</h1>
+    <h1>{{ $t('sequence.tagIntro') }}</h1>
     <TextInputComponent
       class="my-2 grow"
-      placeHolder="Schlüsselwörter"
+      :placeHolder="$t('sequence.tags')"
       v-model="tagsField"
     >
     </TextInputComponent>
     <div class="flex flex-row">
       <div class="flex-grow text-error">
         <div v-if="error">
-          Es ist ein Fehler beim Speichern der Schlüsselwörter aufgetreten.
+          {{ $t('sequence.tagAddError') }}
         </div>
       </div>
-      <ButtonComponent class="w-fit float-right" @click="confimChanges"
-        >Bestätigen</ButtonComponent
-      >
+      <ButtonComponent class="w-fit float-right" @click="confimChanges">{{
+        $t('save')
+      }}</ButtonComponent>
     </div>
   </div>
 </template>

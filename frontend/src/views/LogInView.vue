@@ -4,27 +4,29 @@
     <img src="../assets/Logo.png" class="w-1/3 mx-auto" />
     <ContainerComponent class="w-1/2 mx-auto my-auto h-fit">
       <template #Header>
-        <h1 class="underline text-xl">Anmelden:</h1>
+        <h1 class="underline text-xl">{{ $t('account.login') }}:</h1>
       </template>
       <template #default>
         <table class="w-full">
           <tr>
-            <td class="p-1">Nutzername/Email:</td>
+            <td class="p-1 whitespace-nowrap">
+              {{ $t('account.name') }}/{{ $t('account.mail') }}:
+            </td>
             <td class="w-full p-1">
               <TextInputComponent
                 :disabled="disableInputShowSpinner"
-                placeHolder="Nutzername/Email"
+                :placeHolder="`${$t('account.name')}/${$t('account.mail')}`"
                 v-model="mailField"
               />
             </td>
           </tr>
           <tr>
-            <td class="p-1">Passwort:</td>
+            <td class="p-1">{{ $t('account.password') }}:</td>
             <td class="w-full p-1">
               <TextInputComponent
                 :disabled="disableInputShowSpinner"
                 :hidden="true"
-                placeHolder="Passwort"
+                :placeHolder="$t('account.password')"
                 v-model="passwordField"
               />
             </td>
@@ -38,13 +40,13 @@
               class="cursor-pointer"
               v-model="keepLoggedIn"
             />
-            <label class="cursor-pointer" @click="disableCheckBox"
-              >Angemeldet bleiben</label
-            >
+            <label class="cursor-pointer" @click="disableCheckBox">{{
+              $t('account.keepLoggedIn')
+            }}</label>
           </div>
           <div class="flex-grow text-center">
             <div class="text-error" v-if="displayError">
-              Falscher Nutzername/Email oder Passwort.
+              {{ $t('account.wrongInputData') }}
             </div>
           </div>
           <ButtonComponent
@@ -52,7 +54,7 @@
             :loading="disableInputShowSpinner"
             @click="checkLogIn()"
           >
-            Anmelden
+            {{ $t('account.login') }}
           </ButtonComponent>
         </div>
       </template>

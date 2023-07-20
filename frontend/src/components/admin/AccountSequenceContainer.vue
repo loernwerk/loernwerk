@@ -1,7 +1,9 @@
 <template>
   <ContainerComponent>
     <template #Header>
-      <h1 class="underline text-xl mb-2">Sequenzen des Nutzers:</h1>
+      <h1 class="underline text-xl mb-2">
+        {{ $t('account.sequencesOfUser') }}:
+      </h1>
     </template>
     <div v-for="sequence in sequences" :key="sequence.code" class="mb-2">
       <ContainerComponent>
@@ -9,13 +11,15 @@
           <h3 class="text-3xl text-center">{{ sequence.name }}</h3>
           <div class="flex">
             <ButtonComponent @click="showSequence(sequence.code)">
-              Anzeigen
+              {{ $t('show') }}
             </ButtonComponent>
             <div class="flex-grow text-error">
-              <div v-if="showError">Löschen fehlgeschlagen</div>
+              <div v-if="showError">
+                {{ $t('failed', { object: $t('delete') }) }}
+              </div>
             </div>
             <ButtonComponent @click="deleteSequence(sequence.code)">
-              Löschen
+              {{ $t('delete') }}
             </ButtonComponent>
           </div>
         </div>

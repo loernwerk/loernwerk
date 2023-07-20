@@ -9,7 +9,9 @@
       />
       <TextInputComponent
         class="flex-1 !border-none !bg-transparent"
-        :placeHolder="placeHolder"
+        :placeHolder="
+          placeHolder !== undefined ? placeHolder : `${$t('search')}...`
+        "
         v-model="searchText"
       />
     </div>
@@ -33,7 +35,6 @@ defineProps({
   placeHolder: {
     type: String,
     required: false,
-    default: 'Search...',
   },
 });
 
