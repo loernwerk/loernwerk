@@ -17,6 +17,8 @@ import { buildH5Pi18n, buildH5PRequest } from './loernwerkUtilities';
 import { h5pAjaxExpressRouter } from '@lumieducation/h5p-express';
 import { resolve } from 'node:path';
 import fileUpload from 'express-fileupload';
+import { ConfigRouterFactory } from './router/ConfigRouterFactory';
+import { ConfigController } from './controller/ConfigController';
 
 /**
  * Main class and entrypoint of the backend server.
@@ -34,6 +36,7 @@ class loernwerkServer {
         await AccountController.ensureAdminAccount();
         await H5PServer.getInstance().downloadServerFiles();
         await H5PServer.getInstance().initialize();
+        await ConfigController.ensureConfig();
 
         // Setting up Cross-Origin-Resource-Sharing for dev environment
         app.use(
@@ -92,6 +95,7 @@ class loernwerkServer {
                 resolve('h5p/editor')
             )
         );
+        app.use('/api/config', new ConfigRouterFactory().buildRouter());
 
         // Serving built vue app
         app.use(history());

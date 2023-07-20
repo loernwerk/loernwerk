@@ -7,6 +7,7 @@ import 'dotenv/config';
 import { DBH5PFile } from '../model/h5p/DBH5PFile';
 import { DBH5PContent } from '../model/h5p/DBH5PContent';
 import { DBH5PLibrary } from '../model/h5p/DBH5PLibrary';
+import { DBConfigEntry } from '../model/configuration/DBConfigEntry';
 
 /**
  * Handles database connection for the backend server.
@@ -33,6 +34,7 @@ export class DatabaseServer {
                 DBH5PFile,
                 DBH5PContent,
                 DBH5PLibrary,
+                DBConfigEntry,
             ],
         });
 
