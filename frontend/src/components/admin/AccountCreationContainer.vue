@@ -56,11 +56,11 @@
             </td>
           </tr>
           <tr v-if="requiresInviteCode">
-            <td class="p-1">Einladungscode:</td>
+            <td class="p-1">{{ $t('account.inviteCode') }}:</td>
             <td class="p-1">
               <TextInputComponent
                 :disabled="disableInputShowSpinner"
-                place-holder="Einladungscode"
+                place-holder="$t('account.inviteCode')"
                 :max-length="128"
                 v-model="inviteCode"
               />
