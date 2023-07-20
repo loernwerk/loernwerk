@@ -32,6 +32,13 @@ export class AccountRestInterface extends BaseRestInterface {
   }
 
   /**
+   * Tries to logout the currently logged in user.
+   */
+  public static async logout(): Promise<void> {
+    await BaseRestInterface.post<void>(`${this.account_path}logout`, {});
+  }
+
+  /**
    * Sends data for a new Account to backend
    * @param account the account
    * @returns the id of the newly created user

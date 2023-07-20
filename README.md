@@ -1,36 +1,50 @@
 # loernwerk
 
-Documentation incoming. Soon :tm:
+A web app for creating learning sequences.
 
-## Warning
-This platform automatically downloads & serves the required H5P libraries.
-This poses a possible security risk, if the H5P libraries are compromised.
-To avoid the auto download, download the required [H5P library](https://github.com/h5p/h5p-php-library/archive/1.24.0.zip) and [H5P editor library](https://github.com/h5p/h5p-editor-php-library/archive/1.24.1.zip) and place them in the `/h5p/core` and `/h5p/editor` directories.
+## Setup
+Setting up the platform is as easy as it gets:
+1. Obtain a built version of the platform
+    1. Either download a prebuilt release
+    2. Alternatively, [build from source](#building-the-platform-from-source)
+2. Install the required dependencies by running `npm i`
+3. Start the platform by running `npm run start`
+4. Enjoy! The platform will download some required files, and create a default admin at first launch, whose credentials will be displayed in the terminal. The platform will serve at `http://localhost:5000` by default.
 
-## Environment variables
-- `PORT`: Port of the application. Default: 5000
-- `HOSTNAME`: Hostname of the application. Default: 'localhost'
-- `DATABASE_FILE`: Database file of the SQLite database. Default: 'dev.db'
-- `SSL_KEYFILE`: File containing the key used for SSL encryption. If undefined, HTTPS server wont be started.
-- `SSL_CERTFILE`: File containing the certificate used for SSL encryption. If undefined, HTTPS server wont be started.
-- `SSL_PORT`: Port under which the HTTPS server should be started. Default: 5443.
-- `SSL_CAFILE`: CA File to be used for SSL encryption. Optional.
-- `DISABLE_HTTP`: If set, the HTTP server wont be started and therefore disabled.
+Alternatively, a Dockerfile is also available to build the platform to a docker image.
 
-## Imprint
-To add your own imprint, edit the `build/dist/imprint.html` file.
-Alternatively, the source file at `frontend/public/imprint.html` can be edited, however, the platform needs to be recompiled afterwards.
+## Configuration
 
-## Command reference
+Some basic settings of the platform can be configured via environment variables. These are:
 
-- `npm run dev`: Runs both backend and frontend dev server
-- `npm run dev:backend`: Runs only backend dev server
-- `npm run dev:frontend`: Runs only frontend dev server
+| Variable        | Description                                                                             | Default        |
+|-----------------|-----------------------------------------------------------------------------------------|----------------|
+| `PORT`          | Port of the application.                                                                | `5000`         |
+| `HOSTNAME`      | Hostname of the application.                                                            | `localhost`    |
+| `DATABASE_FILE` | Database file for the SQLite database.                                                  | `loernwerk.db` |
+| `SSL_KEYFILE`   | File containing the key used for SSL encryption. Required for the HTTPS server.         |                |
+| `SSL_CERTFILE`  | File containing the certificate used for SSL encryption. Required for the HTTPS server. |                |
+| `SSL_PORT`      | Port for the HTTPS server.                                                              | `5443`         |
+| `SSL_CAFILE`    | CA File used for SSL encryption. Optional.                                              |                |
+| `DISABLE_HTTP`  | If set, will disable the HTTP server.                                                   |                |
 
-- `npm run build`: Builds the entire project
-- `npm run build:frontend`: Builds only the frontend using `vue-tsc` and `vite`
-- `npm run build:backend`: Builds only the backend using `tsc`
+`.env` files can also be used to set these variables.
 
-- `npm run start`: Starts the built project
-- `npm run lint`: Runs eslint on the entire sourcecode (also done precommit)
-- `npm run prettier`: Runs prettier on the entire sourcecode (also done precommit)
+## Adding a custom imprint
+The imprint file is located inside the `dist/imprint.html`. The content of this file can be changed to your liking to add your custom imprint.
+
+Alternatively, the imprint can be changed in the source files at `frontend/public/imprint.html`, after which the platform needs to be recompiled.
+
+## Security warning - automatic file download
+The platform automatically downloads & serves the required H5P libraries.
+The libraries are downloaded upon server start, if they aren't found on the filesystem.
+This poses a possible security risk, if the H5P libraries contain malicious code, or the automatic download is redirected to malicious files.
+To avoid the automatic download and unpacking of the libraries, you can manually download the [H5P library](https://github.com/h5p/h5p-php-library/archive/1.24.0.zip) and [H5P editor library](https://github.com/h5p/h5p-editor-php-library/archive/1.24.1.zip) and place them in the `/h5p/core` and `/h5p/editor` directories respectively.
+
+## Building the platform from source
+1. Clone the git repository
+2. Install all dependencies by running `npm i`
+3. Build the platform by running `npm run build`
+   1. You may also only build parts of the platform by running `npm run build:frontend` or `npm run build:backend`
+   2. The command `npm run build:postscript` runs the `build_postscript.ts` file which handles copying necessary assets and modifying the `package.json` inside the build output.
+4. The built platform will be placed inside the `build` folder. You can also immediately run it by using `npm run start`!

@@ -3,7 +3,7 @@
   <ContainerComponent
     class="bg-interactable border-interactable cursor-pointer !shadow-none !max-h-fit py-1"
   >
-    <template #default>
+    <template #Header>
       <!-- Slot for the comtent of the component -->
       <slot></slot>
     </template>
