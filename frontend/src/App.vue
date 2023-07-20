@@ -7,6 +7,7 @@
           <NavigationBar
             v-if="$router.currentRoute.value.meta['hasNavBar']"
             v-model:dark-mode="isDarkMode"
+            class="flex-shrink-0"
           />
           <div v-else class="absolute top-5 right-5 z-50">
             <LightDarkSwitch v-model="isDarkMode" />
