@@ -81,6 +81,11 @@ const messages = {
       emptyPossible: 'Leer lassen für unbegrenzt',
       invalidInput: 'Ungültige Eingabe für {object}',
     },
+    navBar: {
+      overview: 'Sequenzübersicht',
+      admin: 'Admin',
+      sequenceEdit: 'Sequenzbearbeitung',
+    },
   },
   en: {
     save: 'Save',
@@ -161,6 +166,11 @@ const messages = {
       maxSlides: 'Maximum number of slides',
       emptyPossible: 'Leave empty for unlimited',
       invalidInput: 'Invalid input for {object}',
+    },
+    navBar: {
+      overview: 'Sequenceoverview',
+      admin: 'Admin',
+      sequenceEdit: 'Edit sequence',
     },
   },
 };
