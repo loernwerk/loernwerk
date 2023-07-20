@@ -56,12 +56,14 @@ export class AccountRouterFactory extends RouterFactory {
                             res.sendStatus(401);
                             return;
                         case RegistrationType.INVITE:
-                            const code = req.query.code
-                            if (code === undefined || await ConfigController.isValidInviteCode(code.toString())) {
+                            const code = req.query.code?.toString()
+                            if (code === undefined || await ConfigController.isValidInviteCode(code)) {
                                 res.sendStatus(401)
                                 return
                             }
-                            //set remove code if nec  
+                            if (await ConfigController.getConfigEntry(ConfigKey.REGISTRATION_CODES_EXPIRES_AFTER_USE) === true) {
+                                removecode = code
+                            }
                     }
                     
                 }
@@ -70,6 +72,9 @@ export class AccountRouterFactory extends RouterFactory {
                     const user = await AccountController.createNewAccount(
                         req.body
                     );
+                    if (removecode !== '') {
+                        ConfigController.removeInviteCode(removecode)
+                    }
                     res.status(201).json({ id: user.id });
                 } catch {
                     res.sendStatus(400);

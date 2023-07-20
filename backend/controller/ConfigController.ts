@@ -1,5 +1,4 @@
 import { ConfigKey } from '../../model/configuration/ConfigKey';
-import { ConfigTypeMap } from '../../model/configuration/ConfigTypeMap';
 import { DBConfigEntry } from '../../model/configuration/DBConfigEntry';
 import { RegistrationType } from '../../model/configuration/RegistrationType';
 import {
@@ -65,8 +64,13 @@ export class ConfigController {
         return rec;
     }
 
-    public static async isValidInviteCode(code:string) {
-        const codes = (await this.getConfigEntry(ConfigKey.REGISTRATION_CODE) as string).split(',')
+    /**
+     * tests if a invite code is valid
+     * @param code the code to test
+     * @returns true if the invite code is valid
+     */
+    public static async isValidInviteCode(code:string) : Promise<boolean> {
+        const codes = (await this.getConfigEntry(ConfigKey.REGISTRATION_CODES) as string).split(',')
         for (const c of codes) {
             if (c === code) {
                 return true
@@ -75,11 +79,15 @@ export class ConfigController {
         return false
     }
 
-    public static async removeInviteCode(code: string) {
-        let codes = (await this.getConfigEntry(ConfigKey.REGISTRATION_CODE) as string).split(',')
+    /**
+     * removes a invite code from the code list
+     * @param code the code to remove
+     */
+    public static async removeInviteCode(code: string): Promise<void> {
+        let codes = (await this.getConfigEntry(ConfigKey.REGISTRATION_CODES) as string).split(',')
         const index = codes.indexOf(code)
         codes = codes.splice(index, 1)
-        this.setConfigEntry(ConfigKey.REGISTRATION_CODE, codes.join(','))
+        this.setConfigEntry(ConfigKey.REGISTRATION_CODES, codes.join(','))
     }
 
     /**
@@ -90,7 +98,8 @@ export class ConfigController {
             [ConfigKey.MAX_SEQUENCES_PER_USER, -1],
             [ConfigKey.MAX_SLIDES_PER_SEQUENCE, -1],
             [ConfigKey.REGISTRATION_TYPE, RegistrationType.CLOSED as unknown],
-            [ConfigKey.REGISTRATION_CODE, Math.floor(Math.random() * 10 ** 8)],
+            [ConfigKey.REGISTRATION_CODES, ''],
+            [ConfigKey.REGISTRATION_CODES_EXPIRES_AFTER_USE, true]
         ]);
         for (const [key, value] of defaultValueMap) {
             const entry = await DBConfigEntry.findOneBy({ key: key });
