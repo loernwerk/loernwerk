@@ -3,26 +3,27 @@ import { H5PContent } from '../model/slide/content/H5PContent';
 import { EmbedContent } from '../model/slide/content/EmbedContent';
 import { ImageContent } from '../model/slide/content/ImageContent';
 import { TextContent } from '../model/slide/content/TextContent';
+import { ContentType } from '../model/slide/content/Content';
 describe('Factory-Tests', () => {
     const h5pJSON = {
         h5pContentId: 'string',
         sequenceCode: 'Sequence66',
-        type: 3,
+        contentType: ContentType.H5P,
     };
     const embedJSON = {
         url: 'string',
-        type: 2,
+        contentType: ContentType.EMBED,
     };
 
     const imageJSON = {
         img: 'string',
         scale: 'number',
-        type: 1,
+        contentType: ContentType.IMAGE,
     };
 
     const textJSON = {
         delta: 'ops : []',
-        type: 0,
+        contentType: ContentType.TEXT,
     };
 
     it('h5p factory test', async () => {

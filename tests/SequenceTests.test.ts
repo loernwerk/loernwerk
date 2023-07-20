@@ -8,6 +8,8 @@ import { DBSlide } from '../model/slide/DBSlide';
 import { LayoutType } from '../model/slide/layout/Layout';
 import { ISequenceWithSlides } from '../model/sequence/ISequenceWithSlides';
 import { DBH5PContent } from '../model/h5p/DBH5PContent';
+import { DBConfigEntry } from '../model/configuration/DBConfigEntry';
+import { ConfigController } from '../backend/controller/ConfigController';
 
 let mockDb;
 beforeAll(async () => {
@@ -15,11 +17,12 @@ beforeAll(async () => {
         type: 'sqlite',
         database: ':memory:',
         dropSchema: true,
-        entities: [DBUser, DBSequence, DBSlide, DBH5PContent],
+        entities: [DBUser, DBSequence, DBSlide, DBH5PContent, DBConfigEntry],
         synchronize: true,
         logging: false,
     });
     await mockDb.initialize();
+    await ConfigController.ensureConfig();
 
     const sequenceByUser = new DBSequence();
     sequenceByUser.code = 'CODE66';
