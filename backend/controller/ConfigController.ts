@@ -36,6 +36,9 @@ export class ConfigController {
         key: ConfigKey,
         value: unknown
     ): Promise<void> {
+        if (ConfigTypeMap.getType(key).type === 'code') {
+            return; // May throw error
+        }
         const entry = await DBConfigEntry.findOneBy({ key: key });
         if (entry === null) {
             throw new LoernwerkError(
@@ -45,6 +48,30 @@ export class ConfigController {
         }
         entry.value = value;
         await entry.save();
+    }
+
+    /**
+     * Rolls the value of a configurationentry
+     * @param key the key from the entry to roll
+     */
+    public static async rollCodeEntry(key: ConfigKey): Promise<void> {
+        //Merge to above?
+        const type = ConfigTypeMap.getType(key);
+        if (type.type !== 'code' || !type.options.rollable) {
+            throw new LoernwerkError(
+                'not a rollable ConfigEntry',
+                LoernwerkErrorCodes.BAD_REQUEST
+            );
+        }
+        const entry = await DBConfigEntry.findOneBy({ key: key });
+        if (entry === null) {
+            throw new LoernwerkError(
+                'Config not Found',
+                LoernwerkErrorCodes.NOT_FOUND
+            );
+        }
+        entry.value = Math.floor(Math.random() * 10 ** type.options.length);
+        entry.save();
     }
 
     /**
@@ -73,7 +100,7 @@ export class ConfigController {
             [ConfigKey.MAX_SEQUENCES_PER_USER, -1],
             [ConfigKey.MAX_SLIDES_PER_SEQUENCE, -1],
             [ConfigKey.REGISTRATION_TYPE, RegistrationType.CLOSED as unknown],
-            [ConfigKey.REGISTRATION_CODE, Math.floor(Math.random() * 10 ** 8)]
+            [ConfigKey.REGISTRATION_CODE, Math.floor(Math.random() * 10 ** 8)],
         ]);
         for (const [key, value] of defaultValueMap) {
             const entry = await DBConfigEntry.findOneBy({ key: key });
