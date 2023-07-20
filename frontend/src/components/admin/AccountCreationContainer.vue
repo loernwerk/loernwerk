@@ -135,11 +135,14 @@ async function createUser(): Promise<void> {
   }
 
   try {
-    await AccountRestInterface.addAccount({
-      name: nameField.value,
-      mail: mailField.value,
-      password: pwField.value,
-    }, (props.requiresInviteCode === true)?inviteCode.value:undefined);
+    await AccountRestInterface.addAccount(
+      {
+        name: nameField.value,
+        mail: mailField.value,
+        password: pwField.value,
+      },
+      props.requiresInviteCode === true ? inviteCode.value : undefined
+    );
     displaySuccess.value = true;
     emit('create');
   } catch (e) {

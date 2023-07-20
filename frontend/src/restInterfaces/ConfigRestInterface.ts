@@ -30,7 +30,7 @@ export class ConfigRestInterface extends BaseRestInterface {
       value: value,
     });
   }
-  
+
   /**
    * Sends a request to backend to get all current configuration values
    * @returns all configuration values

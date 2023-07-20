@@ -48,33 +48,44 @@ export class AccountRouterFactory extends RouterFactory {
             '/',
             requireBody('name', 'mail', 'password'),
             async (req, res) => {
-                let removecode = ''
+                let removecode = '';
                 if (!req.session.isAdmin) {
-                    const registrationConfig = await ConfigController.getConfigEntry(ConfigKey.REGISTRATION_TYPE)
+                    const registrationConfig =
+                        await ConfigController.getConfigEntry(
+                            ConfigKey.REGISTRATION_TYPE
+                        );
                     switch (registrationConfig) {
                         case RegistrationType.CLOSED:
                             res.sendStatus(401);
                             return;
                         case RegistrationType.INVITE:
-                            console.log('invite')
-                            const code = req.query.code?.toString()
-                            if (code === undefined || !(await ConfigController.isValidInviteCode(code))) {
-                                res.sendStatus(401)
-                                return
+                            console.log('invite');
+                            const code = req.query.code?.toString();
+                            if (
+                                code === undefined ||
+                                !(await ConfigController.isValidInviteCode(
+                                    code
+                                ))
+                            ) {
+                                res.sendStatus(401);
+                                return;
                             }
-                            if (await ConfigController.getConfigEntry(ConfigKey.REGISTRATION_CODES_EXPIRES_AFTER_USE) === true) {
-                                removecode = code
+                            if (
+                                (await ConfigController.getConfigEntry(
+                                    ConfigKey.REGISTRATION_CODES_EXPIRES_AFTER_USE
+                                )) === true
+                            ) {
+                                removecode = code;
                             }
                     }
-                    
                 }
-                    
+
                 try {
                     const user = await AccountController.createNewAccount(
                         req.body
                     );
                     if (removecode !== '') {
-                        ConfigController.removeInviteCode(removecode)
+                        ConfigController.removeInviteCode(removecode);
                     }
                     res.status(201).json({ id: user.id });
                 } catch {

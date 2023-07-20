@@ -37,9 +37,7 @@
           </select>
           <div v-if="ConfigTypeMap.getType(key).type === 'codes'">
             <TextInputComponent v-model="model[key]" />
-            <ButtonComponent @click="">
-              Generiere
-            </ButtonComponent>
+            <ButtonComponent @click=""> Generiere </ButtonComponent>
           </div>
         </td>
       </tr>
@@ -73,7 +71,7 @@ const configKeys = [
   ConfigKey.MAX_SEQUENCES_PER_USER,
   ConfigKey.MAX_SLIDES_PER_SEQUENCE,
   ConfigKey.REGISTRATION_TYPE,
-  ConfigKey.REGISTRATION_CODES
+  ConfigKey.REGISTRATION_CODES,
 ];
 
 /**
@@ -105,7 +103,7 @@ const keyOrder: ConfigKey[] = [
   ConfigKey.MAX_SLIDES_PER_SEQUENCE,
   ConfigKey.REGISTRATION_TYPE,
   ConfigKey.REGISTRATION_CODES,
-  ConfigKey.REGISTRATION_CODES_EXPIRES_AFTER_USE
+  ConfigKey.REGISTRATION_CODES_EXPIRES_AFTER_USE,
 ];
 
 const keyDescribtion: Record<ConfigKey, string> = {
@@ -113,7 +111,8 @@ const keyDescribtion: Record<ConfigKey, string> = {
   [ConfigKey.MAX_SLIDES_PER_SEQUENCE]: 'Maximale Folien pro Sequenz',
   [ConfigKey.REGISTRATION_TYPE]: 'Offene Registrierung',
   [ConfigKey.REGISTRATION_CODES]: 'Einladungscode',
-  [ConfigKey.REGISTRATION_CODES_EXPIRES_AFTER_USE]: 'Einladungscode ist nach Verwendung ungültig'
+  [ConfigKey.REGISTRATION_CODES_EXPIRES_AFTER_USE]:
+    'Einladungscode ist nach Verwendung ungültig',
 };
 
 /**
@@ -170,7 +169,6 @@ function getSaveValue(key: ConfigKey): unknown {
       return model.value[key] + '';
   }
 }
-
 
 /**
  * Saves the current configuration
