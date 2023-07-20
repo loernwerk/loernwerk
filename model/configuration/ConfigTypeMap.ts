@@ -19,7 +19,7 @@ export class ConfigTypeMap {
             case ConfigKey.MAX_SLIDES_PER_SEQUENCE:
                 return { type: 'number', options: 'unlimited' };
 
-            case ConfigKey.OPEN_REGISTRATION:
+            case ConfigKey.REGISTRATION_TYPE:
                 return { type: 'boolean' };
             default:
                 throw new LoernwerkError(
