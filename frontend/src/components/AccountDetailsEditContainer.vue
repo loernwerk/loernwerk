@@ -2,52 +2,54 @@
   <div>
     <ContainerComponent>
       <template #Header>
-        <h1 class="underline text-xl">Daten ändern:</h1>
+        <h1 class="underline text-xl">
+          {{ $t('change', { object: $t('user') }) }}:
+        </h1>
       </template>
 
       <template #default>
         <table class="w-full">
           <tr>
-            <td class="p-1">Nutzername:</td>
+            <td class="p-1">{{ $t('account.name') }}:</td>
             <td class="p-1 w-2/3">
               <TextInputComponent
                 :disabled="disableInputShowSpinner || deleted"
-                place-holder="Nutzername"
+                :place-holder="$t('account.name')"
                 :max-length="128"
                 v-model="nameField"
               />
             </td>
           </tr>
           <tr>
-            <td class="p-1">E-mail:</td>
+            <td class="p-1">{{ $t('account.mail') }}:</td>
             <td class="p-1">
               <TextInputComponent
                 :disabled="disableInputShowSpinner || deleted"
-                place-holder="E-mail"
+                :place-holder="$t('account.mail')"
                 :max-length="320"
                 v-model="mailField"
               />
             </td>
           </tr>
           <tr>
-            <td class="p-1">Passwort:</td>
+            <td class="p-1">{{ $t('account.password') }}:</td>
             <td class="p-1">
               <TextInputComponent
                 :disabled="disableInputShowSpinner || deleted"
                 :hidden="true"
-                place-holder="Passwort"
+                :place-holder="$t('account.password')"
                 :max-length="128"
                 v-model="pwField"
               />
             </td>
           </tr>
           <tr>
-            <td class="p-1">Passwort wiederholen:</td>
+            <td class="p-1">{{ $t('account.passwordRepeat') }}:</td>
             <td class="p-1">
               <TextInputComponent
                 :disabled="disableInputShowSpinner || deleted"
                 :hidden="true"
-                place-holder="Passwort wiederholen"
+                :place-holder="$t('account.passwordRepeat')"
                 :max-length="128"
                 v-model="pwFieldControl"
               />
@@ -65,7 +67,7 @@
                   :checked="isAdmin"
                 />
                 <label class="cursor-pointer" @click="toggleAdminCheckBox">
-                  Adminaccount
+                  {{ $t('account.isAdmin') }}
                 </label>
               </div>
             </td>
@@ -77,12 +79,14 @@
             :loading="disableInputShowSpinner"
             @click="reset()"
           >
-            Abbrechen
+            {{ $t('cancel') }}
           </ButtonComponent>
           <div class="flex-grow text-center">
-            <div class="text-error" v-if="displayError">Ungültige Eingabe</div>
+            <div class="text-error" v-if="displayError">
+              {{ $t('invalidInput') }}
+            </div>
             <div class="text-success" v-if="displaySuccess">
-              Account gespeichert
+              {{ $t('save', { object: $t('user') }) }}
             </div>
           </div>
           <ButtonComponent
@@ -90,19 +94,21 @@
             :loading="disableInputShowSpinner"
             @click="updateInformation()"
           >
-            Speichern
+            {{ $t('save') }}
           </ButtonComponent>
         </div>
         <div class="flex items-center pt-1" v-if="showadminview">
           <div class="flex-grow text-center">
-            <div class="text-success" v-if="deleted">Account gelöscht</div>
+            <div class="text-success" v-if="deleted">
+              {{ $t('deleted', { object: $t('user') }) }}
+            </div>
           </div>
           <ButtonComponent
             class="w-fit p-1"
             :loading="disableInputShowSpinner"
             @click="deleteAccount()"
           >
-            Löschen
+            {{ $t('delete') }}
           </ButtonComponent>
         </div>
       </template>

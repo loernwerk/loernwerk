@@ -3,7 +3,7 @@
     <template #Header>
       <div class="flex flex-col p-0.5">
         <ButtonComponent @click="emit('createUser')" class="pb-1">
-          Nutzer erstellen
+          {{ $t('create', { object: $t('user') }) }}
         </ButtonComponent>
         <SearchBarComponent
           @input-changed="

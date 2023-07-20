@@ -15,7 +15,7 @@
             @click="showPopupNewSequence = true"
             v-if="allOwnSequences.length < maxSequnces || maxSequnces < 0"
           >
-            Sequenz erstellen
+            {{ $t('create', { object: $t('sequence.sequence') }) }}
           </ButtonComponent>
           <SearchBarComponent
             @input-changed="(val: string) => applySearch(val)"
@@ -28,7 +28,7 @@
       <div class="flex pt-5 w-full grow space-x-5">
         <div class="flex-1">
           <SequenceDisplayContainer
-            name="Meine Sequenzen:"
+            :name="`${$t('sequence.mySequences')}:`"
             :sequences="sequences"
             :user-id="ownId"
             @reload-sequences="reloadSequences()"
@@ -37,7 +37,7 @@
         </div>
         <div class="flex-1">
           <SequenceDisplayContainer
-            name="Mit mir geteilte Sequenzen:"
+            :name="`${$t('sequence.sharedSequences')}:`"
             :sequences="sharedSequences"
             :user-id="ownId"
           ></SequenceDisplayContainer>

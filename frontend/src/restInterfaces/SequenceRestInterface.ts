@@ -130,15 +130,20 @@ export class SequenceRestInterface extends BaseRestInterface {
   /**
    * Builds the URL to download the certificate
    * @param sequenceCode  code of the sequence for which certificate is requested
+   * @param language The language of the certificate
    * @returns URL as string
    */
-  public static getUrlForCertificate(sequenceCode: string): string {
+  public static getUrlForCertificate(
+    sequenceCode: string,
+    language: string
+  ): string {
     return (
       BaseRestInterface.getBaseURL() +
       this.sequence_path +
       '/' +
       sequenceCode +
-      '/view/certificate'
+      '/view/certificate?language=' +
+      language
     );
   }
 }

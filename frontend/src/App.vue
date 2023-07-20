@@ -8,8 +8,9 @@
             v-if="$router.currentRoute.value.meta['hasNavBar']"
             v-model:dark-mode="isDarkMode"
           />
-          <div v-else class="absolute top-5 right-5 z-50">
+          <div v-else class="absolute top-5 right-5 z-50 flex space-x-5">
             <LightDarkSwitch v-model="isDarkMode" />
+            <LanguageSelector :border-color="isDarkMode ? 'white' : 'black'" />
           </div>
         </Suspense>
         <div class="relative top-0 left-0 bottom-0 right-0 p-5 flex flex-grow">
@@ -27,6 +28,7 @@ import { RouterView } from 'vue-router';
 import NavigationBar from './components/navBar/NavigationBar.vue';
 import { ref } from 'vue';
 import LightDarkSwitch from './components/navBar/LightDarkSwitch.vue';
+import LanguageSelector from './components/navBar/LanguageSelector.vue';
 
 const isDarkMode = ref(false);
 </script>

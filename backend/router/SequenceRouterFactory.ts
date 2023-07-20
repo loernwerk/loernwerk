@@ -160,12 +160,26 @@ export class SequenceRouterFactory extends RouterFactory {
 
         sequenceRouter.get('/:code/view/certificate', async (req, res) => {
             try {
+                const language = (req.query.language as string) || 'de';
                 const pdf = await SequenceController.getCertificatePDF(
-                    req.params.code
+                    req.params.code,
+                    language
                 );
+                let filename: string;
+                switch (language) {
+                    case 'de':
+                        filename = 'Teilnahmezertifikate.pdf';
+                        break;
+                    case 'en':
+                        filename = 'Certificate.pdf';
+                        break;
+                    default:
+                        res.sendStatus(400);
+                        return;
+                }
                 res.set(
                     'Content-Disposition',
-                    'attachment;filename=Teilnahmezertifikat.pdf'
+                    `attachment;filename=${filename}`
                 );
                 res.status(200).send(pdf);
             } catch {
