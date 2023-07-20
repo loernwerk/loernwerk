@@ -1,8 +1,9 @@
 <template>
   <div class="flex flex-col">
     <table class="h-fit">
-      <tr v-for="key in keyOrder" :key="key">
+      <tr v-for="key in configKeys" :key="key">
         <td class="p-2">{{ keyDescription[key] }}:</td>
+
         <td class="p-2">
           <div
             v-if="ConfigTypeMap.getType(key).type === 'number'"
@@ -17,17 +18,23 @@
             v-model="model[key]"
             class="w-full"
           />
+          <input
+            v-if="ConfigTypeMap.getType(key).type === 'boolean'"
+            type="checkbox"
+            v-model="model[key]"
+          />
           <select
             v-if="ConfigTypeMap.getType(key).type === 'enum'"
             v-model="model[key]"
-            class="w-full"
+            class="w-full bg-transparent"
           >
             <option
               v-for="option in getEnumOptions(key)"
               :key="option"
               :value="option"
+              class="bg-interactable"
             >
-              {{ option }}
+              {{ $t('config.' + option) }}
             </option>
           </select>
         </td>
@@ -51,7 +58,7 @@
 import { ConfigKey } from '../../../../model/configuration/ConfigKey';
 import { IConfigEntry } from '../../../../model/configuration/IConfigEntry';
 import { ConfigTypeMap } from '../../../../model/configuration/ConfigTypeMap';
-import { ComputedRef, PropType, Ref, computed, ref } from 'vue';
+import { PropType, Ref, ref } from 'vue';
 import ButtonComponent from '../ButtonComponent.vue';
 import TextInputComponent from '../TextInputComponent.vue';
 import { i18n } from '../../i18n';
@@ -68,6 +75,9 @@ const emits = defineEmits(['save', 'cancel']);
 const configKeys = [
   ConfigKey.MAX_SEQUENCES_PER_USER,
   ConfigKey.MAX_SLIDES_PER_SEQUENCE,
+  ConfigKey.REGISTRATION_TYPE,
+  ConfigKey.REGISTRATION_CODES,
+  ConfigKey.REGISTRATION_CODES_EXPIRES_AFTER_USE,
 ];
 
 /**
@@ -94,17 +104,15 @@ function getConfigRecord(): Record<ConfigKey, string> {
 
 const model = ref(getConfigRecord());
 
-const keyOrder: ConfigKey[] = [
-  ConfigKey.MAX_SEQUENCES_PER_USER,
-  ConfigKey.MAX_SLIDES_PER_SEQUENCE,
-];
-
-const keyDescription: ComputedRef<Record<ConfigKey, string>> = computed(() => {
-  return {
-    [ConfigKey.MAX_SEQUENCES_PER_USER]: i18n.global.t('config.maxSequences'),
-    [ConfigKey.MAX_SLIDES_PER_SEQUENCE]: i18n.global.t('config.maxSlides'),
-  };
-});
+const keyDescription: Record<ConfigKey, string> = {
+  [ConfigKey.MAX_SEQUENCES_PER_USER]: i18n.global.t('config.maxSequences'),
+  [ConfigKey.MAX_SLIDES_PER_SEQUENCE]: i18n.global.t('config.maxSlides'),
+  [ConfigKey.REGISTRATION_TYPE]: i18n.global.t('config.registrationType'),
+  [ConfigKey.REGISTRATION_CODES]: i18n.global.t('config.registrationCodes'),
+  [ConfigKey.REGISTRATION_CODES_EXPIRES_AFTER_USE]: i18n.global.t(
+    'config.registrationCodesExpirations'
+  ),
+};
 
 /**
  * Returns valid options for this config enum.
@@ -131,7 +139,7 @@ function checkValidInput(key: ConfigKey): boolean {
       if (!(model.value[key] + '').match(/^[0-9]*$/)) {
         return false;
       }
-      return type.options === 'limited' && model.value[key] === '';
+      return !(type.options === 'limited' && model.value[key] === '');
     case 'string':
       return model.value[key] !== '';
     default:
@@ -154,6 +162,8 @@ function getSaveValue(key: ConfigKey): unknown {
         return -1;
       }
       return parseInt(model.value[key]);
+    case 'boolean':
+      return model.value[key] as unknown as boolean;
     default:
       return model.value[key] + '';
   }
@@ -163,7 +173,7 @@ function getSaveValue(key: ConfigKey): unknown {
  * Saves the current configuration
  */
 function save(): void {
-  for (const key of keyOrder) {
+  for (const key of configKeys) {
     if (!checkValidInput(key)) {
       errorKey.value = key;
       return;
@@ -171,7 +181,7 @@ function save(): void {
   }
 
   const result: IConfigEntry[] = [];
-  for (const key of keyOrder) {
+  for (const key of configKeys) {
     result.push({
       key: key,
       value: getSaveValue(key),

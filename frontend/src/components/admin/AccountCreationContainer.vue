@@ -55,6 +55,17 @@
               />
             </td>
           </tr>
+          <tr v-if="requiresInviteCode">
+            <td class="p-1">{{ $t('account.inviteCode') }}:</td>
+            <td class="p-1">
+              <TextInputComponent
+                :disabled="disableInputShowSpinner"
+                :place-holder="$t('account.inviteCode')"
+                :max-length="128"
+                v-model="inviteCode"
+              />
+            </td>
+          </tr>
         </table>
         <div class="flex items-center pt-4">
           <div class="flex-grow text-center">
@@ -91,10 +102,19 @@ const emit = defineEmits([
   'create',
 ]);
 
+const props = defineProps({
+  requiresInviteCode: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+});
+
 const nameField = ref('');
 const mailField = ref('');
 const pwField = ref('');
 const pwFieldControl = ref('');
+const inviteCode = ref('');
 const disableInputShowSpinner = ref(false);
 const displayError = ref(false);
 const displaySuccess = ref(false);
@@ -119,11 +139,14 @@ async function createUser(): Promise<void> {
   }
 
   try {
-    await AccountRestInterface.addAccount({
-      name: nameField.value,
-      mail: mailField.value,
-      password: pwField.value,
-    });
+    await AccountRestInterface.addAccount(
+      {
+        name: nameField.value,
+        mail: mailField.value,
+        password: pwField.value,
+      },
+      props.requiresInviteCode === true ? inviteCode.value : undefined
+    );
     displaySuccess.value = true;
     emit('create');
   } catch (e) {

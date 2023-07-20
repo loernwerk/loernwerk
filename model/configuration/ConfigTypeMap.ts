@@ -1,6 +1,7 @@
 import { ConfigKey } from './ConfigKey';
 import { ConfigType } from './ConfigType';
 import { LoernwerkError, LoernwerkErrorCodes } from '../loernwerkError';
+import { RegistrationType } from './RegistrationType';
 
 /**
  * Utility class to get the type of a configuration setting.
@@ -19,6 +20,15 @@ export class ConfigTypeMap {
             case ConfigKey.MAX_SLIDES_PER_SEQUENCE:
                 return { type: 'number', options: 'unlimited' };
 
+            case ConfigKey.REGISTRATION_TYPE:
+                return {
+                    type: 'enum',
+                    options: Object.values(RegistrationType),
+                };
+            case ConfigKey.REGISTRATION_CODES:
+                return { type: 'string' };
+            case ConfigKey.REGISTRATION_CODES_EXPIRES_AFTER_USE:
+                return { type: 'boolean' };
             default:
                 throw new LoernwerkError(
                     'Unknown config key',

@@ -1,5 +1,6 @@
 import { ConfigKey } from '../../model/configuration/ConfigKey';
 import { DBConfigEntry } from '../../model/configuration/DBConfigEntry';
+import { RegistrationType } from '../../model/configuration/RegistrationType';
 import {
     LoernwerkError,
     LoernwerkErrorCodes,
@@ -64,21 +65,54 @@ export class ConfigController {
     }
 
     /**
+     * tests if a invite code is valid
+     * @param code the code to test
+     * @returns true if the invite code is valid
+     */
+    public static async isValidInviteCode(code: string): Promise<boolean> {
+        const codes = (
+            (await this.getConfigEntry(ConfigKey.REGISTRATION_CODES)) as string
+        ).split(',');
+        for (const c of codes) {
+            if (c === code) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * removes a invite code from the code list
+     * @param code the code to remove
+     */
+    public static async removeInviteCode(code: string): Promise<void> {
+        const codes = (
+            (await this.getConfigEntry(ConfigKey.REGISTRATION_CODES)) as string
+        ).split(',');
+        const index = codes.indexOf(code);
+        codes.splice(index, 1);
+        this.setConfigEntry(ConfigKey.REGISTRATION_CODES, codes.join(','));
+    }
+
+    /**
      * Sets a default value for non existing configentries
      */
     public static async ensureConfig(): Promise<void> {
-        const nullInitialized = [
-            ConfigKey.MAX_SEQUENCES_PER_USER,
-            ConfigKey.MAX_SLIDES_PER_SEQUENCE,
-        ];
-        for (const x of nullInitialized) {
-            const entry = await DBConfigEntry.findOneBy({ key: x });
+        const defaultValueMap: Map<ConfigKey, unknown> = new Map([
+            [ConfigKey.MAX_SEQUENCES_PER_USER, -1],
+            [ConfigKey.MAX_SLIDES_PER_SEQUENCE, -1],
+            [ConfigKey.REGISTRATION_TYPE, RegistrationType.CLOSED as unknown],
+            [ConfigKey.REGISTRATION_CODES, ''],
+            [ConfigKey.REGISTRATION_CODES_EXPIRES_AFTER_USE, true],
+        ]);
+        for (const [key, value] of defaultValueMap) {
+            const entry = await DBConfigEntry.findOneBy({ key: key });
             if (entry !== null) {
                 continue;
             }
             const newEntry = new DBConfigEntry();
-            newEntry.key = x;
-            newEntry.value = -1;
+            newEntry.key = key;
+            newEntry.value = value;
             await newEntry.save();
         }
     }

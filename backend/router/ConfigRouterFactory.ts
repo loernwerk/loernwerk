@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { RouterFactory } from './RouterFactory';
 import { ConfigController } from '../controller/ConfigController';
-import { requireAdmin, requireBody, requireLogin } from '../loernwerkUtilities';
+import { requireAdmin, requireBody } from '../loernwerkUtilities';
 import { ConfigKey } from '../../model/configuration/ConfigKey';
 
 /**
@@ -38,7 +38,14 @@ export class ConfigRouterFactory extends RouterFactory {
             res.status(200).json(allConfigEntries);
         });
 
-        configRouter.get('/:key', requireLogin, async (req, res) => {
+        configRouter.get('/:key', async (req, res) => {
+            if (
+                req.session.userId === undefined &&
+                (req.params.key as ConfigKey) !== ConfigKey.REGISTRATION_TYPE
+            ) {
+                res.sendStatus(401);
+                return;
+            }
             try {
                 const value = await ConfigController.getConfigEntry(
                     req.params.key as ConfigKey

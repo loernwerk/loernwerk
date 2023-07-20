@@ -4,6 +4,9 @@ import { AccountController } from '../controller/AccountController';
 import { IUser, UserClass } from '../../model/user/IUser';
 import { requireAdmin, requireBody, requireLogin } from '../loernwerkUtilities';
 import { LoernwerkErrorCodes } from '../../model/loernwerkError';
+import { ConfigController } from '../controller/ConfigController';
+import { ConfigKey } from '../../model/configuration/ConfigKey';
+import { RegistrationType } from '../../model/configuration/RegistrationType';
 
 /**
  * Builds router for request regarding Account management
@@ -48,13 +51,48 @@ export class AccountRouterFactory extends RouterFactory {
 
         accountRouter.put(
             '/',
-            requireAdmin,
             requireBody('name', 'mail', 'password'),
             async (req, res) => {
+                let removecode = '';
+                if (!req.session.isAdmin) {
+                    const registrationConfig =
+                        await ConfigController.getConfigEntry(
+                            ConfigKey.REGISTRATION_TYPE
+                        );
+                    switch (registrationConfig) {
+                        case RegistrationType.CLOSED: {
+                            res.sendStatus(401);
+                            return;
+                        }
+                        case RegistrationType.INVITATION: {
+                            const code = req.body.code?.toString();
+                            if (
+                                code === undefined ||
+                                !(await ConfigController.isValidInviteCode(
+                                    code
+                                ))
+                            ) {
+                                res.sendStatus(401);
+                                return;
+                            }
+                            if (
+                                (await ConfigController.getConfigEntry(
+                                    ConfigKey.REGISTRATION_CODES_EXPIRES_AFTER_USE
+                                )) === true
+                            ) {
+                                removecode = code;
+                            }
+                        }
+                    }
+                }
+
                 try {
                     const user = await AccountController.createNewAccount(
                         req.body
                     );
+                    if (removecode !== '') {
+                        ConfigController.removeInviteCode(removecode);
+                    }
                     res.status(201).json({ id: user.id });
                 } catch {
                     res.sendStatus(400);

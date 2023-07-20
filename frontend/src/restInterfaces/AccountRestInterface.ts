@@ -41,11 +41,18 @@ export class AccountRestInterface extends BaseRestInterface {
   /**
    * Sends data for a new Account to backend
    * @param account the account
+   * @param inviteCode the invite code if neccessary
    * @returns the id of the newly created user
    */
-  public static async addAccount(account: Partial<IUser>): Promise<number> {
+  public static async addAccount(
+    account: Partial<IUser>,
+    inviteCode?: string
+  ): Promise<number> {
     return (
-      await BaseRestInterface.put<{ id: number }>(this.account_path, account)
+      await BaseRestInterface.put<{ id: number }>(this.account_path, {
+        ...account,
+        registrationCode: inviteCode,
+      })
     ).id;
   }
 

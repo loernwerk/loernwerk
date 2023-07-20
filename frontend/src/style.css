@@ -22,7 +22,7 @@
 
 @layer components {
     .text-color {
-        @apply text-font-light dark:text-font-dark; 
+        @apply text-font-light dark:text-font-dark;
     }
 
     .text-error {

@@ -2,7 +2,7 @@
  * Saves the type of a value for a certain configuration setting.
  */
 export type ConfigType =
-    | {
+    {
         /**
          * Type of the configuration setting
          */
