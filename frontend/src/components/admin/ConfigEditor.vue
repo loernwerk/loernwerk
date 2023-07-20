@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col">
     <table class="h-fit">
-      <tr v-for="key in keyOrder" :key="key">
+      <tr v-for="key in configKeys" :key="key">
         <td class="p-2">{{ keyDescribtion[key] }}:</td>
         <td class="p-2">
           <div
@@ -98,14 +98,6 @@ function getConfigRecord(): Record<ConfigKey, string> {
 
 const model = ref(getConfigRecord());
 
-const keyOrder: ConfigKey[] = [
-  ConfigKey.MAX_SEQUENCES_PER_USER,
-  ConfigKey.MAX_SLIDES_PER_SEQUENCE,
-  ConfigKey.REGISTRATION_TYPE,
-  ConfigKey.REGISTRATION_CODES,
-  ConfigKey.REGISTRATION_CODES_EXPIRES_AFTER_USE,
-];
-
 const keyDescribtion: Record<ConfigKey, string> = {
   [ConfigKey.MAX_SEQUENCES_PER_USER]: 'Maximale Sequenzen pro Nutzer',
   [ConfigKey.MAX_SLIDES_PER_SEQUENCE]: 'Maximale Folien pro Sequenz',
@@ -174,7 +166,7 @@ function getSaveValue(key: ConfigKey): unknown {
  * Saves the current configuration
  */
 function save(): void {
-  for (const key of keyOrder) {
+  for (const key of configKeys) {
     if (!checkValidInput(key)) {
       errorMessage.value = `Ungültige Eingabe für "${keyDescribtion[key]}"`;
       return;
@@ -182,7 +174,7 @@ function save(): void {
   }
 
   const result: IConfigEntry[] = [];
-  for (const key of keyOrder) {
+  for (const key of configKeys) {
     result.push({
       key: key,
       value: getSaveValue(key),
