@@ -64,7 +64,7 @@
       class="w-full mt-auto mb-auto ml-3 mr-3"
       v-if="registrationFormVisible"
     >
-      <AccountCreationContainer />
+      <AccountCreationContainer :requires-invite-code="configtype == RegistrationType.INVITE" />
     </div>
     <ButtonComponent
       v-if="registrationButtonVisible"
@@ -86,6 +86,7 @@ import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
 import { router } from '../router';
 import { ConfigRestInterface } from '../restInterfaces/ConfigRestInterface';
 import { ConfigKey } from '../../../model/configuration/ConfigKey';
+import { RegistrationType } from '../../../model/configuration/RegistrationType';
 
 const mailField = ref('');
 const passwordField = ref('');
@@ -95,9 +96,11 @@ const displayError = ref(false);
 const registrationButtonVisible = ref(false);
 const registrationFormVisible = ref(false);
 
-registrationButtonVisible.value = (await ConfigRestInterface.getValue(
+const configtype = ref(await ConfigRestInterface.getValue(
   ConfigKey.REGISTRATION_TYPE
-)) as boolean;
+));
+
+registrationButtonVisible.value = configtype.value == RegistrationType.OPEN || configtype.value == RegistrationType.INVITE
 
 /**
  * Locks the Checkbox while checking Login data

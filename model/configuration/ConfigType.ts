@@ -27,6 +27,11 @@ export type ConfigType =
          * All possible options for this enum
          */
         options: string[];
+    } | {
+        type:'code';
+        
+        options: CodeOption
     };
 
 export type NumberOption = 'limited' | 'unlimited';
+export type CodeOption = {length: number, rollable: boolean};

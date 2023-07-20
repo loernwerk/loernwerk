@@ -14,4 +14,8 @@ export enum ConfigKey {
      * If the open_registration is available or not
      */
     REGISTRATION_TYPE = 'registration_type',
+    /**
+     * the code for the open registration
+     */
+    REGISTRATION_CODE = 'registration_code'
 }

@@ -1,5 +1,7 @@
 import { ConfigKey } from '../../model/configuration/ConfigKey';
+import { ConfigTypeMap } from '../../model/configuration/ConfigTypeMap';
 import { DBConfigEntry } from '../../model/configuration/DBConfigEntry';
+import { RegistrationType } from '../../model/configuration/RegistrationType';
 import {
     LoernwerkError,
     LoernwerkErrorCodes,
@@ -67,27 +69,21 @@ export class ConfigController {
      * Sets a default value for non existing configentries
      */
     public static async ensureConfig(): Promise<void> {
-        const defaultValueMap: Map<unknown, ConfigKey[]> = new Map([
-            [
-                -1 as unknown,
-                [
-                    ConfigKey.MAX_SEQUENCES_PER_USER,
-                    ConfigKey.MAX_SLIDES_PER_SEQUENCE,
-                ],
-            ],
-            [false as unknown, [ConfigKey.REGISTRATION_TYPE]],
+        const defaultValueMap: Map<ConfigKey, unknown> = new Map([
+            [ConfigKey.MAX_SEQUENCES_PER_USER, -1],
+            [ConfigKey.MAX_SLIDES_PER_SEQUENCE, -1],
+            [ConfigKey.REGISTRATION_TYPE, RegistrationType.CLOSED as unknown],
+            [ConfigKey.REGISTRATION_CODE, Math.floor(Math.random() * 10 ** 8)]
         ]);
-        for (const [defaultValue, keys] of defaultValueMap) {
-            for (const k of keys) {
-                const entry = await DBConfigEntry.findOneBy({ key: k });
-                if (entry !== null) {
-                    continue;
-                }
-                const newEntry = new DBConfigEntry();
-                newEntry.key = k;
-                newEntry.value = defaultValue;
-                await newEntry.save();
+        for (const [key, value] of defaultValueMap) {
+            const entry = await DBConfigEntry.findOneBy({ key: key });
+            if (entry !== null) {
+                continue;
             }
+            const newEntry = new DBConfigEntry();
+            newEntry.key = key;
+            newEntry.value = value;
+            await newEntry.save();
         }
     }
 }

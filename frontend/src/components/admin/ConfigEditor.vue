@@ -35,6 +35,9 @@
               {{ option }}
             </option>
           </select>
+          <div v-if="ConfigTypeMap.getType(key).type === 'code'">
+            <TextInputComponent :disabled="true" v-model="model[key]" />
+          </div>
         </td>
       </tr>
     </table>
@@ -67,6 +70,7 @@ const configKeys = [
   ConfigKey.MAX_SEQUENCES_PER_USER,
   ConfigKey.MAX_SLIDES_PER_SEQUENCE,
   ConfigKey.REGISTRATION_TYPE,
+  ConfigKey.REGISTRATION_CODE
 ];
 
 /**
@@ -97,12 +101,14 @@ const keyOrder: ConfigKey[] = [
   ConfigKey.MAX_SEQUENCES_PER_USER,
   ConfigKey.MAX_SLIDES_PER_SEQUENCE,
   ConfigKey.REGISTRATION_TYPE,
+  ConfigKey.REGISTRATION_CODE
 ];
 
 const keyDescribtion: Record<ConfigKey, string> = {
   [ConfigKey.MAX_SEQUENCES_PER_USER]: 'Maximale Sequenzen pro Nutzer',
   [ConfigKey.MAX_SLIDES_PER_SEQUENCE]: 'Maximale Folien pro Sequenz',
   [ConfigKey.REGISTRATION_TYPE]: 'Offene Registrierung',
+  [ConfigKey.REGISTRATION_CODE]: 'Einladungscode'
 };
 
 /**
