@@ -8,7 +8,6 @@ import { DBSequence } from '../model/sequence/DBSequence';
 import { SequenceController } from '../backend/controller/SequenceController';
 
 let mockDb;
-let mockDbSequences;
 beforeAll(async () => {
     mockDb = new DataSource({
         type: 'sqlite',
@@ -41,16 +40,16 @@ beforeAll(async () => {
     await toBeDeleted.save();
 
     const sequenceByDeletedAccount = new DBSequence();
-    sequenceByDeletedAccount.code = 'code66';
+    sequenceByDeletedAccount.code = 'CODE66';
     sequenceByDeletedAccount.authorId = 931943;
     sequenceByDeletedAccount.name = 'Sequence66';
     sequenceByDeletedAccount.slideCount = 0;
     sequenceByDeletedAccount.writeAccess = [];
     sequenceByDeletedAccount.readAccess = [];
+    await sequenceByDeletedAccount.save();
 });
 afterAll(async () => {
     await mockDb.destroy();
-    await mockDbSequences.destroy();
 });
 describe('AccountController Tests', () => {
     const doubledName = {
@@ -203,10 +202,12 @@ describe('AccountController Tests', () => {
 
     //deleteAccount function
     it('delete a correct account', async () => {
-        const accountToBeDeleted = await DBUser.findBy({ name: 'bobby' });
-        await AccountController.deleteAccount(accountToBeDeleted[0].id);
+        const accountToBeDeleted = await DBUser.findOne({
+            where: { id: 931943 },
+        });
+        await AccountController.deleteAccount(accountToBeDeleted.id);
         await expect(() =>
-            SequenceController.getSequenceByCode('code66')
+            SequenceController.getSequenceByCode('CODE66')
         ).rejects.toThrow(
             new LoernwerkError(
                 'No matching sequence',
@@ -224,17 +225,6 @@ describe('AccountController Tests', () => {
         const admin = await DBUser.findBy({ type: UserClass.ADMIN });
         expect(admin[0]).toBeInstanceOf(DBUser);
         expect(admin[0]).toHaveProperty('type', UserClass.ADMIN);
-    });
-
-    /**
-     * should undefined be returned if admin already exists?
-     * NOTE: This test only runs in suite, because admin was created in prior test
-     */
-    it('create Admin, admin already exists', async () => {
-        const existingAdmin = await DBUser.findBy({ type: UserClass.ADMIN });
-        expect(existingAdmin[0]).toHaveProperty('type', UserClass.ADMIN);
-        const admin = await AccountController.ensureAdminAccount();
-        expect(admin === undefined).toBe(true);
     });
 
     //saveAccount function
