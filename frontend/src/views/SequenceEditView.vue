@@ -71,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { Ref, computed, ref } from 'vue';
+import { Ref, computed, ref, watch } from 'vue';
 import { ISequenceWithSlides } from '../../../model/sequence/ISequenceWithSlides';
 import SlideOverviewContainer from '../components/SlideOverviewContainer.vue';
 import {
@@ -172,6 +172,7 @@ function changeContent(slot: LayoutSlot, contentType: ContentType): void {
   }
 
   sequence.value.slides[selectedSlideIndex.value].content[slot] = content;
+  updateShownTabs();
 }
 
 /**
@@ -249,20 +250,13 @@ function updateSlide(slide: ISlide): void {
 }
 
 const currentEditingSlot: Ref<LayoutSlot | null> = ref(null);
-const allTabs = ['slide', 'content.text', 'content.image', 'content.embed'];
-
-const tabs = computed(() => {
-  const slot = currentEditingSlot.value;
-  let tabs = ['slide'];
-  if (slot != null) {
-    const tabName = getTabNameForSlot(slot);
-    if (tabName) {
-      tabs.push(tabName);
-    }
-    editOptionsTabContainer.value?.selectTab(tabName);
-  }
-  return tabs;
-});
+const tabs = ref(['slide']);
+const allTabs = ref([
+  'slide',
+  'content.text',
+  'content.image',
+  'content.embed',
+]);
 const editOptionsTabContainer: Ref<typeof TabbedContainer | null> = ref(null);
 
 /**
@@ -272,6 +266,24 @@ const editOptionsTabContainer: Ref<typeof TabbedContainer | null> = ref(null);
 function selectEditingSlot(slot: LayoutSlot): void {
   currentEditingSlot.value = slot;
 }
+
+/**
+ * Updates the tabs shown in the tab container
+ */
+function updateShownTabs(): void {
+  const slot = currentEditingSlot.value;
+  tabs.value = ['slide'];
+  if (slot != null) {
+    const tabName = getTabNameForSlot(slot);
+    if (tabName) {
+      tabs.value.push(tabName);
+      editOptionsTabContainer.value?.selectTab(tabName);
+    }
+  }
+}
+watch(currentEditingSlot, () => {
+  updateShownTabs();
+});
 
 /**
  * Returns the name of the tab for the given slot
@@ -297,7 +309,7 @@ function getTabNameForSlot(slot: LayoutSlot): string | undefined {
  * @returns The tab for the given content type
  */
 function getTab(index: number): string {
-  return allTabs[index];
+  return allTabs.value[index];
 }
 
 /**

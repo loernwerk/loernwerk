@@ -21,6 +21,7 @@
 import ButtonComponent from '../components/ButtonComponent.vue';
 import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
 import { ref } from 'vue';
+import { i18n } from '../i18n';
 
 const props = defineProps({
   /**
@@ -40,7 +41,12 @@ const sequence = ref(
  * Opens a new tab and downloads certificate as pdf
  */
 function downloadCertificate(): void {
-  window.open(SequenceRestInterface.getUrlForCertificate(props.sequenceCode));
+  window.open(
+    SequenceRestInterface.getUrlForCertificate(
+      props.sequenceCode,
+      i18n.global.locale
+    )
+  );
 }
 </script>
 

@@ -1,7 +1,7 @@
 <template>
   <ContainerComponent>
     <template #Header>
-      <h1 class="underline text-xl">{{ $t('sequencesOfUser') }}:</h1>
+      <h1 class="underline text-xl">{{ $t('account.sequencesOfUser') }}:</h1>
     </template>
     <div v-for="sequence in sequences" :key="sequence.code">
       <ContainerComponent>

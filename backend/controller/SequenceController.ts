@@ -335,9 +335,13 @@ export class SequenceController {
     /**
      * Generates a pdf certificate for the specified sequence.
      * @param code Code of the sequence
+     * @param language Language of the generated certificate. Defaults to 'de'.
      * @returns Certifcate PDF as Buffer
      */
-    public static async getCertificatePDF(code: string): Promise<Buffer> {
+    public static async getCertificatePDF(
+        code: string,
+        language = 'de'
+    ): Promise<Buffer> {
         const sequence = await DBSequence.findOne({
             select: ['code', 'name'],
             where: { code: code },
@@ -349,7 +353,20 @@ export class SequenceController {
             );
         }
 
-        const srcPDF = await readFile('assets/certificate_de.pdf');
+        let srcPDF: Buffer;
+        switch (language) {
+            case 'de':
+                srcPDF = await readFile('assets/certificate_de.pdf');
+                break;
+            case 'en':
+                srcPDF = await readFile('assets/certificate_en.pdf');
+                break;
+            default:
+                throw new LoernwerkError(
+                    `Unknown language ${language}`,
+                    LoernwerkErrorCodes.INVALID_PARAMETER
+                );
+        }
         const templatePDF = new ExternalDocument(srcPDF);
 
         const generatedPDF = new Document();
