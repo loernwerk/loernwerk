@@ -37,7 +37,7 @@ export class ConfigRestInterface extends BaseRestInterface {
    */
   public static async rollValue(key: ConfigKey): Promise<void> {
     await BaseRestInterface.patch(
-      `${this.config_path}${key}`.concat('?roll="true"'),
+      `${this.config_path}${key}`.concat('?roll=true'),
       {
         value: 'empty', //remove require in backend?
       }

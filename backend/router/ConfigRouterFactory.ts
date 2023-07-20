@@ -27,10 +27,9 @@ export class ConfigRouterFactory extends RouterFactory {
                             req.body.value
                         );
                     } else if (req.query.roll === 'true') {
-                        const rolled = await ConfigController.rollCodeEntry(
+                        await ConfigController.rollCodeEntry(
                             req.params.key as ConfigKey
                         );
-                        res.send(200).json({ rolled });
                     } else {
                         res.sendStatus(404);
                         return;

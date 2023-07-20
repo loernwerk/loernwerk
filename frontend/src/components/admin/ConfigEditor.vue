@@ -37,6 +37,9 @@
           </select>
           <div v-if="ConfigTypeMap.getType(key).type === 'code'">
             <TextInputComponent :disabled="true" v-model="model[key]" />
+            <ButtonComponent @click="reroll(key)">
+              Neu generieren
+            </ButtonComponent>
           </div>
         </td>
       </tr>
@@ -56,6 +59,7 @@ import { ConfigTypeMap } from '../../../../model/configuration/ConfigTypeMap';
 import { PropType, ref } from 'vue';
 import ButtonComponent from '../ButtonComponent.vue';
 import TextInputComponent from '../TextInputComponent.vue';
+import { ConfigRestInterface } from '../../restInterfaces/ConfigRestInterface';
 
 const props = defineProps({
   entries: {
@@ -70,7 +74,7 @@ const configKeys = [
   ConfigKey.MAX_SEQUENCES_PER_USER,
   ConfigKey.MAX_SLIDES_PER_SEQUENCE,
   ConfigKey.REGISTRATION_TYPE,
-  ConfigKey.REGISTRATION_CODE
+  ConfigKey.REGISTRATION_CODE,
 ];
 
 /**
@@ -101,14 +105,14 @@ const keyOrder: ConfigKey[] = [
   ConfigKey.MAX_SEQUENCES_PER_USER,
   ConfigKey.MAX_SLIDES_PER_SEQUENCE,
   ConfigKey.REGISTRATION_TYPE,
-  ConfigKey.REGISTRATION_CODE
+  ConfigKey.REGISTRATION_CODE,
 ];
 
 const keyDescribtion: Record<ConfigKey, string> = {
   [ConfigKey.MAX_SEQUENCES_PER_USER]: 'Maximale Sequenzen pro Nutzer',
   [ConfigKey.MAX_SLIDES_PER_SEQUENCE]: 'Maximale Folien pro Sequenz',
   [ConfigKey.REGISTRATION_TYPE]: 'Offene Registrierung',
-  [ConfigKey.REGISTRATION_CODE]: 'Einladungscode'
+  [ConfigKey.REGISTRATION_CODE]: 'Einladungscode',
 };
 
 /**
@@ -164,6 +168,18 @@ function getSaveValue(key: ConfigKey): unknown {
     default:
       return model.value[key] + '';
   }
+}
+
+/**
+ * rolls an ConfigEntry and updates the value
+ * @param key the ConfigKey which will rolled
+ */
+async function reroll(key: ConfigKey): Promise<void> {
+  ConfigRestInterface.rollValue(key);
+  model.value.registration_code = ('' +
+    (await ConfigRestInterface.getValue(
+      ConfigKey.REGISTRATION_CODE
+    ))) as string;
 }
 
 /**
