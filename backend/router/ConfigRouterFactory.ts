@@ -21,10 +21,21 @@ export class ConfigRouterFactory extends RouterFactory {
             requireBody('value'),
             async (req, res) => {
                 try {
-                    await ConfigController.setConfigEntry(
-                        req.params.key as ConfigKey,
-                        req.body.value
-                    );
+                    if (req.query.roll === undefined) {
+                        await ConfigController.setConfigEntry(
+                            req.params.key as ConfigKey,
+                            req.body.value
+                        );
+                    } else if (req.query.roll === 'true') {
+                        const rolled = await ConfigController.rollCodeEntry(
+                            req.params.key as ConfigKey
+                        );
+                        res.send(200).json({ rolled });
+                    } else {
+                        res.sendStatus(404);
+                        return;
+                    }
+
                     res.sendStatus(204);
                 } catch {
                     res.sendStatus(404);

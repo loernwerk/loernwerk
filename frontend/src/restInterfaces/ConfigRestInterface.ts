@@ -32,6 +32,19 @@ export class ConfigRestInterface extends BaseRestInterface {
   }
 
   /**
+   * Sends a request to backend to roll a given configuration setting
+   * @param key the key of the configuration which should be rolled
+   */
+  public static async rollValue(key: ConfigKey): Promise<void> {
+    await BaseRestInterface.patch(
+      `${this.config_path}${key}`.concat('?roll="true"'),
+      {
+        value: 'empty', //remove require in backend?
+      }
+    );
+  }
+
+  /**
    * Sends a request to backend to get all current configuration values
    * @returns all configuration values
    */

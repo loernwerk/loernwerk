@@ -53,9 +53,9 @@ export class ConfigController {
     /**
      * Rolls the value of a configurationentry
      * @param key the key from the entry to roll
+     * @returns the new value of the entry
      */
-    public static async rollCodeEntry(key: ConfigKey): Promise<void> {
-        //Merge to above?
+    public static async rollCodeEntry(key: ConfigKey): Promise<number> {
         const type = ConfigTypeMap.getType(key);
         if (type.type !== 'code' || !type.options.rollable) {
             throw new LoernwerkError(
@@ -72,6 +72,7 @@ export class ConfigController {
         }
         entry.value = Math.floor(Math.random() * 10 ** type.options.length);
         entry.save();
+        return entry.value as number;
     }
 
     /**
