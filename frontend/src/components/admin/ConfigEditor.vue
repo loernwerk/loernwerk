@@ -105,7 +105,7 @@ function getConfigRecord(): Record<ConfigKey, string> {
 
 const model = ref(getConfigRecord());
 
-const keyDescribtion: Record<ConfigKey, string> = {
+const keyDescription: Record<ConfigKey, string> = {
   [ConfigKey.MAX_SEQUENCES_PER_USER]: 'Maximale Sequenzen pro Nutzer',
   [ConfigKey.MAX_SLIDES_PER_SEQUENCE]: 'Maximale Folien pro Sequenz',
   [ConfigKey.REGISTRATION_TYPE]: 'Offene Registrierung',
