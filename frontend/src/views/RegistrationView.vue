@@ -10,6 +10,8 @@ import AccountCreationContainer from '../components/admin/AccountCreationContain
 import { ConfigRestInterface } from '../restInterfaces/ConfigRestInterface';
 import { router } from '../router';
 
+console.log(!(await ConfigRestInterface.getValue(ConfigKey.OPEN_REGISTRATION)));
+
 if (!(await ConfigRestInterface.getValue(ConfigKey.OPEN_REGISTRATION))) {
   console.log('redirect');
   console.log(await ConfigRestInterface.getValue(ConfigKey.OPEN_REGISTRATION));

@@ -34,6 +34,7 @@ export class ConfigController {
         key: ConfigKey,
         value: unknown
     ): Promise<void> {
+        console.log(key + ' : ' + value);
         const entry = await DBConfigEntry.findOneBy({ key: key });
         if (entry === null) {
             throw new LoernwerkError(
@@ -67,28 +68,27 @@ export class ConfigController {
      * Sets a default value for non existing configentries
      */
     public static async ensureConfig(): Promise<void> {
-        const nullInitialized = [
-            ConfigKey.MAX_SEQUENCES_PER_USER,
-            ConfigKey.MAX_SLIDES_PER_SEQUENCE,
-        ];
-        let nnn = await DBConfigEntry.findOneBy({
-            key: ConfigKey.OPEN_REGISTRATION,
-        });
-        if (nnn === null) {
-            nnn = new DBConfigEntry();
-        }
-        nnn.key = ConfigKey.OPEN_REGISTRATION;
-        nnn.value = true;
-        nnn.save();
-        for (const x of nullInitialized) {
-            const entry = await DBConfigEntry.findOneBy({ key: x });
-            if (entry !== null) {
-                continue;
+        const defaultValueMap: Map<unknown, ConfigKey[]> = new Map([
+            [
+                -1 as unknown,
+                [
+                    ConfigKey.MAX_SEQUENCES_PER_USER,
+                    ConfigKey.MAX_SLIDES_PER_SEQUENCE,
+                ],
+            ],
+            [false as unknown, [ConfigKey.OPEN_REGISTRATION]],
+        ]);
+        for (const [defaultValue, keys] of defaultValueMap) {
+            for (const k of keys) {
+                const entry = await DBConfigEntry.findOneBy({ key: k });
+                if (entry !== null) {
+                    continue;
+                }
+                const newEntry = new DBConfigEntry();
+                newEntry.key = k;
+                newEntry.value = defaultValue;
+                await newEntry.save();
             }
-            const newEntry = new DBConfigEntry();
-            newEntry.key = x;
-            newEntry.value = -1;
-            await newEntry.save();
         }
     }
 }

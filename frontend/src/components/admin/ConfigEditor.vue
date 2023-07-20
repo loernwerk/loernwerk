@@ -133,7 +133,7 @@ function checkValidInput(key: ConfigKey): boolean {
       if (!(model.value[key] + '').match(/^[0-9]*$/)) {
         return false;
       }
-      return type.options === 'limited' && model.value[key] === '';
+      return !(type.options === 'limited' && model.value[key] === '');
     case 'string':
       return model.value[key] !== '';
     default:

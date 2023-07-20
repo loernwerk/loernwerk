@@ -82,9 +82,11 @@ const passwordField = ref('');
 const keepLoggedIn = ref(false);
 const disableInputShowSpinner = ref(false);
 const displayError = ref(false);
-const registrationVisible = ref(
-  await ConfigRestInterface.getValue(ConfigKey.OPEN_REGISTRATION)
-);
+const registrationVisible = ref(false);
+
+registrationVisible.value = (await ConfigRestInterface.getValue(
+  ConfigKey.OPEN_REGISTRATION
+)) as boolean;
 
 /**
  * Locks the Checkbox while checking Login data
