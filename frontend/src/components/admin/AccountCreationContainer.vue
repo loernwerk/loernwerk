@@ -2,65 +2,78 @@
   <div>
     <ContainerComponent>
       <template #Header>
-        <h1 class="underline text-xl">Nutzer erstellen:</h1>
+        <h1 class="underline text-xl">
+          {{ $t('create', { object: $t('user') }) }}:
+        </h1>
       </template>
 
       <template #default>
         <table class="w-full">
           <tr>
-            <td class="p-1">Nutzername:</td>
+            <td class="p-1">{{ $t('account.name') }}:</td>
             <td class="p-1 w-2/3">
               <TextInputComponent
                 :disabled="disableInputShowSpinner"
-                place-holder="Nutzername"
+                :place-holder="$t('account.name')"
                 :max-length="128"
                 v-model="nameField"
               />
             </td>
           </tr>
           <tr>
-            <td class="p-1">E-mail:</td>
+            <td class="p-1">{{ $t('account.mail') }}:</td>
             <td class="p-1">
               <TextInputComponent
                 :disabled="disableInputShowSpinner"
-                place-holder="E-mail"
+                :place-holder="$t('account.mail')"
                 :max-length="320"
                 v-model="mailField"
               />
             </td>
           </tr>
           <tr>
-            <td class="p-1">Passwort:</td>
+            <td class="p-1">{{ $t('account.password') }}:</td>
             <td class="p-1">
               <TextInputComponent
                 :disabled="disableInputShowSpinner"
                 :hidden="true"
-                place-holder="Passwort"
+                :place-holder="$t('account.password')"
                 :max-length="128"
                 v-model="pwField"
               />
             </td>
           </tr>
           <tr>
-            <td class="p-1">Passwort wiederholen:</td>
+            <td class="p-1">{{ $t('account.passwordRepeat') }}:</td>
             <td class="p-1">
               <TextInputComponent
                 :disabled="disableInputShowSpinner"
                 :hidden="true"
-                place-holder="Passwort wiederholen"
+                :place-holder="$t('account.passwordRepeat')"
                 :max-length="128"
                 v-model="pwFieldControl"
+              />
+            </td>
+          </tr>
+          <tr v-if="requiresInviteCode">
+            <td class="p-1">{{ $t('account.inviteCode') }}:</td>
+            <td class="p-1">
+              <TextInputComponent
+                :disabled="disableInputShowSpinner"
+                :place-holder="$t('account.inviteCode')"
+                :max-length="128"
+                v-model="inviteCode"
               />
             </td>
           </tr>
         </table>
         <div class="flex items-center pt-4">
           <div class="flex-grow text-center">
-            <div class="text-red-500 italic" v-if="displayError">
-              Ungültige Eingabe
+            <div class="text-error" v-if="displayError">
+              {{ $t('invalidInput') }}
             </div>
-            <div class="text-green-500 italic" v-if="displaySuccess">
-              Account erstellt
+            <div class="text-success" v-if="displaySuccess">
+              {{ $t('created', { object: $t('user') }) }}
             </div>
           </div>
           <ButtonComponent
@@ -68,7 +81,7 @@
             :loading="disableInputShowSpinner"
             @click="createUser()"
           >
-            Erstellen
+            {{ $t('createAction') }}
           </ButtonComponent>
         </div>
       </template>
@@ -77,10 +90,10 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
-import TextInputComponent from './TextInputComponent.vue';
-import ButtonComponent from './ButtonComponent.vue';
-import ContainerComponent from './ContainerComponent.vue';
-import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
+import TextInputComponent from '../TextInputComponent.vue';
+import ButtonComponent from '../ButtonComponent.vue';
+import ContainerComponent from '../ContainerComponent.vue';
+import { AccountRestInterface } from '../../restInterfaces/AccountRestInterface';
 
 const emit = defineEmits([
   /**
@@ -89,10 +102,19 @@ const emit = defineEmits([
   'create',
 ]);
 
+const props = defineProps({
+  requiresInviteCode: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+});
+
 const nameField = ref('');
 const mailField = ref('');
 const pwField = ref('');
 const pwFieldControl = ref('');
+const inviteCode = ref('');
 const disableInputShowSpinner = ref(false);
 const displayError = ref(false);
 const displaySuccess = ref(false);
@@ -117,11 +139,14 @@ async function createUser(): Promise<void> {
   }
 
   try {
-    await AccountRestInterface.addAccount({
-      name: nameField.value,
-      mail: mailField.value,
-      password: pwField.value,
-    });
+    await AccountRestInterface.addAccount(
+      {
+        name: nameField.value,
+        mail: mailField.value,
+        password: pwField.value,
+      },
+      props.requiresInviteCode === true ? inviteCode.value : undefined
+    );
     displaySuccess.value = true;
     emit('create');
   } catch (e) {

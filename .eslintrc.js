@@ -36,7 +36,7 @@ module.exports = {
     },
     plugins: ["@typescript-eslint", "vue", "jsdoc"],
     rules: {
-        "indent": ["error", 4, { "SwitchCase": 1, "ObjectExpression": "first", "ArrayExpression": "first", "MemberExpression": "off", "ignoredNodes": ["ClassBody.body > PropertyDefinition[decorators.length > 0] > .key"] }],
+        "indent": "off",
         "no-duplicate-imports": "warn",
         "no-self-compare": "warn",
         "no-unmodified-loop-condition": "warn",

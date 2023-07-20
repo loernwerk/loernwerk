@@ -1,13 +1,19 @@
 <template>
   <div class="flex items-center mt-4 space-x-2">
-    <h1>Sequenz "{{ sequence.name }}" löschen?</h1>
+    <h1>
+      {{
+        $t('deleteObject', {
+          object: `${$t('sequence.sequence')} "${sequence.name}"`,
+        })
+      }}:
+    </h1>
     <div class="grow">
-      <div class="text-red-500" v-if="error">
-        Es ist ein Fehler beim Löschen der Sequenz aufgetreten.
+      <div class="text-error" v-if="error">
+        {{ $t('sequence.deleteError') }}
       </div>
     </div>
     <ButtonComponent class="w-fit float-right" @click="deleteSequence()"
-      >Unwiderruflich löschen
+      >{{ $t('delete') }}
     </ButtonComponent>
   </div>
 </template>
@@ -33,7 +39,7 @@ const emits = defineEmits([
   /**
    * Emitted when sequence is deleted
    */
-  'deleted',
+  'delete',
 ]);
 
 /**
@@ -44,7 +50,7 @@ async function deleteSequence(): Promise<void> {
   const sequenceCode = props.sequence.code as string;
   try {
     await SequenceRestInterface.deleteSequence(sequenceCode);
-    emits('deleted');
+    emits('delete');
   } catch {
     error.value = true;
   }

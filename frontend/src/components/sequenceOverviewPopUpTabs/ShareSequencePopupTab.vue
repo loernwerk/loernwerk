@@ -3,24 +3,26 @@
     <TextInputComponent
       class="mb-2 mt-4"
       v-model="userInfoField"
-      place-holder="Nutzername der Lehrkraft"
+      :place-holder="$t('sequence.teacherName')"
       :class="{ 'border-red-600': showRedBorder }"
     >
     </TextInputComponent>
     <div class="flex flex-row space-x-2">
       <select class="interactable" v-model="setWriteAccess">
-        <option :value="false">Lesezugriff</option>
-        <option :value="true">Schreibzugriff</option>
+        <option :value="false">{{ $t('sequence.readAccess') }}</option>
+        <option :value="true">{{ $t('sequence.writeAccess') }}</option>
       </select>
       <ButtonComponent class="flex-1" @click="confirmSharing()"
-        >Teilen
+        >{{ $t('sequence.share') }}
       </ButtonComponent>
     </div>
-    <div class="text-red-500" v-if="error">
-      Es ist ein Fehler beim Freigeben der Sequenz aufgetreten.
+    <div class="text-error" v-if="error">
+      {{ $t('sequence.shareError') }}
     </div>
 
-    <div v-if="displayReadAccess.length > 0">Lehrkräfte mit Lesezugriff:</div>
+    <div v-if="displayReadAccess.length > 0">
+      {{ $t('sequence.teacherWith', { object: $t('sequence.readAccess') }) }}:
+    </div>
     <table class="table-auto text-sm">
       <tbody>
         <tr v-for="(user, index) in displayReadAccess" :key="index">
@@ -37,7 +39,7 @@
     </table>
 
     <div v-if="displayWriteAccess.length > 0">
-      Lehrkräfte mit Schreibzugriff:
+      {{ $t('sequence.teacherWith', { object: $t('sequence.writeAccess') }) }}:
     </div>
     <table class="table-auto text-sm">
       <tbody>

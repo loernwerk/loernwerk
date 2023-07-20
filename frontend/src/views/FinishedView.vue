@@ -3,12 +3,12 @@
   <div class="flex flex-col">
     <img src="../assets/Logo.png" class="w-1/2 mx-auto" />
     <div class="text-center text-2xl">
-      Du hast es geschafft<br />
-      und die Lernsequenz "{{ sequence.name }}" vollständig bearbeitet!
+      {{ $t('finished.youDidIt') }}<br />
+      {{ $t('finished.done', { name: sequence.name }) }}
     </div>
     <div class="flex justify-center mt-6">
       <ButtonComponent class="w-fit" @click="downloadCertificate()">
-        Teilnahmezertifikat
+        {{ $t('finished.certificate') }}
       </ButtonComponent>
     </div>
   </div>
@@ -21,26 +21,32 @@
 import ButtonComponent from '../components/ButtonComponent.vue';
 import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
 import { ref } from 'vue';
+import { i18n } from '../i18n';
 
 const props = defineProps({
   /**
    * Sequence code to get meta data
    */
-  code: {
+  sequenceCode: {
     type: String,
     required: true,
   },
 });
 
 const sequence = ref(
-  await SequenceRestInterface.getMetadataForStudent(props.code)
+  await SequenceRestInterface.getMetadataForStudent(props.sequenceCode)
 );
 
 /**
  * Opens a new tab and downloads certificate as pdf
  */
 function downloadCertificate(): void {
-  window.open(SequenceRestInterface.getUrlForCertificate(props.code));
+  window.open(
+    SequenceRestInterface.getUrlForCertificate(
+      props.sequenceCode,
+      i18n.global.locale
+    )
+  );
 }
 </script>
 

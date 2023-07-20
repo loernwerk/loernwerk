@@ -12,6 +12,11 @@ import { DBH5PContent } from '../../model/h5p/DBH5PContent';
 import { H5PServer } from '../h5p/H5PServer';
 import { readFile } from 'fs/promises';
 import { Document, ExternalDocument } from 'pdfjs';
+import { H5PContent } from '../../model/slide/content/H5PContent';
+import { ContentType } from '../../model/slide/content/Content';
+import { In, Not } from 'typeorm';
+import { ConfigController } from './ConfigController';
+import { ConfigKey } from '../../model/configuration/ConfigKey';
 
 /**
  * Manages the sequence data in the database and handles inquiries requests regarding these
@@ -31,6 +36,22 @@ export class SequenceController {
             throw new LoernwerkError(
                 'user not found',
                 LoernwerkErrorCodes.NOT_FOUND
+            );
+        }
+        const userSequenceLimit = (await ConfigController.getConfigEntry(
+            ConfigKey.MAX_SEQUENCES_PER_USER
+        )) as number;
+        const sequencesOfUser = await DBSequence.find({
+            where: { authorId: userId },
+            select: { code: true },
+        });
+        if (
+            userSequenceLimit > 0 &&
+            sequencesOfUser.length >= userSequenceLimit
+        ) {
+            throw new LoernwerkError(
+                'no more sequences creatable',
+                LoernwerkErrorCodes.BAD_REQUEST
             );
         }
         const dbSequence = new DBSequence();
@@ -113,6 +134,21 @@ export class SequenceController {
             throw new LoernwerkError(
                 'No Sequence Found',
                 LoernwerkErrorCodes.NOT_FOUND
+            );
+        }
+
+        const userSlideLimit = (await ConfigController.getConfigEntry(
+            ConfigKey.MAX_SLIDES_PER_SEQUENCE
+        )) as number;
+        const sequenceSlideCount = sequence.slides?.length;
+        if (
+            userSlideLimit > 0 &&
+            sequenceSlideCount !== undefined &&
+            sequenceSlideCount >= userSlideLimit
+        ) {
+            throw new LoernwerkError(
+                'to much slides in sequences',
+                LoernwerkErrorCodes.BAD_REQUEST
             );
         }
 
@@ -302,9 +338,13 @@ export class SequenceController {
     /**
      * Generates a pdf certificate for the specified sequence.
      * @param code Code of the sequence
+     * @param language Language of the generated certificate. Defaults to 'de'.
      * @returns Certifcate PDF as Buffer
      */
-    public static async getCertificatePDF(code: string): Promise<Buffer> {
+    public static async getCertificatePDF(
+        code: string,
+        language = 'de'
+    ): Promise<Buffer> {
         const sequence = await DBSequence.findOne({
             select: ['code', 'name'],
             where: { code: code },
@@ -316,7 +356,20 @@ export class SequenceController {
             );
         }
 
-        const srcPDF = await readFile('assets/certificate_de.pdf');
+        let srcPDF: Buffer;
+        switch (language) {
+            case 'de':
+                srcPDF = await readFile('assets/certificate_de.pdf');
+                break;
+            case 'en':
+                srcPDF = await readFile('assets/certificate_en.pdf');
+                break;
+            default:
+                throw new LoernwerkError(
+                    `Unknown language ${language}`,
+                    LoernwerkErrorCodes.INVALID_PARAMETER
+                );
+        }
         const templatePDF = new ExternalDocument(srcPDF);
 
         const generatedPDF = new Document();
@@ -340,6 +393,8 @@ export class SequenceController {
      * @param slides the slides to store
      */
     private static async saveSlides(slides: ISlide[]): Promise<void> {
+        const h5pIds = [];
+
         for (const s of slides) {
             let slide = await DBSlide.findOneBy({ id: s.id });
             if (slide === null) {
@@ -352,6 +407,25 @@ export class SequenceController {
             slide.layout = s.layout;
             slide.order = s.order;
             await slide.save();
+
+            for (const slot in slide.content) {
+                if (slide.content[slot].type !== ContentType.H5P) {
+                    h5pIds.push(
+                        (slide.content[slot].type as H5PContent).h5pContentId
+                    );
+                }
+            }
+        }
+
+        // Delete unnecessary H5P content
+        const unnecessaryContent = await DBH5PContent.find({
+            select: ['h5pContentId'],
+            where: { h5pContentId: Not(In(h5pIds)) },
+        });
+        for (const unnecessaryId of unnecessaryContent) {
+            await H5PServer.getInstance()
+                .getH5PEditor()
+                .contentStorage.deleteContent(unnecessaryId.h5pContentId);
         }
     }
 

@@ -4,7 +4,7 @@
     <img src="../assets/Logo.png" class="w-1/3 mx-auto" />
     <ContainerComponent class="mx-auto space-y-2 px-10 py-3">
       <template #Header>
-        <h1 class="text-3xl text-center">Code eingeben:</h1>
+        <h1 class="text-3xl text-center">{{ $t('main.enterCode') }}:</h1>
       </template>
       <template #default>
         <CodeInput
@@ -17,11 +17,13 @@
     </ContainerComponent>
     <ButtonComponent
       class="absolute right-5 bottom-5 h-fit"
-      @click="router.push('LogIn')"
+      @click="router.push({ name: 'LogIn' })"
     >
-      Anmelden
+      {{ $t('account.login') }}
     </ButtonComponent>
-    <a class="absolute bottom-5 m-auto" href="/imprint.html">Impressum</a>
+    <a class="absolute bottom-5 m-auto" href="/imprint.html">{{
+      $t('main.imprint')
+    }}</a>
   </div>
 </template>
 
@@ -46,7 +48,7 @@ async function checkCode(code: string): Promise<void> {
 
   try {
     await SequenceRestInterface.getMetadataForStudent(code);
-    router.push({ name: 'Slide', params: { code: code } });
+    await router.push({ name: 'Slide', params: { sequenceCode: code } });
   } catch {
     showRedBorder.value = true;
   }

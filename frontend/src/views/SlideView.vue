@@ -9,9 +9,8 @@
         :key="index"
       >
       </SlideDisplayFactory>
-      <div class="text-red-500" v-if="error">
-        Es ist ein Fehler bei der Folien Ansicht aufgetreten. Bitte laden sie
-        die Seite erneut.
+      <div class="text-error" v-if="error">
+        {{ $t('notAvailable', { object: $t('slide') }) }} {{ $t('reloadPage') }}
       </div>
     </div>
     <div class="flex items-center">
@@ -23,7 +22,7 @@
         :loading="displaySpinner"
         @click="nextSlideToExecute()"
       >
-        Weiter
+        {{ $t('next') }}
       </ButtonComponent>
     </div>
   </div>
@@ -43,7 +42,7 @@ const props = defineProps({
   /**
    * Sequence code to get meta data
    */
-  code: {
+  sequenceCode: {
     type: String,
     required: true,
   },
@@ -58,7 +57,9 @@ const error = ref(false);
 
 let sequence: Partial<ISequence>;
 try {
-  sequence = await SequenceRestInterface.getMetadataForStudent(props.code);
+  sequence = await SequenceRestInterface.getMetadataForStudent(
+    props.sequenceCode
+  );
   await nextSlideToExecute();
 } catch {
   router.push({ name: 'Main' });
@@ -71,7 +72,10 @@ async function nextSlideToExecute(): Promise<void> {
   displaySpinner.value = true;
 
   if (index.value == sequence.slideCount) {
-    router.push({ name: 'Finished', params: { code: sequence.code } });
+    await router.push({
+      name: 'Finished',
+      params: { sequenceCode: sequence.code },
+    });
     return;
   }
   try {

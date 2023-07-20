@@ -4,7 +4,7 @@
 
 @layer base {
     #app {
-        font-family: Avenir, Helvetica, Arial, sans-serif;
+        font-family: Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
     }
@@ -13,17 +13,59 @@
         @apply w-1 h-1 cursor-pointer;
     }
     *::-webkit-scrollbar-track {
-        @apply bg-scrollbar-backgorund rounded-full border-4;
+        @apply bg-scrollbar-backgorund-light dark:bg-scrollbar-backgorund-dark rounded-full border-4;
     }
     *::-webkit-scrollbar-thumb {
-        @apply bg-scrollbar-thumb rounded-full border-2;
+        @apply bg-scrollbar-thumb-light dark:bg-scrollbar-thumb-dark rounded-full border-2;
+    }
+}
+
+@layer components {
+    .text-color {
+        @apply text-font-light dark:text-font-dark;
+    }
+
+    .text-error {
+        @apply text-font-error-light dark:text-font-error-dark italic;
+    }
+
+    .text-success {
+        @apply text-font-success-light dark:text-font-success-dark italic;
+    }
+
+    .bg-background {
+        @apply bg-backgorund-light dark:bg-backgorund-dark;
+    }
+
+    .bg-container {
+        @apply bg-container-light dark:bg-container-dark;
+    }
+
+    .border-container {
+        @apply border-container-border-light dark:border-container-border-dark;
+    }
+
+    .bg-interactable {
+        @apply bg-interactable-light dark:bg-interactable-dark;
+    }
+
+    .bg-interactable-selected {
+        @apply bg-interactable-selected-light dark:bg-interactable-selected-dark;
+    }
+
+    .border-interactable {
+        @apply border-interactable-border-light dark:border-interactable-border-dark;
+    }
+
+    .bg-navbar {
+        @apply bg-navbar-light dark:bg-navbar-dark;
     }
 
     .container {
-        @apply p-2 border-1 rounded-md bg-container border-container-border box-border shadow overflow-hidden flex flex-col;
+        @apply p-2 border-1 rounded-md bg-container border-container box-border shadow overflow-hidden flex flex-col;
     }
 
     .interactable {
-        @apply container bg-interactable border-interactable-border cursor-pointer !shadow-none !max-h-fit py-1;
+        @apply container bg-interactable border-interactable cursor-pointer !shadow-none !max-h-fit py-1;
     }
 }

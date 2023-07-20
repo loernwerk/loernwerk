@@ -7,11 +7,15 @@
     >
     </PopupNewSequence>
 
-    <div class="w-full h-full flex flex-col grow">
+    <div class="w-full flex flex-col h-full overflow-hidden">
       <div class="h-fit flex space-x-5">
         <div class="flex items-center h-fit flex-1 space-x-2">
-          <ButtonComponent class="w-fit" @click="showPopupNewSequence = true">
-            Sequenz erstellen
+          <ButtonComponent
+            class="w-fit"
+            @click="showPopupNewSequence = true"
+            v-if="allOwnSequences.length < maxSequnces || maxSequnces < 0"
+          >
+            {{ $t('create', { object: $t('sequence.sequence') }) }}
           </ButtonComponent>
           <SearchBarComponent
             @input-changed="(val: string) => applySearch(val)"
@@ -21,23 +25,20 @@
         <div class="flex-1"><!-- Empty div to fill remaining space --></div>
       </div>
 
-      <div class="flex pt-5 w-full grow space-x-5">
-        <div class="flex-1">
-          <SequenceDisplayContainer
-            name="Meine Sequenzen:"
-            :sequences="sequences"
-            :own-id="ownId"
-            @reload-sequences="reloadSequences()"
-          >
-          </SequenceDisplayContainer>
-        </div>
-        <div class="flex-1">
-          <SequenceDisplayContainer
-            name="Mit mir geteilte Sequenzen:"
-            :sequences="sharedSequences"
-            :own-id="ownId"
-          ></SequenceDisplayContainer>
-        </div>
+      <div class="flex pt-5 w-full space-x-5 grow overflow-hidden">
+        <SequenceDisplayContainer
+          :name="`${$t('sequence.mySequences')}:`"
+          :sequences="sequences"
+          :user-id="ownId"
+          @reload-sequences="reloadSequences()"
+          class="flex-1 h-full max-h-full"
+        />
+        <SequenceDisplayContainer
+          :name="`${$t('sequence.sharedSequences')}:`"
+          :sequences="sharedSequences"
+          :user-id="ownId"
+          class="flex-1 h-full max-h-full"
+        />
       </div>
     </div>
   </div>
@@ -52,6 +53,8 @@ import PopupNewSequence from '../components/PopupNewSequence.vue';
 import SequenceDisplayContainer from '../components/SequenceDisplayContainer.vue';
 import { ISequence } from '../../../model/sequence/ISequence';
 import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
+import { ConfigRestInterface } from '../restInterfaces/ConfigRestInterface';
+import { ConfigKey } from '../../../model/configuration/ConfigKey';
 
 const showPopupNewSequence = ref(false);
 
@@ -98,5 +101,14 @@ async function reloadSequences(): Promise<void> {
 
   sequences.value = await SequenceRestInterface.getOwnSequences();
   allOwnSequences.value = sequences.value;
+}
+
+const maxSequnces = ref(-1);
+try {
+  maxSequnces.value = (await ConfigRestInterface.getValue(
+    ConfigKey.MAX_SEQUENCES_PER_USER
+  )) as number;
+} catch (e) {
+  // allow unlimited sequences
 }
 </script>

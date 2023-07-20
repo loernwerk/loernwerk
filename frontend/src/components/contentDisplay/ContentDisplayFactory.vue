@@ -3,14 +3,14 @@
   <div class="h-full p-3 relative">
     <div class="h-full" v-if="content">
       <EmbedDisplay
-        v-if="content.type === ContentType.EMBED"
+        v-if="content.contentType === ContentType.EMBED"
         :embed-content="(content as EmbedContent)"
         :edit-mode="editMode"
         class="h-full"
         @editing="(val) => $emit('editing', val)"
       />
       <TextDisplay
-        v-else-if="content.type === ContentType.TEXT"
+        v-else-if="content.contentType === ContentType.TEXT"
         :text-content="(content as TextContent)"
         :edit-mode="editMode"
         :layout-slot="layoutSlot"
@@ -18,14 +18,14 @@
         @editing="(val) => $emit('editing', val)"
       />
       <ImageDisplay
-        v-else-if="content.type === ContentType.IMAGE"
+        v-else-if="content.contentType === ContentType.IMAGE"
         :image-content="(content as ImageContent)"
         :edit-mode="editMode"
         class="h-full"
         @editing="(val) => $emit('editing', val)"
       />
       <H5PDisplay
-        v-else-if="content.type === ContentType.H5P"
+        v-else-if="content.contentType === ContentType.H5P"
         :h5p-content="(content as H5PContent)"
         :edit-mode="editMode"
         class="h-full"
@@ -40,7 +40,7 @@
         v-for="[content, image] in possibleNewContentTypes"
         :key="content"
         class="h-3 cursor-pointer"
-        :src="`/src/assets/icons/${image}`"
+        :src="getIconUrl(image)"
         @click="$emit('changeContent', content)"
       />
     </div>
@@ -101,6 +101,15 @@ defineEmits([
   'changeContent',
 ]);
 
+/**
+ * Returns the url of the icon-asset with the supplied name.
+ * @param image icon image to return
+ * @returns url to the icon
+ */
+function getIconUrl(image: string): string {
+  return new URL(`../../assets/icons/${image}`, import.meta.url).href;
+}
+
 const possibleNewContentTypes = computed(() => {
   const contentTypes = [
     ContentType.TEXT,
@@ -109,7 +118,7 @@ const possibleNewContentTypes = computed(() => {
     ContentType.EMBED,
   ];
   if (props.content) {
-    contentTypes.splice(contentTypes.indexOf(props.content.type), 1);
+    contentTypes.splice(contentTypes.indexOf(props.content.contentType), 1);
   }
 
   const imageUrls: Record<ContentType, string> = {

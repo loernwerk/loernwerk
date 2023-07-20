@@ -14,7 +14,7 @@
         </template>
         <template v-slot:[tabName(1)]>
           <DeleteSequencePopupTab
-            @deleted="closeAndReload()"
+            @delete="closeAndReload()"
             :sequence="sequence"
           />
         </template>
@@ -32,21 +32,21 @@
         <h3 class="text-3xl text-center">{{ sequence.name }}</h3>
         <div
           class="flex flex-row space-x-2 flex-wrap"
-          v-if="sequence.authorId === ownId"
+          v-if="sequence.authorId === userId"
         >
           <div
             v-for="(tag, index) in sequence.tags"
-            class="border-1 rounded bg-green-200 px-1 box-border"
+            class="border-1 rounded bg-green-200 px-1 box-border dark:bg-green-800 border-green-200 dark:border-green-800"
             :key="index"
           >
             {{ tag }}
           </div>
         </div>
-        <div v-if="sequence.authorId != ownId" class="text-xs">
+        <div v-if="sequence.authorId != userId" class="text-xs">
           {{
-            sequence.readAccess.includes(ownId)
-              ? 'Lesezugriff'
-              : 'Schreibzugriff'
+            sequence.readAccess.includes(userId)
+              ? $t('sequence.readAccess')
+              : $t('sequence.writeAccess')
           }}
         </div>
         <div class="flex flex-row space-x-2">
@@ -55,17 +55,18 @@
             @click="
               router.push({
                 name:
-                  sequence.authorId == ownId ||
-                  sequence.writeAccess.includes(ownId)
+                  sequence.authorId == userId ||
+                  sequence.writeAccess.includes(userId)
                     ? 'SequenceEdit'
                     : 'Slide',
-                params: { code: sequence.code },
+                params: { sequenceCode: sequence.code },
               })
             "
             >{{
-              sequence.authorId == ownId || sequence.writeAccess.includes(ownId)
-                ? 'Bearbeiten'
-                : 'Ansehen'
+              sequence.authorId == userId ||
+              sequence.writeAccess.includes(userId)
+                ? $t('edit')
+                : $t('view')
             }}
           </ButtonComponent>
           <ButtonComponent class="" @click="popupOpen = !popupOpen">
@@ -85,10 +86,10 @@ import { router } from '../router';
 import PopupComponent from './PopupComponent.vue';
 import { PropType, computed, ref } from 'vue';
 import TabbedContainer from './TabbedContainer.vue';
-import DeleteSequencePopupTab from './PopupTabs/DeleteSequencePopupTab.vue';
-import DataSequencePopupTab from './PopupTabs/DataSequencePopupTab.vue';
-import ShareSequencePopupTab from './PopupTabs/ShareSequencePopupTab.vue';
-import TagSequencePopupTab from './PopupTabs/TagSequencePopupTab.vue';
+import DeleteSequencePopupTab from './sequenceOverviewPopUpTabs/DeleteSequencePopupTab.vue';
+import DataSequencePopupTab from './sequenceOverviewPopUpTabs/DataSequencePopupTab.vue';
+import ShareSequencePopupTab from './sequenceOverviewPopUpTabs/ShareSequencePopupTab.vue';
+import TagSequencePopupTab from './sequenceOverviewPopUpTabs/TagSequencePopupTab.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
@@ -107,7 +108,7 @@ const props = defineProps({
   /**
    * Id of account that displays the sequence
    */
-  ownId: {
+  userId: {
     type: Number,
     required: true,
   },
@@ -122,18 +123,20 @@ const emits = defineEmits([
 
 const popupOpen = ref(false);
 
-const tabNames = [
-  'Schlüsselwörter',
-  'Löschen',
-  'Mit Lehrkräften teilen',
-  'Mit Teilnehmern teilen',
-];
+const tabNames = computed(() => {
+  return [
+    'sequence.tags',
+    'delete',
+    'sequence.shareWithTeacher',
+    'sequence.shareWithStudent',
+  ] as string[];
+});
 
 const shownTabs = computed(() => {
-  if (props.sequence?.authorId === props.ownId) {
-    return tabNames;
+  if (props.sequence?.authorId === props.userId) {
+    return tabNames.value;
   } else {
-    return [tabNames[3]];
+    return [tabNames.value[3]];
   }
 });
 
@@ -143,7 +146,7 @@ const shownTabs = computed(() => {
  * @returns tab name
  */
 function tabName(index: number): string {
-  return tabNames[index];
+  return tabNames.value[index];
 }
 
 /**

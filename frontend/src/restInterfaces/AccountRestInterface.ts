@@ -32,13 +32,27 @@ export class AccountRestInterface extends BaseRestInterface {
   }
 
   /**
+   * Tries to logout the currently logged in user.
+   */
+  public static async logout(): Promise<void> {
+    await BaseRestInterface.post<void>(`${this.account_path}logout`, {});
+  }
+
+  /**
    * Sends data for a new Account to backend
    * @param account the account
+   * @param inviteCode the invite code if neccessary
    * @returns the id of the newly created user
    */
-  public static async addAccount(account: Partial<IUser>): Promise<number> {
+  public static async addAccount(
+    account: Partial<IUser>,
+    inviteCode?: string
+  ): Promise<number> {
     return (
-      await BaseRestInterface.put<{ id: number }>(this.account_path, account)
+      await BaseRestInterface.put<{ id: number }>(this.account_path, {
+        ...account,
+        registrationCode: inviteCode,
+      })
     ).id;
   }
 

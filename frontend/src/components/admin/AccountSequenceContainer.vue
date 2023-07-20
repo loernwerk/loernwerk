@@ -1,23 +1,25 @@
 <template>
   <ContainerComponent>
     <template #Header>
-      <h1 class="underline text-xl">Sequenzen des Nutzers:</h1>
+      <h1 class="underline text-xl mb-2">
+        {{ $t('account.sequencesOfUser') }}:
+      </h1>
     </template>
-    <div v-for="sequence in sequences" :key="sequence.code">
+    <div v-for="sequence in sequences" :key="sequence.code" class="mb-2">
       <ContainerComponent>
-        <div class="flex flex-col">
-          <div>
-            {{ sequence.name }}
-          </div>
+        <div class="flex flex-col space-y-2">
+          <h3 class="text-3xl text-center">{{ sequence.name }}</h3>
           <div class="flex">
             <ButtonComponent @click="showSequence(sequence.code)">
-              Anzeigen
+              {{ $t('show') }}
             </ButtonComponent>
-            <div class="flex-grow text-red-500">
-              <div v-if="showError">Löschen fehlgeschlagen</div>
+            <div class="flex-grow text-error">
+              <div v-if="showError">
+                {{ $t('failed', { object: $t('delete') }) }}
+              </div>
             </div>
             <ButtonComponent @click="deleteSequence(sequence.code)">
-              Löschen
+              {{ $t('delete') }}
             </ButtonComponent>
           </div>
         </div>
@@ -27,11 +29,11 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
-import { ISequence } from '../../../model/sequence/ISequence';
-import ContainerComponent from './ContainerComponent.vue';
-import ButtonComponent from './ButtonComponent.vue';
-import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
-import { router } from '../router';
+import { ISequence } from '../../../../model/sequence/ISequence';
+import ContainerComponent from '../ContainerComponent.vue';
+import ButtonComponent from '../ButtonComponent.vue';
+import { SequenceRestInterface } from '../../restInterfaces/SequenceRestInterface';
+import { useRouter } from 'vue-router';
 
 defineProps({
   sequences: {
@@ -40,7 +42,8 @@ defineProps({
   },
 });
 
-const emit = defineEmits(['sequenceDelete']);
+const router = useRouter();
+const emit = defineEmits(['delete']);
 
 const showError = ref(false);
 /**
@@ -48,7 +51,7 @@ const showError = ref(false);
  * @param code the code of the sequence
  */
 function showSequence(code: string): void {
-  router.push('/'.concat(code));
+  router.push({ name: 'Slide', params: { sequenceCode: code } });
 }
 
 /**
@@ -58,7 +61,7 @@ function showSequence(code: string): void {
 async function deleteSequence(code: string): Promise<void> {
   try {
     await SequenceRestInterface.deleteSequence(code);
-    emit('sequenceDelete');
+    emit('delete');
   } catch {
     showError.value = true;
   }

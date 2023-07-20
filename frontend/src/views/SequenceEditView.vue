@@ -13,10 +13,10 @@
       <TabbedContainer
         class="h-48"
         :shown-tabs="tabs"
-        :possible-tabs="['Seite', 'Embed', 'Bild', 'Text']"
+        :possible-tabs="allTabs"
         ref="editOptionsTabContainer"
       >
-        <template #Seite>
+        <template v-slot:[getTab(0)]>
           <SlideOptionsTab
             :slide="selectedSlide"
             :sequence="sequence"
@@ -26,7 +26,7 @@
           />
         </template>
 
-        <template #Embed>
+        <template v-slot:[getTab(3)]>
           <EmbedOptionsTab
             v-if="currentEditingSlot"
             :embedContent="(selectedSlide.content[currentEditingSlot] as EmbedContent)"
@@ -34,7 +34,7 @@
           />
         </template>
 
-        <template #Bild>
+        <template v-slot:[getTab(2)]>
           <ImageOptionsTab
             v-if="currentEditingSlot"
             :imageContent="(selectedSlide.content[currentEditingSlot] as ImageContent)"
@@ -42,7 +42,7 @@
           />
         </template>
 
-        <template #Text>
+        <template v-slot:[getTab(1)]>
           <TextOptionsTab
             :key="selectedSlideIndex"
             :selected-slot="
@@ -99,14 +99,14 @@ const props = defineProps({
   /**
    * The code of the sequence to edit
    */
-  code: {
+  sequenceCode: {
     type: String,
     required: true,
   },
 });
 
 const sequence = ref<ISequenceWithSlides>(
-  await SequenceRestInterface.getSequence(props.code)
+  await SequenceRestInterface.getSequence(props.sequenceCode)
 );
 
 if (sequence.value.slides.length == 0) {
@@ -125,10 +125,10 @@ const router = useRouter();
  * @param update Object containing data for update
  */
 function updateContent(slot: LayoutSlot, update: unknown): void {
-  if (selectedSlide.value.content[slot]?.type == ContentType.TEXT) {
+  if (selectedSlide.value.content[slot]?.contentType == ContentType.TEXT) {
     (selectedSlide.value.content[slot] as TextContent).delta = update as Delta;
   }
-  if (selectedSlide.value.content[slot]?.type == ContentType.H5P) {
+  if (selectedSlide.value.content[slot]?.contentType == ContentType.H5P) {
     if (update !== undefined) {
       (selectedSlide.value.content[slot] as H5PContent).h5pContentId =
         update as string;
@@ -146,28 +146,28 @@ function changeContent(slot: LayoutSlot, contentType: ContentType): void {
   switch (contentType) {
     case ContentType.IMAGE:
       content = new ImageContent();
-      content.type = ContentType.IMAGE;
+      content.contentType = ContentType.IMAGE;
       content.img = '';
       content.scale = 1;
       break;
 
     case ContentType.TEXT:
       content = new TextContent();
-      content.type = ContentType.TEXT;
+      content.contentType = ContentType.TEXT;
       content.delta = new Delta();
       break;
 
     case ContentType.EMBED:
       content = new EmbedContent();
-      content.type = ContentType.EMBED;
+      content.contentType = ContentType.EMBED;
       content.url = '';
       break;
 
     case ContentType.H5P:
       content = new H5PContent();
-      content.type = ContentType.H5P;
+      content.contentType = ContentType.H5P;
       content.h5pContentId = 'new';
-      content.sequenceCode = props.code;
+      content.sequenceCode = props.sequenceCode;
       break;
   }
 
@@ -205,7 +205,7 @@ function addSlide(): void {
     id: maxId + 1,
   };
   const header = new TextContent();
-  header.type = ContentType.TEXT;
+  header.contentType = ContentType.TEXT;
   header.delta = new Delta();
   slide.content[LayoutSlot.HEADER] = header;
 
@@ -242,7 +242,7 @@ function deleteSlide(index: number): void {
 function updateSlide(slide: ISlide): void {
   if (Layout.hasHeader(slide.layout) && !slide.content[LayoutSlot.HEADER]) {
     const header = new TextContent();
-    header.type = ContentType.TEXT;
+    header.contentType = ContentType.TEXT;
     header.delta = new Delta();
     slide.content[LayoutSlot.HEADER] = header;
   }
@@ -250,7 +250,13 @@ function updateSlide(slide: ISlide): void {
 }
 
 const currentEditingSlot: Ref<LayoutSlot | null> = ref(null);
-const tabs = ref(['Seite']);
+const tabs = ref(['slide']);
+const allTabs = ref([
+  'slide',
+  'content.text',
+  'content.image',
+  'content.embed',
+]);
 const editOptionsTabContainer: Ref<typeof TabbedContainer | null> = ref(null);
 
 /**
@@ -266,7 +272,7 @@ function selectEditingSlot(slot: LayoutSlot): void {
  */
 function updateShownTabs(): void {
   const slot = currentEditingSlot.value;
-  tabs.value = ['Seite'];
+  tabs.value = ['slide'];
   if (slot != null) {
     const tabName = getTabNameForSlot(slot);
     if (tabName) {
@@ -275,7 +281,6 @@ function updateShownTabs(): void {
     }
   }
 }
-
 watch(currentEditingSlot, () => {
   updateShownTabs();
 });
@@ -287,11 +292,11 @@ watch(currentEditingSlot, () => {
  */
 function getTabNameForSlot(slot: LayoutSlot): string | undefined {
   const tabNameMap = {
-    [ContentType.TEXT]: 'Text',
-    [ContentType.IMAGE]: 'Bild',
-    [ContentType.EMBED]: 'Embed',
+    [ContentType.TEXT]: 'content.text',
+    [ContentType.IMAGE]: 'content.image',
+    [ContentType.EMBED]: 'content.embed',
   };
-  const type = selectedSlide.value.content[slot]?.type;
+  const type = selectedSlide.value.content[slot]?.contentType;
   if (type != undefined && type != ContentType.H5P) {
     return tabNameMap[type];
   }
@@ -299,10 +304,19 @@ function getTabNameForSlot(slot: LayoutSlot): string | undefined {
 }
 
 /**
+ * Gets the tab name for the given content type
+ * @param index index in the tab array
+ * @returns The tab for the given content type
+ */
+function getTab(index: number): string {
+  return allTabs.value[index];
+}
+
+/**
  * Saves the sequence
  */
 async function save(): Promise<void> {
   await SequenceRestInterface.updateSequence(sequence.value);
-  router.push('/overview');
+  await router.push({ name: 'Overview' });
 }
 </script>

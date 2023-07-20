@@ -7,6 +7,7 @@ import 'dotenv/config';
 import { DBH5PFile } from '../model/h5p/DBH5PFile';
 import { DBH5PContent } from '../model/h5p/DBH5PContent';
 import { DBH5PLibrary } from '../model/h5p/DBH5PLibrary';
+import { DBConfigEntry } from '../model/configuration/DBConfigEntry';
 
 /**
  * Handles database connection for the backend server.
@@ -21,7 +22,7 @@ export class DatabaseServer {
      * @private
      */
     private constructor() {
-        const database = process.env.DATABASE_FILE || 'dev.db';
+        const database = process.env.DATABASE_FILE || 'loernwerk.db';
 
         this.db = new DataSource({
             type: 'sqlite',
@@ -33,6 +34,7 @@ export class DatabaseServer {
                 DBH5PFile,
                 DBH5PContent,
                 DBH5PLibrary,
+                DBConfigEntry,
             ],
         });
 
@@ -55,7 +57,7 @@ export class DatabaseServer {
      */
     public async initialize(): Promise<void> {
         await this.db.initialize();
-        await this.db.synchronize(); // TODO: Other option to avoid dataloss?
+        await this.db.synchronize();
         console.log('Database connection established.');
     }
 

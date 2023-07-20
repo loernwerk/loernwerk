@@ -1,9 +1,9 @@
 <template>
   <ContainerComponent class="w-1/4 flex flex-col">
     <template #Header>
-      <div class="flex flex-col p-0.5">
+      <div class="flex flex-col p-0.5 mb-2">
         <ButtonComponent @click="emit('createUser')" class="pb-1">
-          Nutzer erstellen
+          {{ $t('create', { object: $t('user') }) }}
         </ButtonComponent>
         <SearchBarComponent
           @input-changed="
@@ -31,10 +31,10 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { IUser } from '../../../model/user/IUser';
-import ButtonComponent from './ButtonComponent.vue';
-import SearchBarComponent from './SearchBarComponent.vue';
-import ContainerComponent from './ContainerComponent.vue';
+import { IUser } from '../../../../model/user/IUser';
+import ButtonComponent from '../ButtonComponent.vue';
+import SearchBarComponent from '../SearchBarComponent.vue';
+import ContainerComponent from '../ContainerComponent.vue';
 
 const props = defineProps({
   accounts: {

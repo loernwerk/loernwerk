@@ -2,25 +2,27 @@
   <PopupComponent @closed="$emit('closed')">
     <ContainerComponent class="px-10 py-10 w-96">
       <template #Header>
-        <h1 class="text-xl">Sequenz erstellen:</h1>
+        <h1 class="text-xl">
+          {{ $t('create', { object: $t('sequence.sequence') }) }}:
+        </h1>
       </template>
       <template #default>
         <div class="space-y-2">
           <TextInputComponent
             class="w-full"
             :disabled="disableInputShowSpinner"
-            placeHolder="Name der Sequenz"
+            :placeHolder="$t('sequence.name')"
             v-model="nameField"
           />
-          <div class="text-red-500" v-if="error">
-            Es ist ein Fehler beim Erstellen der Sequenz aufgetreten.
+          <div class="text-error" v-if="error">
+            {{ $t('sequence.creationError') }}
           </div>
           <ButtonComponent
             class="w-fit float-right"
             :loading="disableInputShowSpinner"
             @click="newSequence()"
           >
-            Bestätigen
+            {{ $t('createAction') }}
           </ButtonComponent>
         </div>
       </template>
@@ -57,7 +59,7 @@ async function newSequence(): Promise<void> {
   disableInputShowSpinner.value = true;
   try {
     const code = await SequenceRestInterface.addSequence(nameField.value);
-    router.push({ name: 'SequenceEdit', params: { code: code } });
+    await router.push({ name: 'SequenceEdit', params: { sequenceCode: code } });
   } catch {
     error.value = true;
   }

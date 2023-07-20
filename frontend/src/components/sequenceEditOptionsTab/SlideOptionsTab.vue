@@ -3,7 +3,7 @@
     <div class="flex flex-row space-x-5 grow items-start">
       <div class="border-r-1 pr-2 border-container-border items-start">
         <div class="flex items-center space-x-2">
-          <p>Name:</p>
+          <p>{{ $t('content.sequenceName') }}:</p>
           <TextInputComponent
             :start-text="sequence.name"
             v-model="sequenceName"
@@ -11,7 +11,7 @@
         </div>
       </div>
       <div class="flex space-x-2 items-center">
-        <p>Hintergrundfarbe:</p>
+        <p>{{ $t('content.background') }}:</p>
         <input
           type="color"
           :value="slide.backgroundColor"
@@ -19,7 +19,7 @@
         />
       </div>
       <div class="flex space-x-2 items-start">
-        <p class="flex items-center h-10">Anordnung:</p>
+        <p class="flex items-center h-10">{{ $t('content.layout') }}:</p>
         <div class="flex flex-wrap flex-col h-28">
           <InteractableComponent
             v-for="layout in layouts"
@@ -28,17 +28,14 @@
             @click="updateSlideLayout(layout)"
             class="mb-2 mr-2"
           >
-            <img
-              :src="`/src/assets/layouts/${layoutImageMap[layout]}`"
-              class="h-8"
-            />
+            <img :src="getLayoutImageUrl(layoutImageMap[layout])" class="h-8" />
           </InteractableComponent>
         </div>
       </div>
     </div>
-    <ButtonComponent @click="$emit('save')" class="h-fit"
-      >Speichern</ButtonComponent
-    >
+    <ButtonComponent @click="$emit('save')" class="h-fit">{{
+      $t('save')
+    }}</ButtonComponent>
   </div>
 </template>
 
@@ -135,6 +132,15 @@ function updateSlideLayout(layout: LayoutType): void {
   const tempSlide = props.slide;
   tempSlide.layout = layout;
   updateSlide(tempSlide);
+}
+
+/**
+ * Returns the url to the image of the supplied layout
+ * @param image Image to fetch url for
+ * @returns url to the supplied image
+ */
+function getLayoutImageUrl(image: string): string {
+  return new URL(`../../assets/layouts/${image}`, import.meta.url).href;
 }
 
 const layoutImageMap: Record<LayoutType, string> = {
