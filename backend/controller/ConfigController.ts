@@ -34,7 +34,6 @@ export class ConfigController {
         key: ConfigKey,
         value: unknown
     ): Promise<void> {
-        console.log(key + ' : ' + value);
         const entry = await DBConfigEntry.findOneBy({ key: key });
         if (entry === null) {
             throw new LoernwerkError(
