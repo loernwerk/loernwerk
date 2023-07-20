@@ -2,6 +2,7 @@ import { createI18n } from 'vue-i18n';
 
 const messages = {
   de: {
+    search: 'Suche',
     save: 'Speichern',
     cancel: 'Abbrechen',
     delete: 'Löschen',
@@ -89,6 +90,7 @@ const messages = {
     },
   },
   en: {
+    search: 'Search',
     save: 'Save',
     cancel: 'Cancel',
     delete: 'Delete',
