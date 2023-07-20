@@ -48,15 +48,24 @@ export class AccountRouterFactory extends RouterFactory {
             '/',
             requireBody('name', 'mail', 'password'),
             async (req, res) => {
-                if (
-                    !req.session.isAdmin &&
-                    (await ConfigController.getConfigEntry(
-                        ConfigKey.REGISTRATION_TYPE
-                    )) !== RegistrationType.OPEN //need to change for invite
-                ) {
-                    res.sendStatus(401);
-                    return;
+                let removecode = ''
+                if (!req.session.isAdmin) {
+                    const registrationConfig = await ConfigController.getConfigEntry(ConfigKey.REGISTRATION_TYPE)
+                    switch (registrationConfig) {
+                        case RegistrationType.CLOSED:
+                            res.sendStatus(401);
+                            return;
+                        case RegistrationType.INVITE:
+                            const code = req.query.code
+                            if (code === undefined || await ConfigController.isValidInviteCode(code.toString())) {
+                                res.sendStatus(401)
+                                return
+                            }
+                            //set remove code if nec  
+                    }
+                    
                 }
+                    
                 try {
                     const user = await AccountController.createNewAccount(
                         req.body

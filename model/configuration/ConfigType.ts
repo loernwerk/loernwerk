@@ -28,10 +28,7 @@ export type ConfigType =
          */
         options: string[];
     } | {
-        type:'code';
-        
-        options: CodeOption
+        type:'codes';
     };
 
 export type NumberOption = 'limited' | 'unlimited';
-export type CodeOption = {length: number, rollable: boolean};

@@ -22,8 +22,10 @@ export class ConfigTypeMap {
 
             case ConfigKey.REGISTRATION_TYPE:
                 return { type: 'enum', options: Object.values(RegistrationType) };
-            case ConfigKey.REGISTRATION_CODE:
-                return {type: 'code', options: {length: 8, rollable: true}}
+            case ConfigKey.REGISTRATION_CODES:
+                return {type: 'codes'}
+            case ConfigKey.REGISTRATION_CODES_EXPIRES_AFTER_USE:
+                return {type: 'boolean'}
             default:
                 throw new LoernwerkError(
                     'Unknown config key',

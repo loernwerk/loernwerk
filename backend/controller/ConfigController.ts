@@ -36,9 +36,6 @@ export class ConfigController {
         key: ConfigKey,
         value: unknown
     ): Promise<void> {
-        if (ConfigTypeMap.getType(key).type === 'code') {
-            return; // May throw error
-        }
         const entry = await DBConfigEntry.findOneBy({ key: key });
         if (entry === null) {
             throw new LoernwerkError(
@@ -48,31 +45,6 @@ export class ConfigController {
         }
         entry.value = value;
         await entry.save();
-    }
-
-    /**
-     * Rolls the value of a configurationentry
-     * @param key the key from the entry to roll
-     * @returns the new value of the entry
-     */
-    public static async rollCodeEntry(key: ConfigKey): Promise<number> {
-        const type = ConfigTypeMap.getType(key);
-        if (type.type !== 'code' || !type.options.rollable) {
-            throw new LoernwerkError(
-                'not a rollable ConfigEntry',
-                LoernwerkErrorCodes.BAD_REQUEST
-            );
-        }
-        const entry = await DBConfigEntry.findOneBy({ key: key });
-        if (entry === null) {
-            throw new LoernwerkError(
-                'Config not Found',
-                LoernwerkErrorCodes.NOT_FOUND
-            );
-        }
-        entry.value = Math.floor(Math.random() * 10 ** type.options.length);
-        entry.save();
-        return entry.value as number;
     }
 
     /**
@@ -91,6 +63,23 @@ export class ConfigController {
             rec[x.key] = x.value;
         }
         return rec;
+    }
+
+    public static async isValidInviteCode(code:string) {
+        const codes = (await this.getConfigEntry(ConfigKey.REGISTRATION_CODE) as string).split(',')
+        for (const c of codes) {
+            if (c === code) {
+                return true
+            }
+        }
+        return false
+    }
+
+    public static async removeInviteCode(code: string) {
+        let codes = (await this.getConfigEntry(ConfigKey.REGISTRATION_CODE) as string).split(',')
+        const index = codes.indexOf(code)
+        codes = codes.splice(index, 1)
+        this.setConfigEntry(ConfigKey.REGISTRATION_CODE, codes.join(','))
     }
 
     /**
