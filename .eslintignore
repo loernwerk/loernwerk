@@ -3,3 +3,4 @@ frontend/vite.config.ts
 build
 tailwind.config.js
 /h5p/
+jest.config.js
