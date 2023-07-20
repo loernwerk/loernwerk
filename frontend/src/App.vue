@@ -12,7 +12,9 @@
             <LightDarkSwitch v-model="isDarkMode" />
           </div>
         </Suspense>
-        <div class="relative top-0 left-0 bottom-0 right-0 p-5 flex flex-grow">
+        <div
+          class="relative top-0 left-0 bottom-0 right-0 p-5 flex flex-grow overflow-hidden"
+        >
           <Suspense>
             <RouterView />
           </Suspense>
