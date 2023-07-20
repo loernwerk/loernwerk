@@ -114,7 +114,7 @@ const messages = {
       mail: 'E-Mail',
       password: 'Password',
       passwordRepeat: 'Repeat password',
-      keepLoggedIn: 'Keep me logged in',
+      keepLoggedIn: 'Stay logged in',
       wrongLoginData: 'Wrong username/E-Mail or password',
       isAdmin: 'is admin',
       sequencesOfUser: 'Sequences of user',
