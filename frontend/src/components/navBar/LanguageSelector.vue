@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { i18n } from '../i18n';
+import { i18n } from '../../i18n';
 
 defineProps({
   borderColor: {
@@ -29,7 +29,7 @@ defineProps({
  * @returns The icon url
  */
 function getIconUrl(lang: string): string {
-  return new URL(`../assets/langs/${lang}.png`, import.meta.url).href;
+  return new URL(`../../assets/langs/${lang}.png`, import.meta.url).href;
 }
 
 /**

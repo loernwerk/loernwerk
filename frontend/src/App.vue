@@ -28,7 +28,7 @@ import { RouterView } from 'vue-router';
 import NavigationBar from './components/navBar/NavigationBar.vue';
 import { ref } from 'vue';
 import LightDarkSwitch from './components/navBar/LightDarkSwitch.vue';
-import LanguageSelector from './components/LanguageSelector.vue';
+import LanguageSelector from './components/navBar/LanguageSelector.vue';
 
 const isDarkMode = ref(false);
 </script>

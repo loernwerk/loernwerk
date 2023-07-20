@@ -75,6 +75,12 @@ const messages = {
       teacher: 'Lehrkraft',
       student: 'Teilnehmenden',
     },
+    config: {
+      maxSequences: 'Maximale Anzahl an Lernsequenzen',
+      maxSlides: 'Maximale Anzahl an Seiten',
+      emptyPossible: 'Leer lassen für unbegrenzt',
+      invalidInput: 'Ungültige Eingabe für {object}',
+    },
   },
   en: {
     save: 'Save',
@@ -149,6 +155,12 @@ const messages = {
       shareWith: 'Share with {object}',
       teacher: 'Teacher',
       student: 'Students',
+    },
+    config: {
+      maxSequences: 'Maximum number of learning sequences',
+      maxSlides: 'Maximum number of slides',
+      emptyPossible: 'Leave empty for unlimited',
+      invalidInput: 'Invalid input for {object}',
     },
   },
 };
