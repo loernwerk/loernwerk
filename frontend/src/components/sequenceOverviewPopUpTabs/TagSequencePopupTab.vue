@@ -3,7 +3,7 @@
     <h1>{{ $t('sequence.tagIntro') }}</h1>
     <TextInputComponent
       class="my-2 grow"
-      :placeHolder="$tc('sequence.tag', 2)"
+      :placeHolder="$t('sequence.tags')"
       v-model="tagsField"
     >
     </TextInputComponent>

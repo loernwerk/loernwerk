@@ -93,7 +93,6 @@ import TagSequencePopupTab from './sequenceOverviewPopUpTabs/TagSequencePopupTab
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
-import { i18n } from '../i18n';
 
 library.add(faEllipsis);
 
@@ -126,14 +125,10 @@ const popupOpen = ref(false);
 
 const tabNames = computed(() => {
   return [
-    i18n.global.tc('sequence.tag', 2),
-    i18n.global.t('delete'),
-    i18n.global.t('sequence.shareWith', {
-      object: i18n.global.t('sequence.teacher'),
-    }),
-    i18n.global.t('sequence.shareWith', {
-      object: i18n.global.t('sequence.student'),
-    }),
+    'sequence.tags',
+    'delete',
+    'sequence.shareWithTeacher',
+    'sequence.shareWithstudent',
   ] as string[];
 });
 

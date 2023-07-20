@@ -11,7 +11,7 @@
           @click="selectedTab = tab"
           :class="{ 'border-b-1': selectedTab === tab }"
         >
-          {{ tab }}
+          {{ $t(tab) }}
         </h1>
       </div>
     </template>

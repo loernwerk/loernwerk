@@ -94,7 +94,6 @@ import { H5PContent } from '../../../model/slide/content/H5PContent';
 import Delta from 'quill-delta';
 import { ISlide } from '../../../model/slide/ISlide';
 import { useRouter } from 'vue-router';
-import { i18n } from '../i18n';
 
 const props = defineProps({
   /**
@@ -250,23 +249,17 @@ function updateSlide(slide: ISlide): void {
 }
 
 const currentEditingSlot: Ref<LayoutSlot | null> = ref(null);
-const allTabs = computed(() => {
-  return [
-    i18n.global.t('slide'),
-    i18n.global.t('content.text'),
-    i18n.global.t('content.image'),
-    i18n.global.t('content.embed'),
-  ];
-});
+const allTabs = ['slide', 'content.text', 'content.image', 'content.embed'];
 
 const tabs = computed(() => {
   const slot = currentEditingSlot.value;
-  let tabs = [i18n.global.t('slide')];
+  let tabs = ['slide'];
   if (slot != null) {
     const tabName = getTabNameForSlot(slot);
     if (tabName) {
       tabs.push(tabName);
     }
+    editOptionsTabContainer.value?.selectTab(tabName);
   }
   return tabs;
 });
@@ -287,9 +280,9 @@ function selectEditingSlot(slot: LayoutSlot): void {
  */
 function getTabNameForSlot(slot: LayoutSlot): string | undefined {
   const tabNameMap = {
-    [ContentType.TEXT]: i18n.global.t('content.text'),
-    [ContentType.IMAGE]: i18n.global.t('content.image'),
-    [ContentType.EMBED]: i18n.global.t('content.embed'),
+    [ContentType.TEXT]: 'content.text',
+    [ContentType.IMAGE]: 'content.image',
+    [ContentType.EMBED]: 'content.embed',
   };
   const type = selectedSlide.value.content[slot]?.contentType;
   if (type != undefined && type != ContentType.H5P) {
@@ -304,7 +297,7 @@ function getTabNameForSlot(slot: LayoutSlot): string | undefined {
  * @returns The tab for the given content type
  */
 function getTab(index: number): string {
-  return allTabs.value[index];
+  return allTabs[index];
 }
 
 /**
