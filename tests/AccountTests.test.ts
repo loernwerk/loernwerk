@@ -6,6 +6,8 @@ import { LoernwerkError, LoernwerkErrorCodes } from '../model/loernwerkError';
 import bcrypt from 'bcrypt';
 import { DBSequence } from '../model/sequence/DBSequence';
 import { SequenceController } from '../backend/controller/SequenceController';
+import { DBH5PContent } from '../model/h5p/DBH5PContent';
+import { DBSlide } from '../model/slide/DBSlide';
 
 let mockDb;
 beforeAll(async () => {
@@ -13,7 +15,7 @@ beforeAll(async () => {
         type: 'sqlite',
         database: ':memory:',
         dropSchema: true,
-        entities: [DBUser, DBSequence],
+        entities: [DBUser, DBSequence, DBSlide, DBH5PContent],
         synchronize: true,
         logging: false,
     });
