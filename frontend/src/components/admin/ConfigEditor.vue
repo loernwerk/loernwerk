@@ -3,13 +3,14 @@
     <table class="h-fit">
       <tr v-for="key in configKeys" :key="key">
         <td class="p-2">{{ keyDescribtion[key] }}:</td>
+
         <td class="p-2">
           <div
             v-if="ConfigTypeMap.getType(key).type === 'number'"
             class="flex space-x-2 items-center"
           >
             <TextInputComponent v-model="model[key]" />
-            <i>Leer lassen für unbegrenzte Menge</i>
+            <i>{{ $t('config.emptyPossible') }}</i>
           </div>
 
           <TextInputComponent
@@ -42,9 +43,15 @@
       </tr>
     </table>
     <div class="flex items-center">
-      <ButtonComponent @click="$emit('cancel')">Abbrechen</ButtonComponent>
-      <div class="grow text-center text-red-500">{{ errorMessage }}</div>
-      <ButtonComponent @click="save()">Speichern</ButtonComponent>
+      <ButtonComponent @click="$emit('cancel')">{{
+        $t('cancel')
+      }}</ButtonComponent>
+      <div class="grow text-center text-red-500">
+        <div v-if="errorKey">
+          {{ $t('config.invalidInput', { object: keyDescription[errorKey] }) }}
+        </div>
+      </div>
+      <ButtonComponent @click="save()">{{ $t('save') }}</ButtonComponent>
     </div>
   </div>
 </template>
@@ -53,9 +60,10 @@
 import { ConfigKey } from '../../../../model/configuration/ConfigKey';
 import { IConfigEntry } from '../../../../model/configuration/IConfigEntry';
 import { ConfigTypeMap } from '../../../../model/configuration/ConfigTypeMap';
-import { PropType, ref } from 'vue';
+import { ComputedRef, PropType, Ref, computed, ref } from 'vue';
 import ButtonComponent from '../ButtonComponent.vue';
 import TextInputComponent from '../TextInputComponent.vue';
+import { i18n } from '../../i18n';
 
 const props = defineProps({
   entries: {
@@ -107,6 +115,7 @@ const keyDescribtion: Record<ConfigKey, string> = {
     'Einladungscode ist nach Verwendung ungültig',
 };
 
+
 /**
  * Returns valid options for this config enum.
  * @param key ConfigKey to get options for
@@ -140,7 +149,7 @@ function checkValidInput(key: ConfigKey): boolean {
   }
 }
 
-const errorMessage = ref('');
+const errorKey: Ref<ConfigKey | undefined> = ref(undefined);
 
 /**
  * Gets the save value for the given key
@@ -168,7 +177,7 @@ function getSaveValue(key: ConfigKey): unknown {
 function save(): void {
   for (const key of configKeys) {
     if (!checkValidInput(key)) {
-      errorMessage.value = `Ungültige Eingabe für "${keyDescribtion[key]}"`;
+      errorKey.value = key;
       return;
     }
   }
@@ -181,7 +190,7 @@ function save(): void {
     });
   }
 
-  errorMessage.value = '';
+  errorKey.value = undefined;
   emits('save', result);
 }
 </script>

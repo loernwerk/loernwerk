@@ -1,9 +1,9 @@
 <template>
   <ContainerComponent class="w-1/4 flex flex-col">
     <template #Header>
-      <div class="flex flex-col p-0.5">
+      <div class="flex flex-col p-0.5 mb-2">
         <ButtonComponent @click="emit('createUser')" class="pb-1">
-          Nutzer erstellen
+          {{ $t('create', { object: $t('user') }) }}
         </ButtonComponent>
         <SearchBarComponent
           @input-changed="

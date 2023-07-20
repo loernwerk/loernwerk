@@ -10,8 +10,7 @@
       >
       </SlideDisplayFactory>
       <div class="text-error" v-if="error">
-        Es ist ein Fehler bei der Folien Ansicht aufgetreten. Bitte laden sie
-        die Seite erneut.
+        {{ $t('notAvailable', { object: $t('slide') }) }} {{ $t('reloadPage') }}
       </div>
     </div>
     <div class="flex items-center">
@@ -23,7 +22,7 @@
         :loading="displaySpinner"
         @click="nextSlideToExecute()"
       >
-        Weiter
+        {{ $t('next') }}
       </ButtonComponent>
     </div>
   </div>

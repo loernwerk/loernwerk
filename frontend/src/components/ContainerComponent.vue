@@ -7,7 +7,7 @@
       <!-- Header that does not get scrolled -->
       <slot name="Header"></slot>
     </div>
-    <div class="flex-grow overflow-y-auto">
+    <div class="flex-grow overflow-y-auto max-h-full min-h-0 flex flex-col">
       <div class="min-h-0 max-h-full">
         <!-- Scrollable body -->
         <slot></slot>

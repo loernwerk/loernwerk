@@ -10,7 +10,7 @@
     <TextInputComponent
       :uppercase="true"
       :disabled="disableInputShowSpinner"
-      class="w-64 text-7xl font-mono border-2"
+      class="w-[17.4rem] text-7xl mono-font border-2"
       :class="{ 'border-red-600': showRedBorder }"
       :max-length="codeLength"
       v-model="code"
@@ -72,3 +72,10 @@ watch(code, (codeEntered) => {
   }
 });
 </script>
+
+<style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+.mono-font {
+  font-family: 'Roboto Mono', monospace;
+}
+</style>

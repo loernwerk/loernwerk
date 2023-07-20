@@ -13,10 +13,10 @@
       <TabbedContainer
         class="h-48"
         :shown-tabs="tabs"
-        :possible-tabs="['Seite', 'Embed', 'Bild', 'Text']"
+        :possible-tabs="allTabs"
         ref="editOptionsTabContainer"
       >
-        <template #Seite>
+        <template v-slot:[getTab(0)]>
           <SlideOptionsTab
             :slide="selectedSlide"
             :sequence="sequence"
@@ -26,7 +26,7 @@
           />
         </template>
 
-        <template #Embed>
+        <template v-slot:[getTab(3)]>
           <EmbedOptionsTab
             v-if="currentEditingSlot"
             :embedContent="(selectedSlide.content[currentEditingSlot] as EmbedContent)"
@@ -34,7 +34,7 @@
           />
         </template>
 
-        <template #Bild>
+        <template v-slot:[getTab(2)]>
           <ImageOptionsTab
             v-if="currentEditingSlot"
             :imageContent="(selectedSlide.content[currentEditingSlot] as ImageContent)"
@@ -42,7 +42,7 @@
           />
         </template>
 
-        <template #Text>
+        <template v-slot:[getTab(1)]>
           <TextOptionsTab
             :key="selectedSlideIndex"
             :selected-slot="
@@ -250,7 +250,13 @@ function updateSlide(slide: ISlide): void {
 }
 
 const currentEditingSlot: Ref<LayoutSlot | null> = ref(null);
-const tabs = ref(['Seite']);
+const tabs = ref(['slide']);
+const allTabs = ref([
+  'slide',
+  'content.text',
+  'content.image',
+  'content.embed',
+]);
 const editOptionsTabContainer: Ref<typeof TabbedContainer | null> = ref(null);
 
 /**
@@ -266,7 +272,7 @@ function selectEditingSlot(slot: LayoutSlot): void {
  */
 function updateShownTabs(): void {
   const slot = currentEditingSlot.value;
-  tabs.value = ['Seite'];
+  tabs.value = ['slide'];
   if (slot != null) {
     const tabName = getTabNameForSlot(slot);
     if (tabName) {
@@ -275,7 +281,6 @@ function updateShownTabs(): void {
     }
   }
 }
-
 watch(currentEditingSlot, () => {
   updateShownTabs();
 });
@@ -287,15 +292,24 @@ watch(currentEditingSlot, () => {
  */
 function getTabNameForSlot(slot: LayoutSlot): string | undefined {
   const tabNameMap = {
-    [ContentType.TEXT]: 'Text',
-    [ContentType.IMAGE]: 'Bild',
-    [ContentType.EMBED]: 'Embed',
+    [ContentType.TEXT]: 'content.text',
+    [ContentType.IMAGE]: 'content.image',
+    [ContentType.EMBED]: 'content.embed',
   };
   const type = selectedSlide.value.content[slot]?.contentType;
   if (type != undefined && type != ContentType.H5P) {
     return tabNameMap[type];
   }
   return undefined;
+}
+
+/**
+ * Gets the tab name for the given content type
+ * @param index index in the tab array
+ * @returns The tab for the given content type
+ */
+function getTab(index: number): string {
+  return allTabs.value[index];
 }
 
 /**

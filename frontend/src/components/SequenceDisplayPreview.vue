@@ -45,8 +45,8 @@
         <div v-if="sequence.authorId != userId" class="text-xs">
           {{
             sequence.readAccess.includes(userId)
-              ? 'Lesezugriff'
-              : 'Schreibzugriff'
+              ? $t('sequence.readAccess')
+              : $t('sequence.writeAccess')
           }}
         </div>
         <div class="flex flex-row space-x-2">
@@ -65,8 +65,8 @@
             >{{
               sequence.authorId == userId ||
               sequence.writeAccess.includes(userId)
-                ? 'Bearbeiten'
-                : 'Ansehen'
+                ? $t('edit')
+                : $t('view')
             }}
           </ButtonComponent>
           <ButtonComponent class="" @click="popupOpen = !popupOpen">
@@ -123,18 +123,20 @@ const emits = defineEmits([
 
 const popupOpen = ref(false);
 
-const tabNames = [
-  'Schlüsselwörter',
-  'Löschen',
-  'Mit Lehrkräften teilen',
-  'Mit Teilnehmern teilen',
-];
+const tabNames = computed(() => {
+  return [
+    'sequence.tags',
+    'delete',
+    'sequence.shareWithTeacher',
+    'sequence.shareWithStudent',
+  ] as string[];
+});
 
 const shownTabs = computed(() => {
   if (props.sequence?.authorId === props.userId) {
-    return tabNames;
+    return tabNames.value;
   } else {
-    return [tabNames[3]];
+    return [tabNames.value[3]];
   }
 });
 
@@ -144,7 +146,7 @@ const shownTabs = computed(() => {
  * @returns tab name
  */
 function tabName(index: number): string {
-  return tabNames[index];
+  return tabNames.value[index];
 }
 
 /**

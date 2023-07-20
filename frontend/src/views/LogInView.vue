@@ -7,27 +7,29 @@
       v-if="!registrationFormVisible"
     >
       <template #Header>
-        <h1 class="underline text-xl">Anmelden:</h1>
+        <h1 class="underline text-xl">{{ $t('account.login') }}:</h1>
       </template>
       <template #default>
         <table class="w-full">
           <tr>
-            <td class="p-1">Nutzername/Email:</td>
+            <td class="p-1 whitespace-nowrap">
+              {{ $t('account.name') }}/{{ $t('account.mail') }}:
+            </td>
             <td class="w-full p-1">
               <TextInputComponent
                 :disabled="disableInputShowSpinner"
-                placeHolder="Nutzername/Email"
+                :placeHolder="`${$t('account.name')}/${$t('account.mail')}`"
                 v-model="mailField"
               />
             </td>
           </tr>
           <tr>
-            <td class="p-1">Passwort:</td>
+            <td class="p-1">{{ $t('account.password') }}:</td>
             <td class="w-full p-1">
               <TextInputComponent
                 :disabled="disableInputShowSpinner"
                 :hidden="true"
-                placeHolder="Passwort"
+                :placeHolder="$t('account.password')"
                 v-model="passwordField"
               />
             </td>
@@ -41,13 +43,13 @@
               class="cursor-pointer"
               v-model="keepLoggedIn"
             />
-            <label class="cursor-pointer" @click="disableCheckBox"
-              >Angemeldet bleiben</label
-            >
+            <label class="cursor-pointer" @click="disableCheckBox">{{
+              $t('account.keepLoggedIn')
+            }}</label>
           </div>
           <div class="flex-grow text-center">
             <div class="text-error" v-if="displayError">
-              Falscher Nutzername/Email oder Passwort.
+              {{ $t('account.wrongInputData') }}
             </div>
           </div>
           <ButtonComponent
@@ -55,7 +57,7 @@
             :loading="disableInputShowSpinner"
             @click="checkLogIn()"
           >
-            Anmelden
+            {{ $t('account.login') }}
           </ButtonComponent>
         </div>
       </template>
@@ -79,7 +81,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import ButtonComponent from '../components/ButtonComponent.vue';
 import ContainerComponent from '../components/ContainerComponent.vue';
 import TextInputComponent from '../components/TextInputComponent.vue';
@@ -89,7 +91,9 @@ import { router } from '../router';
 import { ConfigRestInterface } from '../restInterfaces/ConfigRestInterface';
 import { ConfigKey } from '../../../model/configuration/ConfigKey';
 import { RegistrationType } from '../../../model/configuration/RegistrationType';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const mailField = ref('');
 const passwordField = ref('');
 const keepLoggedIn = ref(false);
@@ -105,6 +109,16 @@ const configtype = ref(
 registrationButtonVisible.value =
   configtype.value == RegistrationType.OPEN ||
   configtype.value == RegistrationType.INVITE;
+
+onMounted(async () => {
+  // Checks if the user is already logged in
+  try {
+    await AccountRestInterface.getOwnAccount();
+    await router.push({ name: 'Overview' });
+  } catch {
+    // User isn't logged in, do nothing and show the login
+  }
+});
 
 /**
  * Locks the Checkbox while checking Login data

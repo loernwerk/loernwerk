@@ -1,9 +1,13 @@
 <template>
   <div class="flex flex-row items-center space-x-5 w-full pt-5">
-    <ButtonComponent @click="selectImage()">Bild ändern</ButtonComponent>
-    <div class="text-error">{{ errorMessage }}</div>
+    <ButtonComponent @click="selectImage()">{{
+      $t('change', { object: $t('content.image') })
+    }}</ButtonComponent>
+    <div class="text-error" v-if="errorCode !== ''">
+      {{ $t(errorCode) }}
+    </div>
     <div class="space-x-2 flex flex-row items-center w-96">
-      <p>Skalierung:</p>
+      <p>{{ $t('content.scale') }}:</p>
       <input
         type="range"
         min="0"
@@ -43,7 +47,8 @@ const emits = defineEmits([
 ]);
 
 const refContent = ref(props.imageContent);
-const errorMessage = ref('');
+
+const errorCode = ref('');
 
 /**
  * Opens a file dialog to select a new image.
@@ -60,15 +65,15 @@ function selectImage(): void {
     }
     const file = files.item(0);
     if (!file) {
-      errorMessage.value = 'Es wurde keine Datei ausgewählt.';
+      errorCode.value = 'content.fileNotFound';
       return;
     }
     // Limits the file size to 2MB
     if (file.size > 2097152) {
-      errorMessage.value = 'Die Datei darf nicht größer als 2MB sein.';
+      errorCode.value = 'content.fileTooLarge';
       return;
     }
-    errorMessage.value = '';
+    errorCode.value = '';
     imageToBase64(file);
   };
   input.click();

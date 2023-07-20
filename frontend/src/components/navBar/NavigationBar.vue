@@ -7,7 +7,7 @@
       :active="isCurrentView('Overview')"
       targetLink="/overview"
     >
-      Sequenzübersicht
+      {{ $t('navBar.overview') }}
     </NavigationBarItem>
 
     <NavigationBarItem v-if="currentViewLocalized !== ''" :active="true">
@@ -19,7 +19,7 @@
       targetLink="/admin"
       v-if="isAdmin"
     >
-      Admin
+      {{ $t('navBar.admin') }}
     </NavigationBarItem>
 
     <div class="flex-grow"></div>
@@ -27,6 +27,8 @@
     <div>
       <LightDarkSwitch v-model="isDarkMode" class="text-white" />
     </div>
+
+    <LanguageSelector />
 
     <FontAwesomeIcon
       icon="circle-user"
@@ -41,11 +43,13 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import { RouteLocationNormalized, useRouter } from 'vue-router';
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { AccountRestInterface } from '../../restInterfaces/AccountRestInterface';
 import { UserClass } from '../../../../model/user/IUser';
 import NavigationBarItem from './NavigationBarItem.vue';
 import LightDarkSwitch from './LightDarkSwitch.vue';
+import LanguageSelector from './LanguageSelector.vue';
+import { i18n } from '../../i18n';
 
 library.add(faCircleUser);
 
@@ -71,7 +75,13 @@ watch(isDarkMode, (newVal) => {
 
 const router = useRouter();
 const currentView = ref('');
-const currentViewLocalized = ref('');
+const currentViewLocalized = computed(() => {
+  switch (currentView.value) {
+    case 'SequenceEdit':
+      return i18n.global.t('navBar.sequenceEdit');
+  }
+  return '';
+});
 const isAdmin = ref(false);
 
 router.afterEach((to) => updateNavBar(to));
@@ -90,14 +100,6 @@ try {
  */
 function updateNavBar(newView: RouteLocationNormalized): void {
   currentView.value = newView.name as string;
-
-  // Localizing the current view
-  currentViewLocalized.value = '';
-  switch (currentView.value) {
-    case 'SequenceEdit':
-      currentViewLocalized.value = 'Sequenzbearbeitung';
-      break;
-  }
 }
 
 /**

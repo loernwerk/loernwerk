@@ -1,13 +1,19 @@
 <template>
   <div class="flex items-center mt-4 space-x-2">
-    <h1>Sequenz "{{ sequence.name }}" löschen?</h1>
+    <h1>
+      {{
+        $t('deleteObject', {
+          object: `${$t('sequence.sequence')} "${sequence.name}"`,
+        })
+      }}:
+    </h1>
     <div class="grow">
       <div class="text-error" v-if="error">
-        Es ist ein Fehler beim Löschen der Sequenz aufgetreten.
+        {{ $t('sequence.deleteError') }}
       </div>
     </div>
     <ButtonComponent class="w-fit float-right" @click="deleteSequence()"
-      >Unwiderruflich löschen
+      >{{ $t('delete') }}
     </ButtonComponent>
   </div>
 </template>
