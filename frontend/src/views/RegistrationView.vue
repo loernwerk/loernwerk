@@ -10,8 +10,8 @@ import AccountCreationContainer from '../components/admin/AccountCreationContain
 import { ConfigRestInterface } from '../restInterfaces/ConfigRestInterface';
 import { router } from '../router';
 
-if (!(await ConfigRestInterface.getValue(ConfigKey.OPEN_REGISTRATION))) {
-  console.log(await ConfigRestInterface.getValue(ConfigKey.OPEN_REGISTRATION));
+if (!(await ConfigRestInterface.getValue(ConfigKey.REGISTRATION_TYPE))) {
+  console.log(await ConfigRestInterface.getValue(ConfigKey.REGISTRATION_TYPE));
   router.push({ name: 'LogIn' });
 }
 </script>

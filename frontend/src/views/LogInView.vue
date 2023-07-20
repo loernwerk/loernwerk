@@ -85,7 +85,7 @@ const displayError = ref(false);
 const registrationVisible = ref(false);
 
 registrationVisible.value = (await ConfigRestInterface.getValue(
-  ConfigKey.OPEN_REGISTRATION
+  ConfigKey.REGISTRATION_TYPE
 )) as boolean;
 
 /**

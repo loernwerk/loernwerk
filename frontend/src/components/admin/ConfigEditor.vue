@@ -66,7 +66,7 @@ const emits = defineEmits(['save', 'cancel']);
 const configKeys = [
   ConfigKey.MAX_SEQUENCES_PER_USER,
   ConfigKey.MAX_SLIDES_PER_SEQUENCE,
-  ConfigKey.OPEN_REGISTRATION,
+  ConfigKey.REGISTRATION_TYPE,
 ];
 
 /**
@@ -96,13 +96,13 @@ const model = ref(getConfigRecord());
 const keyOrder: ConfigKey[] = [
   ConfigKey.MAX_SEQUENCES_PER_USER,
   ConfigKey.MAX_SLIDES_PER_SEQUENCE,
-  ConfigKey.OPEN_REGISTRATION,
+  ConfigKey.REGISTRATION_TYPE,
 ];
 
 const keyDescribtion: Record<ConfigKey, string> = {
   [ConfigKey.MAX_SEQUENCES_PER_USER]: 'Maximale Sequenzen pro Nutzer',
   [ConfigKey.MAX_SLIDES_PER_SEQUENCE]: 'Maximale Folien pro Sequenz',
-  [ConfigKey.OPEN_REGISTRATION]: 'Offene Registrierung',
+  [ConfigKey.REGISTRATION_TYPE]: 'Offene Registrierung',
 };
 
 /**
