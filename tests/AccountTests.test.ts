@@ -219,10 +219,7 @@ describe('AccountController Tests', () => {
         );
     });
 
-    /**
-     * ensureAdminExists function
-     *NOTE: Admin email returns undefined@loernwerk.de, intended?
-     */
+    //ensureAdminExists function
     it('create Admin, because no admin exists', async () => {
         const noAdmin = await DBUser.findBy({ type: UserClass.ADMIN });
         expect(noAdmin.length).toEqual(0);
