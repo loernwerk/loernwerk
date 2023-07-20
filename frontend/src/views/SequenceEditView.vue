@@ -260,7 +260,6 @@ const allTabs = computed(() => {
 });
 
 const tabs = computed(() => {
-  console.log('refreshing tabs');
   const slot = currentEditingSlot.value;
   let tabs = [i18n.global.t('slide')];
   if (slot != null) {
