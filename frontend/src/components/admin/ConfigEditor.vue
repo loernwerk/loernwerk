@@ -60,10 +60,9 @@
 import { ConfigKey } from '../../../../model/configuration/ConfigKey';
 import { IConfigEntry } from '../../../../model/configuration/IConfigEntry';
 import { ConfigTypeMap } from '../../../../model/configuration/ConfigTypeMap';
-import { ComputedRef, PropType, Ref, computed, ref } from 'vue';
+import { PropType, Ref, ref } from 'vue';
 import ButtonComponent from '../ButtonComponent.vue';
 import TextInputComponent from '../TextInputComponent.vue';
-import { i18n } from '../../i18n';
 
 const props = defineProps({
   entries: {
@@ -114,7 +113,6 @@ const keyDescribtion: Record<ConfigKey, string> = {
   [ConfigKey.REGISTRATION_CODES_EXPIRES_AFTER_USE]:
     'Einladungscode ist nach Verwendung ungültig',
 };
-
 
 /**
  * Returns valid options for this config enum.

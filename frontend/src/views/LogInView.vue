@@ -87,7 +87,6 @@ import ContainerComponent from '../components/ContainerComponent.vue';
 import TextInputComponent from '../components/TextInputComponent.vue';
 import AccountCreationContainer from '../components/admin/AccountCreationContainer.vue';
 import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
-import { router } from '../router';
 import { ConfigRestInterface } from '../restInterfaces/ConfigRestInterface';
 import { ConfigKey } from '../../../model/configuration/ConfigKey';
 import { RegistrationType } from '../../../model/configuration/RegistrationType';
