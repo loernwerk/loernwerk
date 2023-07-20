@@ -152,11 +152,8 @@ describe('SequenceController Tests', () => {
         expect(pdf).toBeInstanceOf(Buffer);
     });
 
-    /**
-     * deleteSequence function
-     * TODO: This test fails probably because it expects the slide to have H5P content, but does not find it
-     */
-    xit('try to delete sequence', async () => {
+    //deleteSequence function
+    it('try to delete sequence', async () => {
         const user = await DBUser.findBy({ name: 'anatoli' });
         const sequence = await DBSequence.findBy({ code: 'CODE66' });
         await SequenceController.deleteSequence(sequence[0].code);
