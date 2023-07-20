@@ -79,10 +79,10 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
-import TextInputComponent from './TextInputComponent.vue';
-import ButtonComponent from './ButtonComponent.vue';
-import ContainerComponent from './ContainerComponent.vue';
-import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
+import TextInputComponent from '../TextInputComponent.vue';
+import ButtonComponent from '../ButtonComponent.vue';
+import ContainerComponent from '../ContainerComponent.vue';
+import { AccountRestInterface } from '../../restInterfaces/AccountRestInterface';
 
 const emit = defineEmits([
   /**

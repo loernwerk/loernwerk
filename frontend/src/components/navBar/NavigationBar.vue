@@ -2,7 +2,7 @@
   <div
     class="w-full h-20 bg-navbar flex flex-row items-center gap-5 drop-shadow"
   >
-    <img src="../assets/logo_navbar.png" class="h-10 mx-5" />
+    <img src="../../assets/logo_navbar.png" class="h-10 mx-5" />
     <NavigationBarItem
       :active="isCurrentView('Overview')"
       targetLink="/overview"
@@ -44,8 +44,8 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import { RouteLocationNormalized, useRouter } from 'vue-router';
 import { ref, watch } from 'vue';
-import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
-import { UserClass } from '../../../model/user/IUser';
+import { AccountRestInterface } from '../../restInterfaces/AccountRestInterface';
+import { UserClass } from '../../../../model/user/IUser';
 import NavigationBarItem from './NavigationBarItem.vue';
 import LightDarkSwitch from './LightDarkSwitch.vue';
 import LanguageSelector from './LanguageSelector.vue';

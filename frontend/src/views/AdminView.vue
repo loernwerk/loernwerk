@@ -24,7 +24,7 @@
         <AccountSequenceContainer
           :sequences="sequencesOfUser"
           class="flex-grow"
-          @sequence-delete="refreshSequence()"
+          @delete="refreshSequence()"
         />
       </div>
       <AccountCreationContainer
@@ -33,26 +33,55 @@
         @create="refresh()"
       />
     </div>
+    <ButtonComponent
+      class="absolute top-2 right-2 text-2xl"
+      @click="showConfigEditor = true"
+    >
+      <FontAwesomeIcon :icon="['fas', 'gear']" />
+    </ButtonComponent>
+    <PopupComponent v-if="showConfigEditor" @closed="showConfigEditor = false">
+      <ContainerComponent class="px-10 py-10">
+        <ConfigEditor
+          :entries="(configs as Record<ConfigKey, unknown>)"
+          @save="(val) => saveConfig(val)"
+        />
+      </ContainerComponent>
+    </PopupComponent>
   </div>
 </template>
 <script setup lang="ts">
 import { Ref, ref } from 'vue';
 import { IUser } from '../../../model/user/IUser';
 import AccountDetailsEditContainer from '../components/AccountDetailsEditContainer.vue';
-import AccountList from '../components/AccountList.vue';
+import AccountList from '../components/admin/AccountList.vue';
 import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
-import AccountCreationContainer from '../components/AccountCreationContainer.vue';
-import AccountSequenceContainer from '../components/AccountSequenceContainer.vue';
+import AccountCreationContainer from '../components/admin/AccountCreationContainer.vue';
+import AccountSequenceContainer from '../components/admin/AccountSequenceContainer.vue';
 import { ISequence } from '../../../model/sequence/ISequence';
 import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
 import { router } from '../router';
+import ButtonComponent from '../components/ButtonComponent.vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faGear } from '@fortawesome/free-solid-svg-icons';
+import PopupComponent from '../components/PopupComponent.vue';
+import ConfigEditor from '../components/admin/ConfigEditor.vue';
+import { ConfigRestInterface } from '../restInterfaces/ConfigRestInterface';
+import { ConfigKey } from '../../../model/configuration/ConfigKey';
+import { IConfigEntry } from '../../../model/configuration/IConfigEntry';
+import ContainerComponent from '../components/ContainerComponent.vue';
 
+library.add(faGear);
+
+const showConfigEditor = ref(false);
+const configs = ref({});
 const displayCreateUser = ref(false);
 const selectedUser: Ref<Partial<IUser>> | Ref<null> = ref(null);
 const sequencesOfUser: Ref<ISequence[]> = ref([]);
 const accounts: Ref<Partial<IUser>[]> = ref([]);
 try {
   accounts.value = await AccountRestInterface.getAccountMetaDataList();
+  configs.value = await ConfigRestInterface.getAllValue();
 } catch {
   router.push({ name: 'Main' });
 }
@@ -80,5 +109,17 @@ async function refreshSequence(): Promise<void> {
   sequencesOfUser.value = await SequenceRestInterface.getSequenceByUser(
     selectedUser.value?.id as number
   );
+}
+
+/**
+ * Saves the configs to the backend
+ * @param configsToSave the configs to save
+ */
+async function saveConfig(configsToSave: IConfigEntry[]): Promise<void> {
+  for (const entry of configsToSave) {
+    await ConfigRestInterface.setValue(entry.key, entry.value);
+  }
+  showConfigEditor.value = false;
+  configs.value = await ConfigRestInterface.getAllValue();
 }
 </script>

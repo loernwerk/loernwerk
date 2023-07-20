@@ -126,10 +126,10 @@ const router = useRouter();
  * @param update Object containing data for update
  */
 function updateContent(slot: LayoutSlot, update: unknown): void {
-  if (selectedSlide.value.content[slot]?.type == ContentType.TEXT) {
+  if (selectedSlide.value.content[slot]?.contentType == ContentType.TEXT) {
     (selectedSlide.value.content[slot] as TextContent).delta = update as Delta;
   }
-  if (selectedSlide.value.content[slot]?.type == ContentType.H5P) {
+  if (selectedSlide.value.content[slot]?.contentType == ContentType.H5P) {
     if (update !== undefined) {
       (selectedSlide.value.content[slot] as H5PContent).h5pContentId =
         update as string;
@@ -147,26 +147,26 @@ function changeContent(slot: LayoutSlot, contentType: ContentType): void {
   switch (contentType) {
     case ContentType.IMAGE:
       content = new ImageContent();
-      content.type = ContentType.IMAGE;
+      content.contentType = ContentType.IMAGE;
       content.img = '';
       content.scale = 1;
       break;
 
     case ContentType.TEXT:
       content = new TextContent();
-      content.type = ContentType.TEXT;
+      content.contentType = ContentType.TEXT;
       content.delta = new Delta();
       break;
 
     case ContentType.EMBED:
       content = new EmbedContent();
-      content.type = ContentType.EMBED;
+      content.contentType = ContentType.EMBED;
       content.url = '';
       break;
 
     case ContentType.H5P:
       content = new H5PContent();
-      content.type = ContentType.H5P;
+      content.contentType = ContentType.H5P;
       content.h5pContentId = 'new';
       content.sequenceCode = props.sequenceCode;
       break;
@@ -205,7 +205,7 @@ function addSlide(): void {
     id: maxId + 1,
   };
   const header = new TextContent();
-  header.type = ContentType.TEXT;
+  header.contentType = ContentType.TEXT;
   header.delta = new Delta();
   slide.content[LayoutSlot.HEADER] = header;
 
@@ -242,7 +242,7 @@ function deleteSlide(index: number): void {
 function updateSlide(slide: ISlide): void {
   if (Layout.hasHeader(slide.layout) && !slide.content[LayoutSlot.HEADER]) {
     const header = new TextContent();
-    header.type = ContentType.TEXT;
+    header.contentType = ContentType.TEXT;
     header.delta = new Delta();
     slide.content[LayoutSlot.HEADER] = header;
   }
@@ -292,7 +292,7 @@ function getTabNameForSlot(slot: LayoutSlot): string | undefined {
     [ContentType.IMAGE]: i18n.global.t('content.image'),
     [ContentType.EMBED]: i18n.global.t('content.embed'),
   };
-  const type = selectedSlide.value.content[slot]?.type;
+  const type = selectedSlide.value.content[slot]?.contentType;
   if (type != undefined && type != ContentType.H5P) {
     return tabNameMap[type];
   }

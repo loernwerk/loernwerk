@@ -8,7 +8,7 @@
       <div class="mt-2" v-for="sequence in sequences" :key="sequence.name">
         <SequenceDisplayPreview
           :sequence="sequence"
-          :own-id="ownId"
+          :user-id="userId"
           @reload-sequences="$emit('reloadSequences')"
         ></SequenceDisplayPreview>
       </div>
@@ -39,7 +39,7 @@ defineProps({
   /**
    * Id of account that displays the sequences
    */
-  ownId: {
+  userId: {
     type: Number,
     required: true,
   },

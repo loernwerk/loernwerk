@@ -55,4 +55,8 @@ export enum LoernwerkErrorCodes {
      * The entity wasn't initialized prior
      */
     UNINITIALIZED = 'UNINITIALIZED',
+    /**
+     * Given parameter was invalid
+     */
+    INVALID_PARAMETER = 'INVALID_PARAMETER',
 }
