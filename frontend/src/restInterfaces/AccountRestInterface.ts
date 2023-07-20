@@ -34,6 +34,7 @@ export class AccountRestInterface extends BaseRestInterface {
   /**
    * Sends data for a new Account to backend
    * @param account the account
+   * @param inviteCode the invite code if neccessary
    * @returns the id of the newly created user
    */
   public static async addAccount(
