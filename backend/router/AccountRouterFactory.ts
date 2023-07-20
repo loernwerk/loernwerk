@@ -55,10 +55,11 @@ export class AccountRouterFactory extends RouterFactory {
                             ConfigKey.REGISTRATION_TYPE
                         );
                     switch (registrationConfig) {
-                        case RegistrationType.CLOSED:
+                        case RegistrationType.CLOSED: {
                             res.sendStatus(401);
                             return;
-                        case RegistrationType.INVITE:
+                        }
+                        case RegistrationType.INVITE: {
                             console.log('invite');
                             const code = req.query.code?.toString();
                             if (
@@ -77,6 +78,7 @@ export class AccountRouterFactory extends RouterFactory {
                             ) {
                                 removecode = code;
                             }
+                        }
                     }
                 }
 
