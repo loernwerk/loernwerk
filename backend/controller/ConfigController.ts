@@ -71,6 +71,15 @@ export class ConfigController {
             ConfigKey.MAX_SEQUENCES_PER_USER,
             ConfigKey.MAX_SLIDES_PER_SEQUENCE,
         ];
+        let nnn = await DBConfigEntry.findOneBy({
+            key: ConfigKey.OPEN_REGISTRATION,
+        });
+        if (nnn === null) {
+            nnn = new DBConfigEntry();
+        }
+        nnn.key = ConfigKey.OPEN_REGISTRATION;
+        nnn.value = false;
+        nnn.save();
         for (const x of nullInitialized) {
             const entry = await DBConfigEntry.findOneBy({ key: x });
             if (entry !== null) {

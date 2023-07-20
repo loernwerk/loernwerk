@@ -4,6 +4,8 @@ import { AccountController } from '../controller/AccountController';
 import { IUser, UserClass } from '../../model/user/IUser';
 import { requireAdmin, requireBody, requireLogin } from '../loernwerkUtilities';
 import { LoernwerkErrorCodes } from '../../model/loernwerkError';
+import { ConfigController } from '../controller/ConfigController';
+import { ConfigKey } from '../../model/configuration/ConfigKey';
 
 /**
  * Builds router for request regarding Account management
@@ -43,9 +45,17 @@ export class AccountRouterFactory extends RouterFactory {
 
         accountRouter.put(
             '/',
-            requireAdmin,
             requireBody('name', 'mail', 'password'),
             async (req, res) => {
+                if (
+                    !req.session.isAdmin &&
+                    !(await ConfigController.getConfigEntry(
+                        ConfigKey.OPEN_REGISTRATION
+                    ))
+                ) {
+                    res.sendStatus(401);
+                    return;
+                }
                 try {
                     const user = await AccountController.createNewAccount(
                         req.body

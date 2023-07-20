@@ -10,4 +10,8 @@ export enum ConfigKey {
      * Maximum number of slides a sequence can contain
      */
     MAX_SLIDES_PER_SEQUENCE = 'max_slides_per_sequence',
+    /**
+     * If the open_registration is available or not
+     */
+    OPEN_REGISTRATION = 'open_registration',
 }

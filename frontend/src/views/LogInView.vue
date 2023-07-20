@@ -57,6 +57,13 @@
         </div>
       </template>
     </ContainerComponent>
+    <ButtonComponent
+      v-if="registrationVisible"
+      class="absolute right-5 bottom-5 h-fit"
+      @click="router.push({ name: 'LogIn' })"
+    >
+      Registrieren
+    </ButtonComponent>
   </div>
 </template>
 
@@ -67,12 +74,17 @@ import ContainerComponent from '../components/ContainerComponent.vue';
 import TextInputComponent from '../components/TextInputComponent.vue';
 import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
 import { router } from '../router';
+import { ConfigRestInterface } from '../restInterfaces/ConfigRestInterface';
+import { ConfigKey } from '../../../model/configuration/ConfigKey';
 
 const mailField = ref('');
 const passwordField = ref('');
 const keepLoggedIn = ref(false);
 const disableInputShowSpinner = ref(false);
 const displayError = ref(false);
+const registrationVisible = ref(
+  await ConfigRestInterface.getValue(ConfigKey.OPEN_REGISTRATION)
+);
 
 /**
  * Locks the Checkbox while checking Login data
