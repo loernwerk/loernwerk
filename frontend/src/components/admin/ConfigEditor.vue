@@ -17,6 +17,11 @@
             v-model="model[key]"
             class="w-full"
           />
+          <input
+            v-if="ConfigTypeMap.getType(key).type === 'boolean'"
+            type="checkbox"
+            v-model="model[key]"
+          />
           <select
             v-if="ConfigTypeMap.getType(key).type === 'enum'"
             v-model="model[key]"
@@ -29,14 +34,6 @@
             >
               {{ option }}
             </option>
-          </select>
-          <select
-            v-if="ConfigTypeMap.getType(key).type === 'boolean'"
-            v-model="model[key]"
-            class="w-full"
-          >
-            <option :value="true">Wahr</option>
-            <option :value="false">Falsch</option>
           </select>
         </td>
       </tr>
@@ -156,6 +153,8 @@ function getSaveValue(key: ConfigKey): unknown {
         return -1;
       }
       return parseInt(model.value[key]);
+    case 'boolean':
+      return model.value[key] as unknown as boolean;
     default:
       return model.value[key] + '';
   }
