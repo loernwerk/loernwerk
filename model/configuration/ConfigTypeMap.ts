@@ -19,6 +19,8 @@ export class ConfigTypeMap {
             case ConfigKey.MAX_SLIDES_PER_SEQUENCE:
                 return { type: 'number', options: ['unlimited'] };
 
+            case ConfigKey.OPEN_REGISTRATION:
+                return { type: 'boolean' };
             default:
                 throw new LoernwerkError(
                     'Unknown config key',

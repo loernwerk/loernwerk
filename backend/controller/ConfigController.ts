@@ -78,7 +78,7 @@ export class ConfigController {
             nnn = new DBConfigEntry();
         }
         nnn.key = ConfigKey.OPEN_REGISTRATION;
-        nnn.value = false;
+        nnn.value = true;
         nnn.save();
         for (const x of nullInitialized) {
             const entry = await DBConfigEntry.findOneBy({ key: x });

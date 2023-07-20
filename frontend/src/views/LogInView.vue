@@ -60,7 +60,7 @@
     <ButtonComponent
       v-if="registrationVisible"
       class="absolute right-5 bottom-5 h-fit"
-      @click="router.push({ name: 'LogIn' })"
+      @click="router.push({ name: 'Register' })"
     >
       Registrieren
     </ButtonComponent>
