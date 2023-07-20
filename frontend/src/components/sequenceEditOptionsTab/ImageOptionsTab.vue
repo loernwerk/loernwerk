@@ -3,7 +3,9 @@
     <ButtonComponent @click="selectImage()">{{
       $t('change', { object: $t('content.image') })
     }}</ButtonComponent>
-    <div class="text-error">{{ errorMessage }}</div>
+    <div class="text-error" v-if="errorCode !== ''">
+      {{ $t(errorCode) }}
+    </div>
     <div class="space-x-2 flex flex-row items-center w-96">
       <p>{{ $t('content.scale') }}:</p>
       <input
@@ -21,10 +23,9 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, computed, ref, watch } from 'vue';
+import { PropType, ref, watch } from 'vue';
 import { ImageContent } from '../../../../model/slide/content/ImageContent';
 import ButtonComponent from '../ButtonComponent.vue';
-import { i18n } from '../../i18n';
 
 const props = defineProps({
   /**
@@ -47,24 +48,7 @@ const emits = defineEmits([
 
 const refContent = ref(props.imageContent);
 
-enum ErrorCodes {
-  NONE,
-  NoFileSelected,
-  FileTooLarge,
-}
-
-const errorCode = ref(ErrorCodes.NONE);
-const errorMessage = computed(() => {
-  switch (errorCode.value) {
-    case ErrorCodes.NoFileSelected:
-      return i18n.global.t('content.fileNotFound');
-    case ErrorCodes.FileTooLarge:
-      return i18n.global.t('content.fileTooLarge', { size: '2MB' });
-    case ErrorCodes.NONE:
-    default:
-      return '';
-  }
-});
+const errorCode = ref('');
 
 /**
  * Opens a file dialog to select a new image.
@@ -81,15 +65,15 @@ function selectImage(): void {
     }
     const file = files.item(0);
     if (!file) {
-      errorCode.value = ErrorCodes.NoFileSelected;
+      errorCode.value = 'content.fileNotFound';
       return;
     }
     // Limits the file size to 2MB
     if (file.size > 2097152) {
-      errorCode.value = ErrorCodes.FileTooLarge;
+      errorCode.value = 'content.fileTooLarge';
       return;
     }
-    errorCode.value = ErrorCodes.NONE;
+    errorCode.value = '';
     imageToBase64(file);
   };
   input.click();
