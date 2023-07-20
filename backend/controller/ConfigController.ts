@@ -73,8 +73,6 @@ export class ConfigController {
         const codes = (
             (await this.getConfigEntry(ConfigKey.REGISTRATION_CODES)) as string
         ).split(',');
-        console.log(codes);
-        console.log(code);
         for (const c of codes) {
             if (c === code) {
                 return true;
@@ -88,11 +86,11 @@ export class ConfigController {
      * @param code the code to remove
      */
     public static async removeInviteCode(code: string): Promise<void> {
-        let codes = (
+        const codes = (
             (await this.getConfigEntry(ConfigKey.REGISTRATION_CODES)) as string
         ).split(',');
         const index = codes.indexOf(code);
-        codes = codes.splice(index, 1);
+        codes.splice(index, 1);
         this.setConfigEntry(ConfigKey.REGISTRATION_CODES, codes.join(','));
     }
 

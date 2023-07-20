@@ -60,7 +60,6 @@ export class AccountRouterFactory extends RouterFactory {
                             return;
                         }
                         case RegistrationType.INVITE: {
-                            console.log('invite');
                             const code = req.query.code?.toString();
                             if (
                                 code === undefined ||
