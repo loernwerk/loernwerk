@@ -128,7 +128,7 @@ const tabNames = computed(() => {
     'sequence.tags',
     'delete',
     'sequence.shareWithTeacher',
-    'sequence.shareWithstudent',
+    'sequence.shareWithStudent',
   ] as string[];
 });
 

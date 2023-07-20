@@ -79,7 +79,7 @@
             :loading="disableInputShowSpinner"
             @click="reset()"
           >
-            Abbrechen
+            {{ $t('cancel') }}
           </ButtonComponent>
           <div class="flex-grow text-center">
             <div class="text-error" v-if="displayError">
