@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full flex h-full">
+  <div class="w-full flex h-full space-x-5">
     <AccountList
       :accounts="accounts"
       @selected="
@@ -14,7 +14,7 @@
       "
     />
     <div class="flex flex-grow">
-      <div v-if="selectedUser !== null" class="w-full flex">
+      <div v-if="selectedUser !== null" class="w-full flex space-x-2">
         <AccountDetailsEditContainer
           class="w-2/3 pl-1 pr-1"
           :showadminview="true"
