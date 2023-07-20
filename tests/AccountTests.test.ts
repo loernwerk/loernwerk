@@ -48,6 +48,7 @@ beforeAll(async () => {
     sequenceByDeletedAccount.slideCount = 0;
     sequenceByDeletedAccount.writeAccess = [];
     sequenceByDeletedAccount.readAccess = [];
+    sequenceByDeletedAccount.tags = [];
     await sequenceByDeletedAccount.save();
 });
 afterAll(async () => {
