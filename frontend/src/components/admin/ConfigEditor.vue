@@ -23,7 +23,7 @@
             class="w-full"
           >
             <option
-              v-for="option in ConfigTypeMap.getType(key).options"
+              v-for="option in getEnumOptions(key)"
               :key="option"
               :value="option"
             >
@@ -109,6 +109,19 @@ const keyDescribtion: Record<ConfigKey, string> = {
 };
 
 /**
+ * Returns valid options for this config enum.
+ * @param key ConfigKey to get options for
+ * @returns Array of all valid options
+ */
+function getEnumOptions(key: ConfigKey): string[] {
+  const configType = ConfigTypeMap.getType(key);
+  if (configType.type !== 'enum') {
+    return [];
+  }
+  return configType.options;
+}
+
+/**
  * Checks whether the given input for the key is valid
  * @param key Key to check for
  * @returns True if the input is valid, false otherwise
@@ -120,13 +133,7 @@ function checkValidInput(key: ConfigKey): boolean {
       if (!(model.value[key] + '').match(/^[0-9]*$/)) {
         return false;
       }
-      return !(
-        type.options &&
-        type.options.length > 0 &&
-        type.options[0] == 'limited' &&
-        model.value[key] == ''
-      );
-
+      return type.options === 'limited' && model.value[key] === '';
     case 'string':
       return model.value[key] !== '';
     default:

@@ -1,5 +1,5 @@
 import { ConfigKey } from './ConfigKey';
-import { IConfigType } from './IConfigType';
+import { ConfigType } from './ConfigType';
 import { LoernwerkError, LoernwerkErrorCodes } from '../loernwerkError';
 
 /**
@@ -11,13 +11,13 @@ export class ConfigTypeMap {
      * @param key configuration of which the type is requested
      * @returns type of the value of the setting
      */
-    public static getType(key: ConfigKey): IConfigType {
+    public static getType(key: ConfigKey): ConfigType {
         switch (key) {
             case ConfigKey.MAX_SEQUENCES_PER_USER:
-                return { type: 'number', options: ['limited'] };
+                return { type: 'number', options: 'unlimited' };
 
             case ConfigKey.MAX_SLIDES_PER_SEQUENCE:
-                return { type: 'number', options: ['unlimited'] };
+                return { type: 'number', options: 'unlimited' };
 
             case ConfigKey.OPEN_REGISTRATION:
                 return { type: 'boolean' };
