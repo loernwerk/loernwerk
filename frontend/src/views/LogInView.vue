@@ -64,7 +64,7 @@
     </ContainerComponent>
     <div class="w-full my-auto mx-3" v-if="registrationFormVisible">
       <AccountCreationContainer
-        :requires-invite-code="configtype == RegistrationType.INVITE"
+        :requires-invite-code="configtype == RegistrationType.INVITATION"
       />
     </div>
     <ButtonComponent
@@ -105,8 +105,8 @@ const configtype = ref(
 );
 
 registrationButtonVisible.value =
-  configtype.value == RegistrationType.OPEN ||
-  configtype.value == RegistrationType.INVITE;
+  configtype.value == RegistrationType.PUBLIC ||
+  configtype.value == RegistrationType.INVITATION;
 
 onMounted(async () => {
   // Checks if the user is already logged in

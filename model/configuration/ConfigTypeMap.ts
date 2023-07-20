@@ -26,7 +26,7 @@ export class ConfigTypeMap {
                     options: Object.values(RegistrationType),
                 };
             case ConfigKey.REGISTRATION_CODES:
-                return { type: 'codes' };
+                return { type: 'string' };
             case ConfigKey.REGISTRATION_CODES_EXPIRES_AFTER_USE:
                 return { type: 'boolean' };
             default:
