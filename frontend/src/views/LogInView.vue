@@ -62,10 +62,7 @@
         </div>
       </template>
     </ContainerComponent>
-    <div
-      class="w-full mt-auto mb-auto ml-3 mr-3"
-      v-if="registrationFormVisible"
-    >
+    <div class="w-full my-auto mx-3" v-if="registrationFormVisible">
       <AccountCreationContainer
         :requires-invite-code="configtype == RegistrationType.INVITE"
       />
