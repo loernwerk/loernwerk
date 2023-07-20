@@ -2,7 +2,7 @@
   <div class="flex flex-col">
     <table class="h-fit">
       <tr v-for="key in configKeys" :key="key">
-        <td class="p-2">{{ keyDescribtion[key] }}:</td>
+        <td class="p-2">{{ keyDescription[key] }}:</td>
 
         <td class="p-2">
           <div
@@ -63,6 +63,7 @@ import { ConfigTypeMap } from '../../../../model/configuration/ConfigTypeMap';
 import { PropType, Ref, ref } from 'vue';
 import ButtonComponent from '../ButtonComponent.vue';
 import TextInputComponent from '../TextInputComponent.vue';
+import { i18n } from '../../i18n';
 
 const props = defineProps({
   entries: {
@@ -106,12 +107,13 @@ function getConfigRecord(): Record<ConfigKey, string> {
 const model = ref(getConfigRecord());
 
 const keyDescription: Record<ConfigKey, string> = {
-  [ConfigKey.MAX_SEQUENCES_PER_USER]: 'Maximale Sequenzen pro Nutzer',
-  [ConfigKey.MAX_SLIDES_PER_SEQUENCE]: 'Maximale Folien pro Sequenz',
-  [ConfigKey.REGISTRATION_TYPE]: 'Offene Registrierung',
-  [ConfigKey.REGISTRATION_CODES]: 'Einladungscode',
-  [ConfigKey.REGISTRATION_CODES_EXPIRES_AFTER_USE]:
-    'Einladungscode ist nach Verwendung ungültig',
+  [ConfigKey.MAX_SEQUENCES_PER_USER]: i18n.global.t('config.maxSequences'),
+  [ConfigKey.MAX_SLIDES_PER_SEQUENCE]: i18n.global.t('config.maxSlides'),
+  [ConfigKey.REGISTRATION_TYPE]: i18n.global.t('config.registrationType'),
+  [ConfigKey.REGISTRATION_CODES]: i18n.global.t('config.registrationCodes'),
+  [ConfigKey.REGISTRATION_CODES_EXPIRES_AFTER_USE]: i18n.global.t(
+    'config.registrationCodesExpirations'
+  ),
 };
 
 /**
