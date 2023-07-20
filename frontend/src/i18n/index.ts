@@ -82,6 +82,10 @@ const messages = {
       maxSlides: 'Maximale Anzahl an Seiten',
       emptyPossible: 'Leer lassen für unbegrenzt',
       invalidInput: 'Ungültige Eingabe für {object}',
+      registrationType: 'Registrierungsart',
+      registrationCodes: 'Einladungscodes (getrennt durch Kommas)',
+      registrationCodesExpirations:
+        'Einladungscodes verliert nach Verwendung Gültigkeit',
     },
     navBar: {
       overview: 'Sequenzübersicht',
@@ -170,6 +174,9 @@ const messages = {
       maxSlides: 'Maximum number of slides',
       emptyPossible: 'Leave empty for unlimited',
       invalidInput: 'Invalid input for {object}',
+      registrationType: 'Registrationtype',
+      registrationCodes: 'Registrationcode (seperated by comma)',
+      registrationCodesExpirations: 'Registrationcode expires after use',
     },
     navBar: {
       overview: 'Sequenceoverview',
