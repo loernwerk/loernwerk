@@ -11,7 +11,9 @@
             v-for="[index, slide] in slides.entries()"
             :key="slide.id"
           >
-            <p>{{ index + 1 }}</p>
+            <p :class="{ 'font-bold': index === selectedSlideIndex }">
+              {{ index + 1 }}
+            </p>
             <SlideOverviewContainerElement
               :slide="slide"
               class="rounded-md border-1"

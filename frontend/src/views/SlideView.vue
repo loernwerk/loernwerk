@@ -1,29 +1,32 @@
 <!-- View for execution of a sequence -->
 <template>
-  <div class="flex w-full flex-col content-center">
-    <div class="flex flex-grow justify-center">
-      <SlideDisplayFactory
-        v-if="slide != null && !error"
-        :slide="slide"
-        :editMode="false"
-        :key="index"
-      >
-      </SlideDisplayFactory>
-      <div class="text-error" v-if="error">
-        {{ $t('notAvailable', { object: $t('slide') }) }} {{ $t('reloadPage') }}
+  <div class="flex w-full flex-col content-center mt-10">
+    <div class="h-full flex flex-col overflow-hidden">
+      <div class="flex flex-1 justify-center overflow-hidden">
+        <SlideDisplayFactory
+          v-if="slide != null && !error"
+          :slide="slide"
+          :editMode="false"
+          :key="index"
+        >
+        </SlideDisplayFactory>
+        <div class="text-error" v-if="error">
+          {{ $t('notAvailable', { object: $t('slide') }) }}
+          {{ $t('reloadPage') }}
+        </div>
       </div>
-    </div>
-    <div class="flex items-center">
-      <div class="w-full mr-4">
-        <ProgressBar :percentage="percentage"> </ProgressBar>
+      <div class="mt-4 flex items-center flex-shrink-0">
+        <div class="w-full mr-4">
+          <ProgressBar :percentage="percentage"> </ProgressBar>
+        </div>
+        <ButtonComponent
+          class="w-fit"
+          :loading="displaySpinner"
+          @click="nextSlideToExecute()"
+        >
+          {{ $t('next') }}
+        </ButtonComponent>
       </div>
-      <ButtonComponent
-        class="w-fit"
-        :loading="displaySpinner"
-        @click="nextSlideToExecute()"
-      >
-        {{ $t('next') }}
-      </ButtonComponent>
     </div>
   </div>
 </template>

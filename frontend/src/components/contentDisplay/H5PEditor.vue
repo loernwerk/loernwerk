@@ -87,8 +87,14 @@ onMounted(() => {
  */
 async function save(): Promise<void> {
   currentlySaving.value = true;
-  const { contentId } = await (editor.value as H5PEditorComponent).save();
-  emits('closed', contentId);
+  try {
+    const { contentId } = await (editor.value as H5PEditorComponent).save();
+    currentlySaving.value = false;
+    emits('closed', contentId);
+  } catch (e) {
+    void e;
+    currentlySaving.value = false;
+  }
 }
 
 /**

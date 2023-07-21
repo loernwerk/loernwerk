@@ -12,7 +12,10 @@
         {{ $t('sequence.deleteError') }}
       </div>
     </div>
-    <ButtonComponent class="w-fit float-right" @click="deleteSequence()"
+    <ButtonComponent
+      class="w-fit float-right"
+      @click="deleteSequence()"
+      :loading="loading"
       >{{ $t('delete') }}
     </ButtonComponent>
   </div>
@@ -42,11 +45,14 @@ const emits = defineEmits([
   'delete',
 ]);
 
+const loading = ref(false);
+
 /**
  * This Method deletes the desired Sequence
  */
 async function deleteSequence(): Promise<void> {
   error.value = false;
+  loading.value = true;
   const sequenceCode = props.sequence.code as string;
   try {
     await SequenceRestInterface.deleteSequence(sequenceCode);
@@ -54,5 +60,6 @@ async function deleteSequence(): Promise<void> {
   } catch {
     error.value = true;
   }
+  loading.value = false;
 }
 </script>

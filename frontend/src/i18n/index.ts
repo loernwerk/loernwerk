@@ -23,6 +23,8 @@ const messages = {
     deleted: '{object} gelöscht',
     show: 'Anzeigen',
     failed: '{object} fehlgeschlagen',
+    leaveWarning:
+      'Wollen Sie die Seite wirklich verlassen? Ungespeicherte Änderungen gehen verloren!',
     account: {
       login: 'Anmelden',
       register: 'Registrieren',
@@ -51,7 +53,7 @@ const messages = {
       sequenceName: 'Name der Lernsequenz',
       background: 'Hintergrund',
       layout: 'Anordnung',
-      fileTooLarge: 'Datei ist größer als {size}',
+      fileTooLarge: 'Datei ist größer als 2 MB',
       fileNotFound: 'Datei nicht gefunden',
       text: 'Text',
       embed: 'Einbetten',
@@ -87,10 +89,11 @@ const messages = {
       registrationType: 'Registrierungsart',
       registrationCodes: 'Einladungscodes (getrennt durch Kommas)',
       registrationCodesExpirations:
-        'Einladungscodes verliert nach Verwendung Gültigkeit',
+        'Einladungscode verliert nach Verwendung Gültigkeit',
       open: 'Offene Registrierung',
       closed: 'Registrierung durch Admin',
       invite: 'Registrierung durch Einladungscodes',
+      config: 'Einstellungen',
     },
     navBar: {
       overview: 'Sequenzübersicht',
@@ -120,6 +123,8 @@ const messages = {
     deleted: '{object} deleted',
     show: 'Show',
     failed: '{object} failed',
+    leaveWarning:
+      'Do you want to leave the site? Unsaved changes will be lost!',
     account: {
       login: 'Login',
       register: 'Register',
@@ -148,7 +153,7 @@ const messages = {
       sequenceName: 'Name of the learning sequence',
       background: 'Background',
       layout: 'Layout',
-      fileTooLarge: 'File is larger than {size}',
+      fileTooLarge: 'File is larger than MB',
       fileNotFound: 'File not found',
       text: 'Text',
       embed: 'Embed',
@@ -187,6 +192,7 @@ const messages = {
       open: 'Open registration',
       closed: 'Only admins can add new users',
       invite: 'Registration through invitecodes',
+      config: 'Settings',
     },
     navBar: {
       overview: 'Sequenceoverview',

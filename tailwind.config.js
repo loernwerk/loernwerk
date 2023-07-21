@@ -44,7 +44,7 @@ export default {
                     }
                   },
                 scrollbar: {
-                    backgorund: { 
+                    backgorund: {
                       light: colors.slate[100],
                       dark: '#30363D'
                     },
@@ -56,6 +56,10 @@ export default {
                 navbar: {
                     light: '#006634',
                     dark: '#003317',
+                },
+                tabselector: {
+                  light: 'hsl(0, 0%, 60%)',
+                  dark: 'hsl(0, 0%, 70%)'
                 }
             },
             borderWidth: {

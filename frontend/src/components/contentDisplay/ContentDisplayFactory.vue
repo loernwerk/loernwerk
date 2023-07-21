@@ -1,48 +1,50 @@
 <!-- Visualizes a content object. -->
 <template>
-  <div class="h-full p-3 relative">
-    <div class="h-full" v-if="content">
-      <EmbedDisplay
-        v-if="content.contentType === ContentType.EMBED"
-        :embed-content="(content as EmbedContent)"
-        :edit-mode="editMode"
-        class="h-full"
-        @editing="(val) => $emit('editing', val)"
-      />
-      <TextDisplay
-        v-else-if="content.contentType === ContentType.TEXT"
-        :text-content="(content as TextContent)"
-        :edit-mode="editMode"
-        :layout-slot="layoutSlot"
-        class="h-full"
-        @editing="(val) => $emit('editing', val)"
-      />
-      <ImageDisplay
-        v-else-if="content.contentType === ContentType.IMAGE"
-        :image-content="(content as ImageContent)"
-        :edit-mode="editMode"
-        class="h-full"
-        @editing="(val) => $emit('editing', val)"
-      />
-      <H5PDisplay
-        v-else-if="content.contentType === ContentType.H5P"
-        :h5p-content="(content as H5PContent)"
-        :edit-mode="editMode"
-        class="h-full"
-        @editing="(val) => $emit('editing', val)"
-      />
-    </div>
-    <div
-      class="absolute flex flex-rows space-x-2 top-3 right-3"
-      v-if="editMode && layoutSlot != LayoutSlot.HEADER"
-    >
-      <img
-        v-for="[content, image] in possibleNewContentTypes"
-        :key="content"
-        class="h-3 cursor-pointer"
-        :src="getIconUrl(image)"
-        @click="$emit('changeContent', content)"
-      />
+  <div class="h-full p-3 relative overflow-hidden">
+    <div class="h-full" :class="{ 'border-1': editMode }">
+      <div class="h-full" v-if="content">
+        <EmbedDisplay
+          v-if="content.contentType === ContentType.EMBED"
+          :embed-content="(content as EmbedContent)"
+          :edit-mode="editMode"
+          class="h-full"
+          @editing="(val) => $emit('editing', val)"
+        />
+        <TextDisplay
+          v-else-if="content.contentType === ContentType.TEXT"
+          :text-content="(content as TextContent)"
+          :edit-mode="editMode"
+          :layout-slot="layoutSlot"
+          class="h-full"
+          @editing="(val) => $emit('editing', val)"
+        />
+        <ImageDisplay
+          v-else-if="content.contentType === ContentType.IMAGE"
+          :image-content="(content as ImageContent)"
+          :edit-mode="editMode"
+          class="h-full"
+          @editing="(val) => $emit('editing', val)"
+        />
+        <H5PDisplay
+          v-else-if="content.contentType === ContentType.H5P"
+          :h5p-content="(content as H5PContent)"
+          :edit-mode="editMode"
+          class="h-full absolute"
+          @editing="(val) => $emit('editing', val)"
+        />
+      </div>
+      <div
+        class="absolute flex flex-rows space-x-2 top-3 right-3"
+        v-if="editMode && layoutSlot != LayoutSlot.HEADER"
+      >
+        <img
+          v-for="[content, image] in possibleNewContentTypes"
+          :key="content"
+          class="h-3 cursor-pointer"
+          :src="getIconUrl(image)"
+          @click="$emit('changeContent', content)"
+        />
+      </div>
     </div>
   </div>
 </template>

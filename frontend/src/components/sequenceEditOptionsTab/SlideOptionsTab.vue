@@ -18,24 +18,13 @@
           @change="val => updateSlideBackgroundColor((val.target as HTMLInputElement).value)"
         />
       </div>
-      <div class="flex space-x-2 items-start">
-        <p class="flex items-center h-10">{{ $t('content.layout') }}:</p>
-        <div class="flex flex-wrap flex-col h-28">
-          <InteractableComponent
-            v-for="layout in layouts"
-            :class="{ 'bg-interactable-selected': layout == slide.layout }"
-            :key="layout"
-            @click="updateSlideLayout(layout)"
-            class="mb-2 mr-2"
-          >
-            <img :src="getLayoutImageUrl(layoutImageMap[layout])" class="h-8" />
-          </InteractableComponent>
-        </div>
-      </div>
     </div>
-    <ButtonComponent @click="$emit('save')" class="h-fit">{{
-      $t('save')
-    }}</ButtonComponent>
+    <ButtonComponent
+      @click="$emit('save')"
+      :loading="props.disableButton"
+      class="h-fit"
+      >{{ $t('save') }}</ButtonComponent
+    >
   </div>
 </template>
 
@@ -45,8 +34,6 @@ import { ISlide } from '../../../../model/slide/ISlide';
 import ButtonComponent from '../ButtonComponent.vue';
 import TextInputComponent from '../TextInputComponent.vue';
 import { ISequence } from '../../../../model/sequence/ISequence';
-import { LayoutType } from '../../../../model/slide/layout/Layout';
-import InteractableComponent from '../InteractableComponent.vue';
 
 const props = defineProps({
   /**
@@ -62,6 +49,10 @@ const props = defineProps({
    */
   sequence: {
     type: Object as PropType<ISequence>,
+    required: true,
+  },
+  disableButton: {
+    type: Boolean,
     required: true,
   },
 });
@@ -84,7 +75,6 @@ const emits = defineEmits([
    */
   'save',
 ]);
-
 const sequenceName = ref(props.sequence.name);
 watch(sequenceName, () => updateSequenceName(sequenceName.value));
 
@@ -123,45 +113,4 @@ function updateSlideBackgroundColor(color: string): void {
   tempSlide.backgroundColor = color;
   updateSlide(tempSlide);
 }
-
-/**
- * Updates the layout of the slide
- * @param layout The new layout of the slide
- */
-function updateSlideLayout(layout: LayoutType): void {
-  const tempSlide = props.slide;
-  tempSlide.layout = layout;
-  updateSlide(tempSlide);
-}
-
-/**
- * Returns the url to the image of the supplied layout
- * @param image Image to fetch url for
- * @returns url to the supplied image
- */
-function getLayoutImageUrl(image: string): string {
-  return new URL(`../../assets/layouts/${image}`, import.meta.url).href;
-}
-
-const layoutImageMap: Record<LayoutType, string> = {
-  [LayoutType.TITLEPAGE]: 'Title.png',
-  [LayoutType.SINGLE_COLUMN]: 'Main.png',
-  [LayoutType.TWO_COLUMN]: 'Two.png',
-  [LayoutType.GRID]: 'Four.png',
-  [LayoutType.SINGLE_COLUMN_WITH_HEADER]: 'MainTitle.png',
-  [LayoutType.TWO_COLUMN_WITH_HEADER]: 'TwoTitle.png',
-  [LayoutType.GRID_WITH_HEADER]: 'FourTitle.png',
-  [LayoutType.SIDEBAR]: 'Sidebar.png',
-};
-
-const layouts = [
-  LayoutType.TITLEPAGE,
-  LayoutType.SIDEBAR,
-  LayoutType.SINGLE_COLUMN_WITH_HEADER,
-  LayoutType.SINGLE_COLUMN,
-  LayoutType.TWO_COLUMN_WITH_HEADER,
-  LayoutType.TWO_COLUMN,
-  LayoutType.GRID_WITH_HEADER,
-  LayoutType.GRID,
-];
 </script>

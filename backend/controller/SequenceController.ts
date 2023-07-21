@@ -144,7 +144,7 @@ export class SequenceController {
         if (
             userSlideLimit > 0 &&
             sequenceSlideCount !== undefined &&
-            sequenceSlideCount >= userSlideLimit
+            sequenceSlideCount > userSlideLimit
         ) {
             throw new LoernwerkError(
                 'to much slides in sequences',
@@ -178,7 +178,7 @@ export class SequenceController {
 
         if (sequence.slides !== undefined) {
             dbSequence.slideCount = sequence.slides.length;
-            await this.saveSlides(sequence.slides);
+            await this.saveSlides(sequence.slides, sequence.code);
         }
 
         if (sequence.tags !== undefined) {
@@ -391,16 +391,24 @@ export class SequenceController {
     /**
      * stores the slides in the database
      * @param slides the slides to store
+     * @param sequenceCode code of the sequence of the slides
      */
-    private static async saveSlides(slides: ISlide[]): Promise<void> {
+    private static async saveSlides(
+        slides: ISlide[],
+        sequenceCode: string
+    ): Promise<void> {
         const h5pIds = [];
+        const usedSlideIds = [];
 
         for (const s of slides) {
-            let slide = await DBSlide.findOneBy({ id: s.id });
+            let slide = await DBSlide.findOneBy({
+                id: s.id,
+                sequenceCode: sequenceCode,
+            });
             if (slide === null) {
                 slide = new DBSlide();
                 slide.id = s.id;
-                slide.sequenceCode = s.sequenceCode;
+                slide.sequenceCode = sequenceCode;
             }
             slide.backgroundColor = s.backgroundColor;
             slide.content = s.content;
@@ -408,10 +416,13 @@ export class SequenceController {
             slide.order = s.order;
             await slide.save();
 
+            usedSlideIds.push(slide.id);
+
             for (const slot in slide.content) {
-                if (slide.content[slot].type !== ContentType.H5P) {
+                if (slide.content[slot].contentType === ContentType.H5P) {
                     h5pIds.push(
-                        (slide.content[slot].type as H5PContent).h5pContentId
+                        (slide.content[slot].contentType as H5PContent)
+                            .h5pContentId
                     );
                 }
             }
@@ -427,6 +438,12 @@ export class SequenceController {
                 .getH5PEditor()
                 .contentStorage.deleteContent(unnecessaryId.h5pContentId);
         }
+
+        // Delete unnecessary slides
+        await DBSlide.delete({
+            id: Not(In(usedSlideIds)),
+            sequenceCode: sequenceCode,
+        });
     }
 
     /**

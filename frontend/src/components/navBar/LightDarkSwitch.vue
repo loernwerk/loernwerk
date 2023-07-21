@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center space-x-4 text-xl">
+  <div class="flex items-center space-x-2 text-xl">
     <FontAwesomeIcon :icon="['fas', 'sun']" />
     <label class="switch">
       <input type="checkbox" v-model="val" />

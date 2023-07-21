@@ -11,7 +11,7 @@
     />
     <div class="flex flex-col grow space-y-5">
       <TabbedContainer
-        class="h-48"
+        class="h-36 flex-shrink-0"
         :shown-tabs="tabs"
         :possible-tabs="allTabs"
         ref="editOptionsTabContainer"
@@ -20,13 +20,21 @@
           <SlideOptionsTab
             :slide="selectedSlide"
             :sequence="sequence"
+            :disable-button="disableButton"
             @update-sequence="(val) => (sequence.name = val.name)"
             @update-slide="(val) => updateSlide(val)"
             @save="save()"
           />
         </template>
 
-        <template v-slot:[getTab(3)]>
+        <template v-slot:[getTab(1)]>
+          <LayoutOptionsTab
+            :slide="selectedSlide"
+            @update-slide="(val: ISlide) => updateSlide(val)"
+          />
+        </template>
+
+        <template v-slot:[getTab(4)]>
           <EmbedOptionsTab
             v-if="currentEditingSlot"
             :embedContent="(selectedSlide.content[currentEditingSlot] as EmbedContent)"
@@ -34,7 +42,7 @@
           />
         </template>
 
-        <template v-slot:[getTab(2)]>
+        <template v-slot:[getTab(3)]>
           <ImageOptionsTab
             v-if="currentEditingSlot"
             :imageContent="(selectedSlide.content[currentEditingSlot] as ImageContent)"
@@ -42,7 +50,7 @@
           />
         </template>
 
-        <template v-slot:[getTab(1)]>
+        <template v-slot:[getTab(2)]>
           <TextOptionsTab
             :key="selectedSlideIndex"
             :selected-slot="
@@ -51,12 +59,12 @@
           />
         </template>
       </TabbedContainer>
-      <div class="grow flex items-center justify-center">
+      <div class="grow flex items-center justify-center relative">
         <SlideDisplayFactory
           :key="selectedSlideIndex"
           :slide="selectedSlide"
           :edit-mode="true"
-          class="h-[100%]"
+          class="h-full absolute"
           @editing="
             (val) => {
               selectEditingSlot(val.slot);
@@ -71,7 +79,7 @@
 </template>
 
 <script setup lang="ts">
-import { Ref, computed, ref, watch } from 'vue';
+import { Ref, computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { ISequenceWithSlides } from '../../../model/sequence/ISequenceWithSlides';
 import SlideOverviewContainer from '../components/SlideOverviewContainer.vue';
 import {
@@ -86,6 +94,7 @@ import ImageOptionsTab from '../components/sequenceEditOptionsTab/ImageOptionsTa
 import SlideOptionsTab from '../components/sequenceEditOptionsTab/SlideOptionsTab.vue';
 import TextOptionsTab from '../components/sequenceEditOptionsTab/TextOptionsTab.vue';
 import SlideDisplayFactory from '../components/contentDisplay/SlideDisplayFactory.vue';
+import LayoutOptionsTab from '../components/sequenceEditOptionsTab/LayoutOptionsTab.vue';
 import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
 import { TextContent } from '../../../model/slide/content/TextContent';
 import { ImageContent } from '../../../model/slide/content/ImageContent';
@@ -94,6 +103,7 @@ import { H5PContent } from '../../../model/slide/content/H5PContent';
 import Delta from 'quill-delta';
 import { ISlide } from '../../../model/slide/ISlide';
 import { useRouter } from 'vue-router';
+import { i18n } from '../i18n';
 
 const props = defineProps({
   /**
@@ -104,6 +114,39 @@ const props = defineProps({
     required: true,
   },
 });
+
+const isSaved = ref(false);
+const disableButton = ref(false);
+
+onMounted(() => {
+  window.addEventListener('beforeunload', onUnloadEventListener);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('beforeunload', onUnloadEventListener);
+});
+
+useRouter().beforeEach((to, from) => {
+  void to;
+  if (!isSaved.value && from.name === 'SequenceEdit') {
+    const result = confirm(i18n.global.t('leaveWarning'));
+    if (result) {
+      isSaved.value = true;
+    } else {
+      return false;
+    }
+  }
+});
+
+/**
+ * an event listener for the beforunloadevent which prevents leaving with unsaved content
+ * @param event the unloadevent
+ * @returns the message to be prompted
+ */
+function onUnloadEventListener(event: BeforeUnloadEvent): string {
+  event.preventDefault();
+  return i18n.global.t('leaveWarning');
+}
 
 const sequence = ref<ISequenceWithSlides>(
   await SequenceRestInterface.getSequence(props.sequenceCode)
@@ -250,9 +293,10 @@ function updateSlide(slide: ISlide): void {
 }
 
 const currentEditingSlot: Ref<LayoutSlot | null> = ref(null);
-const tabs = ref(['slide']);
+const tabs = ref(['slide', 'content.layout']);
 const allTabs = ref([
   'slide',
+  'content.layout',
   'content.text',
   'content.image',
   'content.embed',
@@ -272,7 +316,7 @@ function selectEditingSlot(slot: LayoutSlot): void {
  */
 function updateShownTabs(): void {
   const slot = currentEditingSlot.value;
-  tabs.value = ['slide'];
+  tabs.value = ['slide', 'content.layout'];
   if (slot != null) {
     const tabName = getTabNameForSlot(slot);
     if (tabName) {
@@ -316,7 +360,13 @@ function getTab(index: number): string {
  * Saves the sequence
  */
 async function save(): Promise<void> {
-  await SequenceRestInterface.updateSequence(sequence.value);
+  isSaved.value = true;
+  disableButton.value = true;
+  try {
+    await SequenceRestInterface.updateSequence(sequence.value);
+  } catch {
+    disableButton.value = false;
+  }
   await router.push({ name: 'Overview' });
 }
 </script>

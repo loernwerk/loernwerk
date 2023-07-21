@@ -1,8 +1,11 @@
 <template>
   <div
-    class="w-full h-20 bg-navbar flex flex-row items-center gap-5 drop-shadow"
+    class="w-full h-14 bg-navbar flex flex-row items-center gap-5 drop-shadow"
   >
-    <img src="../../assets/logo_navbar.png" class="h-10 mx-5" />
+    <div class="mx-5 py-3 h-full">
+      <img src="../../assets/logo_navbar.png" class="h-full" />
+    </div>
+
     <NavigationBarItem
       :active="isCurrentView('Overview')"
       targetLink="/overview"
@@ -33,7 +36,7 @@
     <FontAwesomeIcon
       icon="circle-user"
       size="3x"
-      class="float-right mr-5 cursor-pointer text-white"
+      class="float-right mr-5 cursor-pointer text-white h-9"
       @click="router.push({ name: 'Account' })"
     ></FontAwesomeIcon>
   </div>
@@ -42,7 +45,11 @@
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
-import { RouteLocationNormalized, useRouter } from 'vue-router';
+import {
+  RouteLocationNormalized,
+  useRouter,
+  isNavigationFailure,
+} from 'vue-router';
 import { computed, ref, watch } from 'vue';
 import { AccountRestInterface } from '../../restInterfaces/AccountRestInterface';
 import { UserClass } from '../../../../model/user/IUser';
@@ -84,7 +91,12 @@ const currentViewLocalized = computed(() => {
 });
 const isAdmin = ref(false);
 
-router.afterEach((to) => updateNavBar(to));
+router.afterEach((to, from, failure) => {
+  void from;
+  if (!isNavigationFailure(failure)) {
+    updateNavBar(to);
+  }
+});
 updateNavBar(router.currentRoute.value);
 
 try {

@@ -1,50 +1,57 @@
 <template>
-  <div class="w-full flex h-full space-x-5">
-    <AccountList
-      :accounts="accounts"
-      @selected="
-        (id) => {
-          displayCreateUser = false;
-          updateUser(id);
-        }
-      "
-      @createUser="
-        selectedUser = null;
-        displayCreateUser = true;
-      "
-    />
-    <div class="flex flex-grow">
-      <div v-if="selectedUser !== null" class="w-full flex space-x-2">
-        <AccountDetailsEditContainer
-          class="w-2/3 pl-1 pr-1"
-          :showadminview="true"
-          :user="selectedUser"
-          @delete="refresh()"
-        />
-        <AccountSequenceContainer
-          :sequences="sequencesOfUser"
-          class="flex-grow"
-          @delete="refreshSequence()"
+  <div class="w-full h-full">
+    <div class="w-full flex h-full space-x-5">
+      <AccountList
+        :accounts="accounts"
+        @selected="
+          (id) => {
+            displayCreateUser = false;
+            updateUser(id);
+          }
+        "
+        @createUser="
+          selectedUser = null;
+          displayCreateUser = true;
+        "
+      />
+      <div class="flex flex-grow">
+        <div v-if="selectedUser !== null" class="w-full flex space-x-2">
+          <AccountDetailsEditContainer
+            class="w-2/3 pl-1 pr-1"
+            :showadminview="true"
+            :user="selectedUser"
+            @delete="refresh()"
+          />
+          <AccountSequenceContainer
+            :sequences="sequencesOfUser"
+            class="flex-grow"
+            @delete="refreshSequence()"
+          />
+        </div>
+        <AccountCreationContainer
+          v-if="displayCreateUser"
+          class="w-2/3 pl-1"
+          @create="refresh()"
         />
       </div>
-      <AccountCreationContainer
-        v-if="displayCreateUser"
-        class="w-2/3 pl-1"
-        @create="refresh()"
-      />
+      <ButtonComponent
+        class="absolute top-2 right-2 text-2xl"
+        @click="showConfigEditor = true"
+      >
+        <FontAwesomeIcon :icon="['fas', 'gear']" />
+      </ButtonComponent>
     </div>
-    <ButtonComponent
-      class="absolute top-2 right-2 text-2xl"
-      @click="showConfigEditor = true"
-    >
-      <FontAwesomeIcon :icon="['fas', 'gear']" />
-    </ButtonComponent>
     <PopupComponent v-if="showConfigEditor" @closed="showConfigEditor = false">
       <ContainerComponent class="px-10 py-10">
-        <ConfigEditor
-          :entries="(configs as Record<ConfigKey, unknown>)"
-          @save="(val) => saveConfig(val)"
-        />
+        <template #Header>
+          <h1 class="text-xl underline">{{ $t('config.config') }}</h1>
+        </template>
+        <template #default>
+          <ConfigEditor
+            :entries="(configs as Record<ConfigKey, unknown>)"
+            @save="() => onConfigSave()"
+          />
+        </template>
       </ContainerComponent>
     </PopupComponent>
   </div>
@@ -68,7 +75,6 @@ import PopupComponent from '../components/PopupComponent.vue';
 import ConfigEditor from '../components/admin/ConfigEditor.vue';
 import { ConfigRestInterface } from '../restInterfaces/ConfigRestInterface';
 import { ConfigKey } from '../../../model/configuration/ConfigKey';
-import { IConfigEntry } from '../../../model/configuration/IConfigEntry';
 import ContainerComponent from '../components/ContainerComponent.vue';
 
 library.add(faGear);
@@ -113,12 +119,8 @@ async function refreshSequence(): Promise<void> {
 
 /**
  * Saves the configs to the backend
- * @param configsToSave the configs to save
  */
-async function saveConfig(configsToSave: IConfigEntry[]): Promise<void> {
-  for (const entry of configsToSave) {
-    await ConfigRestInterface.setValue(entry.key, entry.value);
-  }
+async function onConfigSave(): Promise<void> {
   showConfigEditor.value = false;
   configs.value = await ConfigRestInterface.getAllValue();
 }

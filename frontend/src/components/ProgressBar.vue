@@ -23,6 +23,6 @@ const props = defineProps({
 });
 
 const checkValueRange = computed(() => {
-  return Math.max(0, Math.min(props.percentage, 1)) * 100;
+  return Math.floor(Math.max(0, Math.min(props.percentage, 1)) * 100);
 });
 </script>

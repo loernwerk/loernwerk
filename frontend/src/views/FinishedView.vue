@@ -1,6 +1,6 @@
 <!-- View for a finished sequence -->
 <template>
-  <div class="flex flex-col">
+  <div class="flex flex-col w-full">
     <img src="../assets/Logo.png" class="w-1/2 mx-auto" />
     <div class="text-center text-2xl">
       {{ $t('finished.youDidIt') }}<br />

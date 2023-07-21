@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="overflow-scroll">
     <h5p-player ref="player" :content-id="contentId" class="h-full w-full" />
   </div>
 </template>

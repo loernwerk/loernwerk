@@ -5,11 +5,14 @@
         class="w-full flex flex-row border-b-1 border-container-border space-x-6"
       >
         <h1
-          class="text-2xl mb-2 border-container-border"
+          class="text-2xl mb-2 border-tabselector"
           v-for="tab in shownTabs"
           :key="tab"
           @click="selectedTab = tab"
-          :class="{ 'border-b-1': selectedTab === tab }"
+          :class="{
+            'border-b-2': selectedTab === tab,
+            'font-bold': selectedTab === tab,
+          }"
         >
           {{ $t(tab) }}
         </h1>

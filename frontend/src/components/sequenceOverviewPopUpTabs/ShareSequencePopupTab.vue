@@ -12,7 +12,10 @@
         <option :value="false">{{ $t('sequence.readAccess') }}</option>
         <option :value="true">{{ $t('sequence.writeAccess') }}</option>
       </select>
-      <ButtonComponent class="flex-1" @click="confirmSharing()"
+      <ButtonComponent
+        class="flex-1"
+        @click="confirmSharing()"
+        :loading="loading"
         >{{ $t('sequence.share') }}
       </ButtonComponent>
     </div>
@@ -95,14 +98,18 @@ const displayWriteAccess: Ref<string[]> = ref([]);
 
 await updateDisplayedListOfSharing();
 
+const loading = ref(false);
+
 /**
  * Process sharing of a sequences
  */
 async function confirmSharing(): Promise<void> {
   error.value = false;
   showRedBorder.value = false;
+  loading.value = true;
 
   if (userInfoField.value.length == 0) {
+    loading.value = false;
     showRedBorder.value = true;
   } else {
     let user: Partial<IUser>;
@@ -118,6 +125,7 @@ async function confirmSharing(): Promise<void> {
       }
     } catch {
       error.value = true;
+      loading.value = false;
       return;
     }
 
@@ -125,6 +133,7 @@ async function confirmSharing(): Promise<void> {
 
     if (props.sequence.authorId == userId) {
       showRedBorder.value = true;
+      loading.value = false;
       return;
     }
 
@@ -159,6 +168,7 @@ async function confirmSharing(): Promise<void> {
     ) {
       //already has desired access
       userInfoField.value = '';
+      loading.value = false;
       return;
     }
 
@@ -170,10 +180,12 @@ async function confirmSharing(): Promise<void> {
       });
     } catch {
       error.value = true;
+      loading.value = false;
       return;
     }
 
     await updateDisplayedListOfSharing();
+    loading.value = false;
     userInfoField.value = '';
   }
 }
