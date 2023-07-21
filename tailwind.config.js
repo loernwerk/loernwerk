@@ -59,7 +59,7 @@ export default {
                 },
                 tabselector: {
                   light: 'hsl(0, 0%, 60%)',
-                  dark: 'hsl(0, 0%, 25%)'
+                  dark: 'hsl(0, 0%, 70%)'
                 }
             },
             borderWidth: {
