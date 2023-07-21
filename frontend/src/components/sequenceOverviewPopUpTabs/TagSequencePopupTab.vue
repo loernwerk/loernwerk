@@ -13,9 +13,12 @@
           {{ $t('sequence.tagAddError') }}
         </div>
       </div>
-      <ButtonComponent class="w-fit float-right" @click="confimChanges">{{
-        $t('save')
-      }}</ButtonComponent>
+      <ButtonComponent
+        class="w-fit float-right"
+        @click="confimChanges"
+        :loading="loading"
+        >{{ $t('save') }}</ButtonComponent
+      >
     </div>
   </div>
 </template>
@@ -47,11 +50,14 @@ const emits = defineEmits([
   'confirmed',
 ]);
 
+const loading = ref(false);
+
 /**
  * Save inputted tags
  */
 async function confimChanges(): Promise<void> {
   error.value = false;
+  loading.value = true;
   const tags = tagsField.value
     .split(',')
     .filter((tag) => tag !== '')
@@ -61,10 +67,11 @@ async function confimChanges(): Promise<void> {
       code: props.sequence.code,
       tags: tags,
     });
+    emits('confirmed');
   } catch {
     error.value = true;
   }
 
-  emits('confirmed');
+  loading.value = false;
 }
 </script>
