@@ -56,6 +56,7 @@ export class H5PServer {
      */
     public async initialize(): Promise<void> {
         const config = await new H5PConfig().load();
+        config.baseUrl = this.getPublicURL();
 
         this.editor = new H5PEditor(
             new CachedKeyValueStorage('kvcache'),
@@ -180,5 +181,41 @@ export class H5PServer {
         } catch {
             return false;
         }
+    }
+
+    /**
+     * Returns the public url of the platform
+     * @private
+     * @returns public url of the platform
+     */
+    private getPublicURL(): string {
+        // By default, use http
+        let protocol = 'http';
+        let port = process.env.PORT || '5000';
+
+        // If SSL is enabled, try to use that
+        if (
+            process.env.DISABLE_HTTP !== undefined ||
+            (process.env.SSL_KEYFILE !== undefined &&
+                process.env.SSL_CERTFILE !== undefined)
+        ) {
+            protocol = 'https';
+            port = process.env.SSL_PORT || '5443';
+        }
+
+        let url = new URL(
+            protocol +
+                '://' +
+                (process.env.HOSTNAME || 'localhost') +
+                ':' +
+                port
+        );
+
+        // If the override url is set, use that
+        if (process.env.PUBLIC_URL !== undefined) {
+            url = new URL(process.env.PUBLIC_URL);
+        }
+
+        return url.origin + '/h5p';
     }
 }
