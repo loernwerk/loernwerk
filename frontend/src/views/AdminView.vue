@@ -1,44 +1,46 @@
 <template>
-  <div class="w-full flex h-full space-x-5">
-    <AccountList
-      :accounts="accounts"
-      @selected="
-        (id) => {
-          displayCreateUser = false;
-          updateUser(id);
-        }
-      "
-      @createUser="
-        selectedUser = null;
-        displayCreateUser = true;
-      "
-    />
-    <div class="flex flex-grow">
-      <div v-if="selectedUser !== null" class="w-full flex space-x-2">
-        <AccountDetailsEditContainer
-          class="w-2/3 pl-1 pr-1"
-          :showadminview="true"
-          :user="selectedUser"
-          @delete="refresh()"
-        />
-        <AccountSequenceContainer
-          :sequences="sequencesOfUser"
-          class="flex-grow"
-          @delete="refreshSequence()"
+  <div class="w-full h-full">
+    <div class="w-full flex h-full space-x-5">
+      <AccountList
+        :accounts="accounts"
+        @selected="
+          (id) => {
+            displayCreateUser = false;
+            updateUser(id);
+          }
+        "
+        @createUser="
+          selectedUser = null;
+          displayCreateUser = true;
+        "
+      />
+      <div class="flex flex-grow">
+        <div v-if="selectedUser !== null" class="w-full flex space-x-2">
+          <AccountDetailsEditContainer
+            class="w-2/3 pl-1 pr-1"
+            :showadminview="true"
+            :user="selectedUser"
+            @delete="refresh()"
+          />
+          <AccountSequenceContainer
+            :sequences="sequencesOfUser"
+            class="flex-grow"
+            @delete="refreshSequence()"
+          />
+        </div>
+        <AccountCreationContainer
+          v-if="displayCreateUser"
+          class="w-2/3 pl-1"
+          @create="refresh()"
         />
       </div>
-      <AccountCreationContainer
-        v-if="displayCreateUser"
-        class="w-2/3 pl-1"
-        @create="refresh()"
-      />
+      <ButtonComponent
+        class="absolute top-2 right-2 text-2xl"
+        @click="showConfigEditor = true"
+      >
+        <FontAwesomeIcon :icon="['fas', 'gear']" />
+      </ButtonComponent>
     </div>
-    <ButtonComponent
-      class="absolute top-2 right-2 text-2xl"
-      @click="showConfigEditor = true"
-    >
-      <FontAwesomeIcon :icon="['fas', 'gear']" />
-    </ButtonComponent>
     <PopupComponent v-if="showConfigEditor" @closed="showConfigEditor = false">
       <ContainerComponent class="px-10 py-10">
         <ConfigEditor
