@@ -89,6 +89,7 @@ const currentViewLocalized = computed(() => {
 const isAdmin = ref(false);
 
 router.afterEach((to, from, failure) => {
+  void from;
   if (!isNavigationFailure(failure)) {
     updateNavBar(to);
   }
