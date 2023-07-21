@@ -1,6 +1,6 @@
 <!-- View for execution of a sequence -->
 <template>
-  <div class="flex w-full flex-col content-center">
+  <div class="flex w-full flex-col content-center mt-10">
     <div class="flex flex-grow justify-center">
       <SlideDisplayFactory
         v-if="slide != null && !error"
@@ -13,7 +13,7 @@
         {{ $t('notAvailable', { object: $t('slide') }) }} {{ $t('reloadPage') }}
       </div>
     </div>
-    <div class="flex items-center">
+    <div class="mt-4 flex items-center">
       <div class="w-full mr-4">
         <ProgressBar :percentage="percentage"> </ProgressBar>
       </div>
