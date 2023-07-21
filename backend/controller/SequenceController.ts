@@ -401,7 +401,10 @@ export class SequenceController {
         const usedSlideIds = [];
 
         for (const s of slides) {
-            let slide = await DBSlide.findOneBy({ id: s.id });
+            let slide = await DBSlide.findOneBy({
+                id: s.id,
+                sequenceCode: sequenceCode,
+            });
             if (slide === null) {
                 slide = new DBSlide();
                 slide.id = s.id;
