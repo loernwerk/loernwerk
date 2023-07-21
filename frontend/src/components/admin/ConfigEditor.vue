@@ -64,13 +64,21 @@ import { i18n } from '../../i18n';
 import { ConfigRestInterface } from '../../restInterfaces/ConfigRestInterface';
 
 const props = defineProps({
+  /**
+   * The entries to edit
+   */
   entries: {
     type: Object as PropType<Record<ConfigKey, unknown>>,
     required: true,
   },
 });
 
-const emits = defineEmits(['save', 'cancel']);
+const emits = defineEmits([
+  /**
+   * Emmited when saving was succesfull
+   */
+  'save',
+]);
 
 const configKeys = [
   ConfigKey.MAX_SEQUENCES_PER_USER,
