@@ -11,7 +11,7 @@
     />
     <div class="flex flex-col grow space-y-5">
       <TabbedContainer
-        class="h-48 flex-shrink-0"
+        class="h-36 flex-shrink-0"
         :shown-tabs="tabs"
         :possible-tabs="allTabs"
         ref="editOptionsTabContainer"
@@ -27,7 +27,14 @@
           />
         </template>
 
-        <template v-slot:[getTab(3)]>
+        <template v-slot:[getTab(1)]>
+          <LayoutOptionsTab
+            :slide="selectedSlide"
+            @update-slide="(val: ISlide) => updateSlide(val)"
+          />
+        </template>
+
+        <template v-slot:[getTab(4)]>
           <EmbedOptionsTab
             v-if="currentEditingSlot"
             :embedContent="(selectedSlide.content[currentEditingSlot] as EmbedContent)"
@@ -35,7 +42,7 @@
           />
         </template>
 
-        <template v-slot:[getTab(2)]>
+        <template v-slot:[getTab(3)]>
           <ImageOptionsTab
             v-if="currentEditingSlot"
             :imageContent="(selectedSlide.content[currentEditingSlot] as ImageContent)"
@@ -43,7 +50,7 @@
           />
         </template>
 
-        <template v-slot:[getTab(1)]>
+        <template v-slot:[getTab(2)]>
           <TextOptionsTab
             :key="selectedSlideIndex"
             :selected-slot="
@@ -87,6 +94,7 @@ import ImageOptionsTab from '../components/sequenceEditOptionsTab/ImageOptionsTa
 import SlideOptionsTab from '../components/sequenceEditOptionsTab/SlideOptionsTab.vue';
 import TextOptionsTab from '../components/sequenceEditOptionsTab/TextOptionsTab.vue';
 import SlideDisplayFactory from '../components/contentDisplay/SlideDisplayFactory.vue';
+import LayoutOptionsTab from '../components/sequenceEditOptionsTab/LayoutOptionsTab.vue';
 import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
 import { TextContent } from '../../../model/slide/content/TextContent';
 import { ImageContent } from '../../../model/slide/content/ImageContent';
@@ -119,6 +127,7 @@ onUnmounted(() => {
 });
 
 useRouter().beforeEach((to, from) => {
+  void to;
   if (!isSaved.value && from.name === 'SequenceEdit') {
     const result = confirm(i18n.global.t('leaveWarning'));
     if (result) {
@@ -284,9 +293,10 @@ function updateSlide(slide: ISlide): void {
 }
 
 const currentEditingSlot: Ref<LayoutSlot | null> = ref(null);
-const tabs = ref(['slide']);
+const tabs = ref(['slide', 'content.layout']);
 const allTabs = ref([
   'slide',
+  'content.layout',
   'content.text',
   'content.image',
   'content.embed',
@@ -306,7 +316,7 @@ function selectEditingSlot(slot: LayoutSlot): void {
  */
 function updateShownTabs(): void {
   const slot = currentEditingSlot.value;
-  tabs.value = ['slide'];
+  tabs.value = ['slide', 'content.layout'];
   if (slot != null) {
     const tabName = getTabNameForSlot(slot);
     if (tabName) {
