@@ -11,7 +11,7 @@
     />
     <div class="flex flex-col grow space-y-5">
       <TabbedContainer
-        class="h-48"
+        class="h-48 flex-shrink-0"
         :shown-tabs="tabs"
         :possible-tabs="allTabs"
         ref="editOptionsTabContainer"
@@ -52,12 +52,12 @@
           />
         </template>
       </TabbedContainer>
-      <div class="grow flex items-center justify-center">
+      <div class="grow flex items-center justify-center relative">
         <SlideDisplayFactory
           :key="selectedSlideIndex"
           :slide="selectedSlide"
           :edit-mode="true"
-          class="h-[100%]"
+          class="h-full absolute"
           @editing="
             (val) => {
               selectEditingSlot(val.slot);
