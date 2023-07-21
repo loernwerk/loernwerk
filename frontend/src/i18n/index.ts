@@ -89,7 +89,7 @@ const messages = {
       registrationType: 'Registrierungsart',
       registrationCodes: 'Einladungscodes (getrennt durch Kommas)',
       registrationCodesExpirations:
-        'Einladungscodes verliert nach Verwendung Gültigkeit',
+        'Einladungscode verliert nach Verwendung Gültigkeit',
       open: 'Offene Registrierung',
       closed: 'Registrierung durch Admin',
       invite: 'Registrierung durch Einladungscodes',
