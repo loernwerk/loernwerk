@@ -68,4 +68,8 @@
     .interactable {
         @apply container bg-interactable border-interactable cursor-pointer !shadow-none !max-h-fit py-1;
     }
+
+    .border-tabselector {
+        @apply border-tabselector-light dark:border-tabselector-dark;
+    }
 }
