@@ -140,7 +140,6 @@ export class SequenceRestInterface extends BaseRestInterface {
     return (
       BaseRestInterface.getBaseURL() +
       this.sequence_path +
-      '/' +
       sequenceCode +
       '/view/certificate?language=' +
       language
