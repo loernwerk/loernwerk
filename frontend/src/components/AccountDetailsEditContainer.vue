@@ -86,7 +86,7 @@
               {{ $t('invalidInput') }}
             </div>
             <div class="text-success" v-if="displaySuccess">
-              {{ $t('save', { object: $t('user') }) }}
+              {{ $t('saved', { object: $t('user') }) }}
             </div>
           </div>
           <ButtonComponent
