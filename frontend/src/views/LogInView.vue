@@ -1,6 +1,6 @@
 <!-- View for users to log in -->
 <template>
-  <div>
+  <div class="w-full">
     <img src="../assets/Logo.png" class="w-1/3 mx-auto" />
     <ContainerComponent
       class="w-1/2 mx-auto my-auto h-fit"
