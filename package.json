@@ -1,7 +1,7 @@
 {
     "name": "loernwerk",
     "private": true,
-    "version": "0.0.1dev",
+    "version": "1.0",
     "scripts": {
         "dev": "concurrently -c \"auto\" \"npm:dev:backend\" \"npm:dev:frontend\"",
         "dev:backend": "ts-node --project tsconfig.node.json backend/loernwerkServer.ts",
