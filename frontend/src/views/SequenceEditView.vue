@@ -151,6 +151,9 @@ function onUnloadEventListener(event: BeforeUnloadEvent): string {
 const sequence = ref<ISequenceWithSlides>(
   await SequenceRestInterface.getSequence(props.sequenceCode)
 );
+sequence.value.slides.sort((slideA, slideB) => {
+  return slideA.order - slideB.order;
+});
 
 if (sequence.value.slides.length == 0) {
   addSlide();
