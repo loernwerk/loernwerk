@@ -4,13 +4,13 @@ A web app for creating learning sequences.
 
 ## Setup
 Setting up the platform is as easy as it gets:
-0. (Install NodeJS, version 18 or later)
-1. Obtain a built version of the platform
+1. (Install NodeJS, version 18 or later)
+2. Obtain a built version of the platform
     1. Either download a prebuilt release
     2. Alternatively, [build from source](#building-the-platform-from-source)
-2. Install the required dependencies by running `npm i`
-3. Start the platform by running `npm run start`
-4. Enjoy! The platform will download some required files, and create a default admin at first launch, whose credentials will be displayed in the terminal. The platform will serve at `http://localhost:5000` by default.
+3. Install the required dependencies by running `npm i`
+4. Start the platform by running `npm run start`
+5. Enjoy! The platform will download some required files, and create a default admin at first launch, whose credentials will be displayed in the terminal. The platform will serve at `http://localhost:5000` by default.
 
 Alternatively, a Dockerfile is also available to build the platform to a docker image.
 
