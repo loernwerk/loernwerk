@@ -168,7 +168,7 @@ export class SequenceRouterFactory extends RouterFactory {
                 let filename: string;
                 switch (language) {
                     case 'de':
-                        filename = 'Teilnahmezertifikate.pdf';
+                        filename = 'Teilnahmezertifikat.pdf';
                         break;
                     case 'en':
                         filename = 'Certificate.pdf';
