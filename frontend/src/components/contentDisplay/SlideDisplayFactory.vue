@@ -1,7 +1,7 @@
 <!-- Visualizes a slide -->
 <template>
   <div
-    class="aspect-video p-5 rounded-md"
+    class="aspect-video h-full p-5 rounded-md"
     :style="{ backgroundColor: slide.backgroundColor }"
   >
     <div class="grid h-full" ref="wrapper" :style="gridTemplate">
