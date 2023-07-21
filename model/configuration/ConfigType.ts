@@ -6,7 +6,7 @@ export type ConfigType =
         /**
          * Type of the configuration setting
          */
-        type: 'string' | 'boolean' | 'codes';
+        type: 'string' | 'boolean';
     }
     | {
         /**

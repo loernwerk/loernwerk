@@ -60,7 +60,7 @@
             <td class="p-1">
               <TextInputComponent
                 :disabled="disableInputShowSpinner"
-                place-holder="$t('account.inviteCode')"
+                :place-holder="$t('account.inviteCode')"
                 :max-length="128"
                 v-model="inviteCode"
               />

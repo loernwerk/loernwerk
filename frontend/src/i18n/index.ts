@@ -186,7 +186,7 @@ const messages = {
       emptyPossible: 'Leave empty for unlimited',
       invalidInput: 'Invalid input for {object}',
       registrationType: 'Registrationtype',
-      registrationCodes: 'Registrationcode (seperated by comma)',
+      registrationCodes: 'Registrationcodes (seperated by comma)',
       registrationCodesExpirations: 'Registrationcode expires after use',
       open: 'Open registration',
       closed: 'Only admins can add new users',

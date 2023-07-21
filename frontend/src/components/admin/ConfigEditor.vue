@@ -26,19 +26,17 @@
           <select
             v-if="ConfigTypeMap.getType(key).type === 'enum'"
             v-model="model[key]"
-            class="w-full"
+            class="w-full bg-transparent"
           >
             <option
               v-for="option in getEnumOptions(key)"
               :key="option"
               :value="option"
+              class="bg-interactable"
             >
               {{ $t('config.' + option) }}
             </option>
           </select>
-          <div v-if="ConfigTypeMap.getType(key).type === 'codes'">
-            <TextInputComponent v-model="model[key]" />
-          </div>
         </td>
       </tr>
     </table>

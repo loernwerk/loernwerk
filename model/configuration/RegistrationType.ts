@@ -5,11 +5,11 @@ export enum RegistrationType {
     /**
      * Everyone can sign up
      */
-    OPEN = 'open',
+    PUBLIC = 'open',
     /**
      * Sign up is possible through a invite code
      */
-    INVITE = 'invite',
+    INVITATION = 'invite',
     /**
      * only admins can create codes
      */

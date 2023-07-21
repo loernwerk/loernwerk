@@ -49,12 +49,10 @@ export class AccountRestInterface extends BaseRestInterface {
     inviteCode?: string
   ): Promise<number> {
     return (
-      await BaseRestInterface.put<{ id: number }>(
-        inviteCode === undefined
-          ? this.account_path
-          : this.account_path.concat('?code=').concat(inviteCode),
-        account
-      )
+      await BaseRestInterface.put<{ id: number }>(this.account_path, {
+        ...account,
+        registrationCode: inviteCode,
+      })
     ).id;
   }
 
