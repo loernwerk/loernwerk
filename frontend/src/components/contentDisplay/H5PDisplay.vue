@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full">
+  <div class="h-full w-full">
     <div v-if="editMode" class="h-full">
       <div class="absolute" v-if="isEditorOpen">
         <H5PEditor
@@ -9,8 +9,12 @@
         />
       </div>
 
-      <div class="h-full cursor-pointer flex p-5" @click="openEditor()" v-else>
-        <div class="w-full flex flex-col justify-center items-center">
+      <div
+        class="h-full cursor-pointer flex p-5 w-full"
+        @click="openEditor()"
+        v-else
+      >
+        <div class="w-full flex flex-col justify-center items-center mx-auto">
           <img
             src="../../assets/h5p.png"
             class="max-w-[75%] max-h-[50%] w-auto h-auto"
