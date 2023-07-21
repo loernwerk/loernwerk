@@ -28,8 +28,15 @@ Some basic settings of the platform can be configured via environment variables.
 | `SSL_PORT`      | Port for the HTTPS server.                                                              | `5443`         |
 | `SSL_CAFILE`    | CA File used for SSL encryption. Optional.                                              |                |
 | `DISABLE_HTTP`  | If set, will disable the HTTP server.                                                   |                |
+| `PUBLIC_URL`    | URL under which the platform will be accessible. Optional. See below for more info.     |                |
 
 `.env` files can also be used to set these variables.
+
+### `PUBLIC_URL`
+The H5P implementation needs to know the address of your webserver in order to correctly send requests to it.
+By default, it tries to guess, based on the `HOSTNAME`, `PORT` and SSL-variables.
+In situations where the server can't correctly guess your address, for example if you're running loernwerk behind a reverse proxy, the H5P implementation will fail to make requests.
+In fix that, set the `PUBLIC_URL` variable to the publicly available address under which you're planning to serve loernwerk, e.g. `https://loernwerk.de`.
 
 ## Adding a custom imprint
 The imprint file is located inside the `dist/imprint.html`. The content of this file can be changed to your liking to add your custom imprint.

@@ -28,7 +28,7 @@ import {
   LayoutType,
 } from '../../../../model/slide/layout/Layout';
 import { ISlide } from '../../../../model/slide/ISlide';
-import { PropType, Ref, computed, onMounted, provide, ref } from 'vue';
+import { computed, onMounted, PropType, provide, Ref, ref } from 'vue';
 import ContentDisplayFactory from './ContentDisplayFactory.vue';
 
 const props = defineProps({
@@ -91,7 +91,11 @@ const usedSlots: Ref<{ slot: LayoutSlot; style: GridSlot }[]> = computed(() => {
 
   let slots: { slot: LayoutSlot; style: GridSlot }[] = [];
 
-  if (Layout.hasHeader(props.slide.layout)) {
+  // Sidebar has a non standard header which is added seperately
+  if (
+    Layout.hasHeader(props.slide.layout) &&
+    props.slide.layout !== LayoutType.SIDEBAR
+  ) {
     slots.push({
       slot: LayoutSlot.HEADER,
       style: {
