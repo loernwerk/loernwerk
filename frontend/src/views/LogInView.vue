@@ -51,6 +51,9 @@
             <div class="text-error" v-if="displayError">
               {{ $t('account.wrongLoginData') }}
             </div>
+            <div class="text-success" v-if="accountCreatedMessage">
+              {{ $t('created', { object: $t('user') }) }}
+            </div>
           </div>
           <ButtonComponent
             class="w-fit"
@@ -65,6 +68,7 @@
     <div class="w-full my-auto mx-3" v-if="registrationFormVisible">
       <AccountCreationContainer
         :requires-invite-code="configtype == RegistrationType.INVITE"
+        @create="accountCreated()"
       />
     </div>
     <ButtonComponent
@@ -99,6 +103,7 @@ const disableInputShowSpinner = ref(false);
 const displayError = ref(false);
 const registrationButtonVisible = ref(false);
 const registrationFormVisible = ref(false);
+const accountCreatedMessage = ref(false);
 
 const configtype = ref(
   await ConfigRestInterface.getValue(ConfigKey.REGISTRATION_TYPE)
@@ -133,6 +138,7 @@ function disableCheckBox(): void {
 async function checkLogIn(): Promise<void> {
   disableInputShowSpinner.value = true;
   displayError.value = false;
+  accountCreatedMessage.value = false;
   const success = await AccountRestInterface.verifyLogin(
     mailField.value,
     passwordField.value,
@@ -145,5 +151,13 @@ async function checkLogIn(): Promise<void> {
     displayError.value = true;
   }
   disableInputShowSpinner.value = false;
+}
+
+/**
+ * Hides the registration container and adds success text
+ */
+function accountCreated(): void {
+  accountCreatedMessage.value = true;
+  registrationFormVisible.value = false;
 }
 </script>
