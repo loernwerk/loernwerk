@@ -1,7 +1,7 @@
 <!-- Visualizes a content object. -->
 <template>
   <div class="h-full p-3 relative">
-    <div class="h-full" v-if="content">
+    <div class="h-full" v-if="content" :class="{ 'border-1': editMode }">
       <EmbedDisplay
         v-if="content.contentType === ContentType.EMBED"
         :embed-content="(content as EmbedContent)"
