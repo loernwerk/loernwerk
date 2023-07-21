@@ -409,9 +409,10 @@ export class SequenceController {
             await slide.save();
 
             for (const slot in slide.content) {
-                if (slide.content[slot].type !== ContentType.H5P) {
+                if (slide.content[slot].contentType === ContentType.H5P) {
                     h5pIds.push(
-                        (slide.content[slot].type as H5PContent).h5pContentId
+                        (slide.content[slot].contentType as H5PContent)
+                            .h5pContentId
                     );
                 }
             }
