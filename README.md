@@ -4,6 +4,7 @@ A web app for creating learning sequences.
 
 ## Setup
 Setting up the platform is as easy as it gets:
+0. (Install NodeJS, version 18 or later)
 1. Obtain a built version of the platform
     1. Either download a prebuilt release
     2. Alternatively, [build from source](#building-the-platform-from-source)

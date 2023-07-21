@@ -75,7 +75,7 @@ const props = defineProps({
 
 const emits = defineEmits([
   /**
-   * Emmited when saving was succesfull
+   * Emmited when saving was successful
    */
   'save',
 ]);
@@ -150,8 +150,6 @@ function checkValidInput(key: ConfigKey): boolean {
         return false;
       }
       return !(type.options === 'limited' && model.value[key] === '');
-    case 'string':
-      return model.value[key] !== '';
     default:
       return true;
   }
@@ -187,6 +185,7 @@ async function save(): Promise<void> {
   for (const key of configKeys) {
     if (!checkValidInput(key)) {
       errorKey.value = key;
+      disableButton.value = false;
       return;
     }
   }
@@ -204,6 +203,7 @@ async function save(): Promise<void> {
   for (const entry of result) {
     await ConfigRestInterface.setValue(entry.key, entry.value);
   }
+  disableButton.value = false;
 
   emits('save');
 }
