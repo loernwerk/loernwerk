@@ -43,15 +43,14 @@
       </tr>
     </table>
     <div class="flex items-center">
-      <ButtonComponent @click="$emit('cancel')">{{
-        $t('cancel')
-      }}</ButtonComponent>
       <div class="grow text-center text-red-500">
         <div v-if="errorKey">
           {{ $t('config.invalidInput', { object: keyDescription[errorKey] }) }}
         </div>
       </div>
-      <ButtonComponent @click="save()">{{ $t('save') }}</ButtonComponent>
+      <ButtonComponent :loading="disableButton" @click="save()">{{
+        $t('save')
+      }}</ButtonComponent>
     </div>
   </div>
 </template>
@@ -64,6 +63,7 @@ import { PropType, Ref, ref } from 'vue';
 import ButtonComponent from '../ButtonComponent.vue';
 import TextInputComponent from '../TextInputComponent.vue';
 import { i18n } from '../../i18n';
+import { ConfigRestInterface } from '../../restInterfaces/ConfigRestInterface';
 
 const props = defineProps({
   entries: {
@@ -81,6 +81,8 @@ const configKeys = [
   ConfigKey.REGISTRATION_CODES,
   ConfigKey.REGISTRATION_CODES_EXPIRES_AFTER_USE,
 ];
+
+const disableButton = ref(false);
 
 /**
  * Returns a record of the current config
@@ -174,7 +176,8 @@ function getSaveValue(key: ConfigKey): unknown {
 /**
  * Saves the current configuration
  */
-function save(): void {
+async function save(): Promise<void> {
+  disableButton.value = true;
   for (const key of configKeys) {
     if (!checkValidInput(key)) {
       errorKey.value = key;
@@ -191,6 +194,11 @@ function save(): void {
   }
 
   errorKey.value = undefined;
-  emits('save', result);
+
+  for (const entry of result) {
+    await ConfigRestInterface.setValue(entry.key, entry.value);
+  }
+
+  emits('save');
 }
 </script>

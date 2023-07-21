@@ -45,7 +45,7 @@
       <ContainerComponent class="px-10 py-10">
         <ConfigEditor
           :entries="(configs as Record<ConfigKey, unknown>)"
-          @save="(val) => saveConfig(val)"
+          @save="() => onConfigSave()"
         />
       </ContainerComponent>
     </PopupComponent>
@@ -70,7 +70,6 @@ import PopupComponent from '../components/PopupComponent.vue';
 import ConfigEditor from '../components/admin/ConfigEditor.vue';
 import { ConfigRestInterface } from '../restInterfaces/ConfigRestInterface';
 import { ConfigKey } from '../../../model/configuration/ConfigKey';
-import { IConfigEntry } from '../../../model/configuration/IConfigEntry';
 import ContainerComponent from '../components/ContainerComponent.vue';
 
 library.add(faGear);
@@ -115,12 +114,8 @@ async function refreshSequence(): Promise<void> {
 
 /**
  * Saves the configs to the backend
- * @param configsToSave the configs to save
  */
-async function saveConfig(configsToSave: IConfigEntry[]): Promise<void> {
-  for (const entry of configsToSave) {
-    await ConfigRestInterface.setValue(entry.key, entry.value);
-  }
+async function onConfigSave(): Promise<void> {
   showConfigEditor.value = false;
   configs.value = await ConfigRestInterface.getAllValue();
 }
