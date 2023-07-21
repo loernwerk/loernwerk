@@ -11,8 +11,11 @@
 
       <div class="h-full cursor-pointer flex p-5" @click="openEditor()" v-else>
         <div class="w-full flex flex-col justify-center items-center">
-          <img src="../../assets/h5p.png" class="w-3/4" />
-          <p class="text-center text-2xl mt-5 text-black">
+          <img
+            src="../../assets/h5p.png"
+            class="max-w-[75%] max-h-[50%] w-auto h-auto"
+          />
+          <p class="text-center text-base mt-5 text-black">
             Klicke um den Inhalt zu bearbeiten
           </p>
         </div>

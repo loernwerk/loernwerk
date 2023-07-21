@@ -2,12 +2,12 @@
 <template>
   <div class="h-full p-3 relative">
     <div class="h-full" :class="{ 'border-1': editMode }">
-      <div class="h-full" v-if="content">
+      <div class="h-full relative" v-if="content">
         <EmbedDisplay
           v-if="content.contentType === ContentType.EMBED"
           :embed-content="(content as EmbedContent)"
           :edit-mode="editMode"
-          class="h-full"
+          class="h-full absolute"
           @editing="(val) => $emit('editing', val)"
         />
         <TextDisplay
@@ -15,21 +15,21 @@
           :text-content="(content as TextContent)"
           :edit-mode="editMode"
           :layout-slot="layoutSlot"
-          class="h-full"
+          class="h-full absolute"
           @editing="(val) => $emit('editing', val)"
         />
         <ImageDisplay
           v-else-if="content.contentType === ContentType.IMAGE"
           :image-content="(content as ImageContent)"
           :edit-mode="editMode"
-          class="h-full"
+          class="h-full absolute"
           @editing="(val) => $emit('editing', val)"
         />
         <H5PDisplay
           v-else-if="content.contentType === ContentType.H5P"
           :h5p-content="(content as H5PContent)"
           :edit-mode="editMode"
-          class="h-full"
+          class="h-full absolute"
           @editing="(val) => $emit('editing', val)"
         />
       </div>
