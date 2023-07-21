@@ -1,8 +1,11 @@
 <template>
   <div
-    class="w-full h-20 bg-navbar flex flex-row items-center gap-5 drop-shadow"
+    class="w-full h-14 bg-navbar flex flex-row items-center gap-5 drop-shadow"
   >
-    <img src="../../assets/logo_navbar.png" class="h-10 mx-5" />
+    <div class="mx-5 py-3 h-full">
+      <img src="../../assets/logo_navbar.png" class="h-full" />
+    </div>
+
     <NavigationBarItem
       :active="isCurrentView('Overview')"
       targetLink="/overview"
@@ -33,7 +36,7 @@
     <FontAwesomeIcon
       icon="circle-user"
       size="3x"
-      class="float-right mr-5 cursor-pointer text-white"
+      class="float-right mr-5 cursor-pointer text-white h-9"
       @click="router.push({ name: 'Account' })"
     ></FontAwesomeIcon>
   </div>

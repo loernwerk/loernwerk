@@ -7,7 +7,7 @@
           v-if="content.contentType === ContentType.EMBED"
           :embed-content="(content as EmbedContent)"
           :edit-mode="editMode"
-          class="h-full absolute"
+          class="h-full"
           @editing="(val) => $emit('editing', val)"
         />
         <TextDisplay
@@ -22,7 +22,7 @@
           v-else-if="content.contentType === ContentType.IMAGE"
           :image-content="(content as ImageContent)"
           :edit-mode="editMode"
-          class="h-full absolute"
+          class="h-full"
           @editing="(val) => $emit('editing', val)"
         />
         <H5PDisplay
