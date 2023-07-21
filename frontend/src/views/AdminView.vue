@@ -43,10 +43,15 @@
     </div>
     <PopupComponent v-if="showConfigEditor" @closed="showConfigEditor = false">
       <ContainerComponent class="px-10 py-10">
-        <ConfigEditor
-          :entries="(configs as Record<ConfigKey, unknown>)"
-          @save="() => onConfigSave()"
-        />
+        <template #Header>
+          <h1 class="text-xl underline">{{ $t('config.config') }}</h1>
+        </template>
+        <template #default>
+          <ConfigEditor
+            :entries="(configs as Record<ConfigKey, unknown>)"
+            @save="() => onConfigSave()"
+          />
+        </template>
       </ContainerComponent>
     </PopupComponent>
   </div>

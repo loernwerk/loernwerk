@@ -93,6 +93,7 @@ const messages = {
       open: 'Offene Registrierung',
       closed: 'Registrierung durch Admin',
       invite: 'Registrierung durch Einladungscodes',
+      config: 'Einstellungen',
     },
     navBar: {
       overview: 'Sequenzübersicht',
@@ -191,6 +192,7 @@ const messages = {
       open: 'Open registration',
       closed: 'Only admins can add new users',
       invite: 'Registration through invitecodes',
+      config: 'Settings',
     },
     navBar: {
       overview: 'Sequenceoverview',

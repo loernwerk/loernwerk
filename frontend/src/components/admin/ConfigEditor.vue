@@ -26,7 +26,7 @@
           <select
             v-if="ConfigTypeMap.getType(key).type === 'enum'"
             v-model="model[key]"
-            class="w-full bg-transparent"
+            class="w-full interactable"
           >
             <option
               v-for="option in getEnumOptions(key)"

@@ -46,7 +46,7 @@
     }
 
     .bg-interactable {
-        @apply bg-interactable-light dark:bg-interactable-dark;
+        @apply !bg-interactable-light dark:!bg-interactable-dark;
     }
 
     .bg-interactable-selected {
@@ -66,7 +66,7 @@
     }
 
     .interactable {
-        @apply container bg-interactable border-interactable cursor-pointer !shadow-none !max-h-fit py-1;
+        @apply container !bg-interactable border-interactable cursor-pointer !shadow-none !max-h-fit py-1;
     }
 
     .border-tabselector {
