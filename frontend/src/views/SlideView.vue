@@ -1,7 +1,7 @@
 <!-- View for execution of a sequence -->
 <template>
   <div class="flex w-full flex-col content-center mt-10">
-    <div class="max-h-full flex flex-col overflow-hidden">
+    <div class="h-full flex flex-col overflow-hidden">
       <div class="flex flex-1 justify-center overflow-hidden">
         <SlideDisplayFactory
           v-if="slide != null && !error"
