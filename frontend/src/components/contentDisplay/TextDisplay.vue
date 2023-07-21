@@ -102,6 +102,7 @@ onMounted(() => {
 <style>
 .ql-editor {
   height: 100%;
+  white-space: pre-wrap;
 }
 
 .ql-container {
