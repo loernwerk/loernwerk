@@ -42,7 +42,11 @@
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
-import { RouteLocationNormalized, useRouter } from 'vue-router';
+import {
+  RouteLocationNormalized,
+  useRouter,
+  isNavigationFailure,
+} from 'vue-router';
 import { computed, ref, watch } from 'vue';
 import { AccountRestInterface } from '../../restInterfaces/AccountRestInterface';
 import { UserClass } from '../../../../model/user/IUser';
@@ -84,7 +88,11 @@ const currentViewLocalized = computed(() => {
 });
 const isAdmin = ref(false);
 
-router.afterEach((to) => updateNavBar(to));
+router.afterEach((to, from, failure) => {
+  if (!isNavigationFailure(failure)) {
+    updateNavBar(to);
+  }
+});
 updateNavBar(router.currentRoute.value);
 
 try {
