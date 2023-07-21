@@ -23,6 +23,8 @@ const messages = {
     deleted: '{object} gelöscht',
     show: 'Anzeigen',
     failed: '{object} fehlgeschlagen',
+    leaveWarning:
+      'Wollen Sie die Seite wirklich verlassen? Ungespeicherte Änderungen gehen verloren!',
     account: {
       login: 'Anmelden',
       register: 'Registrieren',
@@ -120,6 +122,8 @@ const messages = {
     deleted: '{object} deleted',
     show: 'Show',
     failed: '{object} failed',
+    leaveWarning:
+      'Do you want to leave the site? Unsaved changes will be lost!',
     account: {
       login: 'Login',
       register: 'Register',

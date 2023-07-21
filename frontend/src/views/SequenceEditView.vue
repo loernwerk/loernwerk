@@ -71,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { Ref, computed, ref, watch } from 'vue';
+import { Ref, computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { ISequenceWithSlides } from '../../../model/sequence/ISequenceWithSlides';
 import SlideOverviewContainer from '../components/SlideOverviewContainer.vue';
 import {
@@ -94,6 +94,7 @@ import { H5PContent } from '../../../model/slide/content/H5PContent';
 import Delta from 'quill-delta';
 import { ISlide } from '../../../model/slide/ISlide';
 import { useRouter } from 'vue-router';
+import { i18n } from '../i18n';
 
 const props = defineProps({
   /**
@@ -104,6 +105,37 @@ const props = defineProps({
     required: true,
   },
 });
+
+const isSaved = ref(false);
+
+onMounted(() => {
+  window.addEventListener('beforeunload', onUnloadEventListener);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('beforeunload', onUnloadEventListener);
+});
+
+useRouter().beforeEach((to, from) => {
+  if (!isSaved.value && from.name === 'SequenceEdit') {
+    const result = confirm(i18n.global.t('leaveWarning'));
+    if (result) {
+      isSaved.value = true;
+    } else {
+      return false;
+    }
+  }
+});
+
+/**
+ * an event listener for the beforunloadevent which prevents leaving with unsaved content
+ * @param event the unloadevent
+ * @returns the message to be prompted
+ */
+function onUnloadEventListener(event: BeforeUnloadEvent): string {
+  event.preventDefault();
+  return i18n.global.t('leaveWarning');
+}
 
 const sequence = ref<ISequenceWithSlides>(
   await SequenceRestInterface.getSequence(props.sequenceCode)
@@ -316,6 +348,7 @@ function getTab(index: number): string {
  * Saves the sequence
  */
 async function save(): Promise<void> {
+  isSaved.value = true;
   await SequenceRestInterface.updateSequence(sequence.value);
   await router.push({ name: 'Overview' });
 }
