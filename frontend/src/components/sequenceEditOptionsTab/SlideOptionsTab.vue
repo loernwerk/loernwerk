@@ -33,9 +33,12 @@
         </div>
       </div>
     </div>
-    <ButtonComponent @click="$emit('save')" class="h-fit">{{
-      $t('save')
-    }}</ButtonComponent>
+    <ButtonComponent
+      @click="$emit('save')"
+      :loading="props.disableButton"
+      class="h-fit"
+      >{{ $t('save') }}</ButtonComponent
+    >
   </div>
 </template>
 
@@ -64,6 +67,10 @@ const props = defineProps({
     type: Object as PropType<ISequence>,
     required: true,
   },
+  disableButton: {
+    type: Boolean,
+    required: true,
+  },
 });
 
 const emits = defineEmits([
@@ -84,7 +91,6 @@ const emits = defineEmits([
    */
   'save',
 ]);
-
 const sequenceName = ref(props.sequence.name);
 watch(sequenceName, () => updateSequenceName(sequenceName.value));
 

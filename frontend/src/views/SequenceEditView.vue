@@ -20,6 +20,7 @@
           <SlideOptionsTab
             :slide="selectedSlide"
             :sequence="sequence"
+            :disable-button="disableButton"
             @update-sequence="(val) => (sequence.name = val.name)"
             @update-slide="(val) => updateSlide(val)"
             @save="save()"
@@ -107,6 +108,7 @@ const props = defineProps({
 });
 
 const isSaved = ref(false);
+const disableButton = ref(false);
 
 onMounted(() => {
   window.addEventListener('beforeunload', onUnloadEventListener);
@@ -349,7 +351,12 @@ function getTab(index: number): string {
  */
 async function save(): Promise<void> {
   isSaved.value = true;
-  await SequenceRestInterface.updateSequence(sequence.value);
+  disableButton.value = true;
+  try {
+    await SequenceRestInterface.updateSequence(sequence.value);
+  } catch {
+    disableButton.value = false;
+  }
   await router.push({ name: 'Overview' });
 }
 </script>
