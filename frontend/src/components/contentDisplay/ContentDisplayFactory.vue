@@ -1,8 +1,8 @@
 <!-- Visualizes a content object. -->
 <template>
-  <div class="h-full p-3 relative">
+  <div class="h-full p-3 relative overflow-hidden">
     <div class="h-full" :class="{ 'border-1': editMode }">
-      <div class="h-full relative" v-if="content">
+      <div class="h-full" v-if="content">
         <EmbedDisplay
           v-if="content.contentType === ContentType.EMBED"
           :embed-content="(content as EmbedContent)"
@@ -15,7 +15,7 @@
           :text-content="(content as TextContent)"
           :edit-mode="editMode"
           :layout-slot="layoutSlot"
-          class="h-full absolute"
+          class="h-full"
           @editing="(val) => $emit('editing', val)"
         />
         <ImageDisplay
