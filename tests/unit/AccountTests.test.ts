@@ -1,13 +1,16 @@
-import { AccountController } from '../backend/controller/AccountController';
+import { AccountController } from '../../backend/controller/AccountController';
 import { DataSource } from 'typeorm';
-import { UserClass } from '../model/user/IUser';
-import { DBUser } from '../model/user/DBUser';
-import { LoernwerkError, LoernwerkErrorCodes } from '../model/loernwerkError';
+import { UserClass } from '../../model/user/IUser';
+import { DBUser } from '../../model/user/DBUser';
+import {
+    LoernwerkError,
+    LoernwerkErrorCodes,
+} from '../../model/loernwerkError';
 import bcrypt from 'bcrypt';
-import { DBSequence } from '../model/sequence/DBSequence';
-import { SequenceController } from '../backend/controller/SequenceController';
-import { DBH5PContent } from '../model/h5p/DBH5PContent';
-import { DBSlide } from '../model/slide/DBSlide';
+import { DBSequence } from '../../model/sequence/DBSequence';
+import { SequenceController } from '../../backend/controller/SequenceController';
+import { DBH5PContent } from '../../model/h5p/DBH5PContent';
+import { DBSlide } from '../../model/slide/DBSlide';
 
 let mockDb;
 beforeAll(async () => {

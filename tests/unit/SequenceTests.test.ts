@@ -1,15 +1,15 @@
 import { DataSource } from 'typeorm';
-import { DBSequence } from '../model/sequence/DBSequence';
-import { DBUser } from '../model/user/DBUser';
-import { UserClass } from '../model/user/IUser';
+import { DBSequence } from '../../model/sequence/DBSequence';
+import { DBUser } from '../../model/user/DBUser';
+import { UserClass } from '../../model/user/IUser';
 import bcrypt from 'bcrypt';
-import { SequenceController } from '../backend/controller/SequenceController';
-import { DBSlide } from '../model/slide/DBSlide';
-import { LayoutType } from '../model/slide/layout/Layout';
-import { ISequenceWithSlides } from '../model/sequence/ISequenceWithSlides';
-import { DBH5PContent } from '../model/h5p/DBH5PContent';
-import { DBConfigEntry } from '../model/configuration/DBConfigEntry';
-import { ConfigController } from '../backend/controller/ConfigController';
+import { SequenceController } from '../../backend/controller/SequenceController';
+import { DBSlide } from '../../model/slide/DBSlide';
+import { LayoutType } from '../../model/slide/layout/Layout';
+import { ISequenceWithSlides } from '../../model/sequence/ISequenceWithSlides';
+import { DBH5PContent } from '../../model/h5p/DBH5PContent';
+import { DBConfigEntry } from '../../model/configuration/DBConfigEntry';
+import { ConfigController } from '../../backend/controller/ConfigController';
 
 let mockDb;
 beforeAll(async () => {

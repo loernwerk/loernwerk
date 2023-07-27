@@ -1,9 +1,9 @@
-import { ContentFactory } from '../frontend/src/factories/ContentFactory';
-import { H5PContent } from '../model/slide/content/H5PContent';
-import { EmbedContent } from '../model/slide/content/EmbedContent';
-import { ImageContent } from '../model/slide/content/ImageContent';
-import { TextContent } from '../model/slide/content/TextContent';
-import { ContentType } from '../model/slide/content/Content';
+import { ContentFactory } from '../../frontend/src/factories/ContentFactory';
+import { H5PContent } from '../../model/slide/content/H5PContent';
+import { EmbedContent } from '../../model/slide/content/EmbedContent';
+import { ImageContent } from '../../model/slide/content/ImageContent';
+import { TextContent } from '../../model/slide/content/TextContent';
+import { ContentType } from '../../model/slide/content/Content';
 describe('Factory-Tests', () => {
     const h5pJSON = {
         h5pContentId: 'string',
