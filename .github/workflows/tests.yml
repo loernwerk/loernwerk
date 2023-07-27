@@ -18,7 +18,7 @@ jobs:
           concurrent_skipping: 'same_content_newer'
           skip_after_successful_duplicate: 'true'
 
-  build:
+  test:
     needs: pre_job
     if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
     runs-on: ubuntu-latest
@@ -36,4 +36,4 @@ jobs:
           npm run build
       
       - name: Run tests
-        run: npm run tests
+        run: npm run test
