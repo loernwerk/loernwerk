@@ -27,9 +27,19 @@ beforeAll(async () => {
     mockUser.type = UserClass.REGULAR;
     mockUser.password = await bcrypt.hash('verySecurePW', 13);
     mockUser.name = 'magnus';
-    mockUser.sharedSequencesReadAccess = [];
+    mockUser.sharedSequencesReadAccess = ['CODE66'];
     mockUser.sharedSequencesWriteAccess = [];
     await mockUser.save();
+
+    const mockSequence = new DBSequence();
+    mockSequence.code = 'CODE01';
+    mockSequence.authorId = 12345;
+    mockSequence.name = 'sequence1';
+    mockSequence.slideCount = 0;
+    mockSequence.writeAccess = [];
+    mockSequence.readAccess = [931943];
+    mockSequence.tags = [];
+    await mockSequence.save();
 
     const toBeDeleted = new DBUser();
     toBeDeleted.mail = 'bobby@fischer.de';
@@ -37,7 +47,7 @@ beforeAll(async () => {
     toBeDeleted.type = UserClass.REGULAR;
     toBeDeleted.password = await bcrypt.hash('verySecurePW', 13);
     toBeDeleted.name = 'bobby';
-    toBeDeleted.sharedSequencesReadAccess = [];
+    toBeDeleted.sharedSequencesReadAccess = ['CODE01'];
     toBeDeleted.sharedSequencesWriteAccess = [];
     await toBeDeleted.save();
 
@@ -47,7 +57,7 @@ beforeAll(async () => {
     sequenceByDeletedAccount.name = 'Sequence66';
     sequenceByDeletedAccount.slideCount = 0;
     sequenceByDeletedAccount.writeAccess = [];
-    sequenceByDeletedAccount.readAccess = [];
+    sequenceByDeletedAccount.readAccess = [12345];
     sequenceByDeletedAccount.tags = [];
     await sequenceByDeletedAccount.save();
 });
@@ -208,12 +218,36 @@ describe('AccountController Tests', () => {
         const accountToBeDeleted = await DBUser.findOne({
             where: { id: 931943 },
         });
+
         await AccountController.deleteAccount(accountToBeDeleted.id);
         await expect(() =>
             SequenceController.getSequenceByCode('CODE66')
         ).rejects.toThrow(
             new LoernwerkError(
                 'No matching sequence',
+                LoernwerkErrorCodes.NOT_FOUND
+            )
+        );
+        await expect(() =>
+            AccountController.getAccountById(931943)
+        ).rejects.toThrow(
+            new LoernwerkError(
+                'No existing User with given ID',
+                LoernwerkErrorCodes.NOT_FOUND
+            )
+        );
+        const sharedSequence = await DBSequence.findOne({
+            where: { code: 'CODE01' },
+        });
+        expect(sharedSequence.readAccess.length).toEqual(0);
+    });
+
+    it('delete account that does not exist', async () => {
+        await expect(() =>
+            AccountController.deleteAccount(66666)
+        ).rejects.toThrow(
+            new LoernwerkError(
+                'No existing User with given ID',
                 LoernwerkErrorCodes.NOT_FOUND
             )
         );
