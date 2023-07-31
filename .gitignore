@@ -29,3 +29,6 @@ build
 
 dev.db
 loernwerk.db
+/test-results/
+/playwright-report/
+/playwright/.cache/
