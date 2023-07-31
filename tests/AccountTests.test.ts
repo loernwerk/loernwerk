@@ -36,7 +36,7 @@ beforeAll(async () => {
     mockSequence.authorId = 12345;
     mockSequence.name = 'sequence1';
     mockSequence.slideCount = 0;
-    mockSequence.writeAccess = [];
+    mockSequence.writeAccess = [931943];
     mockSequence.readAccess = [931943];
     mockSequence.tags = [];
     await mockSequence.save();
@@ -48,7 +48,7 @@ beforeAll(async () => {
     toBeDeleted.password = await bcrypt.hash('verySecurePW', 13);
     toBeDeleted.name = 'bobby';
     toBeDeleted.sharedSequencesReadAccess = ['CODE01'];
-    toBeDeleted.sharedSequencesWriteAccess = [];
+    toBeDeleted.sharedSequencesWriteAccess = ['CODE01'];
     await toBeDeleted.save();
 
     const sequenceByDeletedAccount = new DBSequence();
@@ -56,7 +56,7 @@ beforeAll(async () => {
     sequenceByDeletedAccount.authorId = 931943;
     sequenceByDeletedAccount.name = 'Sequence66';
     sequenceByDeletedAccount.slideCount = 0;
-    sequenceByDeletedAccount.writeAccess = [];
+    sequenceByDeletedAccount.writeAccess = [12345];
     sequenceByDeletedAccount.readAccess = [12345];
     sequenceByDeletedAccount.tags = [];
     await sequenceByDeletedAccount.save();
@@ -75,6 +75,9 @@ describe('AccountController Tests', () => {
         mail: 'garry@kasparov.de',
         password: 'verySecurePW',
         id: 54321,
+        type: UserClass.REGULAR,
+        sharedSequencesReadAccess: [],
+        sharedSequencesWriteAccess: [],
     };
     const insufficientDetails = {
         name: null,
@@ -240,6 +243,7 @@ describe('AccountController Tests', () => {
             where: { code: 'CODE01' },
         });
         expect(sharedSequence.readAccess.length).toEqual(0);
+        expect(sharedSequence.writeAccess.length).toEqual(0);
     });
 
     it('delete account that does not exist', async () => {
@@ -253,7 +257,7 @@ describe('AccountController Tests', () => {
         );
     });
 
-    //ensureAdminExists function
+    //ensureAdminAccount function
     it('create Admin, because no admin exists', async () => {
         const noAdmin = await DBUser.findBy({ type: UserClass.ADMIN });
         expect(noAdmin.length).toEqual(0);
@@ -263,6 +267,14 @@ describe('AccountController Tests', () => {
         expect(admin[0]).toHaveProperty('type', UserClass.ADMIN);
     });
 
+    //this test only works in suite
+    it('dont create Admin because it already exists', async () => {
+        await AccountController.ensureAdminAccount();
+        const allAdminAccounts = await DBUser.findBy({ type: UserClass.ADMIN });
+        expect(allAdminAccounts.length).toEqual(1);
+        expect(allAdminAccounts[0].type).toEqual(UserClass.ADMIN);
+    });
+
     //saveAccount function
     it('valid account changes', async () => {
         const user = await DBUser.findBy({ name: 'magnus' });
@@ -270,5 +282,17 @@ describe('AccountController Tests', () => {
         await AccountController.saveAccount(user[0]);
         const newUser = await DBUser.findBy({ id: 12345 });
         expect(newUser[0]).toHaveProperty('name', 'mugnus');
+    });
+    it('try to change non-existent account', async () => {
+        const iUser = correctUser;
+        iUser.id = 200000; //nonexistent id
+        await expect(() =>
+            AccountController.saveAccount(iUser)
+        ).rejects.toThrow(
+            new LoernwerkError(
+                'No such existing User',
+                LoernwerkErrorCodes.NOT_FOUND
+            )
+        );
     });
 });
