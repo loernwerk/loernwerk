@@ -8,6 +8,7 @@ import {
 import { H5PServer } from '../h5p/H5PServer';
 import { IEditorModel } from '@lumieducation/h5p-server';
 import { H5PUser } from '../h5p/H5PPermissionSystem';
+import { DBH5PContentUsedBy } from '../../model/h5p/DBH5PContent';
 
 /**
  * Builds router for requests regarding H5P management
@@ -147,6 +148,59 @@ export class H5PRouterFactory extends RouterFactory {
                         req.language ?? 'en'
                     );
                 res.json(content);
+            } catch (e) {
+                res.status(500).send((e as Error).message);
+            }
+        });
+
+        h5pRouter.get('/list', async (req, res) => {
+            let userId = req.session.userId as number;
+            if (req.query.id && req.session.isAdmin) {
+                userId = parseInt(req.query.id as string);
+            }
+
+            const userToQuery: H5PUser = {
+                id: userId.toString(),
+                userId: userId,
+                isAdmin: req.session.isAdmin || false,
+                isLoggedIn: true,
+                email: req.session.email as string,
+                name: req.session.username as string,
+                type: 'local',
+            };
+
+            try {
+                const contents = await H5PServer.getInstance()
+                    .getH5PEditor()
+                    .contentManager.listContent(userToQuery);
+                const result: {
+                    title: string;
+                    contentId: string;
+                    mainLibrary: string;
+                    usedSequences: string[];
+                }[] = [];
+
+                for (const content of contents) {
+                    const metadata = await H5PServer.getInstance()
+                        .getH5PEditor()
+                        .contentManager.getContentMetadata(
+                            content,
+                            userToQuery
+                        );
+                    const usedSequences = await DBH5PContentUsedBy.findBy({
+                        h5pContentId: content,
+                    });
+                    result.push({
+                        title: metadata.title,
+                        contentId: content,
+                        mainLibrary: metadata.mainLibrary,
+                        usedSequences: usedSequences.map(
+                            (sequence) => sequence.sequenceCode
+                        ),
+                    });
+                }
+
+                res.json(result);
             } catch (e) {
                 res.status(500).send((e as Error).message);
             }

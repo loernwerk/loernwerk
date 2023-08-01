@@ -7,6 +7,7 @@ import SlideView from '../views/SlideView.vue';
 import FinishedView from '../views/FinishedView.vue';
 import SequenceOverviewView from '../views/SequenceOverviewView.vue';
 import SequenceEditView from '../views/SequenceEditView.vue';
+import H5PContentOverviewView from '../views/H5PContentOverviewView.vue';
 
 const router = createRouter({
   history: createWebHistory(''),
@@ -57,6 +58,12 @@ const router = createRouter({
       component: SequenceEditView,
       meta: { hasNavBar: true, requiresLogin: true },
       props: true,
+    },
+    {
+      path: '/h5pOverview',
+      name: 'H5POverview',
+      component: H5PContentOverviewView,
+      meta: { hasNavBar: true, requiresLogin: true },
     },
   ],
 });

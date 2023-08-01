@@ -99,6 +99,7 @@ const messages = {
       overview: 'Sequenzübersicht',
       admin: 'Admin',
       sequenceEdit: 'Sequenzbearbeitung',
+      h5pOverview: 'H5P-Inhalte',
     },
   },
   en: {
@@ -198,6 +199,7 @@ const messages = {
       overview: 'Sequenceoverview',
       admin: 'Admin',
       sequenceEdit: 'Edit sequence',
+      h5pOverview: 'H5P contents',
     },
   },
 };

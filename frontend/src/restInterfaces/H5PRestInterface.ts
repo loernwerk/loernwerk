@@ -5,6 +5,13 @@ import {
   IPlayerModel,
 } from '@lumieducation/h5p-server';
 
+interface H5POverviewItem {
+  title: string;
+  mainLibrary: string;
+  contentId: string;
+  usedSequences: string[];
+}
+
 /**
  * Implements communication with the Server concerning all H5P-requests
  */
@@ -65,5 +72,22 @@ export class H5PRestInterface extends BaseRestInterface {
     contentId: string
   ): Promise<IPlayerModel> {
     return await this.get<IPlayerModel>(`${this.h5p_path}${contentId}/view`);
+  }
+
+  /**
+   * Sends a request to get a list of all H5P content of the current user
+   * @param userId Optional user to query for
+   * @returns List of all h5p contents of the supplied user
+   */
+  public static async getH5PContentList(
+    userId?: string
+  ): Promise<H5POverviewItem[]> {
+    if (userId) {
+      return await this.get<H5POverviewItem[]>(
+        `${this.h5p_path}list?id=${userId}`
+      );
+    } else {
+      return await this.get<H5POverviewItem[]>(`${this.h5p_path}list`);
+    }
   }
 }

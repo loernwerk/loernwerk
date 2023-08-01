@@ -448,8 +448,7 @@ export class SequenceController {
             for (const slot in slide.content) {
                 if (slide.content[slot].contentType === ContentType.H5P) {
                     h5pIds.push(
-                        (slide.content[slot].contentType as H5PContent)
-                            .h5pContentId
+                        (slide.content[slot] as H5PContent).h5pContentId
                     );
                 }
             }
@@ -487,7 +486,7 @@ export class SequenceController {
         for (const h5pId of h5pIds) {
             if (
                 usedByEntries.find((entry) => entry.h5pContentId === h5pId) ===
-                null
+                undefined
             ) {
                 // We need to create a new entry
                 const newEntry = new DBH5PContentUsedBy();
