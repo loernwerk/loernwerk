@@ -310,6 +310,12 @@ export class SequenceController {
                 LoernwerkErrorCodes.NOT_FOUND
             );
         }
+        if (dbSequence.slideCount === 0) {
+            throw new LoernwerkError(
+                'Sequence is empty',
+                LoernwerkErrorCodes.NOT_FOUND
+            );
+        }
         return dbSequence;
     }
 
