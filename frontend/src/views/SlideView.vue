@@ -132,7 +132,6 @@ async function previousSlideToExecute(): Promise<void> {
 
   if (disableBackButton.value) {
     displaySpinner.value = false;
-    alert('');
     return;
   }
 
