@@ -8,6 +8,7 @@ import {
 import { H5PServer } from '../h5p/H5PServer';
 import { IEditorModel } from '@lumieducation/h5p-server';
 import { DBH5PContent } from '../../model/h5p/DBH5PContent';
+import { H5PUser } from '../h5p/H5PPermissionSystem';
 
 /**
  * Builds router for requests regarding H5P management
@@ -143,13 +144,13 @@ export class H5PRouterFactory extends RouterFactory {
                         req.params.contentId,
                         {
                             id: 'anonymous',
-                            canCreateRestricted: false,
-                            canInstallRecommended: false,
-                            canUpdateAndInstallLibraries: false,
                             email: 'anonymous@loernwerk.de',
                             name: 'Anonymous student',
                             type: 'local',
-                        },
+                            isAdmin: false,
+                            isLoggedIn: false,
+                            userId: -1,
+                        } as H5PUser,
                         req.language ?? 'en'
                     );
                 res.json(content);
