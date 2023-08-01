@@ -2,11 +2,9 @@
   <slot></slot>
   <div class="relative">
     <div class="absolute bottom-0 right-0">
-      <li>
-        <ul v-for="mes of errormessages" :key="mes">
-          mes
-        </ul>
-      </li>
+      <ul class="list-image-none">
+        <li v-for="mes of errormessages" :key="mes">mes</li>
+      </ul>
     </div>
   </div>
 </template>
