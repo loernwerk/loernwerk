@@ -12,16 +12,15 @@
           <div v-else class="absolute top-5 right-5 z-50 flex space-x-5">
             <LightDarkSwitch v-model="isDarkMode" />
             <LanguageSelector :border-color="isDarkMode ? 'white' : 'black'" />
-            <ErrorCatcher>
-              <ErrorButton />
-            </ErrorCatcher>
           </div>
         </Suspense>
         <div
           class="relative top-0 left-0 bottom-0 right-0 p-5 flex flex-grow overflow-hidden"
         >
           <Suspense>
-            <RouterView />
+            <ErrorCatcher>
+              <RouterView />
+            </ErrorCatcher>
           </Suspense>
         </div>
       </div>
@@ -38,7 +37,6 @@ import NavigationBar from './components/navBar/NavigationBar.vue';
 import LightDarkSwitch from './components/navBar/LightDarkSwitch.vue';
 import LanguageSelector from './components/navBar/LanguageSelector.vue';
 import ErrorCatcher from './components/ErrorCatcher.vue';
-import ErrorButton from './components/ErrorButton.vue';
 
 const router = useRouter();
 const isDarkMode = ref(false);
