@@ -18,6 +18,10 @@ onErrorCaptured((err, instance, info) => {
   errormessages.value.push(err.message);
   console.log(errormessages.value);
   console.log('this needed to be displayed, err:' + err + ' info: ' + info);
+  setTimeout(() => {
+    const i = errormessages.value.indexOf(err.message);
+    errormessages.value.splice(i, 1);
+  }, 2500);
   return false;
 });
 </script>
