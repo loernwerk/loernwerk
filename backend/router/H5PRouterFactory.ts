@@ -7,7 +7,6 @@ import {
 } from '../loernwerkUtilities';
 import { H5PServer } from '../h5p/H5PServer';
 import { IEditorModel } from '@lumieducation/h5p-server';
-import { DBH5PContent } from '../../model/h5p/DBH5PContent';
 import { H5PUser } from '../h5p/H5PPermissionSystem';
 
 /**
@@ -46,12 +45,6 @@ export class H5PRouterFactory extends RouterFactory {
                             req.body.library,
                             req.user
                         );
-
-                    // Try to update belonging sequence code
-                    await DBH5PContent.update(
-                        { h5pContentId: h5pObject.id },
-                        { ownerSequence: req.body.sequence }
-                    );
 
                     res.json({
                         contentId: h5pObject.id,
