@@ -67,6 +67,7 @@
           class="h-full absolute"
           @editing="
             (val) => {
+              addUnloadEventListener();
               selectEditingSlot(val.slot);
               updateContent(val.slot, val.emit);
             }
@@ -79,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import { Ref, computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import { Ref, computed, onUnmounted, ref, watch } from 'vue';
 import { ISequenceWithSlides } from '../../../model/sequence/ISequenceWithSlides';
 import SlideOverviewContainer from '../components/SlideOverviewContainer.vue';
 import {
@@ -117,18 +118,17 @@ const props = defineProps({
 
 const isSaved = ref(false);
 const disableButton = ref(false);
-
-onMounted(() => {
-  window.addEventListener('beforeunload', onUnloadEventListener);
-});
+const edited = ref(false);
 
 onUnmounted(() => {
-  window.removeEventListener('beforeunload', onUnloadEventListener);
+  if (edited.value) {
+    window.removeEventListener('beforeunload', onUnloadEventListener);
+  }
 });
 
 useRouter().beforeEach((to, from) => {
   void to;
-  if (!isSaved.value && from.name === 'SequenceEdit') {
+  if (!isSaved.value && from.name === 'SequenceEdit' && edited.value) {
     const result = confirm(i18n.global.t('leaveWarning'));
     if (result) {
       isSaved.value = true;
@@ -137,6 +137,16 @@ useRouter().beforeEach((to, from) => {
     }
   }
 });
+
+/**
+ * adds the eventlistener on edit
+ */
+function addUnloadEventListener(): void {
+  if (!edited.value) {
+    edited.value = true;
+    window.addEventListener('beforeunload', onUnloadEventListener);
+  }
+}
 
 /**
  * an event listener for the beforunloadevent which prevents leaving with unsaved content
