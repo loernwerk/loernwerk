@@ -19,7 +19,6 @@
           </InteractableComponent>
           <H5PEditor
             :content-id="toEdit"
-            :sequence-code="h5pContent.sequenceCode"
             :key="toEdit"
             @closed="(id) => saveEditor(id)"
           />
@@ -85,12 +84,12 @@ const emits = defineEmits([
 const isEditorOpen = ref(false);
 const toEdit = ref(props.h5pContent.h5pContentId);
 const reusable: Ref<
-{
-  title: string;
-  mainLibrary: string;
-  contentId: string;
-  usedSequences: string[];
-}[]
+  {
+    title: string;
+    mainLibrary: string;
+    contentId: string;
+    usedSequences: string[];
+  }[]
 > = ref([]);
 
 if (props.editMode) {

@@ -25,19 +25,11 @@ import { H5PRestInterface } from '../../restInterfaces/H5PRestInterface';
 import ButtonComponent from '../ButtonComponent.vue';
 import ContainerComponent from '../ContainerComponent.vue';
 
-const props = defineProps({
+defineProps({
   /**
    * The h5p content to display
    */
   contentId: {
-    type: String,
-    required: true,
-  },
-
-  /**
-   * Code of sequence it belongs to
-   */
-  sequenceCode: {
     type: String,
     required: true,
   },
@@ -71,10 +63,7 @@ onMounted(() => {
       requestBody: { library: string; params: unknown }
     ): Promise<{ contentId: string; metadata: IContentMetadata }> => {
       if (contentId === undefined || contentId === 'undefined') {
-        return await H5PRestInterface.createH5PContent(
-          props.sequenceCode as string,
-          requestBody
-        );
+        return await H5PRestInterface.createH5PContent(requestBody);
       } else {
         return await H5PRestInterface.editH5PContent(contentId, requestBody);
       }

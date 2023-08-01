@@ -24,7 +24,7 @@ export class H5PRouterFactory extends RouterFactory {
         h5pRouter.put(
             '/',
             requireLogin,
-            requireBody('params', 'library', 'sequence'),
+            requireBody('params', 'library'),
             buildH5PRequest,
             async (req, res) => {
                 // Deeper checks of request body

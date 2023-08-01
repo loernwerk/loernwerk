@@ -20,19 +20,18 @@ export class H5PRestInterface extends BaseRestInterface {
 
   /**
    * Sends a request to backend to add new H5P content
-   * @param sequenceCode Sequence code of the sequence that this content belongs to
    * @param requestBody Request body supplied by the H5P editor
    * @param requestBody.library Library supplied by the H5P editor
    * @param requestBody.params Content parameters supplied by the H5P editor
    * @returns H5P response by the backend
    */
-  public static async createH5PContent(
-    sequenceCode: string,
-    requestBody: { library: string; params: unknown }
-  ): Promise<{ contentId: string; metadata: IContentMetadata }> {
+  public static async createH5PContent(requestBody: {
+    library: string;
+    params: unknown;
+  }): Promise<{ contentId: string; metadata: IContentMetadata }> {
     return await this.put<{ contentId: string; metadata: IContentMetadata }>(
       this.h5p_path,
-      { ...requestBody, sequence: sequenceCode }
+      { ...requestBody }
     );
   }
 
