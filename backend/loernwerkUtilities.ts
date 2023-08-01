@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
-import { IUser } from '@lumieducation/h5p-server';
 import i18next, { TFunction } from 'i18next';
 import i18nextFsBackend from 'i18next-fs-backend';
 import i18nextHttpMiddleware from 'i18next-http-middleware';
 import { join } from 'path';
+import { H5PUser } from './h5p/H5PPermissionSystem';
 
 /**
  * Express middleware for checking user authentication.
@@ -80,22 +80,22 @@ export function buildH5PRequest(
     if (req.session.userId === undefined) {
         req.user = {
             id: 'anonymous',
-            canCreateRestricted: false,
-            canInstallRecommended: true,
-            canUpdateAndInstallLibraries: false,
             email: 'anonymous@loernwerk.de',
             name: 'Anonymous student',
             type: 'local',
+            isAdmin: false,
+            isLoggedIn: false,
+            userId: -1,
         };
     } else {
         req.user = {
             id: req.session.userId?.toString(),
-            canCreateRestricted: true,
-            canInstallRecommended: true,
-            canUpdateAndInstallLibraries: true,
-            email: req.session.email,
-            name: req.session.username,
+            email: req.session.email || '',
+            name: req.session.username || '',
             type: 'local',
+            isAdmin: req.session.isAdmin || false,
+            isLoggedIn: true,
+            userId: req.session.userId,
         };
     }
     if (translationFunction !== null) {
@@ -175,7 +175,7 @@ declare module 'express-session' {
 declare module 'express-serve-static-core' {
     interface Request {
         // User object required by H5P library.
-        user: IUser;
+        user: H5PUser;
         // Translation function for error messages. Name forced by H5P library.
         t: TFunction;
         // Language used by the user.
