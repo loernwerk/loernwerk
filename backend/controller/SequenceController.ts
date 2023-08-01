@@ -8,7 +8,7 @@ import {
     LoernwerkErrorCodes,
 } from '../../model/loernwerkError';
 import { DBUser } from '../../model/user/DBUser';
-import { DBH5PContent } from '../../model/h5p/DBH5PContent';
+import { DBH5PContent, DBH5PContentUsedBy } from '../../model/h5p/DBH5PContent';
 import { H5PServer } from '../h5p/H5PServer';
 import { readFile } from 'fs/promises';
 import { Document, ExternalDocument } from 'pdfjs';
@@ -119,9 +119,11 @@ export class SequenceController {
     /**
      * Save the sequence in the database
      * @param sequence the sequence
+     * @param userId the user which saves the sequence
      */
     public static async saveSequence(
-        sequence: Partial<ISequenceWithSlides>
+        sequence: Partial<ISequenceWithSlides>,
+        userId: number
     ): Promise<void> {
         if (sequence.code === undefined) {
             throw new LoernwerkError(
@@ -178,7 +180,7 @@ export class SequenceController {
 
         if (sequence.slides !== undefined) {
             dbSequence.slideCount = sequence.slides.length;
-            await this.saveSlides(sequence.slides, sequence.code);
+            await this.saveSlides(sequence.slides, sequence.code, userId);
         }
 
         if (sequence.tags !== undefined) {
@@ -191,8 +193,12 @@ export class SequenceController {
     /**
      * Deletes the sequence with the given code
      * @param code the code of the sequence
+     * @param userId user which deletes this sequence
      */
-    public static async deleteSequence(code: string): Promise<void> {
+    public static async deleteSequence(
+        code: string,
+        userId: number
+    ): Promise<void> {
         const dbSequence = await DBSequence.findOne({
             where: { code: code },
             select: ['code', 'readAccess', 'writeAccess'],
@@ -207,15 +213,34 @@ export class SequenceController {
         for (const s of slides) {
             await s.remove();
         }
-        const h5pContent = await DBH5PContent.find({
-            select: ['h5pContentId'],
-            where: { ownerSequence: code },
+
+        // Removing H5P Content
+        const entriesToRemove = await DBH5PContentUsedBy.findBy({
+            sequenceCode: code,
         });
-        for (const h5p of h5pContent) {
-            await H5PServer.getInstance()
-                .getH5PEditor()
-                .deleteContent(h5p.h5pContentId, undefined);
+        for (const entryToRemove of entriesToRemove) {
+            await entryToRemove.remove();
+            if (
+                (
+                    await DBH5PContentUsedBy.findBy({
+                        h5pContentId: entryToRemove.h5pContentId,
+                    })
+                ).length === 0
+            ) {
+                // H5P Object is no longer used, can be removed entirely, if the object owner is saving
+                const h5pContent = await DBH5PContent.findOneByOrFail({
+                    h5pContentId: entryToRemove.h5pContentId,
+                });
+                if (h5pContent.owner === userId) {
+                    await H5PServer.getInstance()
+                        .getH5PEditor()
+                        .contentStorage.deleteContent(
+                            entryToRemove.h5pContentId
+                        );
+                }
+            }
         }
+
         for (const uId of dbSequence.readAccess) {
             const user = await DBUser.findOneBy({ id: uId });
             if (user == null) {
@@ -392,13 +417,15 @@ export class SequenceController {
      * stores the slides in the database
      * @param slides the slides to store
      * @param sequenceCode code of the sequence of the slides
+     * @param savingUser id of  user which saves these slides
      */
     private static async saveSlides(
         slides: ISlide[],
-        sequenceCode: string
+        sequenceCode: string,
+        savingUser: number
     ): Promise<void> {
-        const h5pIds = [];
-        const usedSlideIds = [];
+        const usedSlideIds: number[] = [];
+        const h5pIds: string[] = [];
 
         for (const s of slides) {
             let slide = await DBSlide.findOneBy({
@@ -428,15 +455,46 @@ export class SequenceController {
             }
         }
 
-        // Delete unnecessary H5P content
-        const unnecessaryContent = await DBH5PContent.find({
-            select: ['h5pContentId'],
-            where: { h5pContentId: Not(In(h5pIds)) },
+        // Update H5P used content map
+        const unneededH5PEntries = await DBH5PContentUsedBy.findBy({
+            sequenceCode: sequenceCode,
+            h5pContentId: Not(In(h5pIds)),
         });
-        for (const unnecessaryId of unnecessaryContent) {
-            await H5PServer.getInstance()
-                .getH5PEditor()
-                .contentStorage.deleteContent(unnecessaryId.h5pContentId);
+        for (const usageEntry of unneededH5PEntries) {
+            await usageEntry.remove();
+            if (
+                (
+                    await DBH5PContentUsedBy.findBy({
+                        h5pContentId: usageEntry.h5pContentId,
+                    })
+                ).length === 0
+            ) {
+                // H5P Object is no longer used, can be removed entirely, if the object owner is saving
+                const h5pContent = await DBH5PContent.findOneByOrFail({
+                    h5pContentId: usageEntry.h5pContentId,
+                });
+                if (h5pContent.owner === savingUser) {
+                    await H5PServer.getInstance()
+                        .getH5PEditor()
+                        .contentStorage.deleteContent(usageEntry.h5pContentId);
+                }
+            }
+        }
+        const usedByEntries = await DBH5PContentUsedBy.findBy({
+            sequenceCode: sequenceCode,
+            h5pContentId: In(h5pIds),
+        });
+        for (const h5pId of h5pIds) {
+            if (
+                usedByEntries.find((entry) => entry.h5pContentId === h5pId) ===
+                null
+            ) {
+                // We need to create a new entry
+                const newEntry = new DBH5PContentUsedBy();
+                newEntry.h5pContentId = h5pId;
+                newEntry.sequenceCode = sequenceCode;
+                await newEntry.save();
+            }
         }
 
         // Delete unnecessary slides
