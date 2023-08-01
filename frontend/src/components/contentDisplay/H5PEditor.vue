@@ -1,5 +1,5 @@
 <template>
-  <ContainerComponent class="fixed top-3 bottom-3 left-3 right-3 z-10">
+  <ContainerComponent>
     <div class="flex flex-col space-y-5">
       <h5p-editor ref="editor" :content-id="contentId" class="grow" />
       <div class="flex items-center">

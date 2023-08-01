@@ -2,11 +2,28 @@
   <div class="h-full w-full">
     <div v-if="editMode" class="h-full">
       <div class="absolute" v-if="isEditorOpen">
-        <H5PEditor
-          :content-id="h5pContent.h5pContentId"
-          :sequence-code="h5pContent.sequenceCode"
-          @closed="(id) => saveEditor(id)"
-        />
+        <ContainerComponent class="fixed top-3 bottom-3 left-3 right-3 z-10">
+          <InteractableComponent class="w-fit mb-3">
+            <select v-model="toEdit" class="text-xl">
+              <option selected value="new">Neuen H5P-Inhalt erstellen</option>
+              <option
+                v-for="content in reusable"
+                :key="content.contentId"
+                :value="content.contentId"
+                class="text-xl"
+              >
+                {{ content.title }} ({{ content.mainLibrary }}, verwendet von
+                {{ content.usedSequences.length }} Sequenzen)
+              </option>
+            </select>
+          </InteractableComponent>
+          <H5PEditor
+            :content-id="toEdit"
+            :sequence-code="h5pContent.sequenceCode"
+            :key="toEdit"
+            @closed="(id) => saveEditor(id)"
+          />
+        </ContainerComponent>
       </div>
 
       <div
@@ -33,10 +50,13 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, ref } from 'vue';
+import { PropType, Ref, ref } from 'vue';
 import { H5PContent } from '../../../../model/slide/content/H5PContent';
 import H5PEditor from './H5PEditor.vue';
 import H5PPlayer from './H5PPlayer.vue';
+import { H5PRestInterface } from '../../restInterfaces/H5PRestInterface';
+import ContainerComponent from '../ContainerComponent.vue';
+import InteractableComponent from '../InteractableComponent.vue';
 
 const props = defineProps({
   /**
@@ -63,6 +83,19 @@ const emits = defineEmits([
 ]);
 
 const isEditorOpen = ref(false);
+const toEdit = ref(props.h5pContent.h5pContentId);
+const reusable: Ref<
+{
+  title: string;
+  mainLibrary: string;
+  contentId: string;
+  usedSequences: string[];
+}[]
+> = ref([]);
+
+if (props.editMode) {
+  reusable.value = await H5PRestInterface.getH5PContentList();
+}
 
 /**
  * Opens the editor
