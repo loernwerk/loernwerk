@@ -32,8 +32,8 @@ export class AccountRouterFactory extends RouterFactory {
                     req.session.isAdmin = user.type === UserClass.ADMIN;
                     req.session.username = user.name;
                     req.session.email = user.mail;
-                } catch {
-                    res.sendStatus(400);
+                } catch (e) {
+                    res.status(400).send(e.message);
                     return;
                 }
                 if (req.body.stayLoggedIn) {

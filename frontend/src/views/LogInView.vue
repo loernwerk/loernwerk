@@ -96,6 +96,7 @@ import { ConfigKey } from '../../../model/configuration/ConfigKey';
 import { RegistrationType } from '../../../model/configuration/RegistrationType';
 import { useRouter } from 'vue-router';
 import ErrorButton from '../components/ErrorButton.vue';
+import { LoernwerkError } from '../../../model/loernwerkError';
 
 const router = useRouter();
 const mailField = ref('');
@@ -141,18 +142,23 @@ async function checkLogIn(): Promise<void> {
   disableInputShowSpinner.value = true;
   displayError.value = false;
   accountCreatedMessage.value = false;
-  const success = await AccountRestInterface.verifyLogin(
-    mailField.value,
-    passwordField.value,
-    keepLoggedIn.value
-  );
-
-  if (success) {
+  try {
+    await AccountRestInterface.tryLogin(
+      mailField.value,
+      passwordField.value,
+      keepLoggedIn.value
+    );
     await router.push({ name: 'Overview' });
-  } else {
+  } catch (e) {
     displayError.value = true;
+    if (e instanceof LoernwerkError) {
+      console.log(e.message);
+    } else {
+      throw e;
+    }
+  } finally {
+    disableInputShowSpinner.value = false;
   }
-  disableInputShowSpinner.value = false;
 }
 
 /**
