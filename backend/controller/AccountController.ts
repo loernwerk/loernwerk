@@ -293,6 +293,12 @@ export class AccountController {
                     LoernwerkErrorCodes.BAD_REQUEST
                 );
             }
+            if (this.getAccountByUsername(data.name) !== null) {
+                throw new LoernwerkError(
+                    'username already exists',
+                    LoernwerkErrorCodes.INVALID_PARAMETER
+                );
+            }
             dbuser.name = data.name;
         }
         if (data.mail != null) {
@@ -306,6 +312,12 @@ export class AccountController {
                 throw new LoernwerkError(
                     'Given information do not satisfy the requirements',
                     LoernwerkErrorCodes.BAD_REQUEST
+                );
+            }
+            if (this.getAccountByEmail(data.mail) !== null) {
+                throw new LoernwerkError(
+                    'mail already exists',
+                    LoernwerkErrorCodes.INVALID_PARAMETER
                 );
             }
             dbuser.mail = data.mail;
