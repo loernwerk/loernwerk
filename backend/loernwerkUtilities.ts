@@ -109,6 +109,9 @@ export function buildH5PRequest(
             }
         >;
     }
+    if (req.query.lang !== undefined) {
+        req.language = req.query.lang as string;
+    }
 
     next();
 }
@@ -153,7 +156,7 @@ export async function buildH5Pi18n(): Promise<void> {
                 'metadata-semantics',
                 'server',
             ],
-            preload: ['de'],
+            preload: ['de', 'en'],
         });
 }
 

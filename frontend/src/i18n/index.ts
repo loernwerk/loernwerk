@@ -101,6 +101,13 @@ const messages = {
       sequenceEdit: 'Sequenzbearbeitung',
       h5pOverview: 'H5P-Inhalte',
     },
+    h5p: {
+      clickToEdit: 'Klicke um den Inhalt zu bearbeiten',
+      createNewContent: 'Neuen H5P-Inhalt erstellen',
+      usedBy: 'verwendet von {object} Sequenzen',
+      overviewTitle: 'Erstellter H5P-Inhalt',
+      usedSequences: 'Verwendete Sequenzen',
+    },
   },
   en: {
     search: 'Search',
@@ -200,6 +207,13 @@ const messages = {
       admin: 'Admin',
       sequenceEdit: 'Edit sequence',
       h5pOverview: 'H5P contents',
+    },
+    h5p: {
+      clickToEdit: 'Click to edit the content',
+      createNewContent: 'Create new H5P-Content',
+      usedBy: 'used by {object} sequences',
+      overviewTitle: 'Created H5P-Content',
+      usedSequences: 'Used Sequences',
     },
   },
 };

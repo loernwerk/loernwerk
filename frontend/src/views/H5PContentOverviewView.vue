@@ -6,7 +6,7 @@
   </div>
 
   <div class="flex flex-col w-full">
-    <div class="underline text-xl">Erstellter H5P-Inhalt:</div>
+    <div class="underline text-xl">{{ $t('h5p.overviewTitle') }}:</div>
 
     <ContainerComponent
       v-for="(content, idx) in contents"
@@ -18,17 +18,18 @@
         <div class="h-full pt-2">{{ content.mainLibrary }}</div>
         <div class="flex-grow pt-2">
           <span v-if="content.usedSequences.length > 0">
-            Verwendete Sequenzen: {{ content.usedSequences.join(', ') }}
+            {{ $t('h5p.usedSequences') }}:
+            {{ content.usedSequences.join(', ') }}
           </span>
         </div>
         <ButtonComponent
           v-if="content.usedSequences.length === 0"
           @click="deleteContent(content.contentId)"
-          >Löschen</ButtonComponent
+          >{{ $t('delete') }}</ButtonComponent
         >
-        <ButtonComponent @click="editContent(content.contentId)"
-          >Bearbeiten</ButtonComponent
-        >
+        <ButtonComponent @click="editContent(content.contentId)">{{
+          $t('edit')
+        }}</ButtonComponent>
       </div>
     </ContainerComponent>
   </div>
