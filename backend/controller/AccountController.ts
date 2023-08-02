@@ -32,13 +32,27 @@ export class AccountController {
             );
         }
 
-        if (this.getAccountByEmail(data.mail as string) !== undefined) {
+        if (
+            (
+                await DBUser.find({
+                    where: { mail: data.mail as string },
+                    select: ['mail'],
+                })
+            ).length > 0
+        ) {
             throw new LoernwerkError(
                 'mail already exists',
                 LoernwerkErrorCodes.ALREADY_EXISTS
             );
         }
-        if (this.getAccountByUsername(data.name as string) !== undefined) {
+        if (
+            (
+                await DBUser.find({
+                    where: { name: data.name as string },
+                    select: ['name'],
+                })
+            ).length > 0
+        ) {
             throw new LoernwerkError(
                 'username already exists',
                 LoernwerkErrorCodes.ALREADY_EXISTS
@@ -278,12 +292,20 @@ export class AccountController {
                     'Given information do not satisfy the requirements',
                     LoernwerkErrorCodes.BAD_REQUEST
                 );
-            }
-            if (this.getAccountByUsername(data.name) !== null) {
-                throw new LoernwerkError(
-                    'username already exists',
-                    LoernwerkErrorCodes.INVALID_PARAMETER
-                );
+
+                if (
+                    (
+                        await DBUser.find({
+                            where: { name: data.name as string },
+                            select: ['name'],
+                        })
+                    ).length > 0
+                ) {
+                    throw new LoernwerkError(
+                        'username already exists',
+                        LoernwerkErrorCodes.INVALID_PARAMETER
+                    );
+                }
             }
             dbuser.name = data.name;
         }
@@ -299,12 +321,20 @@ export class AccountController {
                     'Given information do not satisfy the requirements',
                     LoernwerkErrorCodes.BAD_REQUEST
                 );
-            }
-            if (this.getAccountByEmail(data.mail) !== null) {
-                throw new LoernwerkError(
-                    'mail already exists',
-                    LoernwerkErrorCodes.INVALID_PARAMETER
-                );
+
+                if (
+                    (
+                        await DBUser.find({
+                            where: { mail: data.mail as string },
+                            select: ['mail'],
+                        })
+                    ).length > 0
+                ) {
+                    throw new LoernwerkError(
+                        'mail already exists',
+                        LoernwerkErrorCodes.INVALID_PARAMETER
+                    );
+                }
             }
             dbuser.mail = data.mail;
         }
