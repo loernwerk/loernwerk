@@ -5,21 +5,12 @@ import {
     IContentStorage,
     IFileStats,
     ILibraryName,
-    IUser,
     LibraryName,
-    Permission,
 } from '@lumieducation/h5p-server';
 import { Readable } from 'stream';
 import { DBH5PFile } from '../../model/h5p/DBH5PFile';
 import { DBH5PContent } from '../../model/h5p/DBH5PContent';
-import { DBUser } from '../../model/user/DBUser';
-import { DBSequence } from '../../model/sequence/DBSequence';
-import { UserClass } from '../../model/user/IUser';
-import {
-    LoernwerkError,
-    LoernwerkErrorCodes,
-} from '../../model/loernwerkError';
-import { In } from 'typeorm';
+import { H5PUser } from './H5PPermissionSystem';
 
 /**
  * Custom H5P Content storage implementation to use the SQL database.
@@ -39,7 +30,7 @@ export class H5PContentStorage implements IContentStorage {
     public async addContent(
         metadata: IContentMetadata,
         content: unknown,
-        user: IUser,
+        user: H5PUser,
         contentId?: ContentId
     ): Promise<ContentId> {
         const dbContent = new DBH5PContent();
@@ -53,6 +44,7 @@ export class H5PContentStorage implements IContentStorage {
                 dbContent.h5pContentId = contentId;
             }
         }
+        dbContent.owner = user.userId;
         await dbContent.save();
         return dbContent.h5pContentId;
     }
@@ -64,21 +56,12 @@ export class H5PContentStorage implements IContentStorage {
      * @param filename The filename; can be a path including subdirectories
      * (e.g. 'images/xyz.png')
      * @param readStream A readable stream that contains the data
-     * @param user (optional) The user who owns this object
      */
     public async addFile(
         contentId: ContentId,
         filename: string,
-        readStream: Readable,
-        user?: IUser
+        readStream: Readable
     ): Promise<void> {
-        if (user && !(await this.canUserAccessContent(user.id, contentId))) {
-            throw new LoernwerkError(
-                'User is not allowed to edit this content',
-                LoernwerkErrorCodes.FORBIDDEN
-            );
-        }
-
         // Converting the readable to a string
         const chunks = [];
         for await (const chunk of readStream) {
@@ -130,22 +113,8 @@ export class H5PContentStorage implements IContentStorage {
      * Deletes a content object and all its dependent files from the repository.
      * Throws errors if something goes wrong.
      * @param contentId The content id to delete.
-     * @param user The user who wants to delete the content
      */
-    public async deleteContent(
-        contentId: ContentId,
-        user?: IUser
-    ): Promise<void> {
-        if (
-            user &&
-            !(await this.canUserAccessContent(user.id, contentId, true))
-        ) {
-            throw new LoernwerkError(
-                'User is not allowed to edit this content',
-                LoernwerkErrorCodes.FORBIDDEN
-            );
-        }
-
+    public async deleteContent(contentId: ContentId): Promise<void> {
         await DBH5PContent.delete({ h5pContentId: contentId });
         await DBH5PFile.delete({ ownerType: 'content', owner: contentId });
     }
@@ -155,23 +124,11 @@ export class H5PContentStorage implements IContentStorage {
      * @param contentId the content object the file is attached to
      * @param filename the file to delete; can be a path including
      * subdirectories (e.g. 'images/xyz.png')
-     * @param user The user who wants to delete the file
      */
     public async deleteFile(
         contentId: ContentId,
-        filename: string,
-        user?: IUser
+        filename: string
     ): Promise<void> {
-        if (
-            user &&
-            !(await this.canUserAccessContent(user.id, contentId, true))
-        ) {
-            throw new LoernwerkError(
-                'User is not allowed to edit this content',
-                LoernwerkErrorCodes.FORBIDDEN
-            );
-        }
-
         await DBH5PFile.delete({
             ownerType: 'content',
             owner: contentId,
@@ -184,22 +141,13 @@ export class H5PContentStorage implements IContentStorage {
      * piece of content.
      * @param contentId the id of the content object that the file is attached to
      * @param filename the filename of the file to get information about
-     * @param user the user who wants to retrieve the content file
      * @returns FileStats of the requested file
      */
     public async getFileStats(
         contentId: ContentId,
-        filename: string,
-        user: IUser
+        filename: string
     ): Promise<IFileStats> {
-        if (!(await this.canUserAccessContent(user.id, contentId, true))) {
-            throw new LoernwerkError(
-                'User is not allowed to edit this content',
-                LoernwerkErrorCodes.FORBIDDEN
-            );
-        }
-
-        return await DBH5PFile.findOne({
+        return await DBH5PFile.findOneOrFail({
             select: { birthtime: true, size: true },
             where: {
                 ownerType: 'content',
@@ -225,35 +173,28 @@ export class H5PContentStorage implements IContentStorage {
     public async getFileStream(
         contentId: ContentId,
         filename: string,
-        user: IUser,
+        user: H5PUser,
         rangeStart?: number,
         rangeEnd?: number
     ): Promise<Readable> {
-        const file = await DBH5PFile.findOneBy({
+        const file = await DBH5PFile.findOneByOrFail({
             ownerType: 'content',
             owner: contentId,
             filename: filename,
         });
         const buffer = Buffer.from(file.content);
-        const bufferStart = rangeStart | 0;
-        const bufferEnd = rangeEnd | buffer.length;
+        const bufferStart = rangeStart || 0;
+        const bufferEnd = rangeEnd || buffer.length;
         return Readable.from(buffer.subarray(bufferStart, bufferEnd));
     }
 
     /**
      * Returns the content metadata (=h5p.json) for a content id
      * @param contentId the content id for which to retrieve the metadata
-     * @param user (optional) the user who wants to access the metadata. If
-     * undefined, access must be granted.
      * @returns the metadata
      */
-    public async getMetadata(
-        contentId: ContentId,
-        user?: IUser
-    ): Promise<IContentMetadata> {
-        // Since anyone is allowed to view H5P Content, we dont need to check user permissions here
-        void user;
-        const content = await DBH5PContent.findOne({
+    public async getMetadata(contentId: ContentId): Promise<IContentMetadata> {
+        const content = await DBH5PContent.findOneOrFail({
             where: { h5pContentId: contentId },
         });
 
@@ -270,16 +211,11 @@ export class H5PContentStorage implements IContentStorage {
     /**
      * Returns the content object (=content.json) for a content id
      * @param contentId the content id for which to retrieve the metadata
-     * @param user (optional) the user who wants to access the metadata. If
-     * undefined, access must be granted.
      * @returns the content object
      */
     public async getParameters(
-        contentId: ContentId,
-        user?: IUser
+        contentId: ContentId
     ): Promise<ContentParameters> {
-        // Since anyone is allowed to view H5P Content, we dont need to check user permissions here
-        void user;
         const content = await DBH5PContent.findOneBy({
             h5pContentId: contentId,
         });
@@ -327,68 +263,15 @@ export class H5PContentStorage implements IContentStorage {
     }
 
     /**
-     * Returns an array of permissions that the user has on the piece of content
-     * @param contentId the content id to check
-     * @param user the user who wants to access the piece of content
-     * @returns the permissions the user has for this content (e.g. download it,
-     * delete it etc.)
-     */
-    public async getUserPermissions(
-        contentId: ContentId,
-        user: IUser
-    ): Promise<Permission[]> {
-        const allowedPermissions = [Permission.View];
-
-        const content = await DBH5PContent.findOne({
-            where: { h5pContentId: contentId },
-            select: { ownerSequence: true },
-        });
-        if (!content || content.ownerSequence === null) {
-            return allowedPermissions;
-        }
-        const dbUser = await DBUser.findOneByOrFail({ id: parseInt(user.id) });
-        if (dbUser.type === UserClass.ADMIN) {
-            allowedPermissions.push(
-                Permission.Edit,
-                Permission.Delete,
-                Permission.List
-            );
-        }
-
-        const sequence = await DBSequence.findOneByOrFail({
-            code: content.ownerSequence,
-        });
-        if (
-            sequence.authorId === dbUser.id ||
-            sequence.readAccess.includes(dbUser.id) ||
-            sequence.writeAccess.includes(dbUser.id)
-        ) {
-            allowedPermissions.push(
-                Permission.Edit,
-                Permission.Delete,
-                Permission.List
-            );
-        }
-
-        return allowedPermissions;
-    }
-
-    /**
      * Lists the content objects in the system (if no user is specified) or
      * owned by the user.
      * @param user (optional) the user who owns the content
      * @returns a list of contentIds
      */
-    public async listContent(user?: IUser): Promise<ContentId[]> {
-        // Since content isn't owned by individual users here, all we can check is content used by sequences owned by a single user
+    public async listContent(user?: H5PUser): Promise<ContentId[]> {
         if (user) {
-            const sequences = await DBSequence.find({
-                where: { authorId: parseInt(user.id) },
-                select: { code: true },
-            });
-            const sequenceCodes = sequences.map((sequence) => sequence.code);
             const ids = await DBH5PContent.find({
-                where: { ownerSequence: In(sequenceCodes) },
+                where: { owner: user.userId },
                 select: { h5pContentId: true },
             });
             return ids.map((content) => content.h5pContentId);
@@ -404,55 +287,14 @@ export class H5PContentStorage implements IContentStorage {
      * Gets the filenames of files added to the content with addFile(...) (e.g.
      * images, videos or other files)
      * @param contentId the piece of content
-     * @param user the user who wants to access the piece of content
      * @returns a list of files that are used in the piece of content, e.g.
      * ['images/image1.png', 'videos/video2.mp4', 'file.xyz']
      */
-    public async listFiles(
-        contentId: ContentId,
-        user: IUser
-    ): Promise<string[]> {
-        // Since all users are allowed to view H5P, I dont think access control is needed here
-        void user;
+    public async listFiles(contentId: ContentId): Promise<string[]> {
         const files = await DBH5PFile.find({
             select: { filename: true },
             where: { ownerType: 'content', owner: contentId },
         });
         return files.map((file) => file.filename);
-    }
-
-    /**
-     * Checks whether a user can access specific H5P content, by checking the owner/read-write-permissions/admin privileges.
-     * @param userId User id to check
-     * @param contentId Content id to check
-     * @param adminAllowed Whether admin privilages are also allowed
-     * @returns true, if the user specified by the user id is allowed to access this content
-     * @private
-     */
-    private async canUserAccessContent(
-        userId: string,
-        contentId: string,
-        adminAllowed?: boolean
-    ): Promise<boolean> {
-        const content = await DBH5PContent.findOne({
-            where: { h5pContentId: contentId },
-            select: { ownerSequence: true },
-        });
-        if (!content || content.ownerSequence === null) {
-            return true;
-        }
-        const user = await DBUser.findOneByOrFail({ id: parseInt(userId) });
-        if (adminAllowed && user.type === UserClass.ADMIN) {
-            return true;
-        }
-
-        const sequence = await DBSequence.findOneByOrFail({
-            code: content.ownerSequence,
-        });
-        return (
-            sequence.readAccess.includes(user.id) ||
-            sequence.writeAccess.includes(user.id) ||
-            sequence.authorId === user.id
-        );
     }
 }

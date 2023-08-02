@@ -5,7 +5,7 @@ import { DBUser } from '../model/user/DBUser';
 import 'reflect-metadata';
 import 'dotenv/config';
 import { DBH5PFile } from '../model/h5p/DBH5PFile';
-import { DBH5PContent } from '../model/h5p/DBH5PContent';
+import { DBH5PContent, DBH5PContentUsedBy } from '../model/h5p/DBH5PContent';
 import { DBH5PLibrary } from '../model/h5p/DBH5PLibrary';
 import { DBConfigEntry } from '../model/configuration/DBConfigEntry';
 
@@ -34,6 +34,7 @@ export class DatabaseServer {
                 DBH5PFile,
                 DBH5PContent,
                 DBH5PLibrary,
+                DBH5PContentUsedBy,
                 DBConfigEntry,
             ],
         });

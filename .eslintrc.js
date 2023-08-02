@@ -21,13 +21,6 @@ module.exports = {
                 sourceType: "script",
             },
         },
-        {
-            files: ["frontend/**/*.{ts,vue,html}"],
-            rules: {
-                "indent": ["error", 2, { "SwitchCase": 1, "ObjectExpression": "first", "ArrayExpression": "first", "MemberExpression": "off", "ignoredNodes": ["ClassBody.body > PropertyDefinition[decorators.length > 0] > .key"] }],
-                "@typescript-eslint/indent": ["error", 2, { "SwitchCase": 1, "ObjectExpression": "first", "ArrayExpression": "first", "MemberExpression": "off" }],
-            }
-        }
     ],
     parserOptions: {
         ecmaVersion: "latest",
@@ -37,6 +30,7 @@ module.exports = {
     plugins: ["@typescript-eslint", "vue", "jsdoc"],
     rules: {
         "indent": "off",
+        "@typescript-eslint/indent": "off",
         "no-duplicate-imports": "warn",
         "no-self-compare": "warn",
         "no-unmodified-loop-condition": "warn",
@@ -52,7 +46,6 @@ module.exports = {
         "block-spacing": "error",
         "@typescript-eslint/brace-style": ["error", "1tbs", { "allowSingleLine": true }],
         "comma-spacing": ["error", { "before": false, "after": true }],
-        "@typescript-eslint/indent": ["error", 4, { "SwitchCase": 1, "ObjectExpression": "first", "ArrayExpression": "first", "MemberExpression": "off", "ignoredNodes": ["ClassBody.body > PropertyDefinition[decorators.length > 0] > .key", "TSTypeParameterInstantiation"] }],
         "no-trailing-spaces": ["warn", {"skipBlankLines": true, "ignoreComments": true}],
         "@typescript-eslint/explicit-function-return-type": "error",
         semi: ["warn", "always"],
