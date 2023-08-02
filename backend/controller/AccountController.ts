@@ -5,6 +5,7 @@ import crypto from 'crypto';
 import {
     LoernwerkError,
     LoernwerkErrorCodes,
+    LoernwerkErrorMessages,
 } from '../../model/loernwerkError';
 import { DBSequence } from '../../model/sequence/DBSequence';
 import { SequenceController } from './SequenceController';
@@ -27,7 +28,7 @@ export class AccountController {
             data.password === null
         ) {
             throw new LoernwerkError(
-                'Insufficent User Details',
+                LoernwerkErrorMessages.INSUFFICENT_USER_DETAILS,
                 LoernwerkErrorCodes.INSUFFICENT_INFORMATION
             );
         }
@@ -41,7 +42,7 @@ export class AccountController {
             ).length > 0
         ) {
             throw new LoernwerkError(
-                'mail already exists',
+                LoernwerkErrorMessages.MAIL_ALREADY_EXISTS,
                 LoernwerkErrorCodes.ALREADY_EXISTS
             );
         }
@@ -54,7 +55,7 @@ export class AccountController {
             ).length > 0
         ) {
             throw new LoernwerkError(
-                'username already exists',
+                LoernwerkErrorMessages.USERNAME_ALREADY_EXISTS,
                 LoernwerkErrorCodes.ALREADY_EXISTS
             );
         }
@@ -66,7 +67,7 @@ export class AccountController {
             )
         ) {
             throw new LoernwerkError(
-                'Given information do not satisfy the requirements',
+                LoernwerkErrorMessages.INFORMATION_DOES_NOT_SATISFY_REQUIREMENTS,
                 LoernwerkErrorCodes.BAD_REQUEST
             );
         }
@@ -104,12 +105,12 @@ export class AccountController {
         }
         if (users.length > 1) {
             throw new LoernwerkError(
-                'ambiguous user details',
+                LoernwerkErrorMessages.AMBIGUOUS_USER_DETAILS,
                 LoernwerkErrorCodes.AMBIGUOUS_INFORMATION
             );
         } else if (users.length === 0) {
             throw new LoernwerkError(
-                'Mail/Name not matching an existing User',
+                LoernwerkErrorMessages.USER_NOT_FOUND,
                 LoernwerkErrorCodes.NOT_FOUND
             );
         } else {
@@ -118,7 +119,7 @@ export class AccountController {
                 return founduser;
             }
             throw new LoernwerkError(
-                'Incorrect Password',
+                LoernwerkErrorMessages.USER_NOT_FOUND,
                 LoernwerkErrorCodes.NOT_FOUND
             );
         }
@@ -133,7 +134,7 @@ export class AccountController {
         const user = await DBUser.findOneBy({ id: id });
         if (user === null) {
             throw new LoernwerkError(
-                'No existing User with given ID',
+                LoernwerkErrorMessages.USER_NOT_FOUND,
                 LoernwerkErrorCodes.NOT_FOUND
             );
         }
@@ -149,7 +150,7 @@ export class AccountController {
         const user = await DBUser.findOneBy({ name: username });
         if (user === null) {
             throw new LoernwerkError(
-                'No existing User with given name',
+                LoernwerkErrorMessages.USER_NOT_FOUND,
                 LoernwerkErrorCodes.NOT_FOUND
             );
         }
@@ -165,7 +166,7 @@ export class AccountController {
         const user = await DBUser.findOneBy({ mail: email });
         if (user === null) {
             throw new LoernwerkError(
-                'No existing User with given mail',
+                LoernwerkErrorMessages.USER_NOT_FOUND,
                 LoernwerkErrorCodes.NOT_FOUND
             );
         }
@@ -195,7 +196,7 @@ export class AccountController {
         });
         if (user === null) {
             throw new LoernwerkError(
-                'No existing User with given ID',
+                LoernwerkErrorMessages.USER_NOT_FOUND,
                 LoernwerkErrorCodes.NOT_FOUND
             );
         }
@@ -265,7 +266,7 @@ export class AccountController {
         const dbuser = await DBUser.findOneBy({ id: data.id });
         if (dbuser === null) {
             throw new LoernwerkError(
-                'No such existing User',
+                LoernwerkErrorMessages.USER_NOT_FOUND,
                 LoernwerkErrorCodes.NOT_FOUND
             );
         }
@@ -289,7 +290,7 @@ export class AccountController {
                 )
             ) {
                 throw new LoernwerkError(
-                    'Given information do not satisfy the requirements',
+                    LoernwerkErrorMessages.INFORMATION_DOES_NOT_SATISFY_REQUIREMENTS,
                     LoernwerkErrorCodes.BAD_REQUEST
                 );
             }
@@ -304,7 +305,7 @@ export class AccountController {
                 )
             ) {
                 throw new LoernwerkError(
-                    'Given information do not satisfy the requirements',
+                    LoernwerkErrorMessages.INFORMATION_DOES_NOT_SATISFY_REQUIREMENTS,
                     LoernwerkErrorCodes.BAD_REQUEST
                 );
             }
@@ -313,7 +314,7 @@ export class AccountController {
         if (data.password != null) {
             if (!this.isValidPassword(data.password)) {
                 throw new LoernwerkError(
-                    'Given information do not satisfy the requirements',
+                    LoernwerkErrorMessages.INFORMATION_DOES_NOT_SATISFY_REQUIREMENTS,
                     LoernwerkErrorCodes.BAD_REQUEST
                 );
             }
