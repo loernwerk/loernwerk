@@ -89,4 +89,12 @@ export class H5PRestInterface extends BaseRestInterface {
       return await this.get<H5POverviewItem[]>(`${this.h5p_path}list`);
     }
   }
+
+  /**
+   * Sends a request to delete H5P content.
+   * @param contentId id of the content to delete
+   */
+  public static async deleteH5PContent(contentId: string): Promise<void> {
+    await this.delete(`${this.h5p_path}`, { id: contentId });
+  }
 }

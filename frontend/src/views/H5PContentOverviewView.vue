@@ -1,10 +1,7 @@
 <template>
   <div v-if="currentlyEditing !== null" class="absolute">
     <ContainerComponent class="fixed top-3 bottom-3 left-3 right-3 z-10">
-      <H5PEditor
-        :content-id="currentlyEditing"
-        @closed="currentlyEditing = null"
-      />
+      <H5PEditor :content-id="currentlyEditing" @closed="finishEditing()" />
     </ContainerComponent>
   </div>
 
@@ -20,10 +17,16 @@
         <h3 class="text-3xl">{{ content.title }}</h3>
         <div class="h-full pt-2">{{ content.mainLibrary }}</div>
         <div class="flex-grow pt-2">
-          Verwendete Sequenzen: {{ content.usedSequences.join(', ') }}
+          <span v-if="content.usedSequences.length > 0">
+            Verwendete Sequenzen: {{ content.usedSequences.join(', ') }}
+          </span>
         </div>
-        <ButtonComponent>Löschen</ButtonComponent>
-        <ButtonComponent @click="currentlyEditing = content.contentId"
+        <ButtonComponent
+          v-if="content.usedSequences.length === 0"
+          @click="deleteContent(content.contentId)"
+          >Löschen</ButtonComponent
+        >
+        <ButtonComponent @click="editContent(content.contentId)"
           >Bearbeiten</ButtonComponent
         >
       </div>
@@ -39,6 +42,30 @@ import ContainerComponent from '../components/ContainerComponent.vue';
 import H5PEditor from '../components/contentDisplay/H5PEditor.vue';
 
 const contents = ref(await H5PRestInterface.getH5PContentList());
-
 const currentlyEditing: Ref<string | null> = ref(null);
+
+/**
+ * Opens supplied H5P content in the integrated editor.
+ * @param contentId H5P content to open
+ */
+function editContent(contentId: string): void {
+  currentlyEditing.value = contentId;
+}
+
+/**
+ * Closes the H5P editor and updates the list.
+ */
+async function finishEditing(): Promise<void> {
+  currentlyEditing.value = null;
+  contents.value = await H5PRestInterface.getH5PContentList();
+}
+
+/**
+ * Deletes H5P content.
+ * @param contentId Id of the content to delete
+ */
+async function deleteContent(contentId: string): Promise<void> {
+  await H5PRestInterface.deleteH5PContent(contentId);
+  contents.value = await H5PRestInterface.getH5PContentList();
+}
 </script>

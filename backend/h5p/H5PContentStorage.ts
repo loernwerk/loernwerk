@@ -33,17 +33,26 @@ export class H5PContentStorage implements IContentStorage {
         user: H5PUser,
         contentId?: ContentId
     ): Promise<ContentId> {
-        const dbContent = new DBH5PContent();
-        Object.assign(dbContent, metadata);
-        dbContent.content = content;
+        const dbContent: DBH5PContent = new DBH5PContent();
+
         if (contentId !== undefined) {
-            const existingContent = await DBH5PContent.findOneBy({
-                h5pContentId: contentId,
+            const existingContent = await DBH5PContent.findOne({
+                where: { h5pContentId: contentId },
+                select: ['owner'],
             });
             if (existingContent === null) {
                 dbContent.h5pContentId = contentId;
+            } else {
+                if (user.userId === existingContent.owner) {
+                    // Owner trying to replace the existing content
+                    this.deleteContent(contentId);
+                    dbContent.h5pContentId = contentId;
+                }
             }
         }
+
+        Object.assign(dbContent, metadata);
+        dbContent.content = content;
         dbContent.owner = user.userId;
         await dbContent.save();
         return dbContent.h5pContentId;
