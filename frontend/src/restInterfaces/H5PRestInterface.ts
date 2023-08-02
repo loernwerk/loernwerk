@@ -85,7 +85,7 @@ export class H5PRestInterface extends BaseRestInterface {
    * @returns List of all h5p contents of the supplied user
    */
   public static async getH5PContentList(
-    userId?: string
+    userId?: number
   ): Promise<H5POverviewItem[]> {
     if (userId) {
       return await this.get<H5POverviewItem[]>(
