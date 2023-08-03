@@ -94,6 +94,8 @@ const messages = {
       closed: 'Registrierung durch Admin',
       invite: 'Registrierung durch Einladungscodes',
       config: 'Einstellungen',
+      autodeleteUnusedH5P:
+        'Ungenutze H5P-Inhalte bei Sequenz-Bearbeitung oder -Löschung automatisch löschen',
     },
     navBar: {
       overview: 'Sequenzübersicht',
@@ -201,6 +203,8 @@ const messages = {
       closed: 'Only admins can add new users',
       invite: 'Registration through invitecodes',
       config: 'Settings',
+      autodeleteUnusedH5P:
+        'Delete unused H5P contents upon saving or deleting a sequence',
     },
     navBar: {
       overview: 'Sequenceoverview',

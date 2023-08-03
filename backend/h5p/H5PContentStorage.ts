@@ -45,7 +45,7 @@ export class H5PContentStorage implements IContentStorage {
             } else {
                 if (user.userId === existingContent.owner) {
                     // Owner trying to replace the existing content
-                    this.deleteContent(contentId);
+                    await this.deleteContent(contentId);
                     dbContent.h5pContentId = contentId;
                 }
             }

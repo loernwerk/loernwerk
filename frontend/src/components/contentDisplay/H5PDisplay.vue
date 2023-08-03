@@ -53,7 +53,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, Ref, ref } from 'vue';
+import { PropType, Ref, ref, watch } from 'vue';
 import { H5PContent } from '../../../../model/slide/content/H5PContent';
 import H5PEditor from './H5PEditor.vue';
 import H5PPlayer from './H5PPlayer.vue';
@@ -114,12 +114,20 @@ function openEditor(): void {
  * Saves the editor and returns the new content id to the backend
  * @param id ID to return. Is undefined, if the editor was closed without saving.
  */
-function saveEditor(id: string | undefined): void {
+async function saveEditor(id: string | undefined): Promise<void> {
   if (props.editMode) {
     isEditorOpen.value = false;
     if (id !== undefined) {
       emits('editing', id);
     }
+    reusable.value = await H5PRestInterface.getH5PContentList();
   }
 }
+
+watch(
+  () => props.h5pContent,
+  () => {
+    toEdit.value = props.h5pContent.h5pContentId;
+  }
+);
 </script>
