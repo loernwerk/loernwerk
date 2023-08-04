@@ -6,7 +6,11 @@ import { findComponentByText } from './TestUtilities';
 
 describe('AccountList', () => {
     test('Click "Create new user" button', async () => {
-        const wrapper = mount(AccountList, {});
+        const wrapper = mount(AccountList, {
+            props: {
+                accounts: [],
+            },
+        });
 
         findComponentByText(wrapper, ButtonComponentVue, 'create')?.vm.$emit(
             'click'

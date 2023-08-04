@@ -33,7 +33,6 @@ describe('AccountCreationContainer', () => {
             },
             undefined
         );
-        console.log(wrapper.emitted());
         expect(wrapper.emitted()).toHaveProperty('create');
     });
 
