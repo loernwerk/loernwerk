@@ -3,6 +3,10 @@ import { describe, test, vi } from 'vitest';
 import AccountCreationContainer from '../../frontend/src/components/admin/AccountCreationContainer.vue';
 import ButtonComponentVue from '../../frontend/src/components/ButtonComponent.vue';
 import { AccountRestInterface } from '../../frontend/src/restInterfaces/AccountRestInterface';
+import {
+    LoernwerkError,
+    LoernwerkErrorCodes,
+} from '../../model/loernwerkError';
 
 describe('AccountCreationContainer', () => {
     test('Creates new user with inputted details', async () => {
@@ -34,6 +38,14 @@ describe('AccountCreationContainer', () => {
     });
 
     test('Creates invalid user and show error', async () => {
+        const addAccount = vi.spyOn(AccountRestInterface, 'addAccount');
+        addAccount.mockImplementationOnce(() => {
+            throw new LoernwerkError(
+                'Invalid Input',
+                LoernwerkErrorCodes.INVALID_PARAMETER
+            );
+        });
+
         const wrapper = mount(AccountCreationContainer, {});
 
         const table = wrapper.find('table').findAll('input');
@@ -45,11 +57,13 @@ describe('AccountCreationContainer', () => {
         wrapper.getComponent(ButtonComponentVue).vm.$emit('click');
         await flushPromises();
 
+        expect(addAccount).toBeCalledTimes(1);
         expect(wrapper.html()).toContain('text-error');
     });
 
     test('Create user with unequal passwords', async () => {
         const wrapper = mount(AccountCreationContainer, {});
+        const addAccount = vi.spyOn(AccountRestInterface, 'addAccount');
 
         const table = wrapper.find('table').findAll('input');
         const inputArray = ['a', 'a@x.de', '12345678', '87654321'];
@@ -60,10 +74,12 @@ describe('AccountCreationContainer', () => {
         wrapper.getComponent(ButtonComponentVue).vm.$emit('click');
         await flushPromises();
 
+        expect(addAccount).toHaveBeenCalledTimes(0);
         expect(wrapper.html()).toContain('text-error');
     });
 
     test('Create user with not accepted email format', async () => {
+        const addAccount = vi.spyOn(AccountRestInterface, 'addAccount');
         const wrapper = mount(AccountCreationContainer, {});
 
         const table = wrapper.find('table').findAll('input');
@@ -75,6 +91,7 @@ describe('AccountCreationContainer', () => {
         wrapper.getComponent(ButtonComponentVue).vm.$emit('click');
         await flushPromises();
 
+        expect(addAccount).toHaveBeenCalledTimes(0);
         expect(wrapper.html()).toContain('text-error');
     });
 
