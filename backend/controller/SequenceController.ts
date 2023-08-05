@@ -553,6 +553,9 @@ export class SequenceController {
             const contentId = entryToRemove.h5pContentId;
             await entryToRemove.remove();
             if (
+                (await ConfigController.getConfigEntry(
+                    ConfigKey.AUTODELETE_UNUSED_H5P
+                )) &&
                 (
                     await DBH5PContentUsedBy.findBy({
                         h5pContentId: contentId,

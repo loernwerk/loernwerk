@@ -3,12 +3,15 @@
     <div class="flex flex-col space-y-5">
       <h5p-editor ref="editor" :content-id="contentId" class="grow" />
       <div class="flex items-center">
-        <ButtonComponent class="w-fit" :loading="currentlySaving" @click="save"
-          >Save</ButtonComponent
+        <ButtonComponent
+          class="w-fit"
+          :loading="currentlySaving"
+          @click="save"
+          >{{ $t('save') }}</ButtonComponent
         >
-        <ButtonComponent class="w-fit ml-1" @click="close"
-          >Close</ButtonComponent
-        >
+        <ButtonComponent class="w-fit ml-1" @click="close">{{
+          $t('cancel')
+        }}</ButtonComponent>
       </div>
     </div>
   </ContainerComponent>
@@ -24,6 +27,7 @@ import { onMounted, Ref, ref } from 'vue';
 import { H5PRestInterface } from '../../restInterfaces/H5PRestInterface';
 import ButtonComponent from '../ButtonComponent.vue';
 import ContainerComponent from '../ContainerComponent.vue';
+import { i18n } from '../../i18n';
 
 defineProps({
   /**
@@ -55,7 +59,10 @@ onMounted(() => {
     h5pEditor.loadContentCallback = async (
       contentId: string
     ): Promise<IEditorModel> => {
-      return await H5PRestInterface.getH5PContent(contentId);
+      return await H5PRestInterface.getH5PContent(
+        contentId,
+        i18n.global.locale
+      );
     };
 
     h5pEditor.saveContentCallback = async (

@@ -8,7 +8,7 @@ import {
 import { H5PServer } from '../h5p/H5PServer';
 import { IEditorModel } from '@lumieducation/h5p-server';
 import { H5PUser } from '../h5p/H5PPermissionSystem';
-import { DBH5PContentUsedBy } from '../../model/h5p/DBH5PContent';
+import { DBH5PContent, DBH5PContentUsedBy } from '../../model/h5p/DBH5PContent';
 
 /**
  * Builds router for requests regarding H5P management
@@ -153,7 +153,7 @@ export class H5PRouterFactory extends RouterFactory {
             }
         });
 
-        h5pRouter.get('/list', async (req, res) => {
+        h5pRouter.get('/list', requireLogin, async (req, res) => {
             let userId = req.session.userId as number;
             if (req.query.id && req.session.isAdmin) {
                 userId = parseInt(req.query.id as string);
@@ -205,6 +205,50 @@ export class H5PRouterFactory extends RouterFactory {
                 res.status(500).send((e as Error).message);
             }
         });
+
+        h5pRouter.delete(
+            '/',
+            requireLogin,
+            requireBody('id'),
+            buildH5PRequest,
+            async (req, res) => {
+                // Check for ownership
+                const content = await DBH5PContent.findOne({
+                    where: { h5pContentId: req.body.id },
+                    select: ['owner'],
+                });
+                if (!content) {
+                    res.status(404).send();
+                    return;
+                }
+                if (
+                    content.owner !== req.session.userId &&
+                    !req.session.isAdmin
+                ) {
+                    res.status(403).send();
+                    return;
+                }
+
+                // Check if content used anywhere
+                const usages = await DBH5PContentUsedBy.find({
+                    where: { h5pContentId: req.body.id },
+                    select: ['sequenceCode'],
+                });
+                if (usages.length !== 0) {
+                    res.status(400).send();
+                    return;
+                }
+
+                try {
+                    await H5PServer.getInstance()
+                        .getH5PEditor()
+                        .contentManager.deleteContent(req.body.id, req.user);
+                    res.status(204).send();
+                } catch (e) {
+                    res.status(500).send((e as Error).message);
+                }
+            }
+        );
 
         return h5pRouter;
     }

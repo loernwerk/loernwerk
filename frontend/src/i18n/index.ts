@@ -94,12 +94,21 @@ const messages = {
       closed: 'Registrierung durch Admin',
       invite: 'Registrierung durch Einladungscodes',
       config: 'Einstellungen',
+      autodeleteUnusedH5P:
+        'Ungenutze H5P-Inhalte bei Sequenz-Bearbeitung oder -Löschung automatisch löschen',
     },
     navBar: {
       overview: 'Sequenzübersicht',
       admin: 'Admin',
       sequenceEdit: 'Sequenzbearbeitung',
       h5pOverview: 'H5P-Inhalte',
+    },
+    h5p: {
+      clickToEdit: 'Klicke um den Inhalt zu bearbeiten',
+      createNewContent: 'Neuen H5P-Inhalt erstellen',
+      usedBy: 'verwendet von {object} Sequenzen',
+      overviewTitle: 'Erstellter H5P-Inhalt',
+      usedSequences: 'Verwendete Sequenzen',
     },
   },
   en: {
@@ -194,12 +203,21 @@ const messages = {
       closed: 'Only admins can add new users',
       invite: 'Registration through invitecodes',
       config: 'Settings',
+      autodeleteUnusedH5P:
+        'Delete unused H5P contents upon saving or deleting a sequence',
     },
     navBar: {
       overview: 'Sequenceoverview',
       admin: 'Admin',
       sequenceEdit: 'Edit sequence',
       h5pOverview: 'H5P contents',
+    },
+    h5p: {
+      clickToEdit: 'Click to edit the content',
+      createNewContent: 'Create new H5P-Content',
+      usedBy: 'used by {object} sequences',
+      overviewTitle: 'Created H5P-Content',
+      usedSequences: 'Used Sequences',
     },
   },
 };

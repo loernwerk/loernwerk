@@ -29,6 +29,8 @@ export class ConfigTypeMap {
                 return { type: 'string' };
             case ConfigKey.REGISTRATION_CODES_EXPIRES_AFTER_USE:
                 return { type: 'boolean' };
+            case ConfigKey.AUTODELETE_UNUSED_H5P:
+                return { type: 'boolean' };
             default:
                 throw new LoernwerkError(
                     'Unknown config key',

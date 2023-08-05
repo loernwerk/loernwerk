@@ -38,10 +38,16 @@ export class H5PRestInterface extends BaseRestInterface {
   /**
    * Sends a request to backend to get H5P content for editing
    * @param contentId Internal id of the content to edit
+   * @param language Optional language to use
    * @returns H5P content for editing
    */
-  public static async getH5PContent(contentId: string): Promise<IEditorModel> {
-    return await this.get<IEditorModel>(`${this.h5p_path}${contentId}/edit`);
+  public static async getH5PContent(
+    contentId: string,
+    language?: string
+  ): Promise<IEditorModel> {
+    return await this.get<IEditorModel>(
+      `${this.h5p_path}${contentId}/edit?lang=${language}`
+    );
   }
 
   /**
@@ -79,7 +85,7 @@ export class H5PRestInterface extends BaseRestInterface {
    * @returns List of all h5p contents of the supplied user
    */
   public static async getH5PContentList(
-    userId?: string
+    userId?: number
   ): Promise<H5POverviewItem[]> {
     if (userId) {
       return await this.get<H5POverviewItem[]>(
@@ -88,5 +94,13 @@ export class H5PRestInterface extends BaseRestInterface {
     } else {
       return await this.get<H5POverviewItem[]>(`${this.h5p_path}list`);
     }
+  }
+
+  /**
+   * Sends a request to delete H5P content.
+   * @param contentId id of the content to delete
+   */
+  public static async deleteH5PContent(contentId: string): Promise<void> {
+    await this.delete(`${this.h5p_path}`, { id: contentId });
   }
 }

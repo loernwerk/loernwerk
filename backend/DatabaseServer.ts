@@ -8,6 +8,7 @@ import { DBH5PFile } from '../model/h5p/DBH5PFile';
 import { DBH5PContent, DBH5PContentUsedBy } from '../model/h5p/DBH5PContent';
 import { DBH5PLibrary } from '../model/h5p/DBH5PLibrary';
 import { DBConfigEntry } from '../model/configuration/DBConfigEntry';
+import { H5PReusability1691157808340 } from './db_migrations/1691157808340-H5P-Reusability';
 
 /**
  * Handles database connection for the backend server.
@@ -37,6 +38,7 @@ export class DatabaseServer {
                 DBH5PContentUsedBy,
                 DBConfigEntry,
             ],
+            migrations: [H5PReusability1691157808340],
         });
 
         console.log(`Loaded database file: ${database}`);
@@ -58,8 +60,18 @@ export class DatabaseServer {
      */
     public async initialize(): Promise<void> {
         await this.db.initialize();
-        await this.db.synchronize();
         console.log('Database connection established.');
+
+        const migrations = await this.db.runMigrations();
+        if (migrations.length > 0) {
+            console.log(
+                `Successfully ran ${migrations.length} migrations: ${migrations
+                    .map((migration) => migration.name)
+                    .join(', ')}`
+            );
+        }
+
+        await this.db.synchronize();
     }
 
     /**

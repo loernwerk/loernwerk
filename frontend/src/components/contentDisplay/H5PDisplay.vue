@@ -5,15 +5,19 @@
         <ContainerComponent class="fixed top-3 bottom-3 left-3 right-3 z-10">
           <InteractableComponent class="w-fit mb-3">
             <select v-model="toEdit" class="text-xl">
-              <option selected value="new">Neuen H5P-Inhalt erstellen</option>
+              <option selected value="new">
+                {{ $t('h5p.createNewContent') }}
+              </option>
               <option
                 v-for="content in reusable"
                 :key="content.contentId"
                 :value="content.contentId"
                 class="text-xl"
               >
-                {{ content.title }} ({{ content.mainLibrary }}, verwendet von
-                {{ content.usedSequences.length }} Sequenzen)
+                {{ content.title }} ({{ content.mainLibrary }},
+                {{
+                  $t('h5p.usedBy', { object: content.usedSequences.length })
+                }})
               </option>
             </select>
           </InteractableComponent>
@@ -36,7 +40,7 @@
             class="max-w-[75%] max-h-[50%] w-auto h-auto"
           />
           <p class="text-center text-base mt-5 text-black">
-            Klicke um den Inhalt zu bearbeiten
+            {{ $t('h5p.clickToEdit') }}
           </p>
         </div>
       </div>
@@ -49,7 +53,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, Ref, ref } from 'vue';
+import { PropType, Ref, ref, watch } from 'vue';
 import { H5PContent } from '../../../../model/slide/content/H5PContent';
 import H5PEditor from './H5PEditor.vue';
 import H5PPlayer from './H5PPlayer.vue';
@@ -110,12 +114,20 @@ function openEditor(): void {
  * Saves the editor and returns the new content id to the backend
  * @param id ID to return. Is undefined, if the editor was closed without saving.
  */
-function saveEditor(id: string | undefined): void {
+async function saveEditor(id: string | undefined): Promise<void> {
   if (props.editMode) {
     isEditorOpen.value = false;
     if (id !== undefined) {
       emits('editing', id);
     }
+    reusable.value = await H5PRestInterface.getH5PContentList();
   }
 }
+
+watch(
+  () => props.h5pContent,
+  () => {
+    toEdit.value = props.h5pContent.h5pContentId;
+  }
+);
 </script>
