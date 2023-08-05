@@ -46,11 +46,17 @@ describe('AccountDetailsEditContainer', () => {
         });
 
         const inputs = wrapper.findAll('input');
-        const expectedValues = ['Han Solo', 'solo@loernwerk.de', '', '', 'on'];
+        const expectedValues = ['Han Solo', 'solo@loernwerk.de', '', '', true];
         for (const inputIndex in inputs) {
-            expect(inputs[inputIndex].element.value).toBe(
-                expectedValues[inputIndex]
-            );
+            if (inputs[inputIndex].attributes('type') === 'checkbox') {
+                expect(inputs[inputIndex].element.checked).toBe(
+                    expectedValues[inputIndex]
+                );
+            } else {
+                expect(inputs[inputIndex].element.value).toBe(
+                    expectedValues[inputIndex]
+                );
+            }
         }
     });
 
@@ -246,18 +252,24 @@ describe('AccountDetailsEditContainer', () => {
         });
 
         let inputs = wrapper.findAll('input');
-        let expectedValues = ['Han Solo', 'solo@loernwerk.de', '', '', 'on'];
+        let expectedValues = ['Han Solo', 'solo@loernwerk.de', '', '', true];
         for (const inputIndex in inputs) {
-            expect(inputs[inputIndex].element.value).toBe(
-                expectedValues[inputIndex]
-            );
+            if (inputs[inputIndex].attributes('type') === 'checkbox') {
+                expect(inputs[inputIndex].element.checked).toBe(
+                    expectedValues[inputIndex]
+                );
+            } else {
+                expect(inputs[inputIndex].element.value).toBe(
+                    expectedValues[inputIndex]
+                );
+            }
         }
 
         wrapper.setProps({
             user: {
                 name: 'Luke Skywalker',
                 mail: 'lskywalker@loernwerk.de',
-                type: UserClass.ADMIN,
+                type: UserClass.REGULAR,
                 id: 3,
             },
             showadminview: true,
@@ -270,12 +282,18 @@ describe('AccountDetailsEditContainer', () => {
             'lskywalker@loernwerk.de',
             '',
             '',
-            'on',
+            false,
         ];
         for (const inputIndex in inputs) {
-            expect(inputs[inputIndex].element.value).toBe(
-                expectedValues[inputIndex]
-            );
+            if (inputs[inputIndex].attributes('type') === 'checkbox') {
+                expect(inputs[inputIndex].element.checked).toBe(
+                    expectedValues[inputIndex]
+                );
+            } else {
+                expect(inputs[inputIndex].element.value).toBe(
+                    expectedValues[inputIndex]
+                );
+            }
         }
     });
 });
