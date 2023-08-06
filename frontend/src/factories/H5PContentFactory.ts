@@ -14,7 +14,6 @@ export class H5PContentFactory extends AbstractContentFactory {
   public buildContent(json: unknown): H5PContent {
     const h5pContent = new H5PContent();
     h5pContent.h5pContentId = (json as H5PContent).h5pContentId;
-    h5pContent.sequenceCode = (json as H5PContent).sequenceCode;
     return h5pContent;
   }
 }
