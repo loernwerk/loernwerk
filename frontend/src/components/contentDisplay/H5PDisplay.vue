@@ -4,7 +4,7 @@
       <div class="absolute" v-if="isEditorOpen">
         <ContainerComponent class="fixed top-3 bottom-3 left-3 right-3 z-10">
           <InteractableComponent class="w-fit mb-3">
-            <select v-model="toEdit" class="text-xl">
+            <select v-model="toEdit" class="text-xl bg-interactable">
               <option selected value="new">
                 {{ $t('h5p.createNewContent') }}
               </option>

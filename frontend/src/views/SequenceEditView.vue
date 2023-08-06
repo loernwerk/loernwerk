@@ -52,7 +52,7 @@
 
         <template v-slot:[getTab(2)]>
           <TextOptionsTab
-            :key="selectedSlideIndex"
+            :key="forceRefresh"
             :selected-slot="
               currentEditingSlot != null ? currentEditingSlot : undefined
             "
@@ -61,7 +61,7 @@
       </TabbedContainer>
       <div class="grow flex items-center justify-center relative">
         <SlideDisplayFactory
-          :key="selectedSlideIndex"
+          :key="forceRefresh"
           :slide="selectedSlide"
           :edit-mode="true"
           class="h-full absolute"
@@ -117,6 +117,7 @@ const props = defineProps({
 
 const isSaved = ref(false);
 const disableButton = ref(false);
+const forceRefresh = ref(0);
 
 onMounted(() => {
   window.addEventListener('beforeunload', onUnloadEventListener);
@@ -178,6 +179,7 @@ function updateContent(slot: LayoutSlot, update: unknown): void {
     if (update !== undefined) {
       (selectedSlide.value.content[slot] as H5PContent).h5pContentId =
         update as string;
+      forceRefresh.value++;
     }
   }
 }
@@ -226,6 +228,7 @@ function changeContent(slot: LayoutSlot, contentType: ContentType): void {
  */
 function changeSelectedSlide(index: number): void {
   selectedSlideIndex.value = index;
+  forceRefresh.value++;
   currentEditingSlot.value = null;
   editOptionsTabContainer.value?.selectTab('Seite');
 }
