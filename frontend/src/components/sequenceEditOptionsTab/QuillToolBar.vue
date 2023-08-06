@@ -22,7 +22,7 @@
         </ButtonComponent>
         <span
           class="space-x-1 interactable !flex-row w-fit !h-fit"
-          :class="{ hidden: !showColorPicker }"
+          v-show="showColorPicker"
         >
           <button
             v-for="color in colors"
