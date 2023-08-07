@@ -10,8 +10,6 @@ import {
 import { Readable } from 'stream';
 import { DBH5PFile } from '../../model/h5p/DBH5PFile';
 import { DBH5PContent } from '../../model/h5p/DBH5PContent';
-import { DBSequence } from '../../model/sequence/DBSequence';
-import { In } from 'typeorm';
 import { H5PUser } from './H5PPermissionSystem';
 
 /**
@@ -35,17 +33,27 @@ export class H5PContentStorage implements IContentStorage {
         user: H5PUser,
         contentId?: ContentId
     ): Promise<ContentId> {
-        const dbContent = new DBH5PContent();
-        Object.assign(dbContent, metadata);
-        dbContent.content = content;
+        const dbContent: DBH5PContent = new DBH5PContent();
+
         if (contentId !== undefined) {
-            const existingContent = await DBH5PContent.findOneBy({
-                h5pContentId: contentId,
+            const existingContent = await DBH5PContent.findOne({
+                where: { h5pContentId: contentId },
+                select: ['owner'],
             });
             if (existingContent === null) {
                 dbContent.h5pContentId = contentId;
+            } else {
+                if (user.userId === existingContent.owner) {
+                    // Owner trying to replace the existing content
+                    await this.deleteContent(contentId);
+                    dbContent.h5pContentId = contentId;
+                }
             }
         }
+
+        Object.assign(dbContent, metadata);
+        dbContent.content = content;
+        dbContent.owner = user.userId;
         await dbContent.save();
         return dbContent.h5pContentId;
     }
@@ -270,15 +278,9 @@ export class H5PContentStorage implements IContentStorage {
      * @returns a list of contentIds
      */
     public async listContent(user?: H5PUser): Promise<ContentId[]> {
-        // Since content isn't owned by individual users here, all we can check is content used by sequences owned by a single user
         if (user) {
-            const sequences = await DBSequence.find({
-                where: { authorId: user.userId },
-                select: { code: true },
-            });
-            const sequenceCodes = sequences.map((sequence) => sequence.code);
             const ids = await DBH5PContent.find({
-                where: { ownerSequence: In(sequenceCodes) },
+                where: { owner: user.userId },
                 select: { h5pContentId: true },
             });
             return ids.map((content) => content.h5pContentId);

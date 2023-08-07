@@ -1,10 +1,10 @@
 import {
     ContentPermission,
-    GeneralPermission,
     IPermissionSystem,
     IUser,
 } from '@lumieducation/h5p-server';
-import { DBH5PContent } from '../../model/h5p/DBH5PContent';
+import { DBH5PContent, DBH5PContentUsedBy } from '../../model/h5p/DBH5PContent';
+import { In } from 'typeorm';
 import { DBSequence } from '../../model/sequence/DBSequence';
 
 export interface H5PUser extends IUser {
@@ -48,18 +48,33 @@ export class H5PPermissionSystem implements IPermissionSystem<H5PUser> {
         }
         const content = await DBH5PContent.findOne({
             where: { h5pContentId: contentId },
-            select: ['ownerSequence'],
+            select: ['owner'],
         });
-        if (!content || content.ownerSequence === null) {
+        if (!content) {
             return true;
         }
-        const sequence = await DBSequence.findOneOrFail({
-            where: { code: content.ownerSequence },
-            select: ['authorId', 'readAccess', 'writeAccess'],
+        if (content.owner === actingUser.userId) {
+            return true;
+        }
+        if (permission === ContentPermission.Delete) {
+            return false; // Only the owner is allowed to delete
+        }
+        const containingSequenceCodes = await DBH5PContentUsedBy.find({
+            where: { h5pContentId: contentId },
+            select: ['sequenceCode'],
         });
-        return (
-            sequence.writeAccess.includes(actingUser.userId) ||
-            sequence.authorId === actingUser.userId
+        const containingSequences = await DBSequence.find({
+            where: {
+                code: In(
+                    containingSequenceCodes.map((entry) => entry.sequenceCode)
+                ),
+            },
+            select: ['authorId', 'writeAccess'],
+        });
+        return containingSequences.some(
+            (sequence) =>
+                sequence.writeAccess.includes(actingUser.userId) ||
+                sequence.authorId === actingUser.userId
         );
     }
 
@@ -82,17 +97,15 @@ export class H5PPermissionSystem implements IPermissionSystem<H5PUser> {
 
     /**
      * Checks general permissions for an supplied user
-     * @param actingUser User to check
-     * @param permission Permission to check
      * @returns true, if the supplied user is allowed to take the requested action, false otherwise
      */
-    async checkForGeneralAction(
-        actingUser: H5PUser,
-        permission: GeneralPermission
-    ): Promise<boolean> {
-        if (permission === GeneralPermission.CreateRestricted) {
-            return actingUser.isAdmin;
-        }
-        return actingUser.isLoggedIn;
+    async checkForGeneralAction(): Promise<boolean> {
+        return true;
+        /*
+         * if (permission === GeneralPermission.CreateRestricted) {
+         *     return actingUser.isAdmin;
+         * }
+         * return actingUser.isLoggedIn;
+         */
     }
 }

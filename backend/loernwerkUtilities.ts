@@ -3,6 +3,7 @@ import i18next, { TFunction } from 'i18next';
 import i18nextFsBackend from 'i18next-fs-backend';
 import i18nextHttpMiddleware from 'i18next-http-middleware';
 import { join } from 'path';
+import { IUser } from '@lumieducation/h5p-server';
 import { H5PUser } from './h5p/H5PPermissionSystem';
 
 /**
@@ -109,6 +110,9 @@ export function buildH5PRequest(
             }
         >;
     }
+    if (req.query.lang !== undefined) {
+        req.language = req.query.lang as string;
+    }
 
     next();
 }
@@ -153,7 +157,7 @@ export async function buildH5Pi18n(): Promise<void> {
                 'metadata-semantics',
                 'server',
             ],
-            preload: ['de'],
+            preload: ['de', 'en'],
         });
 }
 
@@ -175,7 +179,7 @@ declare module 'express-session' {
 declare module 'express-serve-static-core' {
     interface Request {
         // User object required by H5P library.
-        user: H5PUser;
+        user: IUser | H5PUser;
         // Translation function for error messages. Name forced by H5P library.
         t: TFunction;
         // Language used by the user.
