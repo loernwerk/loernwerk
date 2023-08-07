@@ -70,7 +70,7 @@
         <div class="flex items-center pt-4">
           <div class="flex-grow text-center">
             <div class="text-error" v-if="displayError">
-              {{ $t('invalidInput') }}
+              {{ errorCode }}
             </div>
             <div class="text-success" v-if="displaySuccess">
               {{ $t('created', { object: $t('user') }) }}
@@ -110,6 +110,7 @@ const props = defineProps({
   },
 });
 
+const errorCode = ref('');
 const nameField = ref('');
 const mailField = ref('');
 const pwField = ref('');
@@ -151,6 +152,7 @@ async function createUser(): Promise<void> {
     emit('create');
   } catch (e) {
     displayError.value = true;
+    errorCode.value = e instanceof Error ? e.message : 'unkown';
   }
   disableInputShowSpinner.value = false;
 }

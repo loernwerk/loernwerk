@@ -83,7 +83,7 @@
           </ButtonComponent>
           <div class="flex-grow text-center">
             <div class="text-error" v-if="displayError">
-              {{ $t('invalidInput') }}
+              {{ errorCode }}
             </div>
             <div class="text-success" v-if="displaySuccess">
               {{ $t('saved', { object: $t('user') }) }}
@@ -142,6 +142,7 @@ const props = defineProps({
 });
 const emit = defineEmits(['delete']);
 
+const errorCode = ref('');
 const nameField = ref(props.user.name);
 const mailField = ref(props.user.mail);
 const pwField = ref('');
@@ -201,6 +202,7 @@ async function updateInformation(): Promise<void> {
     displaySuccess.value = true;
   } catch (e) {
     displayError.value = true;
+    errorCode.value = e instanceof Error ? e.message : 'unkonwn';
   }
   disableInputShowSpinner.value = false;
 }

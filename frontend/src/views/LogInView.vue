@@ -49,7 +49,7 @@
           </div>
           <div class="flex-grow text-center">
             <div class="text-error" v-if="displayError">
-              {{ $t('account.wrongLoginData') }}
+              {{ errorCode }}
             </div>
             <div class="text-success" v-if="accountCreatedMessage">
               {{ $t('created', { object: $t('user') }) }}
@@ -96,8 +96,8 @@ import { ConfigKey } from '../../../model/configuration/ConfigKey';
 import { RegistrationType } from '../../../model/configuration/RegistrationType';
 import { useRouter } from 'vue-router';
 import ErrorButton from '../components/ErrorButton.vue';
-import { LoernwerkError } from '../../../model/loernwerkError';
 
+const errorCode = ref('');
 const router = useRouter();
 const mailField = ref('');
 const passwordField = ref('');
@@ -151,8 +151,9 @@ async function checkLogIn(): Promise<void> {
     await router.push({ name: 'Overview' });
   } catch (e) {
     displayError.value = true;
-    if (e instanceof LoernwerkError) {
+    if (e instanceof Error) {
       console.log(e.message);
+      errorCode.value = e.message;
     } else {
       throw e;
     }

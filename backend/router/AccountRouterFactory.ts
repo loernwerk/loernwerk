@@ -94,8 +94,8 @@ export class AccountRouterFactory extends RouterFactory {
                         ConfigController.removeInviteCode(removecode);
                     }
                     res.status(201).json({ id: user.id });
-                } catch {
-                    res.sendStatus(400);
+                } catch (e) {
+                    res.status(400).send(e.message);
                 }
             }
         );
@@ -126,10 +126,10 @@ export class AccountRouterFactory extends RouterFactory {
                 } catch (error) {
                     switch (error.code) {
                         case LoernwerkErrorCodes.NOT_FOUND:
-                            res.sendStatus(404);
+                            res.status(404).send(error.message);
                             break;
                         default:
-                            res.sendStatus(400);
+                            res.status(400).send(error.message);
                             break;
                     }
                 }
