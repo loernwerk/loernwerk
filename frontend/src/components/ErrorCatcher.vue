@@ -3,7 +3,9 @@
   <div class="relative">
     <div class="absolute bottom-0 right-0">
       <ul class="list-image-none">
-        <li v-for="mes of errormessages" :key="mes">mes</li>
+        <li v-for="mes of errormessages" :key="mes">
+          <Toast :message="mes" />
+        </li>
       </ul>
     </div>
   </div>
