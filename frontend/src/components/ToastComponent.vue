@@ -1,0 +1,44 @@
+<template>
+  <ContainerComponent class="bg-red-700">
+    <div class="text-white text-center">
+      {{ message }}
+    </div>
+    <div class="h-2 w-full bg-red-400">
+      <div
+        class="h-2 bg-red-900 p-0.5 text-center text-xs font-medium leading-none text-white"
+        :style="{ width: timeperc + '%' }"
+      ></div>
+    </div>
+  </ContainerComponent>
+</template>
+<script setup lang="ts">
+import { ref } from 'vue';
+import ContainerComponent from './ContainerComponent.vue';
+
+const props = defineProps({
+  message: {
+    type: String,
+    required: true,
+  },
+  time: {
+    type: Number,
+    required: true,
+  },
+});
+const time = ref(props.time);
+const timeperc = ref(100);
+countDownTimer();
+
+/**
+ * Counts down the timer.
+ */
+function countDownTimer(): void {
+  if (time.value > 0) {
+    setTimeout(() => {
+      time.value -= 30;
+      timeperc.value = (time.value / props.time) * 100;
+      countDownTimer();
+    }, 20);
+  }
+}
+</script>
