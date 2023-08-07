@@ -175,11 +175,14 @@ function updateContent(slot: LayoutSlot, update: unknown): void {
   if (selectedSlide.value.content[slot]?.contentType == ContentType.TEXT) {
     (selectedSlide.value.content[slot] as TextContent).delta = update as Delta;
   }
-  if (selectedSlide.value.content[slot]?.contentType == ContentType.H5P) {
+  if (
+    selectedSlide.value.content[slot]?.contentType == ContentType.H5P &&
+    update !== null
+  ) {
+    forceRefresh.value++;
     if (update !== undefined) {
       (selectedSlide.value.content[slot] as H5PContent).h5pContentId =
         update as string;
-      forceRefresh.value++;
     }
   }
 }

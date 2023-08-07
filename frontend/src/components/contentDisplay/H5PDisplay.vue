@@ -106,7 +106,7 @@ if (props.editMode) {
 function openEditor(): void {
   if (props.editMode) {
     isEditorOpen.value = true;
-    emits('editing');
+    emits('editing', null);
   }
 }
 
@@ -117,9 +117,7 @@ function openEditor(): void {
 async function saveEditor(id: string | undefined): Promise<void> {
   if (props.editMode) {
     isEditorOpen.value = false;
-    if (id !== undefined) {
-      emits('editing', id);
-    }
+    emits('editing', id);
     reusable.value = await H5PRestInterface.getH5PContentList();
   }
 }
