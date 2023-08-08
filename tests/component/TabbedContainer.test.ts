@@ -1,5 +1,7 @@
 import TabbedContianer from '../../frontend/src/components/TabbedContainer.vue';
 import { mount } from '@vue/test-utils';
+import { findNodeByText } from '../component/TestUtilities';
+import { nextTick } from 'vue';
 
 describe('TabbedContainer', () => {
     test('All tabs displayed', async () => {
@@ -53,5 +55,59 @@ describe('TabbedContainer', () => {
         expect(wrapper.text()).toContain('Content 2');
         expect(wrapper.get('#tab1').isVisible()).toBe(false);
         expect(wrapper.get('#tab2').isVisible()).toBe(true);
+    });
+
+    test('selectTab function', async () => {
+        const wrapper = mount(TabbedContianer, {
+            props: {
+                possibleTabs: ['Tab 1', 'Tab 2'],
+                shownTabs: ['Tab 1', 'Tab 2'],
+            },
+            slots: {
+                'Tab 1': '<div id="tab1">Content 1</div>',
+                'Tab 2': '<div id="tab2">Content 2</div>',
+            },
+        });
+
+        expect(wrapper.text()).toContain('Content 1');
+        expect(wrapper.get('#tab1').isVisible()).toBe(true);
+        expect(wrapper.get('#tab2').isVisible()).toBe(false);
+
+        wrapper.vm.selectTab('Tab 2');
+        await nextTick();
+
+        expect(wrapper.text()).toContain('Content 2');
+        expect(wrapper.get('#tab1').isVisible()).toBe(false);
+        expect(wrapper.get('#tab2').isVisible()).toBe(true);
+    });
+
+    test('removal of selected tab', async () => {
+        const wrapper = mount(TabbedContianer, {
+            props: {
+                possibleTabs: ['Tab 1', 'Tab 2'],
+                shownTabs: ['Tab 1', 'Tab 2'],
+            },
+            slots: {
+                'Tab 1': '<div id="tab1">Content 1</div>',
+                'Tab 2': '<div id="tab2">Content 2</div>',
+            },
+        });
+
+        expect(wrapper.text()).toContain('Content 1');
+        expect(wrapper.get('#tab1').isVisible()).toBe(true);
+        expect(wrapper.get('#tab2').isVisible()).toBe(false);
+
+        wrapper.vm.selectTab('Tab 2');
+        await nextTick();
+
+        expect(wrapper.text()).toContain('Content 2');
+        expect(wrapper.get('#tab1').isVisible()).toBe(false);
+        expect(wrapper.get('#tab2').isVisible()).toBe(true);
+
+        wrapper.setProps({ shownTabs: ['Tab 1'] });
+
+        expect(wrapper.text()).toContain('Content 1');
+        expect(wrapper.get('#tab1').isVisible()).toBe(true);
+        expect(wrapper.get('#tab2').isVisible()).toBe(false);
     });
 });
