@@ -2,7 +2,7 @@ import axios from 'axios';
 import { ConfigRestInterface } from '../../../frontend/src/restInterfaces/ConfigRestInterface';
 import { ConfigKey } from '../../../model/configuration/ConfigKey';
 import { RegistrationType } from '../../../model/configuration/RegistrationType';
-import { vi } from 'vitest';;
+import { vi } from 'vitest';
 
 describe('ConfigRestInterface', () => {
     beforeAll(() => {
@@ -39,17 +39,15 @@ describe('ConfigRestInterface', () => {
     });
 
     test('getAllValue', async () => {
-        axios.get = vi
-            .fn()
-            .mockResolvedValue({
-                data: {
-                    max_sequences_per_user: 2,
-                    max_slides_per_sequence: 10,
-                    registration_codes: 'test123',
-                    registration_type: RegistrationType.CLOSED,
-                    registration_codes_expires_after_use: true,
-                },
-            });
+        axios.get = vi.fn().mockResolvedValue({
+            data: {
+                max_sequences_per_user: 2,
+                max_slides_per_sequence: 10,
+                registration_codes: 'test123',
+                registration_type: RegistrationType.CLOSED,
+                registration_codes_expires_after_use: true,
+            },
+        });
         const result = await ConfigRestInterface.getAllValue();
 
         expect(axios.get).toBeCalledWith('null/api/config/', {
