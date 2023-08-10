@@ -17,7 +17,7 @@
     </ContainerComponent>
     <ButtonComponent
       class="absolute right-5 bottom-5 h-fit"
-      @click="router.push({ name: 'LogIn' })"
+      @click="useRouter().push({ name: 'LogIn' })"
     >
       {{ $t('account.login') }}
     </ButtonComponent>
@@ -31,7 +31,7 @@
 import ButtonComponent from '../components/ButtonComponent.vue';
 import ContainerComponent from '../components/ContainerComponent.vue';
 import CodeInput from '../components/CodeInput.vue';
-import { router } from '../router';
+import { useRouter } from 'vue-router';
 import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
 import { ref } from 'vue';
 
@@ -48,7 +48,7 @@ async function checkCode(code: string): Promise<void> {
 
   try {
     await SequenceRestInterface.getMetadataForStudent(code);
-    await router.push({ name: 'Slide', params: { sequenceCode: code } });
+    await useRouter().push({ name: 'Slide', params: { sequenceCode: code } });
   } catch {
     showRedBorder.value = true;
   }
