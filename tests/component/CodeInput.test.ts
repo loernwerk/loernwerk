@@ -9,7 +9,7 @@ describe('CodeInput', () => {
                 showRedBorder: false,
             },
         });
-        const input = wrapper.find('input');
+        const input = wrapper.get('input');
         await input.setValue('123456');
         expect(wrapper.emitted()).toHaveProperty('code-entered');
     });
@@ -21,7 +21,7 @@ describe('CodeInput', () => {
                 showRedBorder: false,
             },
         });
-        const input = wrapper.find('input');
+        const input = wrapper.get('input');
         await input.setValue('12345');
         await input.setValue('');
         expect(wrapper.emitted()).toHaveProperty('code-emptied');
