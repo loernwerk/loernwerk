@@ -57,7 +57,7 @@ describe('AccountCreationContainer', () => {
         await flushPromises();
 
         expect(addAccount).toBeCalledTimes(1);
-        expect(wrapper.html()).toContain('text-error');
+        expect(wrapper.html()).toContain('invalidInput');
     });
 
     test('Create user with unequal passwords', async () => {
