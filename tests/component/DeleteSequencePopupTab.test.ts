@@ -12,8 +12,8 @@ describe('DeleteSequencePopupTab', () => {
                 }
             }
         })
-
-        expect(wrapper.get('h1').text()).toContain('test'); //i18n
+        console.log(wrapper.get('h1').html());
+        expect(wrapper.get('h1').html()).toContain('test'); //i18n
     });
 
     test('emit on Button click', async () => {
