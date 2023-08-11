@@ -10,7 +10,7 @@ export class Layout {
     public static getLayoutSlots(layout: LayoutType): LayoutSlot[] {
         switch (layout) {
             case LayoutType.TITLEPAGE:
-                return [LayoutSlot.HEADER];
+                return [LayoutSlot.MAIN];
 
             case LayoutType.SINGLE_COLUMN_WITH_HEADER:
                 return [LayoutSlot.HEADER, LayoutSlot.MAIN];
