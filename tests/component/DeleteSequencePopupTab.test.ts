@@ -1,7 +1,7 @@
 import { wrap } from "module";
-import { mount } from "@vue/test-utils";
+import { flushPromises, mount } from "@vue/test-utils";
 import DeleteSequencePopupTab from "../../frontend/src/components/sequenceOverviewPopUpTabs/DeleteSequencePopupTab.vue";
-import InteractableComponent from '../../frontend/src/components/InteractableComponent.vue';
+import ButtonComponent from '../../frontend/src/components/ButtonComponent.vue';
 
 describe('DeleteSequencePopupTab', () => {
     test('correctly display value', () => {
@@ -13,12 +13,10 @@ describe('DeleteSequencePopupTab', () => {
             }
         })
 
-        console.log(wrapper.get('h1'))
-
         expect(wrapper.get('h1').text()).toContain('test'); //i18n
     });
 
-    test('emit on Button click', () => {
+    test('emit on Button click', async () => {
         const wrapper = mount(DeleteSequencePopupTab, {
             props: {
                 sequence: {
@@ -27,7 +25,10 @@ describe('DeleteSequencePopupTab', () => {
             }
         });
 
-        wrapper.get(InteractableComponent).trigger('click');
-        expect(wrapper.emitted('delete')).toBeTruthy();
+        //keine Ahnung warum das nicht funktioniert
+        await wrapper.getComponent(ButtonComponent).vm.$emit('click');
+        await flushPromises();
+        console.log(wrapper.emitted().delete.length);
+        expect(wrapper.emitted().delete.length).toBe(1);
     })
 });

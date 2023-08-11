@@ -1,5 +1,6 @@
 import EmbedOptionsTab from '../../frontend/src/components/sequenceEditOptionsTab/EmbedOptionsTab.vue';
-import { mount } from '@vue/test-utils';
+import { flushPromises, mount } from '@vue/test-utils';
+import { EmbedContent } from '../../model/slide/content/EmbedContent';
 
 describe('EmbedOptionsTab', () => {
     test('correctly display value', () => {
@@ -10,15 +11,14 @@ describe('EmbedOptionsTab', () => {
         expect(wrapper.get('input').element.value).toBe('piped.video');
     });
 
-    test('correctly display value', () => {
+    test('correctly display value', async () => {
         const wrapper = mount(EmbedOptionsTab, {
             props: { embedContent: {url: "piped.video"} },
         });
 
         wrapper.get('input').setValue('piped.video/123');
+        await flushPromises();
         const emitted = wrapper.emitted('update-content') as string[][];
-        console.log(emitted);
-        console.log(wrapper.emitted().input);
-        expect(emitted[0][0]).toBe('piped.video/123');
+        expect((emitted[0][0] as unknown as EmbedContent).url ).toBe('piped.video/123');
     });
 });
