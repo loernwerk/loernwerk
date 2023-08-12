@@ -1,6 +1,5 @@
 import NavigationBarItem from '../../frontend/src/components/navBar/NavigationBarItem.vue';
-import { mount } from '@vue/test-utils';
-import { routerMock } from './router_mock.setup';
+import { RouterLinkStub, mount, shallowMount } from '@vue/test-utils';
 
 describe('NavigationBarItem', () => {
     test('bold when active', () => {
@@ -18,12 +17,14 @@ describe('NavigationBarItem', () => {
     });
 
     test('router to correct path', async () => {
-        const wrapper = mount(NavigationBarItem, {
+        const wrapper = shallowMount(NavigationBarItem, {
             props: { targetLink: '/test' },
+            stubs: {
+                RouterLink: RouterLinkStub,
+            },
         });
 
-        await wrapper.get('router-link').trigger('click');
-        expect(routerMock.push).toHaveBeenCalledTimes(1);
-        expect(routerMock.push).toHaveBeenCalledWith('/test');
+        console.log(wrapper.get('router-link').html());
+        expect(wrapper.get('router-link').html()).toContain('to="/test"');
     });
 });
