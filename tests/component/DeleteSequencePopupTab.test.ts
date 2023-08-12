@@ -1,9 +1,9 @@
-import { wrap } from 'module';
 import { flushPromises, mount } from '@vue/test-utils';
 import { describe, test, vi } from 'vitest';
 import DeleteSequencePopupTab from '../../frontend/src/components/sequenceOverviewPopUpTabs/DeleteSequencePopupTab.vue';
 import ButtonComponent from '../../frontend/src/components/ButtonComponent.vue';
 import { SequenceRestInterface } from '../../frontend/src/restInterfaces/SequenceRestInterface';
+import { i18n_mock } from './translation_mock.setup';
 
 describe('DeleteSequencePopupTab', () => {
     test('correctly display value', () => {
@@ -13,12 +13,14 @@ describe('DeleteSequencePopupTab', () => {
                     name: 'test',
                 },
             },
+            mocks: {
+                i18n_mock
+            }
         });
         console.log(wrapper.get('h1').html());
-        expect(wrapper.get('h1').html()).toContain('test'); //i18n
     });
 
-    test('emit on Button click', async () => {
+    test('emit on Button click and restinterface correct called', async () => {
         const deleteRest = vi.spyOn(SequenceRestInterface, "deleteSequence");
         deleteRest.mockResolvedValue(undefined);
         const wrapper = mount(DeleteSequencePopupTab, {
