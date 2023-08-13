@@ -86,6 +86,7 @@ const configKeys = [
   ConfigKey.REGISTRATION_TYPE,
   ConfigKey.REGISTRATION_CODES,
   ConfigKey.REGISTRATION_CODES_EXPIRES_AFTER_USE,
+  ConfigKey.AUTODELETE_UNUSED_H5P,
 ];
 
 const disableButton = ref(false);
@@ -121,6 +122,9 @@ const keyDescription: Record<ConfigKey, string> = {
   [ConfigKey.REGISTRATION_CODES]: i18n.global.t('config.registrationCodes'),
   [ConfigKey.REGISTRATION_CODES_EXPIRES_AFTER_USE]: i18n.global.t(
     'config.registrationCodesExpirations'
+  ),
+  [ConfigKey.AUTODELETE_UNUSED_H5P]: i18n.global.t(
+    'config.autodeleteUnusedH5P'
   ),
 };
 
