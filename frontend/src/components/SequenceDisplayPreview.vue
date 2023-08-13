@@ -53,7 +53,7 @@
           <ButtonComponent
             class="flex-1"
             @click="
-              router.push({
+              useRouter().push({
                 name:
                   sequence.authorId == userId ||
                   sequence.writeAccess.includes(userId)
@@ -82,7 +82,7 @@
 import ButtonComponent from './ButtonComponent.vue';
 import { ISequence } from '../../../model/sequence/ISequence';
 import ContainerComponent from './ContainerComponent.vue';
-import { router } from '../router';
+import { useRouter } from 'vue-router';
 import PopupComponent from './PopupComponent.vue';
 import { PropType, computed, ref } from 'vue';
 import TabbedContainer from './TabbedContainer.vue';

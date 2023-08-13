@@ -1,0 +1,58 @@
+import { mount } from '@vue/test-utils';
+import { describe, test } from 'vitest';
+import SlideOverviewContainer from '../../../frontend/src/components/SlideOverviewContainer.vue';
+import { LayoutType } from '../../../model/slide/layout/Layout';
+import ButtonComponent from '../../../frontend/src/components/ButtonComponent.vue';
+import SlideOverviewContainerElement from '../../../frontend/src/components/SlideOverviewContainerElement.vue';
+import { ISlide } from '../../../model/slide/ISlide';
+describe('SequenceDisplayPreview', () => {
+    const slide1 = {
+        layout: LayoutType.TITLEPAGE,
+        content: {},
+        backgroundColor: '#00FF00',
+        sequenceCode: 'ABCDEF',
+        order: 0,
+        id: 1111,
+    };
+
+    const slide2 = {
+        layout: LayoutType.TWO_COLUMN,
+        content: {},
+        backgroundColor: '#00FF00',
+        sequenceCode: 'ABCDEF',
+        order: 1,
+        id: 2222,
+    };
+
+    const wrapper = mount(SlideOverviewContainer, {
+        props: {
+            slides: [slide1 as ISlide, slide2 as ISlide],
+            selectedSlideIndex: 0,
+        },
+    });
+
+    test('Add slide', async () => {
+        await wrapper.findComponent(ButtonComponent).trigger('click');
+        await wrapper.vm.$nextTick(() => {
+            expect(wrapper.emitted('addSlide')).toBeTruthy();
+        });
+    });
+
+    test('Delete Slide', async () => {
+        await wrapper
+            .findComponent(SlideOverviewContainerElement)
+            .trigger('delete');
+        await wrapper.vm.$nextTick(() => {
+            expect(wrapper.emitted('deleteSlide')).toBeTruthy();
+        });
+    });
+
+    test('Change Selection', async () => {
+        await wrapper
+            .findComponent(SlideOverviewContainerElement)
+            .trigger('click');
+        await wrapper.vm.$nextTick(() => {
+            expect(wrapper.emitted('selectionChanged')).toBeTruthy();
+        });
+    });
+});
