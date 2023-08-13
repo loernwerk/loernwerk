@@ -202,7 +202,7 @@ export class AccountController {
         //Removing sequences through SequenceController
         const sequences = await DBSequence.find({ where: { authorId: id } });
         for (const s of sequences) {
-            await SequenceController.deleteSequence(s.code);
+            await SequenceController.deleteSequence(s.code, id);
         }
         // Removing user from the read/write access list in shared sequences
         for (const code of user.sharedSequencesReadAccess) {

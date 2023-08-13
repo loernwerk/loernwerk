@@ -22,4 +22,8 @@ export enum ConfigKey {
      * if the registration codes expire after use or not
      */
     REGISTRATION_CODES_EXPIRES_AFTER_USE = 'registration_codes_expires_after_use',
+    /**
+     * Auto-delete unused H5P-contents
+     */
+    AUTODELETE_UNUSED_H5P = 'autodelete_unused_h5p',
 }

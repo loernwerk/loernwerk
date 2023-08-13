@@ -213,7 +213,6 @@ function changeContent(slot: LayoutSlot, contentType: ContentType): void {
       content = new H5PContent();
       content.contentType = ContentType.H5P;
       content.h5pContentId = 'new';
-      content.sequenceCode = props.sequenceCode;
       break;
   }
 

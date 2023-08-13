@@ -5,12 +5,6 @@ import { resolve } from 'path';
 dotenv.config({ path: resolve(__dirname, './tests/e2e/e2e.env') });
 
 /**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// require('dotenv').config();
-
-/**
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
@@ -78,7 +72,7 @@ export default defineConfig({
 
     /* Run your local dev server before starting the tests */
     webServer: {
-      command: 'npm run start',
+      command: 'npm run test:e2e:prepare-db && npm run start',
       url: 'http://localhost:5000',
       reuseExistingServer: true,
       stdout: 'pipe',
