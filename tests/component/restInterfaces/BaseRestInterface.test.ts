@@ -1,6 +1,10 @@
 import { BaseRestInterface } from '../../../frontend/src/restInterfaces/BaseRestInterface';
 import { vi } from 'vitest';
-import axios from 'axios';
+import axios, { AxiosError, AxiosHeaders } from 'axios';
+import {
+    LoernwerkError,
+    LoernwerkErrorCodes,
+} from '../../../model/loernwerkError';
 
 /**
  * Dummy class to test BaseRestInterface
@@ -190,4 +194,109 @@ describe('BaseRestInterface', () => {
     test('getBaseURL', () => {
         expect(DummyRestInterface.getBaseURLWrapper()).toBe('null/api');
     });
+
+    test('Error 404', async () => {
+        axios.get = vi.fn().mockImplementation(() => {
+            throw getAxiosError('Not found', 404);
+        });
+
+        let error: LoernwerkError | null = null;
+        try {
+            await DummyRestInterface.getWrapper('test');
+        } catch (e) {
+            error = e;
+        }
+
+        expect(error).not.toBeNull();
+        expect(error).toBeInstanceOf(LoernwerkError);
+        expect(error?.code).toBe(LoernwerkErrorCodes.NOT_FOUND);
+    });
+
+    test('Error 400', async () => {
+        axios.get = vi.fn().mockImplementation(() => {
+            throw getAxiosError('Bad Request', 400);
+        });
+
+        let error: LoernwerkError | null = null;
+        try {
+            await DummyRestInterface.getWrapper('test');
+        } catch (e) {
+            error = e;
+        }
+
+        expect(error).not.toBeNull();
+        expect(error).toBeInstanceOf(LoernwerkError);
+        expect(error?.code).toBe(LoernwerkErrorCodes.BAD_REQUEST);
+    });
+
+    test('Error 401', async () => {
+        axios.get = vi.fn().mockImplementation(() => {
+            throw getAxiosError('Unauthorized', 401);
+        });
+
+        let error: LoernwerkError | null = null;
+        try {
+            await DummyRestInterface.getWrapper('test');
+        } catch (e) {
+            error = e;
+        }
+
+        expect(error).not.toBeNull();
+        expect(error).toBeInstanceOf(LoernwerkError);
+        expect(error?.code).toBe(LoernwerkErrorCodes.UNAUTHORIZED);
+    });
+
+    test('Error 403', async () => {
+        axios.get = vi.fn().mockImplementation(() => {
+            throw getAxiosError('Forbidden', 403);
+        });
+
+        let error: LoernwerkError | null = null;
+        try {
+            await DummyRestInterface.getWrapper('test');
+        } catch (e) {
+            error = e;
+        }
+
+        expect(error).not.toBeNull();
+        expect(error).toBeInstanceOf(LoernwerkError);
+        expect(error?.code).toBe(LoernwerkErrorCodes.FORBIDDEN);
+    });
+
+    test('Error 402', async () => {
+        axios.get = vi.fn().mockImplementation(() => {
+            throw getAxiosError('Payment Required', 402);
+        });
+
+        let error: LoernwerkError | null = null;
+        try {
+            await DummyRestInterface.getWrapper('test');
+        } catch (e) {
+            error = e;
+        }
+
+        expect(error).not.toBeNull();
+        expect(error).toBeInstanceOf(LoernwerkError);
+        expect(error?.code).toBe(LoernwerkErrorCodes.UNKNOWN);
+    });
 });
+
+/**
+ * Creates a dummy AxiosError
+ * @param message text of the error
+ * @param status html status code
+ * @returns a dummy AxiosError
+ */
+function getAxiosError(message: string, status: number): AxiosError {
+    const error = new AxiosError(message, status.toString(), undefined, null);
+    error.response = {
+        data: message,
+        status,
+        statusText: message,
+        headers: {},
+        config: {
+            headers: new AxiosHeaders(),
+        },
+    };
+    return error;
+}
