@@ -72,6 +72,7 @@
           :key="selectedSlideIndex"
           :slide="selectedSlide"
           :edit-mode="true"
+          :editing="currentEditingSlot ?? undefined"
           class="h-full absolute"
           @editing="
             (val) => {

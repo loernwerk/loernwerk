@@ -12,6 +12,7 @@
         :content="slide.content[slot.slot]"
         :style="slot.style"
         :edit-mode="editMode"
+        :editing="slot.slot == editing"
         @editing="(val) => $emit('editing', { slot: slot.slot, emit: val })"
         @change-content="
           (type) => $emit('changeContent', { slot: slot.slot, type: type })
@@ -46,6 +47,14 @@ const props = defineProps({
     type: Boolean,
     required: true,
     default: false,
+  },
+  /**
+   * The slot currently being edited
+   */
+  editing: {
+    type: Number as PropType<LayoutSlot>,
+    required: false,
+    default: -1,
   },
 });
 
