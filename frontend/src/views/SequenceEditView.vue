@@ -208,6 +208,13 @@ function updateContent(slot: LayoutSlot, update: unknown): void {
  * @param contentType Content type to change to
  */
 function changeContent(slot: LayoutSlot, contentType: ContentType): void {
+  if (selectedSlide.value.content[slot]) {
+    const result = confirm(i18n.global.t('looseContentWarning'));
+    if (!result) {
+      return;
+    }
+  }
+
   let content;
   switch (contentType) {
     case ContentType.IMAGE:

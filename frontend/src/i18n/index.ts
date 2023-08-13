@@ -101,6 +101,7 @@ const messages = {
       admin: 'Admin',
       sequenceEdit: 'Sequenzbearbeitung',
     },
+    looseContentWarning: 'Dies löscht den vorherigen Inhalt des Feldes',
   },
   en: {
     search: 'Search',
@@ -201,6 +202,7 @@ const messages = {
       admin: 'Admin',
       sequenceEdit: 'Edit sequence',
     },
+    looseContentWarning: 'This will delete the previous content of the field',
   },
 };
 
