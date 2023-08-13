@@ -16,11 +16,12 @@ describe('ConfigEditor', () => {
                     [ConfigKey.REGISTRATION_TYPE]: RegistrationType.INVITATION,
                     [ConfigKey.REGISTRATION_CODES]: 'one,two,three',
                     [ConfigKey.REGISTRATION_CODES_EXPIRES_AFTER_USE]: true,
+                    [ConfigKey.AUTODELETE_UNUSED_H5P]: false,
                 },
             },
         });
 
-        const expectedValues = ['', '20', 'one,two,three', true];
+        const expectedValues = ['', '20', 'one,two,three', true, false];
         const inputs = wrapper.findAll('input');
         const select = wrapper.find('select');
         for (const inputIndex in inputs) {
@@ -45,11 +46,12 @@ describe('ConfigEditor', () => {
                     [ConfigKey.REGISTRATION_TYPE]: RegistrationType.INVITATION,
                     [ConfigKey.REGISTRATION_CODES]: 'one,two,three',
                     [ConfigKey.REGISTRATION_CODES_EXPIRES_AFTER_USE]: true,
+                    [ConfigKey.AUTODELETE_UNUSED_H5P]: false,
                 },
             },
         });
 
-        const newValues = ['3', '', 'one,two', false];
+        const newValues = ['3', '', 'one,two', false, true];
         const inputs = wrapper.findAll('input');
         const select = wrapper.find('select');
         for (const inputIndex in inputs) {
@@ -61,7 +63,7 @@ describe('ConfigEditor', () => {
         await wrapper.getComponent(ButtonComponent).vm.$emit('click');
         await flushPromises();
 
-        expect(setValue).toBeCalledTimes(5);
+        expect(setValue).toBeCalledTimes(6);
         expect(setValue).toBeCalledWith(ConfigKey.MAX_SEQUENCES_PER_USER, 3);
         expect(setValue).toBeCalledWith(ConfigKey.MAX_SLIDES_PER_SEQUENCE, -1);
         expect(setValue).toBeCalledWith(
@@ -76,6 +78,7 @@ describe('ConfigEditor', () => {
             ConfigKey.REGISTRATION_CODES_EXPIRES_AFTER_USE,
             false
         );
+        expect(setValue).toBeCalledWith(ConfigKey.AUTODELETE_UNUSED_H5P, true);
         expect(wrapper.emitted()).toHaveProperty('save');
 
         setValue.mockClear();
@@ -91,6 +94,7 @@ describe('ConfigEditor', () => {
                     [ConfigKey.REGISTRATION_TYPE]: RegistrationType.INVITATION,
                     [ConfigKey.REGISTRATION_CODES]: 'one,two,three',
                     [ConfigKey.REGISTRATION_CODES_EXPIRES_AFTER_USE]: true,
+                    [ConfigKey.AUTODELETE_UNUSED_H5P]: false,
                 },
             },
         });

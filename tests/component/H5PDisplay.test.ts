@@ -1,13 +1,30 @@
 import { flushPromises, mount } from '@vue/test-utils';
-import { describe, test } from 'vitest';
+import { describe, test, beforeEach, vi } from 'vitest';
 import H5PDisplay from '../../frontend/src/components/contentDisplay/H5PDisplay.vue';
 import { ContentType } from '../../model/slide/content/Content';
+import { defineComponent } from 'vue';
+import { H5PRestInterface } from '../../frontend/src/restInterfaces/H5PRestInterface';
 
 describe('H5PDisplay', () => {
-    test('Correctly display H5PPlayer', () => {
-        const wrapper = mount(H5PDisplay, {
+    const SuspenseH5PDisplay = defineComponent({
+        components: { H5PDisplay },
+        props: ['h5pContent', 'editMode'],
+        emits: ['editing'],
+        template:
+            '<Suspense><H5PDisplay :h5pContent="h5pContent" :editMode="editMode" @editing="(val) => $emit(\'editing\', val)" /></Suspense>',
+    });
+
+    beforeEach(() => {
+        vi.spyOn(H5PRestInterface, 'getH5PContentList').mockResolvedValueOnce(
+            []
+        );
+    });
+
+    test('Correctly display H5PPlayer', async () => {
+        const wrapper = mount(SuspenseH5PDisplay, {
             global: {
                 stubs: {
+                    H5PEditor: true,
                     H5PPlayer: true,
                 },
             },
@@ -16,35 +33,42 @@ describe('H5PDisplay', () => {
                 h5pContent: {
                     h5pContentId: '2',
                     contentType: ContentType.H5P,
-                    sequenceCode: 'ABC123', // TODO: To be removed after merging PR
                 },
             },
         });
+        await flushPromises();
 
         expect(
             wrapper.getComponent({ name: 'H5PPlayer' }).props('contentId')
         ).toBe('2');
     });
 
-    test('Correctly display editor cover', () => {
-        const wrapper = mount(H5PDisplay, {
+    test('Correctly display editor cover', async () => {
+        const wrapper = mount(SuspenseH5PDisplay, {
+            global: {
+                stubs: {
+                    H5PEditor: true,
+                    H5PPlayer: true,
+                },
+            },
             props: {
                 editMode: true,
                 h5pContent: {
                     h5pContentId: '2',
                     contentType: ContentType.H5P,
-                    sequenceCode: 'ABC123', // TODO: To be removed after merging PR
                 },
             },
         });
+        await flushPromises();
 
-        expect(wrapper.text()).toContain('Klicke um den Inhalt zu bearbeiten');
+        expect(wrapper.text()).toContain('h5p.clickToEdit');
     });
 
     test('Correctly display H5PEditor', async () => {
-        const wrapper = mount(H5PDisplay, {
+        const wrapper = mount(SuspenseH5PDisplay, {
             global: {
                 stubs: {
+                    H5PPlayer: true,
                     H5PEditor: true,
                 },
             },
@@ -53,10 +77,14 @@ describe('H5PDisplay', () => {
                 h5pContent: {
                     h5pContentId: '2',
                     contentType: ContentType.H5P,
-                    sequenceCode: 'ABC123', // TODO: To be removed after merging PR
                 },
             },
         });
+        await flushPromises();
+
+        console.log(
+            wrapper.find('div.h-full.cursor-pointer.flex.p-5.w-full').html()
+        );
 
         await wrapper
             .find('div.h-full.cursor-pointer.flex.p-5.w-full')
@@ -70,9 +98,10 @@ describe('H5PDisplay', () => {
     });
 
     test('Correctly closing H5PEditor', async () => {
-        const wrapper = mount(H5PDisplay, {
+        const wrapper = mount(SuspenseH5PDisplay, {
             global: {
                 stubs: {
+                    H5PPlayer: true,
                     H5PEditor: true,
                 },
             },
@@ -81,10 +110,10 @@ describe('H5PDisplay', () => {
                 h5pContent: {
                     h5pContentId: '2',
                     contentType: ContentType.H5P,
-                    sequenceCode: 'ABC123', // TODO: To be removed after merging PR
                 },
             },
         });
+        await flushPromises();
 
         await wrapper
             .find('div.h-full.cursor-pointer.flex.p-5.w-full')
@@ -94,7 +123,7 @@ describe('H5PDisplay', () => {
             .vm.$emit('closed', 'someID');
         await flushPromises();
 
-        expect(wrapper.text()).toContain('Klicke um den Inhalt zu bearbeiten');
+        expect(wrapper.text()).toContain('h5p.clickToEdit');
         const editingEmit = wrapper.emitted('editing') as string[][];
         expect(editingEmit.length).toBe(2);
         expect(editingEmit[1]).toEqual(['someID']);

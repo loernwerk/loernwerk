@@ -326,7 +326,6 @@ describe('SequenceEditView', () => {
                         [LayoutSlot.MAIN]: {
                             contentType: ContentType.H5P,
                             h5pContentId: 'new',
-                            sequenceCode: 'ABCDEF',
                         },
                     },
                     backgroundColor: '#ffffff',
