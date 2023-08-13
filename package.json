@@ -38,8 +38,8 @@
 
     "test:component": "vitest",
 
-    "test:e2e": "playwright test"
-
+    "test:e2e": "playwright test",
+    "test:e2e:prepare-db": "node -r \"fs\" -e \"fs.copyFileSync('./tests/e2e/test.db', './tests/e2e/test_run.db');\""
   },
 
   "dependencies": {
