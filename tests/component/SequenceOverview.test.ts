@@ -4,6 +4,7 @@ import { flushPromises, mount } from '@vue/test-utils';
 import { beforeEach, vi } from 'vitest';
 import { SequenceRestInterface } from '../../frontend/src/restInterfaces/SequenceRestInterface';
 import { AccountRestInterface } from '../../frontend/src/restInterfaces/AccountRestInterface';
+import { ConfigRestInterface } from '../../frontend/src/restInterfaces/ConfigRestInterface';
 import ButtonComponentVue from '../../frontend/src/components/ButtonComponent.vue';
 import PopupNewSequenceVue from '../../frontend/src/components/PopupNewSequence.vue';
 
@@ -80,6 +81,9 @@ describe('SequenceOverviewView', () => {
 
         const getOwnAccount = vi.spyOn(AccountRestInterface, 'getOwnAccount');
         getOwnAccount.mockResolvedValueOnce({ id: 1 });
+
+        const getValue = vi.spyOn(ConfigRestInterface, 'getValue');
+        getValue.mockResolvedValueOnce(-1);
     });
 
     test('Display overview correctly', async () => {
@@ -169,10 +173,15 @@ describe('SequenceOverviewView', () => {
         });
         await flushPromises();
 
-        expect(wrapper.findComponent(PopupNewSequenceVue).exists()).toBe(false);
+        expect(wrapper.findComponent(PopupNewSequenceVue).isVisible()).toBe(
+            false
+        );
 
+        console.log(wrapper.html());
         wrapper.getComponent(ButtonComponentVue).vm.$emit('click');
 
-        expect(wrapper.findComponent(PopupNewSequenceVue).exists()).toBe(true);
+        expect(wrapper.findComponent(PopupNewSequenceVue).isVisible()).toBe(
+            true
+        );
     });
 });

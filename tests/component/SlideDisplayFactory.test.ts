@@ -26,7 +26,7 @@ describe('SlideDisplayFactory', () => {
             wrapper
                 .find('div.aspect-video.h-full.p-5.rounded-md')
                 .attributes('style')
-        ).toBe('background-color: #00FF00;');
+        ).toBe('background-color: rgb(0, 255, 0);');
     });
     test('Correct Layout.Titlepage', async () => {
         const wrapper = mount(SlideDisplayFactory, {
