@@ -76,12 +76,12 @@ describe('QuillToolBar', () => {
 
         const colorPicker = colorPickerButton.find('span');
         expect(colorPicker.exists()).toBe(true);
-        expect(colorPicker.isVisible()).toBe(false);
+        expect(colorPicker.element.style.display).toBe('none');
 
         colorPickerButton.findComponent(ButtonComponentVue).vm.$emit('click');
         await flushPromises();
 
-        //expect(colorPicker.isVisible()).toBe(true);
+        expect(colorPicker.element.style.display).not.toBe('none');
     });
 
     test('Color picker contains all colors', async () => {
