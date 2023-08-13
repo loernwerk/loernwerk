@@ -1,5 +1,5 @@
 import TabbedContianer from '../../frontend/src/components/TabbedContainer.vue';
-import { mount } from '@vue/test-utils';
+import { DOMWrapper, mount } from '@vue/test-utils';
 import { findNodeByText } from '../component/TestUtilities';
 import { nextTick } from 'vue';
 
@@ -43,8 +43,8 @@ describe('TabbedContainer', () => {
         });
 
         expect(wrapper.text()).toContain('Content 1');
-        expect(wrapper.get('#tab1').isVisible()).toBe(true);
-        expect(wrapper.get('#tab2').isVisible()).toBe(false);
+        expect(checkTabVisibility(wrapper.get('#tab1'))).toBe(true);
+        expect(checkTabVisibility(wrapper.get('#tab2'))).toBe(false);
 
         const node = findNodeByText(wrapper, 'h1', 'Tab 2');
         if (!node) {
@@ -53,8 +53,8 @@ describe('TabbedContainer', () => {
         await node.trigger('click');
 
         expect(wrapper.text()).toContain('Content 2');
-        expect(wrapper.get('#tab1').isVisible()).toBe(false);
-        expect(wrapper.get('#tab2').isVisible()).toBe(true);
+        expect(checkTabVisibility(wrapper.get('#tab1'))).toBe(false);
+        expect(checkTabVisibility(wrapper.get('#tab2'))).toBe(true);
     });
 
     test('selectTab function', async () => {
@@ -70,15 +70,15 @@ describe('TabbedContainer', () => {
         });
 
         expect(wrapper.text()).toContain('Content 1');
-        expect(wrapper.get('#tab1').isVisible()).toBe(true);
-        expect(wrapper.get('#tab2').isVisible()).toBe(false);
+        expect(checkTabVisibility(wrapper.get('#tab1'))).toBe(true);
+        expect(checkTabVisibility(wrapper.get('#tab2'))).toBe(false);
 
         wrapper.vm.selectTab('Tab 2');
         await nextTick();
 
         expect(wrapper.text()).toContain('Content 2');
-        expect(wrapper.get('#tab1').isVisible()).toBe(false);
-        expect(wrapper.get('#tab2').isVisible()).toBe(true);
+        expect(checkTabVisibility(wrapper.get('#tab1'))).toBe(false);
+        expect(checkTabVisibility(wrapper.get('#tab2'))).toBe(true);
     });
 
     test('removal of selected tab', async () => {
@@ -94,20 +94,32 @@ describe('TabbedContainer', () => {
         });
 
         expect(wrapper.text()).toContain('Content 1');
-        expect(wrapper.get('#tab1').isVisible()).toBe(true);
-        expect(wrapper.get('#tab2').isVisible()).toBe(false);
+        expect(checkTabVisibility(wrapper.get('#tab1'))).toBe(true);
+        expect(checkTabVisibility(wrapper.get('#tab2'))).toBe(false);
 
         wrapper.vm.selectTab('Tab 2');
         await nextTick();
 
         expect(wrapper.text()).toContain('Content 2');
-        expect(wrapper.get('#tab1').isVisible()).toBe(false);
-        expect(wrapper.get('#tab2').isVisible()).toBe(true);
+        expect(checkTabVisibility(wrapper.get('#tab1'))).toBe(false);
+        expect(checkTabVisibility(wrapper.get('#tab2'))).toBe(true);
 
         wrapper.setProps({ shownTabs: ['Tab 1'] });
+        await nextTick();
 
         expect(wrapper.text()).toContain('Content 1');
-        expect(wrapper.get('#tab1').isVisible()).toBe(true);
-        expect(wrapper.get('#tab2').isVisible()).toBe(false);
+        expect(checkTabVisibility(wrapper.get('#tab1'))).toBe(true);
+        expect(checkTabVisibility(wrapper.get('#tab2'))).toBe(false);
     });
 });
+
+/**
+ * Checks if a tab is visible by checking the display style of the tab is set to none
+ * @param tabValue div inside tab as used in the tests
+ * @returns True if the tab is visible, false otherwise
+ */
+function checkTabVisibility(
+    tabValue: Omit<DOMWrapper<HTMLDivElement>, string>
+): boolean {
+    return tabValue.element?.parentElement?.style.display != 'none';
+}
