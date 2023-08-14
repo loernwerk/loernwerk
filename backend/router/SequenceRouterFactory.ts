@@ -55,7 +55,10 @@ export class SequenceRouterFactory extends RouterFactory {
                 }
 
                 try {
-                    await SequenceController.saveSequence(req.body);
+                    await SequenceController.saveSequence(
+                        req.body,
+                        req.session.userId as number
+                    );
                     res.sendStatus(204);
                 } catch {
                     res.sendStatus(400);
@@ -86,7 +89,10 @@ export class SequenceRouterFactory extends RouterFactory {
                 }
 
                 try {
-                    await SequenceController.deleteSequence(req.body.code);
+                    await SequenceController.deleteSequence(
+                        req.body.code,
+                        req.session.userId as number
+                    );
                     res.sendStatus(204);
                 } catch {
                     res.sendStatus(400);
