@@ -9,7 +9,7 @@
 import { PropType, Ref, onMounted, ref, watch } from 'vue';
 import { TextContent } from '../../../../model/slide/content/TextContent';
 import Quill from 'quill';
-import { colors, sizes, fontFamilies } from './DesignOptions';
+import { colors, sizes, fontFamilies, keyboardBindings } from './DesignOptions';
 import { LayoutSlot } from '../../../../model/slide/layout/Layout';
 
 const props = defineProps({
@@ -71,6 +71,9 @@ onMounted(() => {
     modules: {
       toolbar: {
         container: `#q-toolbar-${props.layoutSlot.toString()}`,
+      },
+      keyboard: {
+        bindings: keyboardBindings,
       },
     },
     readOnly: !props.editMode,
