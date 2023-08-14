@@ -1,20 +1,27 @@
 import { defineComponent } from "vue";
-import SlideView from "../../frontend/src/views/SlideView.vue"
+import FinishedView from "../../frontend/src/views/FinishedView.vue"
+import ButtonComponent from "../../frontend/src/components/ButtonComponent.vue"
 import { SequenceRestInterface } from '../../frontend/src/restInterfaces/SequenceRestInterface';
-import { flushPromises, mount } from '@vue/test-utils';
+import { flushPromises, mount, shallowMount } from '@vue/test-utils';
 import { describe, test, vi } from 'vitest';
 import { routerMock } from './router_mock.setup';
+import { G } from "vitest/dist/types-198fd1d9";
 
 describe("SlideView", () => {
 
-    const SuspenseSlideView = defineComponent({
-        components: { SlideView },
-        template: '<Suspense><SlideView :sequenceCode="code" /></Suspense>',
+    const SuspenseFinishedView = defineComponent({
+        components: { FinishedView },
+        template: '<Suspense><FinishedView :sequenceCode="code" /></Suspense>',
         props: {
             code: String
         }
     });
 
+    const test2 = defineComponent({
+        components: { ButtonComponent },
+        template: '<ButtonComponent class="w-fit" @click="downloadCertificate()">  $t(finished.certificate) </ButtonComponent>'
+    });
+    
     test("correct Sequence fetch call", async () => {
         const getMetadata = vi.spyOn(SequenceRestInterface, "getMetadataForStudent")
         getMetadata.mockImplementation( (code) => {
@@ -32,7 +39,7 @@ describe("SlideView", () => {
                 }
             })
         })
-        const wrapper = mount(SuspenseSlideView, {
+        const wrapper = mount(SuspenseFinishedView, {
             props: {
                 code: "123456"
             }
@@ -45,9 +52,9 @@ describe("SlideView", () => {
 
     })
 
-    test("correct follow up calls", async () => {
+    test("called getcertificateurl with correct params", async () => {
         const getMetadata = vi.spyOn(SequenceRestInterface, "getMetadataForStudent")
-        const getSlide = vi.spyOn(SequenceRestInterface, "getSlide")
+        const getUrl = vi.spyOn(SequenceRestInterface, "getUrlForCertificate")
 
         getMetadata.mockImplementation( (code) => {
             return new Promise(() => {
@@ -60,18 +67,16 @@ describe("SlideView", () => {
                     writeAccess: [],
                     readAccess: [],
                     tags: [],
-                    slideCount: 2
+                    slideCount: 1
                 }
             })
         })
 
-        getSlide.mockImplementation((sequenceCode:string, slideIndex:number) => {
-            return new Promise(() => {
-                return {}
-            })
+        getUrl.mockImplementation( (sequenceCode: string, language: string) => {
+            return "test.de"
         })
 
-        const wrapper = mount(SuspenseSlideView, {
+        const wrapper = mount(SuspenseFinishedView, {
             props: {
                 code: "123456"
             }
@@ -82,11 +87,13 @@ describe("SlideView", () => {
         expect(getMetadata).toBeCalledTimes(1)
         expect(getMetadata).toBeCalledWith("123456")
 
-        expect(routerMock.push).toBeCalledTimes(0)
+        await wrapper.getComponent(ButtonComponent).vm.$emit("click")
 
-        expect(getSlide).toBeCalledTimes(1)
-        expect(getSlide).toBeCalledWith("123456", 0)
+        await flushPromises()
 
+        expect(getUrl).toBeCalled(1)
+        expect(getUrl).toBeCalledWith("123456")
     })
+
 
 })

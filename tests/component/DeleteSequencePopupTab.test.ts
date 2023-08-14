@@ -35,7 +35,6 @@ describe('DeleteSequencePopupTab', () => {
         //keine Ahnung warum das nicht funktioniert
         await wrapper.getComponent(ButtonComponent).vm.$emit('click');
         await flushPromises();
-        console.log(wrapper.emitted().delete.length);
         expect(deleteRest).toBeCalledTimes(1)
         expect(deleteRest).toBeCalledWith('ABCDEF')
         expect(wrapper.emitted().delete.length).toBe(1);
