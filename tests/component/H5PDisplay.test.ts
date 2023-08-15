@@ -82,10 +82,6 @@ describe('H5PDisplay', () => {
         });
         await flushPromises();
 
-        console.log(
-            wrapper.find('div.h-full.cursor-pointer.flex.p-5.w-full').html()
-        );
-
         await wrapper
             .find('div.h-full.cursor-pointer.flex.p-5.w-full')
             .trigger('click');
