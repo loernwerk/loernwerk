@@ -1,8 +1,8 @@
 import { mount } from '@vue/test-utils';
 import { describe, test } from 'vitest';
-import AccountList from '../../frontend/src/components/admin/AccountList.vue';
-import ButtonComponentVue from '../../frontend/src/components/ButtonComponent.vue';
-import { findComponentByText } from './TestUtilities';
+import AccountList from '../../../frontend/src/components/admin/AccountList.vue';
+import ButtonComponentVue from '../../../frontend/src/components/ButtonComponent.vue';
+import { findComponentByText } from '../TestUtilities';
 
 describe('AccountList', () => {
     test('Click "Create new user" button', async () => {

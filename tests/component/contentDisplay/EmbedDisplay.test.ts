@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
 import { describe, test } from 'vitest';
-import EmbedDisplay from '../../frontend/src/components/contentDisplay/EmbedDisplay.vue';
-import { ContentType } from '../../model/slide/content/Content';
+import EmbedDisplay from '../../../frontend/src/components/contentDisplay/EmbedDisplay.vue';
+import { ContentType } from '../../../model/slide/content/Content';
 
 describe('EmbedDisplay', () => {
     test('Correct url in iframe', async () => {

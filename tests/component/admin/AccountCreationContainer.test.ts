@@ -1,12 +1,12 @@
 import { flushPromises, mount } from '@vue/test-utils';
 import { describe, test, vi } from 'vitest';
-import AccountCreationContainer from '../../frontend/src/components/admin/AccountCreationContainer.vue';
-import ButtonComponentVue from '../../frontend/src/components/ButtonComponent.vue';
-import { AccountRestInterface } from '../../frontend/src/restInterfaces/AccountRestInterface';
+import AccountCreationContainer from '../../../frontend/src/components/admin/AccountCreationContainer.vue';
+import ButtonComponentVue from '../../../frontend/src/components/ButtonComponent.vue';
+import { AccountRestInterface } from '../../../frontend/src/restInterfaces/AccountRestInterface';
 import {
     LoernwerkError,
     LoernwerkErrorCodes,
-} from '../../model/loernwerkError';
+} from '../../../model/loernwerkError';
 
 describe('AccountCreationContainer', () => {
     test('Creates new user with inputted details', async () => {

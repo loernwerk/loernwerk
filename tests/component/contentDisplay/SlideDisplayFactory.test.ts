@@ -1,10 +1,10 @@
 import { mount } from '@vue/test-utils';
 import { describe, test } from 'vitest';
-import SlideDisplayFactory from '../../frontend/src/components/contentDisplay/SlideDisplayFactory.vue';
-import { LayoutSlot, LayoutType } from '../../model/slide/layout/Layout';
-import { ContentType } from '../../model/slide/content/Content';
-import ContentDisplayFactoryVue from '../../frontend/src/components/contentDisplay/ContentDisplayFactory.vue';
-import { EmbedContent } from '../../model/slide/content/EmbedContent';
+import SlideDisplayFactory from '../../../frontend/src/components/contentDisplay/SlideDisplayFactory.vue';
+import { LayoutSlot, LayoutType } from '../../../model/slide/layout/Layout';
+import { ContentType } from '../../../model/slide/content/Content';
+import ContentDisplayFactoryVue from '../../../frontend/src/components/contentDisplay/ContentDisplayFactory.vue';
+import { EmbedContent } from '../../../model/slide/content/EmbedContent';
 
 describe('SlideDisplayFactory', () => {
     test('Correct background', async () => {

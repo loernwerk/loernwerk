@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
 import { describe, test } from 'vitest';
-import ImageDisplay from '../../frontend/src/components/contentDisplay/ImageDisplay.vue';
-import { ContentType } from '../../model/slide/content/Content';
+import ImageDisplay from '../../../frontend/src/components/contentDisplay/ImageDisplay.vue';
+import { ContentType } from '../../../model/slide/content/Content';
 
 describe('ImageDisplay', () => {
     test('Correct image.img in img', async () => {
