@@ -1,14 +1,23 @@
 <!-- View for editing seqeunces -->
 <template>
   <div class="flex flex-row grow space-x-5">
-    <SlideOverviewContainer
-      :slides="sequence.slides"
-      :selected-slide-index="selectedSlideIndex"
-      @selection-changed="(val) => changeSelectedSlide(val)"
-      @add-slide="addSlide()"
-      @delete-slide="(val) => deleteSlide(val)"
-      @order-changed="updateSlideOrder()"
-    />
+    <div class="flex flex-col space-y-5">
+      <ButtonComponent @click="save()"
+        ><div class="py-1 text-xl text-center">
+          {{ $t('save') }}
+        </div></ButtonComponent
+      >
+      <SlideOverviewContainer
+        :slides="sequence.slides"
+        :selected-slide-index="selectedSlideIndex"
+        @selection-changed="(val) => changeSelectedSlide(val)"
+        @add-slide="addSlide()"
+        @delete-slide="(val) => deleteSlide(val)"
+        @order-changed="updateSlideOrder()"
+        class="flex-grow"
+      />
+    </div>
+
     <div class="flex flex-col grow space-y-5">
       <TabbedContainer
         class="h-36 flex-shrink-0"
@@ -23,7 +32,6 @@
             :disable-button="disableButton"
             @update-sequence="(val) => (sequence.name = val.name)"
             @update-slide="(val) => updateSlide(val)"
-            @save="save()"
           />
         </template>
 
@@ -64,6 +72,7 @@
           :key="selectedSlideIndex"
           :slide="selectedSlide"
           :edit-mode="true"
+          :editing="currentEditingSlot ?? undefined"
           class="h-full absolute"
           @editing="
             (val) => {
@@ -105,6 +114,7 @@ import Delta from 'quill-delta';
 import { ISlide } from '../../../model/slide/ISlide';
 import { useRouter } from 'vue-router';
 import { i18n } from '../i18n';
+import ButtonComponent from '../components/ButtonComponent.vue';
 
 const props = defineProps({
   /**
@@ -198,6 +208,13 @@ function updateContent(slot: LayoutSlot, update: unknown): void {
  * @param contentType Content type to change to
  */
 function changeContent(slot: LayoutSlot, contentType: ContentType): void {
+  if (selectedSlide.value.content[slot]) {
+    const result = confirm(i18n.global.t('looseContentWarning'));
+    if (!result) {
+      return;
+    }
+  }
+
   let content;
   switch (contentType) {
     case ContentType.IMAGE:
