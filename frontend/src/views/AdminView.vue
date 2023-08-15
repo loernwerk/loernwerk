@@ -56,6 +56,7 @@
     </PopupComponent>
   </div>
 </template>
+
 <script setup lang="ts">
 import { Ref, ref } from 'vue';
 import { IUser } from '../../../model/user/IUser';
@@ -66,7 +67,7 @@ import AccountCreationContainer from '../components/admin/AccountCreationContain
 import AccountSequenceContainer from '../components/admin/AccountSequenceContainer.vue';
 import { ISequence } from '../../../model/sequence/ISequence';
 import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
-import { router } from '../router';
+import { useRouter } from 'vue-router';
 import ButtonComponent from '../components/ButtonComponent.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -89,7 +90,7 @@ try {
   accounts.value = await AccountRestInterface.getAccountMetaDataList();
   configs.value = await ConfigRestInterface.getAllValue();
 } catch {
-  router.push({ name: 'Main' });
+  useRouter().push({ name: 'Main' });
 }
 /**
  * Requests the user with the given id from the backend (currently not)
