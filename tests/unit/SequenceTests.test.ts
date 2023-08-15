@@ -111,10 +111,7 @@ describe('SequenceController Tests', () => {
         expect(sequences[0].code).toEqual('CODE66');
     });
 
-    /**
-     * getSharedSequencesOfUser function
-     * NOTE: If you have read and write access set, then the sequence is returned twice. Intended?
-     */
+    //getSharedSequencesOfUser function
     it('try to get sequences that are shared with a user', async () => {
         const sequences = await SequenceController.getSharedSequencesOfUser(
             2351951
