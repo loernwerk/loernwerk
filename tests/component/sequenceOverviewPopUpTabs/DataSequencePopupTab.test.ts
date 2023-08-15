@@ -33,7 +33,7 @@ describe('SequenceDisplayPreview', () => {
     test('Correct link is displayed', async () => {
         const linkComp = inputComponents[1];
         expect(linkComp.find('input').element.value).toEqual(
-            'http://localhost:3000/' + baseSequence.code
+            window.location.origin + '/' + baseSequence.code
         );
     });
 });
