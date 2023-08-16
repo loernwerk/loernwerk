@@ -26,7 +26,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/vue-fontawesome": "^3.0.3",
     "@lumieducation/h5p-express": "^9.2.2",
-    "@lumieducation/h5p-server": "^9.2.1",
+    "@lumieducation/h5p-server": "^9.3.0",
     "@lumieducation/h5p-webcomponents": "^9.2.2",
     "@types/jest": "^29.5.3",
     "@vue/test-utils": "^2.4.1",
