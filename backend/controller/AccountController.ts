@@ -266,7 +266,7 @@ export class AccountController {
         if (data.type != null) {
             dbuser.type = data.type;
         }
-        if (data.name != null) {
+        if (data.name != null && data.name !== dbuser.name) {
             if (
                 !this.isValidUsername(
                     data.name,
@@ -287,7 +287,7 @@ export class AccountController {
             }
             dbuser.name = data.name;
         }
-        if (data.mail != null) {
+        if (data.mail != null && data.mail !== dbuser.mail) {
             if (
                 !this.isValidMail(
                     data.mail,
