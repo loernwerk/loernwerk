@@ -2,8 +2,6 @@ import { AccountRestInterface } from '../../../frontend/src/restInterfaces/Accou
 import { vi } from 'vitest';
 import axios from 'axios';
 
-vi.mock('axios');
-
 describe('AccountRestInterface', () => {
     beforeAll(() => {
         vi.mock('axios');
