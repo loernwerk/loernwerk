@@ -17,14 +17,14 @@ describe('H5PRestInterface', () => {
 
     test('createH5PContent', async () => {
         axios.put = vi.fn().mockResolvedValue({ data: { dummy: 'data' } });
-        const result = await H5PRestInterface.createH5PContent('test', {
+        const result = await H5PRestInterface.createH5PContent({
             library: 'test',
             params: 'test',
         });
 
         expect(axios.put).toBeCalledWith(
-            'null/api/h5p/',
-            { library: 'test', params: 'test', sequence: 'test' },
+            'http://localhost:5000/api/h5p/',
+            { library: 'test', params: 'test' },
             { withCredentials: true }
         );
         expect(result).toStrictEqual({ dummy: 'data' });
@@ -32,11 +32,14 @@ describe('H5PRestInterface', () => {
 
     test('getH5PContent', async () => {
         axios.get = vi.fn().mockResolvedValue({ data: { dummy: 'data' } });
-        const result = await H5PRestInterface.getH5PContent('test');
+        const result = await H5PRestInterface.getH5PContent('test', 'de');
 
-        expect(axios.get).toBeCalledWith('null/api/h5p/test/edit', {
-            withCredentials: true,
-        });
+        expect(axios.get).toBeCalledWith(
+            'http://localhost:5000/api/h5p/test/edit?lang=de',
+            {
+                withCredentials: true,
+            }
+        );
         expect(result).toStrictEqual({ dummy: 'data' });
     });
 
@@ -48,7 +51,7 @@ describe('H5PRestInterface', () => {
         });
 
         expect(axios.patch).toBeCalledWith(
-            'null/api/h5p/test/edit',
+            'http://localhost:5000/api/h5p/test/edit',
             { library: 'test', params: 'test' },
             { withCredentials: true }
         );
@@ -59,9 +62,12 @@ describe('H5PRestInterface', () => {
         axios.get = vi.fn().mockResolvedValue({ data: { dummy: 'data' } });
         const result = await H5PRestInterface.getH5PContentForExecution('test');
 
-        expect(axios.get).toBeCalledWith('null/api/h5p/test/view', {
-            withCredentials: true,
-        });
+        expect(axios.get).toBeCalledWith(
+            'http://localhost:5000/api/h5p/test/view',
+            {
+                withCredentials: true,
+            }
+        );
         expect(result).toStrictEqual({ dummy: 'data' });
     });
 });

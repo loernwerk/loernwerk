@@ -5,11 +5,6 @@ import axios from 'axios';
 describe('AccountRestInterface', () => {
     beforeAll(() => {
         vi.mock('axios');
-        const mockWindow = Object.create(window);
-        vi.spyOn(window, 'window', 'get').mockImplementation(() => {
-            mockWindow.location.hostname = 'localhost';
-            return mockWindow;
-        });
     });
 
     test('login', async () => {
@@ -21,7 +16,7 @@ describe('AccountRestInterface', () => {
         );
 
         expect(axios.post).toBeCalledWith(
-            'null/api/account/login',
+            'http://localhost:5000/api/account/login',
             { usernameOrEmail: 'test', password: 'test', stayLoggedIn: false },
             { withCredentials: true }
         );
@@ -37,7 +32,7 @@ describe('AccountRestInterface', () => {
         );
 
         expect(axios.post).toBeCalledWith(
-            'null/api/account/login',
+            'http://localhost:5000/api/account/login',
             { usernameOrEmail: 'test', password: 'test', stayLoggedIn: false },
             { withCredentials: true }
         );
@@ -49,7 +44,7 @@ describe('AccountRestInterface', () => {
         await AccountRestInterface.logout();
 
         expect(axios.post).toBeCalledWith(
-            'null/api/account/logout',
+            'http://localhost:5000/api/account/logout',
             {},
             { withCredentials: true }
         );
@@ -63,7 +58,7 @@ describe('AccountRestInterface', () => {
         );
 
         expect(axios.put).toBeCalledWith(
-            'null/api/account/',
+            'http://localhost:5000/api/account/',
             {
                 name: 'test',
                 password: 'test',
@@ -84,7 +79,7 @@ describe('AccountRestInterface', () => {
         });
 
         expect(axios.patch).toBeCalledWith(
-            'null/api/account/',
+            'http://localhost:5000/api/account/',
             { name: 'test', mail: 'test', password: 'test' },
             { withCredentials: true }
         );
@@ -94,10 +89,13 @@ describe('AccountRestInterface', () => {
         axios.delete = vi.fn().mockResolvedValue({ data: {} });
         await AccountRestInterface.deleteAccount(2);
 
-        expect(axios.delete).toBeCalledWith('null/api/account/', {
-            data: { id: 2 },
-            withCredentials: true,
-        });
+        expect(axios.delete).toBeCalledWith(
+            'http://localhost:5000/api/account/',
+            {
+                data: { id: 2 },
+                withCredentials: true,
+            }
+        );
     });
 
     test('getOwnAccount', async () => {
@@ -107,7 +105,7 @@ describe('AccountRestInterface', () => {
 
         const result = await AccountRestInterface.getOwnAccount();
 
-        expect(axios.get).toBeCalledWith('null/api/account/', {
+        expect(axios.get).toBeCalledWith('http://localhost:5000/api/account/', {
             withCredentials: true,
         });
 
@@ -122,9 +120,12 @@ describe('AccountRestInterface', () => {
         });
         const result = await AccountRestInterface.getAccount(2);
 
-        expect(axios.get).toBeCalledWith('null/api/account/?id=2', {
-            withCredentials: true,
-        });
+        expect(axios.get).toBeCalledWith(
+            'http://localhost:5000/api/account/?id=2',
+            {
+                withCredentials: true,
+            }
+        );
         expect(result.id).toBe(2);
         expect(result.name).toBe('test');
         expect(result.mail).toBe('test@test.de');
@@ -139,9 +140,12 @@ describe('AccountRestInterface', () => {
         });
         const result = await AccountRestInterface.getAccounts([2, 3]);
 
-        expect(axios.get).toBeCalledWith('null/api/account/2,3', {
-            withCredentials: true,
-        });
+        expect(axios.get).toBeCalledWith(
+            'http://localhost:5000/api/account/2,3',
+            {
+                withCredentials: true,
+            }
+        );
         expect(Object.keys(result).length).toBe(2);
         expect(result[2]).toBe('test');
         expect(result[3]).toBe('test2');
@@ -156,9 +160,12 @@ describe('AccountRestInterface', () => {
         });
         const result = await AccountRestInterface.getAccountMetaDataList();
 
-        expect(axios.get).toBeCalledWith('null/api/account/list', {
-            withCredentials: true,
-        });
+        expect(axios.get).toBeCalledWith(
+            'http://localhost:5000/api/account/list',
+            {
+                withCredentials: true,
+            }
+        );
         expect(result.length).toBe(2);
         expect(result[0].id).toBe(2);
         expect(result[0].name).toBe('test');
@@ -174,9 +181,12 @@ describe('AccountRestInterface', () => {
         });
         const result = await AccountRestInterface.getAccountByUserName('test');
 
-        expect(axios.get).toBeCalledWith('null/api/account/?name=test', {
-            withCredentials: true,
-        });
+        expect(axios.get).toBeCalledWith(
+            'http://localhost:5000/api/account/?name=test',
+            {
+                withCredentials: true,
+            }
+        );
         expect(result.id).toBe(2);
         expect(result.name).toBe('test');
         expect(result.mail).toBe('test@test.de');
@@ -192,7 +202,7 @@ describe('AccountRestInterface', () => {
         );
 
         expect(axios.get).toBeCalledWith(
-            'null/api/account/?mail=test@test.de',
+            'http://localhost:5000/api/account/?mail=test@test.de',
             {
                 withCredentials: true,
             }

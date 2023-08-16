@@ -76,11 +76,6 @@ class DummyRestInterface extends BaseRestInterface {
 describe('BaseRestInterface', () => {
     beforeAll(() => {
         vi.mock('axios');
-        const mockWindow = Object.create(window);
-        vi.spyOn(global.window, 'window', 'get').mockImplementation(() => {
-            mockWindow.location.hostname = 'http://localhost:8080';
-            return mockWindow;
-        });
     });
 
     test('get', async () => {
@@ -89,7 +84,7 @@ describe('BaseRestInterface', () => {
             '/test'
         );
 
-        expect(axios.get).toBeCalledWith('null/api/test', {
+        expect(axios.get).toBeCalledWith('http://localhost:5000/api/test', {
             withCredentials: true,
         });
         expect(result.value).toBe(2);
@@ -110,7 +105,7 @@ describe('BaseRestInterface', () => {
         );
 
         expect(axios.post).toBeCalledWith(
-            'null/api/test',
+            'http://localhost:5000/api/test',
             { value: 2 },
             { withCredentials: true }
         );
@@ -134,7 +129,7 @@ describe('BaseRestInterface', () => {
         );
 
         expect(axios.put).toBeCalledWith(
-            'null/api/test',
+            'http://localhost:5000/api/test',
             { value: 2 },
             { withCredentials: true }
         );
@@ -158,7 +153,7 @@ describe('BaseRestInterface', () => {
         );
 
         expect(axios.patch).toBeCalledWith(
-            'null/api/test',
+            'http://localhost:5000/api/test',
             { value: 2 },
             { withCredentials: true }
         );
@@ -178,7 +173,7 @@ describe('BaseRestInterface', () => {
         axios.delete = vi.fn().mockResolvedValue({ data: {} });
         await DummyRestInterface.deleteWrapper('/test', { value: 2 });
 
-        expect(axios.delete).toBeCalledWith('null/api/test', {
+        expect(axios.delete).toBeCalledWith('http://localhost:5000/api/test', {
             withCredentials: true,
             data: { value: 2 },
         });
@@ -192,7 +187,9 @@ describe('BaseRestInterface', () => {
     });
 
     test('getBaseURL', () => {
-        expect(DummyRestInterface.getBaseURLWrapper()).toBe('null/api');
+        expect(DummyRestInterface.getBaseURLWrapper()).toBe(
+            'http://localhost:5000/api'
+        );
     });
 
     test('Error 404', async () => {

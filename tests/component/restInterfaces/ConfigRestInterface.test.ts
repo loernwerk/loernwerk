@@ -7,11 +7,6 @@ import { vi } from 'vitest';
 describe('ConfigRestInterface', () => {
     beforeAll(() => {
         vi.mock('axios');
-        const mockWindow = Object.create(window);
-        vi.spyOn(window, 'window', 'get').mockImplementation(() => {
-            mockWindow.location.hostname = 'localhost';
-            return mockWindow;
-        });
     });
 
     test('getValue', async () => {
@@ -21,7 +16,7 @@ describe('ConfigRestInterface', () => {
         );
 
         expect(axios.get).toBeCalledWith(
-            'null/api/config/max_sequences_per_user',
+            'http://localhost:5000/api/config/max_sequences_per_user',
             { withCredentials: true }
         );
         expect(result).toBe(2);
@@ -32,7 +27,7 @@ describe('ConfigRestInterface', () => {
         await ConfigRestInterface.setValue(ConfigKey.MAX_SEQUENCES_PER_USER, 2);
 
         expect(axios.patch).toBeCalledWith(
-            'null/api/config/max_sequences_per_user',
+            'http://localhost:5000/api/config/max_sequences_per_user',
             { value: 2 },
             { withCredentials: true }
         );
@@ -50,7 +45,7 @@ describe('ConfigRestInterface', () => {
         });
         const result = await ConfigRestInterface.getAllValue();
 
-        expect(axios.get).toBeCalledWith('null/api/config/', {
+        expect(axios.get).toBeCalledWith('http://localhost:5000/api/config/', {
             withCredentials: true,
         });
         expect(result[ConfigKey.MAX_SEQUENCES_PER_USER]).toBe(2);

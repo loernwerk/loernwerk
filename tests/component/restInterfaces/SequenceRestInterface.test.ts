@@ -8,11 +8,6 @@ import { EmbedContent } from '../../../model/slide/content/EmbedContent';
 describe('SequenceRestInterface', () => {
     beforeAll(() => {
         vi.mock('axios');
-        const mockWindow = Object.create(window);
-        vi.spyOn(window, 'window', 'get').mockImplementation(() => {
-            mockWindow.location.hostname = 'localhost';
-            return mockWindow;
-        });
     });
 
     test('addSequence', async () => {
@@ -20,7 +15,7 @@ describe('SequenceRestInterface', () => {
         const result = await SequenceRestInterface.addSequence('test');
 
         expect(axios.put).toBeCalledWith(
-            'null/api/sequence/',
+            'http://localhost:5000/api/sequence/',
             { name: 'test' },
             { withCredentials: true }
         );
@@ -37,7 +32,7 @@ describe('SequenceRestInterface', () => {
         });
 
         expect(axios.patch).toBeCalledWith(
-            'null/api/sequence/',
+            'http://localhost:5000/api/sequence/',
             { code: 'test', slides: [], slideCount: 10, name: 'test123' },
             { withCredentials: true }
         );
@@ -47,10 +42,13 @@ describe('SequenceRestInterface', () => {
         axios.delete = vi.fn().mockResolvedValue({ data: {} });
         await SequenceRestInterface.deleteSequence('test');
 
-        expect(axios.delete).toBeCalledWith('null/api/sequence/', {
-            data: { code: 'test' },
-            withCredentials: true,
-        });
+        expect(axios.delete).toBeCalledWith(
+            'http://localhost:5000/api/sequence/',
+            {
+                data: { code: 'test' },
+                withCredentials: true,
+            }
+        );
     });
 
     test('getSequence', async () => {
@@ -84,9 +82,12 @@ describe('SequenceRestInterface', () => {
         });
         const result = await SequenceRestInterface.getSequence('ABC123');
 
-        expect(axios.get).toBeCalledWith('null/api/sequence/ABC123/edit', {
-            withCredentials: true,
-        });
+        expect(axios.get).toBeCalledWith(
+            'http://localhost:5000/api/sequence/ABC123/edit',
+            {
+                withCredentials: true,
+            }
+        );
         expect(result.code).toBe('ABC123');
         expect(result.name).toBe('test123');
         expect(result.authorId).toBe(123);
@@ -138,9 +139,12 @@ describe('SequenceRestInterface', () => {
         });
         const result = await SequenceRestInterface.getOwnSequences();
 
-        expect(axios.get).toBeCalledWith('null/api/sequence/list', {
-            withCredentials: true,
-        });
+        expect(axios.get).toBeCalledWith(
+            'http://localhost:5000/api/sequence/list',
+            {
+                withCredentials: true,
+            }
+        );
         expect(result.length).toBe(2);
         expect(result[0].code).toBe('ABC123');
         expect(result[0].name).toBe('test123');
@@ -188,9 +192,12 @@ describe('SequenceRestInterface', () => {
         });
         const result = await SequenceRestInterface.getSequenceByUser(123);
 
-        expect(axios.get).toBeCalledWith('null/api/sequence/list/123', {
-            withCredentials: true,
-        });
+        expect(axios.get).toBeCalledWith(
+            'http://localhost:5000/api/sequence/list/123',
+            {
+                withCredentials: true,
+            }
+        );
         expect(result.length).toBe(2);
         expect(result[0].code).toBe('ABC123');
         expect(result[0].name).toBe('test123');
@@ -238,9 +245,12 @@ describe('SequenceRestInterface', () => {
         });
         const result = await SequenceRestInterface.getSequencesSharedWithYou();
 
-        expect(axios.get).toBeCalledWith('null/api/sequence/list/shared', {
-            withCredentials: true,
-        });
+        expect(axios.get).toBeCalledWith(
+            'http://localhost:5000/api/sequence/list/shared',
+            {
+                withCredentials: true,
+            }
+        );
         expect(result.length).toBe(2);
         expect(result[0].code).toBe('ABC123');
         expect(result[0].name).toBe('test123');
@@ -271,9 +281,12 @@ describe('SequenceRestInterface', () => {
             'ABC123'
         );
 
-        expect(axios.get).toBeCalledWith('null/api/sequence/ABC123/view', {
-            withCredentials: true,
-        });
+        expect(axios.get).toBeCalledWith(
+            'http://localhost:5000/api/sequence/ABC123/view',
+            {
+                withCredentials: true,
+            }
+        );
         expect(result.code).toBe('ABC123');
         expect(result.name).toBe('test123');
         expect(result.slideCount).toBe(10);
