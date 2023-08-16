@@ -18,7 +18,8 @@
     "test": "npm run test:unit && npm run test:component && npm run test:e2e",
     "test:unit": "jest",
     "test:component": "vitest",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:e2e:prepare-db": "node -r \"fs\" -e \"fs.copyFileSync('./tests/e2e/test.db', './tests/e2e/test_run.db');\""
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.4.0",

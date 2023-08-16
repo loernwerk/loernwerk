@@ -32,27 +32,13 @@ export class AccountController {
             );
         }
 
-        if (
-            (
-                await DBUser.find({
-                    where: { mail: data.mail as string },
-                    select: ['mail'],
-                })
-            ).length > 0
-        ) {
+        if (await this.mailExists(data.mail as string)) {
             throw new LoernwerkError(
                 'mail already exists',
                 LoernwerkErrorCodes.ALREADY_EXISTS
             );
         }
-        if (
-            (
-                await DBUser.find({
-                    where: { name: data.name as string },
-                    select: ['name'],
-                })
-            ).length > 0
-        ) {
+        if (await this.nameExists(data.name as string)) {
             throw new LoernwerkError(
                 'username already exists',
                 LoernwerkErrorCodes.ALREADY_EXISTS
@@ -202,7 +188,7 @@ export class AccountController {
         //Removing sequences through SequenceController
         const sequences = await DBSequence.find({ where: { authorId: id } });
         for (const s of sequences) {
-            await SequenceController.deleteSequence(s.code);
+            await SequenceController.deleteSequence(s.code, id);
         }
         // Removing user from the read/write access list in shared sequences
         for (const code of user.sharedSequencesReadAccess) {
@@ -293,6 +279,12 @@ export class AccountController {
                     LoernwerkErrorCodes.BAD_REQUEST
                 );
             }
+            if (await this.nameExists(data.name)) {
+                throw new LoernwerkError(
+                    'username already exists',
+                    LoernwerkErrorCodes.INVALID_PARAMETER
+                );
+            }
             dbuser.name = data.name;
         }
         if (data.mail != null) {
@@ -306,6 +298,12 @@ export class AccountController {
                 throw new LoernwerkError(
                     'Given information do not satisfy the requirements',
                     LoernwerkErrorCodes.BAD_REQUEST
+                );
+            }
+            if (await this.mailExists(data.mail)) {
+                throw new LoernwerkError(
+                    'mail already exists',
+                    LoernwerkErrorCodes.INVALID_PARAMETER
                 );
             }
             dbuser.mail = data.mail;
@@ -329,6 +327,38 @@ export class AccountController {
      */
     private static async hashPW(pw: string): Promise<string> {
         return bcrypt.hash(pw, 13);
+    }
+
+    /**
+     * tests if a name exists
+     * @param name the name to test
+     * @returns true if the name exists
+     */
+    private static async nameExists(name: string): Promise<boolean> {
+        return (
+            (
+                await DBUser.find({
+                    where: { name: name },
+                    select: ['mail'],
+                })
+            ).length > 0
+        );
+    }
+
+    /**
+     * tests if a mail exists
+     * @param mail the mail to test
+     * @returns true if the mail exists
+     */
+    private static async mailExists(mail: string): Promise<boolean> {
+        return (
+            (
+                await DBUser.find({
+                    where: { mail: mail },
+                    select: ['mail'],
+                })
+            ).length > 0
+        );
     }
 
     /**
