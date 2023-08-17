@@ -18,6 +18,13 @@
     </NavigationBarItem>
 
     <NavigationBarItem
+      :active="isCurrentView('H5POverview')"
+      targetLink="/h5pOverview"
+    >
+      {{ $t('navBar.h5pOverview') }}
+    </NavigationBarItem>
+
+    <NavigationBarItem
       :active="isCurrentView('Admin')"
       targetLink="/admin"
       v-if="isAdmin"
