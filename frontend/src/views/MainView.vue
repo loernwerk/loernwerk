@@ -17,7 +17,7 @@
     </ContainerComponent>
     <ButtonComponent
       class="absolute right-5 bottom-5 h-fit"
-      @click="useRouter().push({ name: 'LogIn' })"
+      @click="router.push({ name: 'LogIn' })"
     >
       {{ $t('account.login') }}
     </ButtonComponent>
@@ -38,6 +38,8 @@ import { ref } from 'vue';
 const showRedBorder = ref(false);
 const disableInputShowSpinner = ref(false);
 
+const router = useRouter();
+
 /**
  * Verify inputted sequence code. If input is valid, redirect. Otherwise change border color of CodeInput.
  * @param code sequence code to check
@@ -48,7 +50,7 @@ async function checkCode(code: string): Promise<void> {
 
   try {
     await SequenceRestInterface.getMetadataForStudent(code);
-    await useRouter().push({ name: 'Slide', params: { sequenceCode: code } });
+    await router.push({ name: 'Slide', params: { sequenceCode: code } });
   } catch {
     showRedBorder.value = true;
   }
