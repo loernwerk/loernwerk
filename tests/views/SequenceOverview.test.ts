@@ -173,15 +173,11 @@ describe('SequenceOverviewView', () => {
         });
         await flushPromises();
 
-        expect(wrapper.findComponent(PopupNewSequenceVue).isVisible()).toBe(
-            false
-        );
+        expect(wrapper.findComponent(PopupNewSequenceVue).exists()).toBe(false);
 
-        console.log(wrapper.html());
         wrapper.getComponent(ButtonComponentVue).vm.$emit('click');
+        await flushPromises();
 
-        expect(wrapper.findComponent(PopupNewSequenceVue).isVisible()).toBe(
-            true
-        );
+        expect(wrapper.findComponent(PopupNewSequenceVue).exists()).toBe(true);
     });
 });

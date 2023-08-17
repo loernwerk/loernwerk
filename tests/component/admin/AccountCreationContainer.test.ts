@@ -96,6 +96,8 @@ describe('AccountCreationContainer', () => {
 
     test('Prop requires invitecode', async () => {
         const addAccount = vi.spyOn(AccountRestInterface, 'addAccount');
+        addAccount.mockResolvedValueOnce(0);
+
         const wrapper = mount(AccountCreationContainer, {
             props: {
                 requiresInviteCode: true,
