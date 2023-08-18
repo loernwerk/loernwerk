@@ -23,3 +23,11 @@ export const fontFamilies = [
   'Brush Script MT',
 ];
 export const defaultFontFamily = 'Arial';
+export const keyboardBindings = {
+  'list autofill': {
+    key: ' ',
+    handler(): boolean {
+      return true;
+    },
+  },
+};
