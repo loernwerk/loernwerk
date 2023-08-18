@@ -7,7 +7,7 @@ import { describe, test, vi } from 'vitest';
 import { routerMock } from './router_mock.setup';
 import { G } from "vitest/dist/types-198fd1d9";
 
-describe("SlideView", () => {
+describe("FinishedView", () => {
 
     const SuspenseFinishedView = defineComponent({
         components: { FinishedView },
@@ -24,21 +24,19 @@ describe("SlideView", () => {
     
     test("correct Sequence fetch call", async () => {
         const getMetadata = vi.spyOn(SequenceRestInterface, "getMetadataForStudent")
-        getMetadata.mockImplementation( (code) => {
-            return new Promise(() => {
-                return {
-                    name: "test",
-                    code: code,
-                    creationDate: new Date(),
-                    modificationDate: new Date(),
-                    authorId: 1,
-                    writeAccess: [],
-                    readAccess: [],
-                    tags: [],
-                    slideCount: 1
-                }
-            })
+
+        getMetadata.mockResolvedValueOnce({
+            name: "test",
+            code: "123456",
+            creationDate: new Date(),
+            modificationDate: new Date(),
+            authorId: 1,
+            writeAccess: [],
+            readAccess: [],
+            tags: [],
+            slideCount: 1
         })
+
         const wrapper = mount(SuspenseFinishedView, {
             props: {
                 code: "123456"
@@ -55,26 +53,24 @@ describe("SlideView", () => {
     test("called getcertificateurl with correct params", async () => {
         const getMetadata = vi.spyOn(SequenceRestInterface, "getMetadataForStudent")
         const getUrl = vi.spyOn(SequenceRestInterface, "getUrlForCertificate")
+        const windowopen = vi.spyOn(window, "open")
 
-        getMetadata.mockImplementation( (code) => {
-            return new Promise(() => {
-                return {
-                    name: "test",
-                    code: code,
-                    creationDate: new Date(),
-                    modificationDate: new Date(),
-                    authorId: 1,
-                    writeAccess: [],
-                    readAccess: [],
-                    tags: [],
-                    slideCount: 1
-                }
-            })
+        getMetadata.mockResolvedValueOnce({
+            name: "test",
+            code: "123456",
+            creationDate: new Date(),
+            modificationDate: new Date(),
+            authorId: 1,
+            writeAccess: [],
+            readAccess: [],
+            tags: [],
+            slideCount: 1
         })
 
-        getUrl.mockImplementation( (sequenceCode: string, language: string) => {
-            return "test.de"
-        })
+        getUrl.mockResolvedValueOnce(
+            "test.de"
+        )
+
 
         const wrapper = mount(SuspenseFinishedView, {
             props: {
@@ -92,7 +88,11 @@ describe("SlideView", () => {
         await flushPromises()
 
         expect(getUrl).toBeCalled(1)
-        expect(getUrl).toBeCalledWith("123456")
+        expect(getUrl).toBeCalledWith("123456", "de")
+
+        expect(windowopen).toBeCalled(1)
+        //not testing the argument, because it is a promise, but since it is what we return in the geturl function it'll work
+
     })
 
 
