@@ -3,7 +3,7 @@
   <div class="relative">
     <div class="absolute bottom-0 right-0 w-40">
       <ul class="list-image-none">
-        <li v-for="pair of errormessages" :key="pair.index">
+        <li v-for="pair of errormessages.reverse()" :key="pair.index">
           <Toast :message="pair.errorMessage" :time="errortimedisplayed" />
         </li>
       </ul>
@@ -26,12 +26,13 @@ let index = 0;
 onErrorCaptured((err, instance, info) => {
   void instance;
   errormessages.value.push({ index: index, errorMessage: err.message });
+  const tbr = index;
   index++;
   console.log(errormessages.value);
   console.log('this needed to be displayed, err:' + err + ' info: ' + info);
   setTimeout(() => {
     const i = errormessages.value.indexOf({
-      index: index - 1,
+      index: tbr,
       errorMessage: err.message,
     });
     errormessages.value.splice(i, 1);
