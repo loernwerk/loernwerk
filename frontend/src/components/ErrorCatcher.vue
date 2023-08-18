@@ -3,8 +3,8 @@
   <div class="relative">
     <div class="absolute bottom-0 right-0 w-40">
       <ul class="list-image-none">
-        <li v-for="mes of errormessages" :key="mes">
-          <Toast :message="mes" :time="errortimedisplayed" />
+        <li v-for="pair of errormessages" :key="pair.index">
+          <Toast :message="pair.errorMessage" :time="errortimedisplayed" />
         </li>
       </ul>
     </div>
@@ -14,16 +14,26 @@
 import { onErrorCaptured, ref, Ref } from 'vue';
 import Toast from './ToastComponent.vue';
 
-const errormessages: Ref<Array<string>> = ref([]);
+interface ErrorIndexPair {
+  index: number;
+  errorMessage: string;
+}
+
+const errormessages: Ref<Array<ErrorIndexPair>> = ref([]);
 const errortimedisplayed = 3000;
+let index = 0;
 
 onErrorCaptured((err, instance, info) => {
   void instance;
-  errormessages.value.push(err.message);
+  errormessages.value.push({ index: index, errorMessage: err.message });
+  index++;
   console.log(errormessages.value);
   console.log('this needed to be displayed, err:' + err + ' info: ' + info);
   setTimeout(() => {
-    const i = errormessages.value.indexOf(err.message);
+    const i = errormessages.value.indexOf({
+      index: index - 1,
+      errorMessage: err.message,
+    });
     errormessages.value.splice(i, 1);
   }, errortimedisplayed);
   return false;
