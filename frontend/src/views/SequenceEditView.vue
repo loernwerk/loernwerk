@@ -30,7 +30,12 @@
             :slide="selectedSlide"
             :sequence="sequence"
             :disable-button="disableButton"
-            @update-sequence="(val) => (sequence.name = val.name)"
+            @update-sequence="
+              (val) => {
+                sequence.name = val.name;
+                addUnloadEventListener();
+              }
+            "
             @update-slide="(val) => updateSlide(val)"
           />
         </template>
@@ -46,7 +51,11 @@
           <EmbedOptionsTab
             v-if="currentEditingSlot"
             :embedContent="(selectedSlide.content[currentEditingSlot] as EmbedContent)"
-            @update-content="(val) => (selectedSlide.content[currentEditingSlot as LayoutSlot] = val)"
+            @update-content="
+              (val) => {
+                selectedSlide.content[currentEditingSlot as LayoutSlot] = val;
+                addUnloadEventListener()
+              }"
           />
         </template>
 
@@ -54,7 +63,11 @@
           <ImageOptionsTab
             v-if="currentEditingSlot"
             :imageContent="(selectedSlide.content[currentEditingSlot] as ImageContent)"
-            @update-content="(val) => (selectedSlide.content[currentEditingSlot as LayoutSlot] = val)"
+            @update-content="
+              (val) => {
+                selectedSlide.content[currentEditingSlot as LayoutSlot] = val;
+                addUnloadEventListener()
+              }"
           />
         </template>
 
@@ -76,7 +89,6 @@
           class="h-full absolute"
           @editing="
             (val) => {
-              addUnloadEventListener();
               selectEditingSlot(val.slot);
               updateContent(val.slot, val.emit);
             }
@@ -191,6 +203,7 @@ const router = useRouter();
  * @param update Object containing data for update
  */
 function updateContent(slot: LayoutSlot, update: unknown): void {
+  addUnloadEventListener();
   if (selectedSlide.value.content[slot]?.contentType == ContentType.TEXT) {
     (selectedSlide.value.content[slot] as TextContent).delta = update as Delta;
   }
@@ -208,6 +221,7 @@ function updateContent(slot: LayoutSlot, update: unknown): void {
  * @param contentType Content type to change to
  */
 function changeContent(slot: LayoutSlot, contentType: ContentType): void {
+  addUnloadEventListener();
   if (selectedSlide.value.content[slot]) {
     const result = confirm(i18n.global.t('looseContentWarning'));
     if (!result) {
@@ -262,6 +276,7 @@ function changeSelectedSlide(index: number): void {
  * Adds a new slide to the sequence
  */
 function addSlide(): void {
+  addUnloadEventListener();
   let maxId = -1;
   sequence.value.slides.forEach((slide) => {
     if (slide.id > maxId) {
@@ -290,6 +305,7 @@ function addSlide(): void {
  * Updates the order of the slides after a drag and drop event
  */
 function updateSlideOrder(): void {
+  addUnloadEventListener();
   for (let i = 0; i < sequence.value.slides.length; i++) {
     // eslint-disable-next-line vue/no-mutating-props
     sequence.value.slides[i].order = i;
@@ -301,6 +317,7 @@ function updateSlideOrder(): void {
  * @param index Index of the slide to delete
  */
 function deleteSlide(index: number): void {
+  addUnloadEventListener();
   if (sequence.value.slides.length == 1) {
     return;
   }
@@ -313,6 +330,7 @@ function deleteSlide(index: number): void {
  * @param slide Slide to use for update
  */
 function updateSlide(slide: ISlide): void {
+  addUnloadEventListener();
   if (Layout.hasHeader(slide.layout) && !slide.content[LayoutSlot.HEADER]) {
     const header = new TextContent();
     header.contentType = ContentType.TEXT;
