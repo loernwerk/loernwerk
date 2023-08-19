@@ -8,12 +8,14 @@
       </template>
       <template #default>
         <div class="space-y-2">
-          <TextInputComponent
-            class="w-full"
-            :disabled="disableInputShowSpinner"
-            :placeHolder="$t('sequence.name')"
-            v-model="nameField"
-          />
+          <form @submit.prevent="newSequence()">
+            <TextInputComponent
+              class="w-full"
+              :disabled="disableInputShowSpinner"
+              :placeHolder="$t('sequence.name')"
+              v-model="nameField"
+            />
+          </form>
           <div class="text-error" v-if="error">
             {{ $t('sequence.creationError') }}
           </div>
