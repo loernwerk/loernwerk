@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('TZ6', async ({ page }) => {
+test('TZ06', async ({ page }) => {
     await page.goto('./');
     await page.getByText('Anmelden').click();
     await expect(page).toHaveURL(/.*login/);
