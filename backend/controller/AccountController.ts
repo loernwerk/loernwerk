@@ -45,15 +45,24 @@ export class AccountController {
                 LoernwerkErrorCodes.ALREADY_EXISTS
             );
         }
-        if (
-            !(
-                this.isValidMail(data.mail, false) &&
-                this.isValidUsername(data.name, false) &&
-                this.isValidPassword(data.password)
-            )
-        ) {
+
+        if (!this.isValidMail(data.mail, false)) {
             throw new LoernwerkError(
-                LoernwerkErrorMessages.INFORMATION_DOES_NOT_SATISFY_REQUIREMENTS,
+                LoernwerkErrorMessages.MAIL_DOES_NOT_SATISFY_REQUIREMENTS,
+                LoernwerkErrorCodes.BAD_REQUEST
+            );
+        }
+
+        if (!this.isValidUsername(data.name, false)) {
+            throw new LoernwerkError(
+                LoernwerkErrorMessages.USERNAME_DOES_NOT_SATISFY_REQUIREMENTS,
+                LoernwerkErrorCodes.BAD_REQUEST
+            );
+        }
+
+        if (!this.isValidPassword(data.password)) {
+            throw new LoernwerkError(
+                LoernwerkErrorMessages.PASSWORD_DOES_NOT_SATISFY_REQUIREMENTS,
                 LoernwerkErrorCodes.BAD_REQUEST
             );
         }
@@ -276,13 +285,13 @@ export class AccountController {
                 )
             ) {
                 throw new LoernwerkError(
-                    LoernwerkErrorMessages.INFORMATION_DOES_NOT_SATISFY_REQUIREMENTS,
+                    LoernwerkErrorMessages.USERNAME_DOES_NOT_SATISFY_REQUIREMENTS,
                     LoernwerkErrorCodes.BAD_REQUEST
                 );
             }
             if (await this.nameExists(data.name)) {
                 throw new LoernwerkError(
-                    'username already exists',
+                    LoernwerkErrorMessages.USERNAME_ALREADY_EXISTS,
                     LoernwerkErrorCodes.INVALID_PARAMETER
                 );
             }
@@ -297,13 +306,13 @@ export class AccountController {
                 )
             ) {
                 throw new LoernwerkError(
-                    LoernwerkErrorMessages.INFORMATION_DOES_NOT_SATISFY_REQUIREMENTS,
+                    LoernwerkErrorMessages.MAIL_DOES_NOT_SATISFY_REQUIREMENTS,
                     LoernwerkErrorCodes.BAD_REQUEST
                 );
             }
             if (await this.mailExists(data.mail)) {
                 throw new LoernwerkError(
-                    'mail already exists',
+                    LoernwerkErrorMessages.MAIL_ALREADY_EXISTS,
                     LoernwerkErrorCodes.INVALID_PARAMETER
                 );
             }
@@ -312,7 +321,7 @@ export class AccountController {
         if (data.password != null) {
             if (!this.isValidPassword(data.password)) {
                 throw new LoernwerkError(
-                    LoernwerkErrorMessages.INFORMATION_DOES_NOT_SATISFY_REQUIREMENTS,
+                    LoernwerkErrorMessages.PASSWORD_DOES_NOT_SATISFY_REQUIREMENTS,
                     LoernwerkErrorCodes.BAD_REQUEST
                 );
             }
