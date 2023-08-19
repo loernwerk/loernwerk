@@ -586,7 +586,7 @@ export class SequenceController {
             h5pContentId: In(usedH5PIds),
         });
         for (const h5pId of usedH5PIds) {
-            if (usedByEntries.some((entry) => entry.h5pContentId === h5pId)) {
+            if (!usedByEntries.some((entry) => entry.h5pContentId === h5pId)) {
                 // We need to create a new entry
                 const newEntry = new DBH5PContentUsedBy();
                 newEntry.h5pContentId = h5pId;
