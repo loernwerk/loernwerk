@@ -17,11 +17,15 @@ test('test', async ({ page, browserName }) => {
         .filter({ hasText: /^Anmelden$/ })
         .nth(2)
         .click();
+
+    // Locate Sequence
     await page
         .locator(
             'div:nth-child(3) > div > div > div:nth-child(2) > div > .space-y-2 > div:nth-child(3) > .flex-1 > .relative > .p-2'
         )
         .click();
+
+    // Change Embed Link
     await page.locator('.grid > div:nth-child(2) > div > div > div').click();
     await page.getByRole('textbox').click();
     await page
@@ -29,6 +33,8 @@ test('test', async ({ page, browserName }) => {
         .fill(
             `https://www.youtube.com/embed/dsHyUgGMht0?bowser=${browserName}`
         );
+
+    // Save sequence
     await page.getByRole('heading', { name: 'Seite' }).nth(1).click();
     await page
         .locator('div')
@@ -38,6 +44,7 @@ test('test', async ({ page, browserName }) => {
 
     await page.waitForURL('/overview');
 
+    // Check if sequence was saved with new url
     const editedSlide = (await fetch(
         'http://localhost:5000/api/sequence/FCBEEB/view/0'
     ).then((res) => res.json())) as ISlide;
