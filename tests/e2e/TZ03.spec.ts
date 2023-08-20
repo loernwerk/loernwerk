@@ -31,4 +31,17 @@ test('test', async ({ page }) => {
     await page
         .getByRole('heading', { name: 'Mit Teilnehmenden teilen' })
         .click();
+
+    await expect(
+        page
+            .locator('div')
+            .filter({ hasText: /^Code der Sequenz:$/ })
+            .getByRole('textbox')
+    ).toBeVisible();
+    await expect(
+        page
+            .locator('div')
+            .filter({ hasText: /^Link der Sequenz:$/ })
+            .getByRole('textbox')
+    ).toBeVisible();
 });
