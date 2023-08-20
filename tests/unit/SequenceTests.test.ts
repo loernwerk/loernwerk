@@ -7,7 +7,7 @@ import { SequenceController } from '../../backend/controller/SequenceController'
 import { DBSlide } from '../../model/slide/DBSlide';
 import { LayoutType } from '../../model/slide/layout/Layout';
 import { ISequenceWithSlides } from '../../model/sequence/ISequenceWithSlides';
-import { DBH5PContent, DBH5PContentUsedBy } from '../../model/h5p/DBH5PContent';
+import { DBH5PContent } from '../../model/h5p/DBH5PContent';
 import { DBConfigEntry } from '../../model/configuration/DBConfigEntry';
 import { ConfigController } from '../../backend/controller/ConfigController';
 
@@ -17,14 +17,7 @@ beforeAll(async () => {
         type: 'sqlite',
         database: ':memory:',
         dropSchema: true,
-        entities: [
-            DBUser,
-            DBSequence,
-            DBSlide,
-            DBH5PContent,
-            DBConfigEntry,
-            DBH5PContentUsedBy,
-        ],
+        entities: [DBUser, DBSequence, DBSlide, DBH5PContent, DBConfigEntry],
         synchronize: true,
         logging: false,
     });
@@ -106,7 +99,7 @@ describe('SequenceController Tests', () => {
             name: 'changed',
             code: 'CODE66',
         };
-        await SequenceController.saveSequence(sequenceChanges, 931943);
+        await SequenceController.saveSequence(sequenceChanges);
         const sequenceChanged = await DBSequence.findBy({ code: 'CODE66' });
         expect(sequenceChanged[0].name).toEqual('changed');
     });
@@ -118,10 +111,7 @@ describe('SequenceController Tests', () => {
         expect(sequences[0].code).toEqual('CODE66');
     });
 
-    /**
-     * getSharedSequencesOfUser function
-     * NOTE: If you have read and write access set, then the sequence is returned twice. Intended?
-     */
+    //getSharedSequencesOfUser function
     it('try to get sequences that are shared with a user', async () => {
         const sequences = await SequenceController.getSharedSequencesOfUser(
             2351951
@@ -166,7 +156,7 @@ describe('SequenceController Tests', () => {
     it('try to delete sequence', async () => {
         const user = await DBUser.findBy({ name: 'anatoli' });
         const sequence = await DBSequence.findBy({ code: 'CODE66' });
-        await SequenceController.deleteSequence(sequence[0].code, 931943);
+        await SequenceController.deleteSequence(sequence[0].code);
         const userSequences = await SequenceController.getSequencesOfUser(
             user[0].id
         );

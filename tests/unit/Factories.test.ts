@@ -7,6 +7,7 @@ import { ContentType } from '../../model/slide/content/Content';
 describe('Factory-Tests', () => {
     const h5pJSON = {
         h5pContentId: 'string',
+        sequenceCode: 'Sequence66',
         contentType: ContentType.H5P,
     };
     const embedJSON = {
@@ -29,6 +30,7 @@ describe('Factory-Tests', () => {
         const h5p = ContentFactory.createContent(h5pJSON);
         expect(h5p).toBeInstanceOf(H5PContent);
         expect((h5p as H5PContent).h5pContentId).toEqual('string');
+        expect((h5p as H5PContent).sequenceCode).toEqual('Sequence66');
     });
 
     it('embed factory test', async () => {
