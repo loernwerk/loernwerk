@@ -2,7 +2,7 @@
 <template>
   <div class="flex flex-row grow space-x-5">
     <div class="flex flex-col space-y-5">
-      <ButtonComponent @click="save()"
+      <ButtonComponent @click="save()" :loading="disableButton"
         ><div class="py-1 text-xl text-center">
           {{ $t('save') }}
         </div></ButtonComponent
@@ -33,7 +33,7 @@
             @update-sequence="
               (val) => {
                 sequence.name = val.name;
-                addUnloadEventListener();
+                edited = true;
               }
             "
             @update-slide="(val) => updateSlide(val)"
@@ -54,7 +54,7 @@
             @update-content="
               (val) => {
                 selectedSlide.content[currentEditingSlot as LayoutSlot] = val;
-                addUnloadEventListener()
+                edited = true;
               }"
           />
         </template>
@@ -66,7 +66,7 @@
             @update-content="
               (val) => {
                 selectedSlide.content[currentEditingSlot as LayoutSlot] = val;
-                addUnloadEventListener()
+                edited = true;
               }"
           />
         </template>
@@ -101,7 +101,7 @@
 </template>
 
 <script setup lang="ts">
-import { Ref, computed, onUnmounted, ref, watch } from 'vue';
+import { Ref, computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { ISequenceWithSlides } from '../../../model/sequence/ISequenceWithSlides';
 import SlideOverviewContainer from '../components/SlideOverviewContainer.vue';
 import {
@@ -138,22 +138,22 @@ const props = defineProps({
   },
 });
 
-const isSaved = ref(false);
 const disableButton = ref(false);
 const edited = ref(false);
 
 onUnmounted(() => {
-  if (edited.value) {
-    window.removeEventListener('beforeunload', onUnloadEventListener);
-  }
+  window.removeEventListener('beforeunload', onUnloadEventListener);
+});
+onMounted(() => {
+  window.addEventListener('beforeunload', onUnloadEventListener);
 });
 
 useRouter().beforeEach((to, from) => {
   void to;
-  if (!isSaved.value && from.name === 'SequenceEdit' && edited.value) {
+  if (from.name === 'SequenceEdit' && edited.value) {
     const result = confirm(i18n.global.t('leaveWarning'));
     if (result) {
-      isSaved.value = true;
+      edited.value = false;
     } else {
       return false;
     }
@@ -161,23 +161,16 @@ useRouter().beforeEach((to, from) => {
 });
 
 /**
- * adds the eventlistener on edit
- */
-function addUnloadEventListener(): void {
-  if (!edited.value) {
-    edited.value = true;
-    window.addEventListener('beforeunload', onUnloadEventListener);
-  }
-}
-
-/**
  * an event listener for the beforunloadevent which prevents leaving with unsaved content
  * @param event the unloadevent
  * @returns the message to be prompted
  */
-function onUnloadEventListener(event: BeforeUnloadEvent): string {
-  event.preventDefault();
-  return i18n.global.t('leaveWarning');
+function onUnloadEventListener(event: BeforeUnloadEvent): string | undefined {
+  if (edited.value) {
+    event.preventDefault();
+    event.returnValue = i18n.global.t('leaveWarning'); // chromium fix
+    return i18n.global.t('leaveWarning');
+  }
 }
 
 const sequence = ref<ISequenceWithSlides>(
@@ -189,6 +182,8 @@ sequence.value.slides.sort((slideA, slideB) => {
 
 if (sequence.value.slides.length == 0) {
   addSlide();
+  // addSlide triggers the edited to be true, but we kinda don't want this here, since this is not a "real", user intented-change
+  edited.value = false;
 }
 
 const selectedSlideIndex = ref(0);
@@ -203,7 +198,7 @@ const router = useRouter();
  * @param update Object containing data for update
  */
 function updateContent(slot: LayoutSlot, update: unknown): void {
-  addUnloadEventListener();
+  edited.value = true;
   if (selectedSlide.value.content[slot]?.contentType == ContentType.TEXT) {
     (selectedSlide.value.content[slot] as TextContent).delta = update as Delta;
   }
@@ -221,7 +216,7 @@ function updateContent(slot: LayoutSlot, update: unknown): void {
  * @param contentType Content type to change to
  */
 function changeContent(slot: LayoutSlot, contentType: ContentType): void {
-  addUnloadEventListener();
+  edited.value = true;
   if (selectedSlide.value.content[slot]) {
     const result = confirm(i18n.global.t('looseContentWarning'));
     if (!result) {
@@ -276,7 +271,7 @@ function changeSelectedSlide(index: number): void {
  * Adds a new slide to the sequence
  */
 function addSlide(): void {
-  addUnloadEventListener();
+  edited.value = true;
   let maxId = -1;
   sequence.value.slides.forEach((slide) => {
     if (slide.id > maxId) {
@@ -305,7 +300,7 @@ function addSlide(): void {
  * Updates the order of the slides after a drag and drop event
  */
 function updateSlideOrder(): void {
-  addUnloadEventListener();
+  edited.value = true;
   for (let i = 0; i < sequence.value.slides.length; i++) {
     // eslint-disable-next-line vue/no-mutating-props
     sequence.value.slides[i].order = i;
@@ -317,7 +312,7 @@ function updateSlideOrder(): void {
  * @param index Index of the slide to delete
  */
 function deleteSlide(index: number): void {
-  addUnloadEventListener();
+  edited.value = true;
   if (sequence.value.slides.length == 1) {
     return;
   }
@@ -330,7 +325,7 @@ function deleteSlide(index: number): void {
  * @param slide Slide to use for update
  */
 function updateSlide(slide: ISlide): void {
-  addUnloadEventListener();
+  edited.value = true;
   if (Layout.hasHeader(slide.layout) && !slide.content[LayoutSlot.HEADER]) {
     const header = new TextContent();
     header.contentType = ContentType.TEXT;
@@ -408,13 +403,13 @@ function getTab(index: number): string {
  * Saves the sequence
  */
 async function save(): Promise<void> {
-  isSaved.value = true;
   disableButton.value = true;
   try {
     await SequenceRestInterface.updateSequence(sequence.value);
+    edited.value = false;
+    await router.push({ name: 'Overview' });
   } catch {
     disableButton.value = false;
   }
-  await router.push({ name: 'Overview' });
 }
 </script>
