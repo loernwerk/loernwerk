@@ -26,8 +26,6 @@ test('test', async ({ page, browserName }) => {
         .nth(2)
         .click();
 
-    console.log(await page.innerHTML('body'));
-
     // Change data
     await page.getByPlaceholder('Benutzername').click();
     await page
