@@ -33,7 +33,7 @@ describe('SearchBarComponent', () => {
         );
     });
 
-    test('Standard placeholder', async () => {
+    test('Specified placeholder', async () => {
         const wrapper = mount(SearchBarComponent, {
             props: {
                 placeHolder: 'PlaceHolder',

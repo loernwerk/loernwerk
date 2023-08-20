@@ -11,7 +11,7 @@ import {
 } from '../../model/loernwerkError';
 
 describe('PopupNewSequence', () => {
-    test('Enter name and click butten', async () => {
+    test('Enter name and click button', async () => {
         const addSequence = vi.spyOn(SequenceRestInterface, 'addSequence');
         addSequence.mockResolvedValueOnce('returned_code');
 

@@ -38,6 +38,7 @@ describe('AccountList', () => {
         await wrapper.find('input').setValue('a');
         expect(wrapper.html()).toContain('Richard Hamming');
         expect(wrapper.html()).toContain('David Huffman');
+        expect(wrapper.html()).not.toContain('Tim Bernes-Lee');
     });
 
     test('Select user from list', async () => {
