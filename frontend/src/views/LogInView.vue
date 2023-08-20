@@ -49,7 +49,7 @@
           </div>
           <div class="flex-grow text-center">
             <div class="text-error" v-if="displayError">
-              {{ errorCode }}
+              {{ $t('error.' + errorCode) }}
             </div>
             <div class="text-success" v-if="accountCreatedMessage">
               {{ $t('created', { object: $t('user') }) }}
