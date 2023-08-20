@@ -1,4 +1,5 @@
 import { createI18n } from 'vue-i18n';
+import { LoernwerkErrorMessages } from '../../../model/loernwerkError';
 
 const messages = {
   de: {
@@ -112,6 +113,23 @@ const messages = {
       overviewTitle: 'Erstellter H5P-Inhalt',
       usedSequences: 'Verwendete Sequenzen',
     },
+    error: {
+      [LoernwerkErrorMessages.AMBIGUOUS_USER_DETAILS]:
+        'Benutzername und E-Mail sind bereits vergeben',
+      [LoernwerkErrorMessages.INSUFFICENT_USER_DETAILS]:
+        'Benutzername, E-Mail und Password müssen angegeben werden',
+      [LoernwerkErrorMessages.MAIL_ALREADY_EXISTS]:
+        'E-Mail ist bereits vergeben',
+      [LoernwerkErrorMessages.MAIL_DOES_NOT_SATISFY_REQUIREMENTS]:
+        'E-Mail ungültig',
+      [LoernwerkErrorMessages.PASSWORD_DOES_NOT_SATISFY_REQUIREMENTS]:
+        'Passwort zu kurz',
+      [LoernwerkErrorMessages.USERNAME_ALREADY_EXISTS]:
+        'Benutzername ist bereits vergeben',
+      [LoernwerkErrorMessages.USERNAME_DOES_NOT_SATISFY_REQUIREMENTS]:
+        'Benutzername ungültig',
+      [LoernwerkErrorMessages.USER_NOT_FOUND]: 'Benutzer nicht gefunden',
+    },
   },
   en: {
     search: 'Search',
@@ -222,6 +240,22 @@ const messages = {
       usedBy: 'used by {object} sequences',
       overviewTitle: 'Created H5P-Content',
       usedSequences: 'Used Sequences',
+    },
+    error: {
+      [LoernwerkErrorMessages.AMBIGUOUS_USER_DETAILS]:
+        'Username and E-Mail are already taken',
+      [LoernwerkErrorMessages.INSUFFICENT_USER_DETAILS]:
+        'Username, E-Mail and Password must be provided',
+      [LoernwerkErrorMessages.MAIL_ALREADY_EXISTS]: 'E-Mail is already taken',
+      [LoernwerkErrorMessages.MAIL_DOES_NOT_SATISFY_REQUIREMENTS]:
+        'E-Mail is invalid',
+      [LoernwerkErrorMessages.PASSWORD_DOES_NOT_SATISFY_REQUIREMENTS]:
+        'Password is too short',
+      [LoernwerkErrorMessages.USERNAME_ALREADY_EXISTS]:
+        'Username is already taken',
+      [LoernwerkErrorMessages.USERNAME_DOES_NOT_SATISFY_REQUIREMENTS]:
+        'Username is invalid',
+      [LoernwerkErrorMessages.USER_NOT_FOUND]: 'User not found',
     },
   },
 };
