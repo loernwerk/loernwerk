@@ -82,6 +82,21 @@ onMounted(() => {
     emits('editing', quill.getContents());
   });
 
+  quill.getModule('toolbar').addHandler('color', (value: boolean | string) => {
+    if (value === true || value === false) {
+      const colorPicker = quill
+        .getModule('toolbar')
+        .container.querySelector('#color-picker');
+      if (colorPicker.classList.contains('hidden')) {
+        colorPicker.classList.remove('hidden');
+      } else {
+        colorPicker.classList.add('hidden');
+      }
+    } else {
+      quill.format('color', value);
+    }
+  });
+
   watch(
     () => props.textContent,
     () => {
