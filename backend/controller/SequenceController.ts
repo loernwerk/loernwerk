@@ -311,6 +311,12 @@ export class SequenceController {
                 LoernwerkErrorCodes.NOT_FOUND
             );
         }
+        if (dbSequence.slideCount === 0) {
+            throw new LoernwerkError(
+                'Sequence is empty',
+                LoernwerkErrorCodes.NOT_FOUND
+            );
+        }
         return dbSequence;
     }
 
@@ -580,10 +586,7 @@ export class SequenceController {
             h5pContentId: In(usedH5PIds),
         });
         for (const h5pId of usedH5PIds) {
-            if (
-                usedByEntries.find((entry) => entry.h5pContentId === h5pId) ===
-                undefined
-            ) {
+            if (usedByEntries.some((entry) => entry.h5pContentId === h5pId)) {
                 // We need to create a new entry
                 const newEntry = new DBH5PContentUsedBy();
                 newEntry.h5pContentId = h5pId;
