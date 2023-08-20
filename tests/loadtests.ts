@@ -31,10 +31,10 @@ const CONFIG = [
     {
         method: 'PATCH',
         route: '/api/sequence/',
-        data: { code: VALID_SEQUENCE, title: 'New Sequence Title' },
+        data: { code: VALID_SEQUENCE, name: 'New Sequence Title' },
         requests: 100,
         expectedTime: 400,
-        expectedStatus: 404,
+        expectedStatus: 204,
         login: true,
     },
     {
