@@ -31,12 +31,14 @@
 import ButtonComponent from '../components/ButtonComponent.vue';
 import ContainerComponent from '../components/ContainerComponent.vue';
 import CodeInput from '../components/CodeInput.vue';
-import { router } from '../router';
+import { useRouter } from 'vue-router';
 import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
 import { ref } from 'vue';
 
 const showRedBorder = ref(false);
 const disableInputShowSpinner = ref(false);
+
+const router = useRouter();
 
 /**
  * Verify inputted sequence code. If input is valid, redirect. Otherwise change border color of CodeInput.

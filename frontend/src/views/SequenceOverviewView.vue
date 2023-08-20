@@ -13,7 +13,7 @@
           <ButtonComponent
             class="w-fit"
             @click="showPopupNewSequence = true"
-            v-if="allOwnSequences.length < maxSequnces || maxSequnces < 0"
+            v-if="allOwnSequences.length < maxSequences || maxSequences < 0"
           >
             {{ $t('create', { object: $t('sequence.sequence') }) }}
           </ButtonComponent>
@@ -103,9 +103,9 @@ async function reloadSequences(): Promise<void> {
   allOwnSequences.value = sequences.value;
 }
 
-const maxSequnces = ref(-1);
+const maxSequences = ref(-1);
 try {
-  maxSequnces.value = (await ConfigRestInterface.getValue(
+  maxSequences.value = (await ConfigRestInterface.getValue(
     ConfigKey.MAX_SEQUENCES_PER_USER
   )) as number;
 } catch (e) {
