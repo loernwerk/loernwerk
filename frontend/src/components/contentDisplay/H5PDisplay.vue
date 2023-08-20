@@ -4,7 +4,7 @@
       <div class="absolute" v-if="isEditorOpen">
         <ContainerComponent class="fixed top-3 bottom-3 left-3 right-3 z-10">
           <InteractableComponent class="w-fit mb-3">
-            <select v-model="toEdit" class="text-xl">
+            <select v-model="toEdit" class="text-xl bg-interactable">
               <option selected value="new">
                 {{ $t('h5p.createNewContent') }}
               </option>
@@ -106,7 +106,7 @@ if (props.editMode) {
 function openEditor(): void {
   if (props.editMode) {
     isEditorOpen.value = true;
-    emits('editing');
+    emits('editing', null);
   }
 }
 
@@ -117,9 +117,7 @@ function openEditor(): void {
 async function saveEditor(id: string | undefined): Promise<void> {
   if (props.editMode) {
     isEditorOpen.value = false;
-    if (id !== undefined) {
-      emits('editing', id);
-    }
+    emits('editing', id);
     reusable.value = await H5PRestInterface.getH5PContentList();
   }
 }

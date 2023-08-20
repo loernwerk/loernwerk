@@ -1,5 +1,8 @@
 <template>
   <div class="mt-4 space-y-2">
+    <div class="text-error" v-if="sequence.slideCount === 0">
+      {{ $t('sequence.shareEmptyWarning') }}
+    </div>
     <div class="flex space-x-2 items-center">
       <h3>{{ $t('sequence.codeOf') }}:</h3>
       <TextInputComponent :disabled="true" v-model="code" class="grow" />
@@ -27,10 +30,12 @@ const props = defineProps({
 });
 
 const link = computed(() => {
+  if (props.sequence.slideCount === 0) return '';
   return window.location.origin + '/' + props.sequence.code;
 });
 
 const code = computed(() => {
+  if (props.sequence.slideCount === 0) return '';
   return props.sequence.code;
 });
 </script>

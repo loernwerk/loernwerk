@@ -80,6 +80,8 @@ const messages = {
       shareWithTeacher: 'Mit Lehrkraft teilen',
       teacher: 'Lehrkraft',
       student: 'Teilnehmenden',
+      shareEmptyWarning:
+        'Sie versuchen, eine leere Sequenz zu teilen! Um eine Sequenz den Teilnehmenden zu teilen, erstelle bitte mind. eine Seite und speichere diese.',
     },
     config: {
       maxSequences: 'Maximale Anzahl an Lernsequenzen',
@@ -190,6 +192,8 @@ const messages = {
       shareWithTeacher: 'Share with teacher',
       teacher: 'Teacher',
       student: 'Students',
+      shareEmptyWarning:
+        'You are trying to share an empty sequence! To share a sequence with students, please create at least one slide and save it.',
     },
     config: {
       maxSequences: 'Maximum number of learning sequences',
