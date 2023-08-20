@@ -7,8 +7,8 @@ import {
     LoernwerkError,
     LoernwerkErrorCodes,
 } from '../../model/loernwerkError';
-import { findComponentByText } from './TestUtilities';
-import { routerMock } from './router_mock.setup';
+import { findComponentByText } from '../component/TestUtilities';
+import { routerMock } from '../component/router_mock.setup';
 import LogInView from '../../frontend/src/views/LogInView.vue';
 import ButtonComponent from '../../frontend/src/components/ButtonComponent.vue';
 import AccountCreationContainer from '../../frontend/src/components/admin/AccountCreationContainer.vue';

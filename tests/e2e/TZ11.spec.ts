@@ -13,6 +13,7 @@ test('TZ11', async ({ page, browserName }) => {
     await expect(page).toHaveURL(/.*overview/);
 
     await page.getByRole('link', { name: 'Admin' }).click();
+    await page.waitForURL(/.*admin/);
     await expect(page).toHaveURL(/.*admin/);
 
     await page.getByText('Benutzer erstellen').click();

@@ -10,7 +10,11 @@ test('TZ13', async ({ page, browserName, context }) => {
     await page.getByPlaceholder('Benutzername/E-Mail').fill('admin');
     await page.getByPlaceholder('Passwort').click();
     await page.getByPlaceholder('Passwort').fill('12345678');
+    const responsePromise = page.waitForResponse(
+        'http://localhost:5000/api/account/login'
+    );
     await page.getByText('Anmelden', { exact: true }).click();
+    await responsePromise;
     expect(page).toHaveURL(/.*overview/);
 
     await page.getByRole('link', { name: 'Admin' }).click();
@@ -19,8 +23,15 @@ test('TZ13', async ({ page, browserName, context }) => {
     const username = `TZ12-13-tobeedited-tobedeleted-${browserName}`;
 
     await page.getByText(username).click();
+    const deleteResponsePromise = page.waitForResponse(
+        'http://localhost:5000/api/account/'
+    );
     await page.getByText('Löschen').click();
+    await deleteResponsePromise;
     expect(
-        await page.getByText(/.*Benutzer erstellen.*/).allInnerTexts()
+        await page
+            .locator('.w-full > div > div:nth-child(2)')
+            .first()
+            .allInnerTexts()
     ).not.toContain(username);
 });

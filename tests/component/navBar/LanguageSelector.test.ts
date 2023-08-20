@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
 import { describe, test, vi } from 'vitest';
-import LanguageSelector from '../../frontend/src/components/navBar/LanguageSelector.vue';
-import { i18n } from '../../frontend/src/i18n';
+import LanguageSelector from '../../../frontend/src/components/navBar/LanguageSelector.vue';
+import { i18n } from '../../../frontend/src/i18n';
 
 vi.mock('../../frontend/src/i18n', () => {
     return {

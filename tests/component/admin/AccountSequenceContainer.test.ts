@@ -1,14 +1,14 @@
 import { flushPromises, mount } from '@vue/test-utils';
 import { describe, test, vi } from 'vitest';
-import AccountSequenceContainer from '../../frontend/src/components/admin/AccountSequenceContainer.vue';
-import ButtonComponent from '../../frontend/src/components/ButtonComponent.vue';
-import { findComponentByText } from './TestUtilities';
-import { routerMock } from './router_mock.setup';
-import { SequenceRestInterface } from '../../frontend/src/restInterfaces/SequenceRestInterface';
+import AccountSequenceContainer from '../../../frontend/src/components/admin/AccountSequenceContainer.vue';
+import ButtonComponent from '../../../frontend/src/components/ButtonComponent.vue';
+import { findComponentByText } from '../TestUtilities';
+import { routerMock } from '../router_mock.setup';
+import { SequenceRestInterface } from '../../../frontend/src/restInterfaces/SequenceRestInterface';
 import {
     LoernwerkError,
     LoernwerkErrorCodes,
-} from '../../model/loernwerkError';
+} from '../../../model/loernwerkError';
 
 describe('AccountSequenceContainer', () => {
     test('Show sequences', () => {

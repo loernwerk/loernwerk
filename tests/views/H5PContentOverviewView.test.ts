@@ -5,7 +5,7 @@ import H5PContentOverviewView from '../../frontend/src/views/H5PContentOverviewV
 import { AccountRestInterface } from '../../frontend/src/restInterfaces/AccountRestInterface';
 import { H5PRestInterface } from '../../frontend/src/restInterfaces/H5PRestInterface';
 import { UserClass } from '../../model/user/IUser';
-import { findComponentByText } from './TestUtilities';
+import { findComponentByText } from '../component/TestUtilities';
 
 describe('H5PContentOverviewView', () => {
     const SuspenseH5PContentOverview = defineComponent({

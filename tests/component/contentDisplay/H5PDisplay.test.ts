@@ -1,9 +1,9 @@
 import { flushPromises, mount } from '@vue/test-utils';
 import { describe, test, beforeEach, vi } from 'vitest';
-import H5PDisplay from '../../frontend/src/components/contentDisplay/H5PDisplay.vue';
-import { ContentType } from '../../model/slide/content/Content';
+import H5PDisplay from '../../../frontend/src/components/contentDisplay/H5PDisplay.vue';
+import { ContentType } from '../../../model/slide/content/Content';
 import { defineComponent } from 'vue';
-import { H5PRestInterface } from '../../frontend/src/restInterfaces/H5PRestInterface';
+import { H5PRestInterface } from '../../../frontend/src/restInterfaces/H5PRestInterface';
 
 describe('H5PDisplay', () => {
     const SuspenseH5PDisplay = defineComponent({

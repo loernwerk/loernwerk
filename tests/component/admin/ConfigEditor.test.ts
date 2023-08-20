@@ -1,10 +1,10 @@
 import { flushPromises, mount } from '@vue/test-utils';
 import { describe, test, vi } from 'vitest';
-import ConfigEditor from '../../frontend/src/components/admin/ConfigEditor.vue';
-import ButtonComponent from '../../frontend/src/components/ButtonComponent.vue';
-import { ConfigKey } from '../../model/configuration/ConfigKey';
-import { RegistrationType } from '../../model/configuration/RegistrationType';
-import { ConfigRestInterface } from '../../frontend/src/restInterfaces/ConfigRestInterface';
+import ConfigEditor from '../../../frontend/src/components/admin/ConfigEditor.vue';
+import ButtonComponent from '../../../frontend/src/components/ButtonComponent.vue';
+import { ConfigKey } from '../../../model/configuration/ConfigKey';
+import { RegistrationType } from '../../../model/configuration/RegistrationType';
+import { ConfigRestInterface } from '../../../frontend/src/restInterfaces/ConfigRestInterface';
 
 describe('ConfigEditor', () => {
     test('Display config settings correctly', () => {
