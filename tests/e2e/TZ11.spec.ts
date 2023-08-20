@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('TZ11', async ({ page }) => {
+test('TZ11', async ({ page, browserName }) => {
     await page.goto('./');
     await page.getByText('Anmelden').click();
     await expect(page).toHaveURL(/.*login/);
@@ -16,19 +16,20 @@ test('TZ11', async ({ page }) => {
     await expect(page).toHaveURL(/.*admin/);
 
     await page.getByText('Benutzer erstellen').click();
-    const elementAccountCreationContainer = page.getByText('Benuter erstellt');
-    expect(elementAccountCreationContainer !== undefined).toBeTruthy();
+    expect(await page.getByText('Benutzer erstellen:').isVisible()).toBe(true);
 
     await page.getByPlaceholder('Benutzername').click();
-    await page.getByPlaceholder('Benutzername').fill('TZ11');
+    await page.getByPlaceholder('Benutzername').fill('TZ11-' + browserName);
     await page.getByPlaceholder('E-Mail').click();
-    await page.getByPlaceholder('E-Mail').fill('tz11@x.de');
+    await page.getByPlaceholder('E-Mail').fill('tz11-' + browserName + '@x.de');
     await page.getByPlaceholder('E-Mail').press('Tab');
     await page.getByPlaceholder('Passwort', { exact: true }).fill('12345678');
     await page.getByPlaceholder('Passwort wiederholen').click();
     await page.getByPlaceholder('Passwort wiederholen').fill('12345678');
+    const responsePromise = page.waitForResponse(
+        'http://localhost:5000/api/account/'
+    );
     await page.getByText('Erstellen', { exact: true }).click();
-
-    const elementSuccessMessage = page.getByText('Benuter erstellt');
-    expect(elementSuccessMessage !== undefined).toBeTruthy();
+    await responsePromise;
+    expect(await page.getByText('Benutzer erstellt').isVisible()).toBe(true);
 });

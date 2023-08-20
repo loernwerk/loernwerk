@@ -28,6 +28,8 @@ test('TZ06', async ({ page }) => {
             'div:nth-child(2) > div:nth-child(2) > div > .mt-2 > div > div > div:nth-child(2) > div > .space-y-2 > div:nth-child(3) > div:nth-child(2) > .relative > .p-2 > div > .svg-inline--fa > path'
         )
         .click();
-    const element = page.getByText('Mit Teilnehmenden teilen');
-    expect(element !== undefined).toBeTruthy();
+
+    expect(await page.getByText('Mit Teilnehmenden teilen').isVisible()).toBe(
+        true
+    );
 });
