@@ -46,7 +46,7 @@
       </select>
     </span>
 
-    <span class="flex space-x-2">
+    <span class="flex space-x-2 active-indicator">
       <button class="ql-bold interactable h-fit">
         <FontAwesomeIcon :icon="['fas', 'bold']" />
       </button>
@@ -58,7 +58,7 @@
       </button>
     </span>
 
-    <span class="flex space-x-2">
+    <span class="flex space-x-2 active-indicator">
       <button class="ql-align interactable h-fit" value="left" type="button">
         <FontAwesomeIcon :icon="['fas', 'align-left']" />
       </button>
@@ -126,3 +126,14 @@ onMounted(() => {
     ?.toggleAttribute('selected', true);
 });
 </script>
+
+<style scoped>
+.active-indicator > .ql-active {
+  border-color: hsl(0, 0%, 30%);
+  background-color: hsl(0, 0%, 95%) !important;
+}
+.dark .active-indicator > .ql-active {
+  border-color: hsl(0, 0%, 70%);
+  background-color: hsl(180, 30%, 25%) !important;
+}
+</style>
