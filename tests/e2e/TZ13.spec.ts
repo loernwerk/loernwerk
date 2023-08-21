@@ -15,6 +15,7 @@ test('TZ13', async ({ page, browserName, context }) => {
     );
     await page.getByText('Anmelden', { exact: true }).click();
     await responsePromise;
+    await page.waitForURL(/.*overview/);
     expect(page).toHaveURL(/.*overview/);
 
     await page.goto('./admin');
