@@ -1,10 +1,10 @@
 import { flushPromises, mount } from '@vue/test-utils';
 import { describe, test, vi } from 'vitest';
-import SequenceDisplayPreview from '../../../frontend/src/components/SequenceDisplayPreview.vue';
-import PopupComponent from '../../../frontend/src/components/PopupComponent.vue';
-import ButtonComponent from '../../../frontend/src/components/ButtonComponent.vue';
+import SequenceDisplayPreview from '../../frontend/src/components/SequenceDisplayPreview.vue';
+import PopupComponent from '../../frontend/src/components/PopupComponent.vue';
+import ButtonComponent from '../../frontend/src/components/ButtonComponent.vue';
 import { routerMock } from './router_mock.setup';
-import TagSequencePopupTab from '../../../frontend/src/components/sequenceOverviewPopUpTabs/TagSequencePopupTab.vue';
+import TagSequencePopupTab from '../../frontend/src/components/sequenceOverviewPopUpTabs/TagSequencePopupTab.vue';
 import { defineComponent } from 'vue';
 import { AccountRestInterface } from '../../frontend/src/restInterfaces/AccountRestInterface';
 

@@ -1,8 +1,8 @@
 import { flushPromises, mount } from '@vue/test-utils';
 import { describe, test, vi } from 'vitest';
-import SlideOverviewContainer from '../../../frontend/src/components/SlideOverviewContainer.vue';
+import SlideOverviewContainer from '../../frontend/src/components/SlideOverviewContainer.vue';
 import { LayoutType } from '../../model/slide/layout/Layout';
-import ButtonComponent from '../../../frontend/src/components/ButtonComponent.vue';
+import ButtonComponent from '../../frontend/src/components/ButtonComponent.vue';
 import { ISlide } from '../../model/slide/ISlide';
 import { ConfigRestInterface } from '../../frontend/src/restInterfaces/ConfigRestInterface';
 import { defineComponent } from 'vue';
