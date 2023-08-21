@@ -6,26 +6,40 @@ import {
     LoernwerkError,
     LoernwerkErrorCodes,
 } from '../../model/loernwerkError';
+import { ConfigController } from '../../backend/controller/ConfigController';
+import { RegistrationType } from '../../model/configuration/RegistrationType';
+import { ConfigKey } from '../../model/configuration/ConfigKey';
 
 const sendStatusFn = jest.fn();
+const statusFn = jest.fn();
 /**
  * Calls the handlefunction on the given router
  * @param router the router to call on
- * @param param params that can be an value assigned on
+ * @param req params that can be an value assigned on
  */
-function handleRouter(router: Router, param: RouterOption): void {
+function handleRouter(router: Router, req: RouterOption): void {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    router.handle(param, { sendStatus: sendStatusFn });
+    router.handle(req, { sendStatus: sendStatusFn, status: statusFn });
 }
+
+let router = new AccountRouterFactory().buildRouter();
+const testUser = {
+    name: 'test',
+    mail: 'test@test.de',
+    type: UserClass.ADMIN,
+    sharedSequencesReadAccess: [],
+    sharedSequencesWriteAccess: [],
+    password: 'test',
+    id: 1234,
+};
 
 describe('Accountrouter tests', () => {
     afterEach(() => {
         jest.clearAllMocks();
+        router = new AccountRouterFactory().buildRouter();
     });
     test('Logout', () => {
-        const router = new AccountRouterFactory().buildRouter();
-
         const destroyFn = jest.fn().mockImplementation((func) => {
             func();
         });
@@ -44,7 +58,6 @@ describe('Accountrouter tests', () => {
     });
 
     test('incorrect login', () => {
-        const router = new AccountRouterFactory().buildRouter();
         const loginFn = jest.spyOn(AccountController, 'tryLogin');
         loginFn.mockImplementationOnce(() => {
             throw new LoernwerkError(
@@ -68,17 +81,8 @@ describe('Accountrouter tests', () => {
 
     test('login', () => {
         //not working however
-        const router = new AccountRouterFactory().buildRouter();
         const loginFn = jest.spyOn(AccountController, 'tryLogin');
-        loginFn.mockResolvedValueOnce({
-            name: 'test',
-            mail: 'test@test.de',
-            type: UserClass.ADMIN,
-            sharedSequencesReadAccess: [],
-            sharedSequencesWriteAccess: [],
-            password: 'test',
-            id: 1234,
-        });
+        loginFn.mockResolvedValueOnce(testUser);
 
         handleRouter(router, {
             url: '/login',
@@ -94,6 +98,71 @@ describe('Accountrouter tests', () => {
         expect(loginFn).toBeCalledWith('test', 'test');
         expect(sendStatusFn).toBeCalledWith(204);
     });
+
+    test('Add Account Admin', () => {
+        const createAccountFn = jest.spyOn(
+            AccountController,
+            'createNewAccount'
+        );
+        createAccountFn.mockResolvedValueOnce(testUser);
+        const body = {
+            name: 'test',
+            mail: 'test@test.de',
+            password: 'test',
+        };
+        handleRouter(router, {
+            url: '/',
+            method: 'put',
+            body: body,
+            session: {
+                isAdmin: true,
+            },
+        });
+
+        expect(createAccountFn).toBeCalledTimes(1);
+        expect(createAccountFn).toBeCalledWith(body);
+        expect(statusFn).toBeCalledWith(204);
+    });
+
+    test('Add Account not Admin reject', () => {
+        const getRegTypeFn = jest.spyOn(ConfigController, 'getConfigEntry');
+        const createAccountFn = jest.spyOn(
+            AccountController,
+            'createNewAccount'
+        );
+        createAccountFn.mockResolvedValueOnce(testUser);
+        getRegTypeFn.mockResolvedValueOnce(RegistrationType.CLOSED);
+        const body = {
+            name: 'test',
+            mail: 'test@test.de',
+            password: 'test',
+        };
+        handleRouter(router, {
+            url: '/',
+            method: 'put',
+            body: body,
+            session: {
+                isAdmin: false,
+            },
+        });
+
+        expect(getRegTypeFn).toBeCalledTimes(1);
+        expect(getRegTypeFn).toBeCalledWith(ConfigKey.REGISTRATION_TYPE);
+        expect(createAccountFn).toBeCalledTimes(0);
+        expect(sendStatusFn).toBeCalledWith(401);
+    });
+
+    test('patch Account reject', () => {
+        handleRouter(router, {
+            body: testUser,
+            session: {
+                isAdmin: false,
+                userId: 0,
+            },
+        });
+
+        expect(sendStatusFn).toBeCalledWith(403);
+    });
 });
 
 interface RouterOption {
@@ -103,6 +172,9 @@ interface RouterOption {
         userId?: number;
         // eslint-disable-next-line
         destroy?: any;
+        isAdmin?: boolean;
+        username?: string;
+        email?: string;
     };
     // eslint-disable-next-line
     body?: any;
