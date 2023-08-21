@@ -17,6 +17,8 @@ test('test', async ({ page, browserName }) => {
         .nth(2)
         .click();
 
+    await page.waitForURL('/overview');
+
     // Create new sequence
     await page.locator('.p-2').first().click();
     await page.getByPlaceholder('Name der Sequenz').click();
@@ -32,6 +34,9 @@ test('test', async ({ page, browserName }) => {
             '.grid > div:nth-child(2) > div > div > div > div > .h-full > .w-full'
         )
         .click();
+
+    await page.waitForTimeout(5000);
+
     await page
         .frameLocator('iframe')
         .getByRole('button', { name: 'Details', exact: true })
