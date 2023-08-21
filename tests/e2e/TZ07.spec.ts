@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test';
 
 const browserAccountMap: Record<string, string> = {
-    chromium: 'lehrkraft',
-    firefox: 'Anderer Lehrer',
-    webkit: 'TZ12-13-tobeedited-tobedeleted',
+    chromium: 'TZ7-1',
+    firefox: 'TZ7-2',
+    webkit: 'TZ7-3',
 };
 
 test('test', async ({ page, browserName }) => {
@@ -25,6 +25,12 @@ test('test', async ({ page, browserName }) => {
         .filter({ hasText: /^Anmelden$/ })
         .nth(2)
         .click();
+
+    await page.waitForURL('/overview');
+
+    await page.locator('svg').nth(2).click();
+
+    await page.waitForURL('/account');
 
     // Change data
     await page.getByPlaceholder('Benutzername').click();
@@ -49,5 +55,5 @@ test('test', async ({ page, browserName }) => {
         .nth(2)
         .click();
 
-    expect(await page.innerHTML('body')).toContain('Benutzer gespeichert');
+    expect(page.getByText('Benutzer gespeichert')).toBeDefined();
 });

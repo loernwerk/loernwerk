@@ -46,6 +46,8 @@ test('test', async ({ page, browserName }) => {
         .getByRole('button', { name: 'Benutzen' })
         .click();
 
+    await page.waitForTimeout(5000);
+
     // Fill in field for H5P Content
     await page
         .frameLocator('iframe')

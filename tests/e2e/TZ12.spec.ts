@@ -24,6 +24,9 @@ test('test', async ({ page, browserName }) => {
     await page
         .locator('div:nth-child(4) > .p-0\\.5 > div > .relative > .p-2')
         .click();
+
+    await page.waitForTimeout(2000);
+
     await page.getByPlaceholder('Benutzername').click();
     await page
         .getByPlaceholder('Benutzername')
