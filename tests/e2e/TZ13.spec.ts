@@ -17,8 +17,8 @@ test('TZ13', async ({ page, browserName, context }) => {
     await responsePromise;
     expect(page).toHaveURL(/.*overview/);
 
-    await page.getByRole('link', { name: 'Admin' }).click();
-    page.waitForURL(/.*admin/);
+    await page.goto('./admin');
+    await page.waitForURL(/.*admin/);
     expect(page).toHaveURL(/.*admin/);
 
     const username = `TZ12-13-tobeedited-tobedeleted-${browserName}`;
