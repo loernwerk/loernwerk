@@ -24,9 +24,7 @@ test('TZ13', async ({ page, browserName, context }) => {
 
     const username = `TZ12-13-tobeedited-tobedeleted-${browserName}`;
 
-    await page
-        .locator('div:nth-child(4) > .p-0\\.5 > div > .relative > .p-2')
-        .click();
+    await page.getByText(username).click();
     await page.getByText('Löschen').click();
     expect(
         await page
