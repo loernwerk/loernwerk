@@ -25,17 +25,12 @@ test('TZ02', async ({ page }) => {
     await page.waitForURL(/.*overview/);
 
     await page.locator('.flex-1 > .relative > .p-2 > div').first().click();
+    await page.waitForURL(/.*edit/);
     expect(page).toHaveURL(/.*edit/);
 
     await page
         .locator('div:nth-child(2) > div > div > div > #editor > .ql-editor')
-        .click();
-    await page
-        .locator('div:nth-child(2) > div > div > div > #editor > .ql-editor')
-        .press('Control+a');
-    await page
-        .locator('div:nth-child(2) > div > div > div > #editor > .ql-editor')
-        .press('Delete');
+        .fill('');
     expect(await page.locator('p').allInnerTexts()).not.toContain(
         'Einen kurzen Satz'
     );
