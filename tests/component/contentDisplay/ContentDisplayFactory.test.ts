@@ -7,7 +7,7 @@ import Delta from 'quill-delta';
 import TextDisplay from '../../../frontend/src/components/contentDisplay/TextDisplay.vue';
 import ImageDisplay from '../../../frontend/src/components/contentDisplay/ImageDisplay.vue';
 import H5PDisplay from '../../../frontend/src/components/contentDisplay/H5PDisplay.vue';
-describe('SequenceDisplayPreview', () => {
+describe('ContentDisplayFactory', () => {
     test('EmbedContent', async () => {
         const wrapper = mount(ContentDisplayFactory, {
             props: {

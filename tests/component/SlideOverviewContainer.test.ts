@@ -1,12 +1,12 @@
 import { flushPromises, mount } from '@vue/test-utils';
 import { describe, test, vi } from 'vitest';
 import SlideOverviewContainer from '../../../frontend/src/components/SlideOverviewContainer.vue';
-import { LayoutType } from '../../../model/slide/layout/Layout';
+import { LayoutType } from '../../model/slide/layout/Layout';
 import ButtonComponent from '../../../frontend/src/components/ButtonComponent.vue';
-import { ISlide } from '../../../model/slide/ISlide';
-import { ConfigRestInterface } from '../../../frontend/src/restInterfaces/ConfigRestInterface';
+import { ISlide } from '../../model/slide/ISlide';
+import { ConfigRestInterface } from '../../frontend/src/restInterfaces/ConfigRestInterface';
 import { defineComponent } from 'vue';
-describe('SequenceDisplayPreview', () => {
+describe('SlideOverviewContainer', () => {
     const slide1 = {
         layout: LayoutType.TITLEPAGE,
         content: {},
@@ -53,7 +53,6 @@ describe('SequenceDisplayPreview', () => {
 
     test('Delete Slide', async () => {
         const element = wrapper.findComponent(SuspenseSlideOverviewContainer);
-        //await element.vm.$emit('delete');
         await wrapper.vm.$emit('deleteSlide');
         await flushPromises();
         expect(element.emitted('deleteSlide')).toBeTruthy();

@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('test', async ({ page }) => {
+test('TZ09', async ({ page }) => {
     await page.goto('./');
     await page.getByRole('textbox').click();
     await page.getByRole('textbox').fill('AFBFFF');

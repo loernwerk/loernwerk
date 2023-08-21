@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils';
 import { describe, test } from 'vitest';
 import DataSequencePopupTab from '../../../frontend/src/components/sequenceOverviewPopUpTabs/DataSequencePopupTab.vue';
 import TextInputComponent from '../../../frontend/src/components/TextInputComponent.vue';
-describe('SequenceDisplayPreview', () => {
+describe('DataSequencePopupTab', () => {
     const baseSequence = {
         code: 'abcdef',
         name: 'Test',

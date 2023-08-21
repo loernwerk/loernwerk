@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('test', async ({ page }) => {
+test('TZ03', async ({ page }) => {
     await page.goto('./');
     await page.getByText('Anmelden').click();
     await page.getByPlaceholder('Benutzername/E-Mail').click();
@@ -19,7 +19,6 @@ test('test', async ({ page }) => {
     await page.getByRole('slider').click();
     await page.getByRole('slider').fill('0.4');
 
-    //expect(page.locator('//*[@id="app"]//p[2]').innerHTML()).toEqual('40%');
     await expect(page.getByText('40%')).toBeVisible();
     await page.getByRole('heading', { name: 'Seite' }).nth(1).click();
     await page.getByText('Speichern').click();

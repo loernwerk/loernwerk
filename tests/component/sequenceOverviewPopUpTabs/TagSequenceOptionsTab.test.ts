@@ -4,7 +4,7 @@ import TagSequencePopupTab from '../../../frontend/src/components/sequenceOvervi
 import TextInputComponent from '../../../frontend/src/components/TextInputComponent.vue';
 import { SequenceRestInterface } from '../../../frontend/src/restInterfaces/SequenceRestInterface';
 import ButtonComponent from '../../../frontend/src/components/ButtonComponent.vue';
-describe('SequenceDisplayPreview', () => {
+describe('TagSequencePopupTab', () => {
     const baseSequence = {
         code: 'ABCDEF',
         name: 'Test',
