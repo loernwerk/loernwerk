@@ -184,7 +184,7 @@ async function updateInformation(): Promise<void> {
     return;
   }
 
-  if (pwField.value !== '') {
+  if (pwField.value !== '' || pwFieldControl.value !== '') {
     if (pwField.value === pwFieldControl.value) {
       updateUser.password = pwField.value;
     } else {
