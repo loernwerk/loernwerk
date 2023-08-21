@@ -24,21 +24,20 @@ describe('SequenceDisplayPreview', () => {
             },
         },
     });
+
     test('Tagging works and Tags are correctly set', async () => {
         const setTags = vi
             .spyOn(SequenceRestInterface, 'updateSequence')
-            .mockResolvedValue(undefined);
-
+            .mockResolvedValueOnce(undefined);
         await flushPromises();
 
         await wrapper
             .findComponent(TextInputComponent)
             .setValue('testTag,testTag2');
-        await wrapper.findComponent(ButtonComponent).trigger('click');
-        await wrapper.vm.$nextTick(() => {
-            wrapper.vm.confirmChanges();
-            expect(wrapper.emitted('confirmed'));
-        });
+        await wrapper.findComponent(ButtonComponent).vm.$emit('click');
+        await flushPromises();
+
+        expect(wrapper.emitted()).toHaveProperty('confirmed');
         expect(wrapper.vm.tagsField).toBe('testTag,testTag2');
         expect(setTags).toHaveBeenCalled();
     });

@@ -68,6 +68,11 @@ describe('SequenceDisplayPreview', () => {
                 editMode: true,
                 layoutSlot: 1,
             },
+            global: {
+                stubs: {
+                    H5PDisplay: true,
+                },
+            },
         });
         expect(wrapper.findComponent(H5PDisplay).exists()).toBeTruthy();
     });

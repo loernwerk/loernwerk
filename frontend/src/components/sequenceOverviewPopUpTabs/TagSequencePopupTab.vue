@@ -15,7 +15,7 @@
       </div>
       <ButtonComponent
         class="w-fit float-right"
-        @click="confimChanges"
+        @click="confirmChanges()"
         :loading="loading"
         >{{ $t('save') }}</ButtonComponent
       >
@@ -55,7 +55,7 @@ const loading = ref(false);
 /**
  * Save inputted tags
  */
-async function confimChanges(): Promise<void> {
+async function confirmChanges(): Promise<void> {
   error.value = false;
   loading.value = true;
   const tags = tagsField.value
