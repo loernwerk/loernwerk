@@ -215,31 +215,7 @@ export class SequenceController {
         }
 
         // Removing H5P Content
-        const entriesToRemove = await DBH5PContentUsedBy.findBy({
-            sequenceCode: code,
-        });
-        for (const entryToRemove of entriesToRemove) {
-            await entryToRemove.remove();
-            if (
-                (
-                    await DBH5PContentUsedBy.findBy({
-                        h5pContentId: entryToRemove.h5pContentId,
-                    })
-                ).length === 0
-            ) {
-                // H5P Object is no longer used, can be removed entirely, if the object owner is saving
-                const h5pContent = await DBH5PContent.findOneByOrFail({
-                    h5pContentId: entryToRemove.h5pContentId,
-                });
-                if (h5pContent.owner === userId) {
-                    await H5PServer.getInstance()
-                        .getH5PEditor()
-                        .contentStorage.deleteContent(
-                            entryToRemove.h5pContentId
-                        );
-                }
-            }
-        }
+        await this.updateH5PContentUsed(dbSequence.code, [], userId);
 
         for (const uId of dbSequence.readAccess) {
             const user = await DBUser.findOneBy({ id: uId });
@@ -332,6 +308,12 @@ export class SequenceController {
         if (dbSequence === null) {
             throw new LoernwerkError(
                 'no sequence found',
+                LoernwerkErrorCodes.NOT_FOUND
+            );
+        }
+        if (dbSequence.slideCount === 0) {
+            throw new LoernwerkError(
+                'Sequence is empty',
                 LoernwerkErrorCodes.NOT_FOUND
             );
         }
@@ -448,54 +430,14 @@ export class SequenceController {
             for (const slot in slide.content) {
                 if (slide.content[slot].contentType === ContentType.H5P) {
                     h5pIds.push(
-                        (slide.content[slot].contentType as H5PContent)
-                            .h5pContentId
+                        (slide.content[slot] as H5PContent).h5pContentId
                     );
                 }
             }
         }
 
         // Update H5P used content map
-        const unneededH5PEntries = await DBH5PContentUsedBy.findBy({
-            sequenceCode: sequenceCode,
-            h5pContentId: Not(In(h5pIds)),
-        });
-        for (const usageEntry of unneededH5PEntries) {
-            await usageEntry.remove();
-            if (
-                (
-                    await DBH5PContentUsedBy.findBy({
-                        h5pContentId: usageEntry.h5pContentId,
-                    })
-                ).length === 0
-            ) {
-                // H5P Object is no longer used, can be removed entirely, if the object owner is saving
-                const h5pContent = await DBH5PContent.findOneByOrFail({
-                    h5pContentId: usageEntry.h5pContentId,
-                });
-                if (h5pContent.owner === savingUser) {
-                    await H5PServer.getInstance()
-                        .getH5PEditor()
-                        .contentStorage.deleteContent(usageEntry.h5pContentId);
-                }
-            }
-        }
-        const usedByEntries = await DBH5PContentUsedBy.findBy({
-            sequenceCode: sequenceCode,
-            h5pContentId: In(h5pIds),
-        });
-        for (const h5pId of h5pIds) {
-            if (
-                usedByEntries.find((entry) => entry.h5pContentId === h5pId) ===
-                null
-            ) {
-                // We need to create a new entry
-                const newEntry = new DBH5PContentUsedBy();
-                newEntry.h5pContentId = h5pId;
-                newEntry.sequenceCode = sequenceCode;
-                await newEntry.save();
-            }
-        }
+        this.updateH5PContentUsed(sequenceCode, h5pIds, savingUser);
 
         // Delete unnecessary slides
         await DBSlide.delete({
@@ -596,5 +538,61 @@ export class SequenceController {
             }
         }
         return returnArray;
+    }
+
+    /**
+     * Update H5P content used by table for supplied sequence and h5p ids. Deletes content not used in any sequence anymore, if done by the owner
+     * @param sequence Sequence code to update
+     * @param usedH5PIds H5P ids of the sequence
+     * @param userId User which triggered the update
+     */
+    private static async updateH5PContentUsed(
+        sequence: string,
+        usedH5PIds: string[],
+        userId: number
+    ): Promise<void> {
+        const entriesToRemove = await DBH5PContentUsedBy.findBy({
+            sequenceCode: sequence,
+            h5pContentId: Not(In(usedH5PIds)),
+        });
+        for (const entryToRemove of entriesToRemove) {
+            const contentId = entryToRemove.h5pContentId;
+            await entryToRemove.remove();
+            if (
+                (await ConfigController.getConfigEntry(
+                    ConfigKey.AUTODELETE_UNUSED_H5P
+                )) &&
+                (
+                    await DBH5PContentUsedBy.findBy({
+                        h5pContentId: contentId,
+                    })
+                ).length === 0
+            ) {
+                // H5P Object is no longer used, can be removed entirely, if the object owner is saving
+                const h5pContent = await DBH5PContent.findOneOrFail({
+                    where: { h5pContentId: contentId },
+                    select: ['owner'],
+                });
+                if (h5pContent.owner === userId) {
+                    await H5PServer.getInstance()
+                        .getH5PEditor()
+                        .contentStorage.deleteContent(contentId);
+                }
+            }
+        }
+
+        const usedByEntries = await DBH5PContentUsedBy.findBy({
+            sequenceCode: sequence,
+            h5pContentId: In(usedH5PIds),
+        });
+        for (const h5pId of usedH5PIds) {
+            if (usedByEntries.some((entry) => entry.h5pContentId === h5pId)) {
+                // We need to create a new entry
+                const newEntry = new DBH5PContentUsedBy();
+                newEntry.h5pContentId = h5pId;
+                newEntry.sequenceCode = sequence;
+                await newEntry.save();
+            }
+        }
     }
 }
