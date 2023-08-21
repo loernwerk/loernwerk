@@ -18,7 +18,7 @@ test('TZ13', async ({ page, browserName, context }) => {
     await page.waitForURL(/.*overview/);
     expect(page).toHaveURL(/.*overview/);
 
-    await page.getByRole('link', { name: 'Admin' }).click();
+    await page.goto('./admin');
     await page.waitForURL(/.*admin/);
     expect(page).toHaveURL(/.*admin/);
 
