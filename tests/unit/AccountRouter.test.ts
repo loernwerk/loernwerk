@@ -154,14 +154,67 @@ describe('Accountrouter tests', () => {
 
     test('patch Account reject', () => {
         handleRouter(router, {
+            url: '/',
+            method: 'patch',
             body: testUser,
             session: {
                 isAdmin: false,
-                userId: 0,
+                userId: 1,
+                username: 'test',
+                email: 'test@test.de',
             },
         });
 
         expect(sendStatusFn).toBeCalledWith(403);
+    });
+
+    test('delete Account', () => {
+        const deleteAccountFn = jest.spyOn(AccountController, 'deleteAccount');
+        deleteAccountFn.mockResolvedValueOnce();
+
+        handleRouter(router, {
+            url: '/',
+            method: 'delete',
+            body: testUser,
+            session: {
+                isAdmin: true,
+                userId: 1,
+                username: 'test',
+                email: 'test@test.de',
+            },
+        });
+
+        expect(deleteAccountFn).toBeCalledTimes(1);
+        expect(deleteAccountFn).toBeCalledWith(1234);
+        expect(sendStatusFn).toBeCalledWith(204);
+    });
+
+    test('get own account', () => {
+        const getAccountByIdFn = jest.spyOn(
+            AccountController,
+            'getAccountById'
+        );
+        getAccountByIdFn.mockResolvedValueOnce(testUser);
+        handleRouter(router, {
+            url: '/',
+            method: 'get',
+            body: testUser,
+            session: {
+                isAdmin: true,
+                userId: 1,
+                username: 'test',
+                email: 'test@test.de',
+            },
+            query: {
+                id: undefined,
+                name: undefined,
+                mail: undefined,
+            },
+        });
+
+        expect(getAccountByIdFn).toBeCalledTimes(1);
+        expect(getAccountByIdFn).toBeCalledWith(testUser.id);
+        expect(sendStatusFn).toBeCalledWith(200);
     });
 });
 
@@ -175,6 +228,11 @@ interface RouterOption {
         isAdmin?: boolean;
         username?: string;
         email?: string;
+    };
+    query?: {
+        id?: number;
+        name?: string;
+        mail?: string;
     };
     // eslint-disable-next-line
     body?: any;
