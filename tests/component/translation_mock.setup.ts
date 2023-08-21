@@ -1,9 +1,9 @@
 import { config } from '@vue/test-utils';
 import { vi } from 'vitest';
 
+export const i18nMock = vi.fn().mockImplementation((tKey: string) => tKey);
+
 config.global.mocks = {
     // Mock translation function that just returns the translation key
-    $t: (tKey: string): string => tKey
+    $t: i18nMock,
 };
-
-export const i18n_mock = vi.fn().mockImplementation((tKey: string, arg: string) => tKey + arg);
