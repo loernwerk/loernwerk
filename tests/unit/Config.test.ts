@@ -8,52 +8,47 @@ import { ConfigController } from '../../backend/controller/ConfigController';
 import { ConfigKey } from '../../model/configuration/ConfigKey';
 import { RegistrationType } from '../../model/configuration/RegistrationType';
 
-let mockDb;
-
-/**
- * Implements a timeout
- * @param ms the milliseconds
- * @returns setTimeout
- */
-function delay(ms: number): Promise<unknown> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-}
-beforeAll(async () => {
-    mockDb = new DataSource({
-        type: 'sqlite',
-        database: ':memory:',
-        dropSchema: true,
-        entities: [DBUser, DBSequence, DBSlide, DBH5PContent, DBConfigEntry],
-        synchronize: true,
-        logging: false,
-    });
-    await mockDb.initialize();
-
-    const configMaxSeq = new DBConfigEntry();
-    configMaxSeq.key = ConfigKey.MAX_SEQUENCES_PER_USER;
-    configMaxSeq.value = 4;
-    await configMaxSeq.save();
-
-    const configMaxSlides = new DBConfigEntry();
-    configMaxSlides.key = ConfigKey.MAX_SLIDES_PER_SEQUENCE;
-    configMaxSlides.value = 4;
-    await configMaxSlides.save();
-
-    const configRegType = new DBConfigEntry();
-    configRegType.key = ConfigKey.REGISTRATION_TYPE;
-    configRegType.value = RegistrationType.CLOSED;
-    await configRegType.save();
-
-    const configCode = new DBConfigEntry();
-    configCode.key = ConfigKey.REGISTRATION_CODES;
-    configCode.value = 'realCode,niceCode';
-    await configCode.save();
-});
-afterAll(async () => {
-    await mockDb.destroy();
-});
+let mockDb: DataSource;
 
 describe('Config Controller', () => {
+    beforeAll(async () => {
+        mockDb = new DataSource({
+            type: 'sqlite',
+            database: ':memory:',
+            dropSchema: true,
+            entities: [
+                DBUser,
+                DBSequence,
+                DBSlide,
+                DBH5PContent,
+                DBConfigEntry,
+            ],
+            synchronize: true,
+            logging: false,
+        });
+        await mockDb.initialize();
+
+        const configMaxSeq = new DBConfigEntry();
+        configMaxSeq.key = ConfigKey.MAX_SEQUENCES_PER_USER;
+        configMaxSeq.value = 4;
+        await configMaxSeq.save();
+
+        const configMaxSlides = new DBConfigEntry();
+        configMaxSlides.key = ConfigKey.MAX_SLIDES_PER_SEQUENCE;
+        configMaxSlides.value = 4;
+        await configMaxSlides.save();
+
+        const configRegType = new DBConfigEntry();
+        configRegType.key = ConfigKey.REGISTRATION_TYPE;
+        configRegType.value = RegistrationType.CLOSED;
+        await configRegType.save();
+
+        const configCode = new DBConfigEntry();
+        configCode.key = ConfigKey.REGISTRATION_CODES;
+        configCode.value = 'realCode,niceCode';
+        await configCode.save();
+    });
+
     //getConfigEntry function
     it('Try to get config entry', async () => {
         const testConf = await ConfigController.getConfigEntry(
@@ -78,7 +73,7 @@ describe('Config Controller', () => {
     it('Retrieve all Config-Entries', async () => {
         const allEntries = await ConfigController.getAllConfigEntries();
         const keys = Object.keys(allEntries);
-        expect(keys.length).toEqual(5);
+        expect(keys.length).toEqual(6);
         expect(Object.values(allEntries)[1]).toEqual(4);
         expect(Object.values(allEntries)[2]).toEqual(RegistrationType.CLOSED);
         expect(Object.values(allEntries)[4]).toEqual('not present');
@@ -98,7 +93,6 @@ describe('Config Controller', () => {
     //removeInviteCode function
     it('removing existing invite code', async () => {
         await ConfigController.removeInviteCode('niceCode');
-        await delay(1000);
         const remainingCodes = await DBConfigEntry.findBy({
             key: ConfigKey.REGISTRATION_CODES,
         });
@@ -127,7 +121,7 @@ describe('Config Controller', () => {
         await ConfigController.ensureConfig();
         const allEntries = await ConfigController.getAllConfigEntries();
         const values = Object.values(allEntries);
-        expect(values.length).toEqual(5);
+        expect(values.length).toEqual(6);
         for (const value in values) {
             expect(value).not.toEqual('not present');
         }

@@ -9,7 +9,7 @@ import {
 import bcrypt from 'bcrypt';
 import { DBSequence } from '../../model/sequence/DBSequence';
 import { SequenceController } from '../../backend/controller/SequenceController';
-import { DBH5PContent } from '../../model/h5p/DBH5PContent';
+import { DBH5PContent, DBH5PContentUsedBy } from '../../model/h5p/DBH5PContent';
 import { DBSlide } from '../../model/slide/DBSlide';
 
 let mockDb;
@@ -18,7 +18,13 @@ beforeAll(async () => {
         type: 'sqlite',
         database: ':memory:',
         dropSchema: true,
-        entities: [DBUser, DBSequence, DBSlide, DBH5PContent],
+        entities: [
+            DBUser,
+            DBSequence,
+            DBSlide,
+            DBH5PContent,
+            DBH5PContentUsedBy,
+        ],
         synchronize: true,
         logging: false,
     });
