@@ -12,6 +12,9 @@ import { RegistrationType } from '../../model/configuration/RegistrationType';
 import { ConfigKey } from '../../model/configuration/ConfigKey';
 import { ISequence } from '../../model/sequence/ISequence';
 import { SequenceController } from '../../backend/controller/SequenceController';
+import { ISequenceWithSlides } from '../../model/sequence/ISequenceWithSlides';
+import { ISlide } from '../../model/slide/ISlide';
+import { LayoutType } from '../../model/slide/layout/Layout';
 
 interface ResponseToolkit {
     sendStatus: jest.Func;
@@ -37,6 +40,7 @@ async function handleRouter(
         const timeoutFunc = setTimeout(reject, timeout, 'Timeout exceeded');
 
         const responseToolkit = {
+            set: jest.fn(),
             sendStatus: jest.fn(),
             status: jest.fn(),
             send: jest.fn(),
@@ -477,7 +481,7 @@ const testSequence: ISequence = {
     tags: [],
 };
 
-describe('Accountrouter tests', () => {
+describe('Sequencerouter tests', () => {
     afterEach(() => {
         jest.clearAllMocks();
     });
@@ -506,6 +510,260 @@ describe('Accountrouter tests', () => {
             code: testSequence.code,
         });
     });
+
+    test('patch Sequence', async () => {
+        const getSeqFn = jest.spyOn(SequenceController, 'getSequenceByCode');
+        getSeqFn.mockResolvedValueOnce(testSequence);
+        const saveSeqFn = jest.spyOn(SequenceController, 'saveSequence');
+        saveSeqFn.mockResolvedValueOnce();
+
+        const responseToolkit = await handleRouter(sequenceRouter, {
+            url: '/',
+            method: 'patch',
+            body: testSequence,
+            session: {
+                isAdmin: true,
+                userId: testSequence.authorId,
+            },
+        });
+
+        expect(getSeqFn).toBeCalledTimes(1);
+        expect(getSeqFn).toBeCalledWith(testSequence.code);
+        expect(saveSeqFn).toBeCalledTimes(1);
+        expect(saveSeqFn).toBeCalledWith(testSequence);
+        expect(responseToolkit.sendStatus).toBeCalledWith(204);
+    });
+
+    test('patch Sequence fail', async () => {
+        const getSeqFn = jest.spyOn(SequenceController, 'getSequenceByCode');
+        getSeqFn.mockResolvedValueOnce(testSequence);
+        const saveSeqFn = jest.spyOn(SequenceController, 'saveSequence');
+        saveSeqFn.mockResolvedValueOnce();
+
+        const responseToolkit = await handleRouter(sequenceRouter, {
+            url: '/',
+            method: 'patch',
+            body: testSequence,
+            session: {
+                isAdmin: true,
+                userId: testSequence.authorId + 1,
+            },
+        });
+
+        expect(getSeqFn).toBeCalledTimes(1);
+        expect(getSeqFn).toBeCalledWith(testSequence.code);
+        expect(responseToolkit.sendStatus).toBeCalledWith(403);
+    });
+
+    test('delete Sequence', async () => {
+        const getSeqFn = jest.spyOn(SequenceController, 'getSequenceByCode');
+        getSeqFn.mockResolvedValueOnce(testSequence);
+        const delSeqFn = jest.spyOn(SequenceController, 'deleteSequence');
+        delSeqFn.mockResolvedValueOnce();
+
+        const responseToolkit = await handleRouter(sequenceRouter, {
+            url: '/',
+            method: 'delete',
+            body: testSequence,
+            session: {
+                isAdmin: true,
+                userId: testSequence.authorId,
+            },
+        });
+
+        expect(responseToolkit.sendStatus).toBeCalledWith(204);
+        expect(getSeqFn).toBeCalledTimes(1);
+        expect(getSeqFn).toBeCalledWith(testSequence.code);
+        expect(delSeqFn).toBeCalledTimes(1);
+        expect(delSeqFn).toBeCalledWith(testSequence.code);
+        expect(responseToolkit.sendStatus).toBeCalledWith(204);
+    });
+
+    test('delete Sequence fail', async () => {
+        const getSeqFn = jest.spyOn(SequenceController, 'getSequenceByCode');
+        getSeqFn.mockResolvedValueOnce(testSequence);
+        const delSeqFn = jest.spyOn(SequenceController, 'deleteSequence');
+        delSeqFn.mockResolvedValueOnce();
+
+        const responseToolkit = await handleRouter(sequenceRouter, {
+            url: '/',
+            method: 'delete',
+            body: testSequence,
+            session: {
+                isAdmin: false,
+                userId: testSequence.authorId + 1,
+            },
+        });
+
+        expect(getSeqFn).toBeCalledTimes(1);
+        expect(getSeqFn).toBeCalledWith(testSequence.code);
+        expect(responseToolkit.sendStatus).toBeCalledWith(403);
+    });
+
+    test('get list', async () => {
+        const seqUserList = jest.spyOn(
+            SequenceController,
+            'getSequencesOfUser'
+        );
+        seqUserList.mockResolvedValue([testSequence]);
+
+        const responseToolkit = await handleRouter(sequenceRouter, {
+            url: '/list',
+            method: 'get',
+            session: {
+                isAdmin: false,
+                userId: testSequence.authorId,
+            },
+        });
+
+        expect(seqUserList).toBeCalledTimes(1);
+        expect(seqUserList).toBeCalledWith(testSequence.authorId);
+        expect(responseToolkit.status).toBeCalledWith(200);
+        expect(responseToolkit.json).toBeCalledWith([testSequence]);
+    });
+
+    test('get list shared', async () => {
+        const seqUserList = jest.spyOn(
+            SequenceController,
+            'getSharedSequencesOfUser'
+        );
+        seqUserList.mockResolvedValue([testSequence]);
+
+        const responseToolkit = await handleRouter(sequenceRouter, {
+            url: '/list/shared',
+            method: 'get',
+            session: {
+                isAdmin: false,
+                userId: testSequence.authorId,
+            },
+        });
+
+        expect(seqUserList).toBeCalledTimes(1);
+        expect(seqUserList).toBeCalledWith(testSequence.authorId);
+        expect(responseToolkit.status).toBeCalledWith(200);
+        expect(responseToolkit.json).toBeCalledWith([testSequence]);
+    });
+
+    test('get list of user', async () => {
+        const seqUserList = jest.spyOn(
+            SequenceController,
+            'getSequencesOfUser'
+        );
+        seqUserList.mockResolvedValue([testSequence]);
+
+        const responseToolkit = await handleRouter(sequenceRouter, {
+            url: '/list/' + testSequence.authorId,
+            method: 'get',
+            session: {
+                isAdmin: true,
+                userId: testSequence.authorId,
+            },
+        });
+
+        expect(seqUserList).toBeCalledTimes(1);
+        expect(seqUserList).toBeCalledWith(testSequence.authorId);
+        expect(responseToolkit.status).toBeCalledWith(200);
+        expect(responseToolkit.json).toBeCalledWith([testSequence]);
+    });
+
+    test('get sequence by code', async () => {
+        const seqWithSlide = jest.spyOn(
+            SequenceController,
+            'getSequenceWithSlides'
+        );
+        const testSequenceWithSlide: Partial<ISequenceWithSlides> =
+            testSequence;
+        testSequenceWithSlide.slides = [];
+        seqWithSlide.mockResolvedValue(
+            testSequenceWithSlide as ISequenceWithSlides
+        );
+
+        const responseToolkit = await handleRouter(sequenceRouter, {
+            url: '/' + testSequence.code + '/edit',
+            method: 'get',
+            session: {
+                isAdmin: false,
+                userId: testSequence.authorId,
+            },
+        });
+
+        expect(seqWithSlide).toBeCalledTimes(1);
+        expect(seqWithSlide).toBeCalledWith(testSequence.code);
+        expect(responseToolkit.status).toBeCalledWith(200);
+        expect(responseToolkit.json).toBeCalledWith(testSequenceWithSlide);
+    });
+
+    test('get sequence for view', async () => {
+        const seqWithSlide = jest.spyOn(
+            SequenceController,
+            'getSequenceForExecution'
+        );
+        seqWithSlide.mockResolvedValue(testSequence);
+
+        const responseToolkit = await handleRouter(sequenceRouter, {
+            url: '/' + testSequence.code + '/view',
+            method: 'get',
+        });
+
+        expect(seqWithSlide).toBeCalledTimes(1);
+        expect(seqWithSlide).toBeCalledWith(testSequence.code);
+        expect(responseToolkit.status).toBeCalledWith(200);
+        expect(responseToolkit.json).toBeCalledWith({
+            name: testSequence.name,
+            authorId: testSequence.authorId,
+            slideCount: testSequence.slideCount,
+            code: testSequence.code,
+        });
+    });
+
+    test('get slide for view', async () => {
+        const seqWithSlide = jest.spyOn(
+            SequenceController,
+            'getSequenceSlideByCode'
+        );
+
+        const testSlide: ISlide = {
+            layout: LayoutType.GRID,
+            content: {},
+            backgroundColor: '',
+            sequenceCode: '',
+            order: 1,
+            id: 2000,
+        };
+
+        seqWithSlide.mockResolvedValue(testSlide);
+
+        const responseToolkit = await handleRouter(sequenceRouter, {
+            url: '/' + testSequence.code + '/view/' + testSlide.order,
+            method: 'get',
+        });
+
+        expect(seqWithSlide).toBeCalledTimes(1);
+        expect(seqWithSlide).toBeCalledWith(testSequence.code, testSlide.order);
+        expect(responseToolkit.status).toBeCalledWith(200);
+        expect(responseToolkit.json).toBeCalledWith(testSlide);
+    });
+
+    test('get pdf', async () => {
+        const seqWithSlide = jest.spyOn(
+            SequenceController,
+            'getCertificatePDF'
+        );
+
+        seqWithSlide.mockResolvedValue(new Buffer('test'));
+
+        const responseToolkit = await handleRouter(sequenceRouter, {
+            url: '/' + testSequence.code + '/view/certificate',
+            method: 'get',
+            query: {
+                language: 'de',
+            },
+        });
+        expect(seqWithSlide).toBeCalledTimes(1);
+        expect(seqWithSlide).toBeCalledWith(testSequence.code, 'de');
+        expect(responseToolkit.status).toBeCalledWith(200);
+        expect(responseToolkit.send).toBeCalledWith(new Buffer('test'));
+    });
 });
 
 interface RouterOption {
@@ -522,6 +780,7 @@ interface RouterOption {
         id?: number;
         name?: string;
         mail?: string;
+        language?: string;
     };
     params?: unknown;
     body?: unknown;
