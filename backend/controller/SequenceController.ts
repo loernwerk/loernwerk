@@ -6,6 +6,7 @@ import { DBSlide } from '../../model/slide/DBSlide';
 import {
     LoernwerkError,
     LoernwerkErrorCodes,
+    LoernwerkErrorMessages,
 } from '../../model/loernwerkError';
 import { DBUser } from '../../model/user/DBUser';
 import { DBH5PContent, DBH5PContentUsedBy } from '../../model/h5p/DBH5PContent';
@@ -34,7 +35,7 @@ export class SequenceController {
     ): Promise<ISequence> {
         if (!(await this.isValidUser(userId))) {
             throw new LoernwerkError(
-                'user not found',
+                LoernwerkErrorMessages.USER_NOT_FOUND,
                 LoernwerkErrorCodes.NOT_FOUND
             );
         }
@@ -50,7 +51,7 @@ export class SequenceController {
             sequencesOfUser.length >= userSequenceLimit
         ) {
             throw new LoernwerkError(
-                'no more sequences creatable',
+                LoernwerkErrorMessages.NO_MORE_SEQUENCES_CREATABLE,
                 LoernwerkErrorCodes.BAD_REQUEST
             );
         }
@@ -86,7 +87,7 @@ export class SequenceController {
         });
         if (dbSequence === null) {
             throw new LoernwerkError(
-                'No matching sequence',
+                LoernwerkErrorMessages.SEQUENCE_NOT_FOUND,
                 LoernwerkErrorCodes.NOT_FOUND
             );
         }
@@ -104,7 +105,7 @@ export class SequenceController {
         const sequenceWithoutSlide = await this.getSequenceByCode(code);
         if (sequenceWithoutSlide === null) {
             throw new LoernwerkError(
-                'No sequence found',
+                LoernwerkErrorMessages.SEQUENCE_NOT_FOUND,
                 LoernwerkErrorCodes.NOT_FOUND
             );
         }
@@ -127,14 +128,14 @@ export class SequenceController {
     ): Promise<void> {
         if (sequence.code === undefined) {
             throw new LoernwerkError(
-                'No Code provided',
+                LoernwerkErrorMessages.NO_CODE_PROVIDED,
                 LoernwerkErrorCodes.INSUFFICENT_INFORMATION
             );
         }
         const dbSequence = await DBSequence.findOneBy({ code: sequence.code });
         if (dbSequence === null) {
             throw new LoernwerkError(
-                'No Sequence Found',
+                LoernwerkErrorMessages.SEQUENCE_NOT_FOUND,
                 LoernwerkErrorCodes.NOT_FOUND
             );
         }
@@ -149,7 +150,7 @@ export class SequenceController {
             sequenceSlideCount > userSlideLimit
         ) {
             throw new LoernwerkError(
-                'to much slides in sequences',
+                LoernwerkErrorMessages.SLIDE_LIMIT_REACHED,
                 LoernwerkErrorCodes.BAD_REQUEST
             );
         }
@@ -205,7 +206,7 @@ export class SequenceController {
         });
         if (dbSequence === null) {
             throw new LoernwerkError(
-                'Sequence not Found',
+                LoernwerkErrorMessages.SEQUENCE_NOT_FOUND,
                 LoernwerkErrorCodes.NOT_FOUND
             );
         }
@@ -246,7 +247,7 @@ export class SequenceController {
     ): Promise<ISequence[]> {
         if (!(await this.isValidUser(userId))) {
             throw new LoernwerkError(
-                'User doesnt exists',
+                LoernwerkErrorMessages.USER_NOT_FOUND,
                 LoernwerkErrorCodes.NOT_FOUND
             );
         }
@@ -267,7 +268,7 @@ export class SequenceController {
         });
         if (user === null) {
             throw new LoernwerkError(
-                'User doesnt exists',
+                LoernwerkErrorMessages.USER_NOT_FOUND,
                 LoernwerkErrorCodes.NOT_FOUND
             );
         }
@@ -279,7 +280,7 @@ export class SequenceController {
             if (dbSequence === null) {
                 // May just bring it back to consistency?
                 throw new LoernwerkError(
-                    'User has access to a non existing Sequence',
+                    LoernwerkErrorMessages.USER_NOT_PRIVILEGED_FOR_SEQUENCE,
                     LoernwerkErrorCodes.NOT_FOUND
                 );
             }
@@ -307,13 +308,13 @@ export class SequenceController {
         });
         if (dbSequence === null) {
             throw new LoernwerkError(
-                'no sequence found',
+                LoernwerkErrorMessages.SEQUENCE_NOT_FOUND,
                 LoernwerkErrorCodes.NOT_FOUND
             );
         }
         if (dbSequence.slideCount === 0) {
             throw new LoernwerkError(
-                'Sequence is empty',
+                LoernwerkErrorMessages.SEQUENCE_EMPTY,
                 LoernwerkErrorCodes.NOT_FOUND
             );
         }
@@ -335,7 +336,7 @@ export class SequenceController {
         });
         if (slide === null) {
             throw new LoernwerkError(
-                'No matching Slide found',
+                LoernwerkErrorMessages.SLIDE_NOT_FOUND,
                 LoernwerkErrorCodes.NOT_FOUND
             );
         }
@@ -358,7 +359,7 @@ export class SequenceController {
         });
         if (sequence === null) {
             throw new LoernwerkError(
-                'Sequence not found',
+                LoernwerkErrorMessages.SEQUENCE_NOT_FOUND,
                 LoernwerkErrorCodes.NOT_FOUND
             );
         }
@@ -373,7 +374,7 @@ export class SequenceController {
                 break;
             default:
                 throw new LoernwerkError(
-                    `Unknown language ${language}`,
+                    LoernwerkErrorMessages.UNKNOWN_LANGUAGE,
                     LoernwerkErrorCodes.INVALID_PARAMETER
                 );
         }
@@ -499,7 +500,7 @@ export class SequenceController {
             const user = await DBUser.findOneBy({ id: uId });
             if (user === null) {
                 throw new LoernwerkError(
-                    'A read access user, does not exist',
+                    LoernwerkErrorMessages.SHARED_USER_NOT_FOUND,
                     LoernwerkErrorCodes.NOT_FOUND
                 );
             }

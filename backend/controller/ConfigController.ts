@@ -4,6 +4,7 @@ import { RegistrationType } from '../../model/configuration/RegistrationType';
 import {
     LoernwerkError,
     LoernwerkErrorCodes,
+    LoernwerkErrorMessages,
 } from '../../model/loernwerkError';
 
 /**
@@ -19,7 +20,7 @@ export class ConfigController {
         const entry = await DBConfigEntry.findOneBy({ key: key });
         if (entry === null) {
             throw new LoernwerkError(
-                'Config key not found',
+                LoernwerkErrorMessages.KEY_NOT_FOUND,
                 LoernwerkErrorCodes.NOT_FOUND
             );
         }
@@ -38,7 +39,7 @@ export class ConfigController {
         const entry = await DBConfigEntry.findOneBy({ key: key });
         if (entry === null) {
             throw new LoernwerkError(
-                'Config not Found',
+                LoernwerkErrorMessages.KEY_NOT_FOUND,
                 LoernwerkErrorCodes.NOT_FOUND
             );
         }
