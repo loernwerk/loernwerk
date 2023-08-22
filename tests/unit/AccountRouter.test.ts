@@ -15,6 +15,7 @@ import { SequenceController } from '../../backend/controller/SequenceController'
 import { ISequenceWithSlides } from '../../model/sequence/ISequenceWithSlides';
 import { ISlide } from '../../model/slide/ISlide';
 import { LayoutType } from '../../model/slide/layout/Layout';
+import { ConfigRouterFactory } from '../../backend/router/ConfigRouterFactory';
 
 interface ResponseToolkit {
     sendStatus: jest.Func;
@@ -73,6 +74,7 @@ async function handleRouter(
 
 const accountRouter = new AccountRouterFactory().buildRouter();
 const sequenceRouter = new SequenceRouterFactory().buildRouter();
+const configRouter = new ConfigRouterFactory().buildRouter();
 
 const testUser = {
     name: 'test',
@@ -763,6 +765,118 @@ describe('Sequencerouter tests', () => {
         expect(seqWithSlide).toBeCalledWith(testSequence.code, 'de');
         expect(responseToolkit.status).toBeCalledWith(200);
         expect(responseToolkit.send).toBeCalledWith(new Buffer('test'));
+    });
+});
+
+describe('Config Router tests', () => {
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    test('patch key', async () => {
+        const setConfigEntry = jest.spyOn(ConfigController, 'setConfigEntry');
+        setConfigEntry.mockResolvedValueOnce();
+
+        const responseToolkit = await handleRouter(configRouter, {
+            url: '/' + ConfigKey.MAX_SEQUENCES_PER_USER,
+            method: 'patch',
+            body: {
+                value: 'test',
+            },
+            session: {
+                isAdmin: true,
+                userId: 123,
+                username: 'test',
+                email: 'test@test.de',
+            },
+        });
+
+        expect(setConfigEntry).toBeCalledTimes(1);
+        expect(setConfigEntry).toBeCalledWith(
+            ConfigKey.MAX_SEQUENCES_PER_USER,
+            'test'
+        );
+        expect(responseToolkit.sendStatus).toBeCalledWith(204);
+    });
+
+    test('get all', async () => {
+        const getConfigEntries = jest.spyOn(
+            ConfigController,
+            'getAllConfigEntries'
+        );
+        getConfigEntries.mockResolvedValueOnce(
+            2 as unknown as Record<ConfigKey, unknown>
+        );
+
+        const responseToolkit = await handleRouter(configRouter, {
+            url: '/',
+            method: 'get',
+            body: {
+                value: 'test',
+            },
+            session: {
+                isAdmin: true,
+                userId: 123,
+                username: 'test',
+                email: 'test@test.de',
+            },
+        });
+
+        expect(getConfigEntries).toBeCalledTimes(1);
+        expect(responseToolkit.status).toBeCalledWith(200);
+    });
+
+    test('get specific ConfigEntry', async () => {
+        const getConfigEntries = jest.spyOn(ConfigController, 'getConfigEntry');
+        getConfigEntries.mockResolvedValueOnce('testval');
+
+        const responseToolkit = await handleRouter(configRouter, {
+            url: '/' + ConfigKey.REGISTRATION_TYPE,
+            method: 'get',
+            session: {
+                userId: undefined,
+            },
+        });
+
+        expect(getConfigEntries).toBeCalledTimes(1);
+        expect(getConfigEntries).toBeCalledWith(ConfigKey.REGISTRATION_TYPE);
+        expect(responseToolkit.status).toBeCalledWith(200);
+        expect(responseToolkit.json).toBeCalledWith({ value: 'testval' });
+    });
+
+    test('get specific ConfigEntry fail', async () => {
+        const getConfigEntries = jest.spyOn(ConfigController, 'getConfigEntry');
+
+        const responseToolkit = await handleRouter(configRouter, {
+            url: '/' + ConfigKey.MAX_SEQUENCES_PER_USER,
+            method: 'get',
+            session: {
+                userId: undefined,
+            },
+        });
+
+        expect(getConfigEntries).toBeCalledTimes(0);
+        expect(responseToolkit.sendStatus).toBeCalledWith(401);
+    });
+
+    test('get specific ConfigEntry', async () => {
+        const getConfigEntries = jest.spyOn(ConfigController, 'getConfigEntry');
+        getConfigEntries.mockResolvedValueOnce('testval');
+
+        const responseToolkit = await handleRouter(configRouter, {
+            url: '/' + ConfigKey.MAX_SEQUENCES_PER_USER,
+            method: 'get',
+            session: {
+                userId: 120,
+            },
+        });
+
+        expect(getConfigEntries).toBeCalledTimes(1);
+        expect(getConfigEntries).toBeCalledWith(
+            ConfigKey.MAX_SEQUENCES_PER_USER
+        );
+        expect(responseToolkit.status).toBeCalledWith(200);
+        expect(responseToolkit.json).toBeCalledWith({ value: 'testval' });
     });
 });
 
