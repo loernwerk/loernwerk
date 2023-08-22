@@ -378,8 +378,9 @@ async function save(): Promise<void> {
   disableButton.value = true;
   try {
     await SequenceRestInterface.updateSequence(sequence.value);
-  } catch {
+  } catch (e) {
     disableButton.value = false;
+    throw e;
   }
   await router.push({ name: 'Overview' });
 }

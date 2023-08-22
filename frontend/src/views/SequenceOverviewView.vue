@@ -104,11 +104,7 @@ async function reloadSequences(): Promise<void> {
 }
 
 const maxSequnces = ref(-1);
-try {
-  maxSequnces.value = (await ConfigRestInterface.getValue(
-    ConfigKey.MAX_SEQUENCES_PER_USER
-  )) as number;
-} catch (e) {
-  // allow unlimited sequences
-}
+maxSequnces.value = (await ConfigRestInterface.getValue(
+  ConfigKey.MAX_SEQUENCES_PER_USER
+)) as number;
 </script>

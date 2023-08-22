@@ -14,9 +14,6 @@
             :placeHolder="$t('sequence.name')"
             v-model="nameField"
           />
-          <div class="text-error" v-if="error">
-            {{ $t('sequence.creationError') }}
-          </div>
           <ButtonComponent
             class="w-fit float-right"
             :loading="disableInputShowSpinner"
@@ -60,8 +57,9 @@ async function newSequence(): Promise<void> {
   try {
     const code = await SequenceRestInterface.addSequence(nameField.value);
     await router.push({ name: 'SequenceEdit', params: { sequenceCode: code } });
-  } catch {
+  } catch (e) {
     error.value = true;
+    throw e;
   }
   disableInputShowSpinner.value = false;
 }
