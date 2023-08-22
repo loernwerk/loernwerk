@@ -62,7 +62,6 @@
           >
             {{ $t('account.login') }}
           </ButtonComponent>
-          <ErrorButton />
         </div>
       </template>
     </ContainerComponent>
@@ -95,7 +94,6 @@ import { ConfigRestInterface } from '../restInterfaces/ConfigRestInterface';
 import { ConfigKey } from '../../../model/configuration/ConfigKey';
 import { RegistrationType } from '../../../model/configuration/RegistrationType';
 import { useRouter } from 'vue-router';
-import ErrorButton from '../components/ErrorButton.vue';
 
 const errorCode = ref('');
 const router = useRouter();
