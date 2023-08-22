@@ -129,6 +129,20 @@ const messages = {
       [LoernwerkErrorMessages.USERNAME_DOES_NOT_SATISFY_REQUIREMENTS]:
         'Benutzername ungültig',
       [LoernwerkErrorMessages.USER_NOT_FOUND]: 'Benutzer nicht gefunden',
+      [LoernwerkErrorMessages.KEY_NOT_FOUND]: 'Schlüssel nicht gefunden',
+      [LoernwerkErrorMessages.NO_MORE_SEQUENCES_CREATABLE]:
+        'Keine weiteren Lernsequenzen erstellbar',
+      [LoernwerkErrorMessages.SEQUENCE_NOT_FOUND]: 'Lernsequenz nicht gefunden',
+      [LoernwerkErrorMessages.NO_CODE_PROVIDED]: 'Kein Code angegeben',
+      [LoernwerkErrorMessages.SLIDE_LIMIT_REACHED]:
+        'Maximale Anzahl an Slides erreicht',
+      [LoernwerkErrorMessages.SEQUENCE_EMPTY]: 'Lernsequenz ist leer',
+      [LoernwerkErrorMessages.SHARED_USER_NOT_FOUND]:
+        'Geteilter Benutzer nicht gefunden',
+      [LoernwerkErrorMessages.USER_NOT_PRIVILEGED_FOR_SEQUENCE]:
+        'Benutzer hat keine Rechte für diese Sequenz',
+      [LoernwerkErrorMessages.SLIDE_NOT_FOUND]: 'Slide nicht gefunden',
+      [LoernwerkErrorMessages.UNKNOWN_LANGUAGE]: 'Unbekannte Sprache',
     },
   },
   en: {
@@ -256,6 +270,19 @@ const messages = {
       [LoernwerkErrorMessages.USERNAME_DOES_NOT_SATISFY_REQUIREMENTS]:
         'Username is invalid',
       [LoernwerkErrorMessages.USER_NOT_FOUND]: 'User not found',
+      [LoernwerkErrorMessages.KEY_NOT_FOUND]: 'Key not found',
+      [LoernwerkErrorMessages.NO_MORE_SEQUENCES_CREATABLE]:
+        'No more sequences creatable',
+      [LoernwerkErrorMessages.SEQUENCE_NOT_FOUND]: 'Sequence not found',
+      [LoernwerkErrorMessages.NO_CODE_PROVIDED]: 'No code provided',
+      [LoernwerkErrorMessages.SLIDE_LIMIT_REACHED]:
+        'Maximum number of slides reached',
+      [LoernwerkErrorMessages.SEQUENCE_EMPTY]: 'Sequence is empty',
+      [LoernwerkErrorMessages.SHARED_USER_NOT_FOUND]: 'Shared user not found',
+      [LoernwerkErrorMessages.USER_NOT_PRIVILEGED_FOR_SEQUENCE]:
+        'User is not privileged for this sequence',
+      [LoernwerkErrorMessages.SLIDE_NOT_FOUND]: 'Slide not found',
+      [LoernwerkErrorMessages.UNKNOWN_LANGUAGE]: 'Unknown language',
     },
   },
 };
