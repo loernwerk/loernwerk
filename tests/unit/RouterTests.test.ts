@@ -438,7 +438,7 @@ describe('Accountrouter tests', () => {
             AccountController,
             'getAccountById'
         );
-        getAccountByIdFn.mockRejectedValue(testUser);
+        getAccountByIdFn.mockResolvedValue(testUser);
 
         const list = '1,2,3';
 
