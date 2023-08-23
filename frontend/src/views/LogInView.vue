@@ -150,7 +150,6 @@ async function checkLogIn(): Promise<void> {
   } catch (e) {
     displayError.value = true;
     if (e instanceof Error) {
-      console.log(e.message);
       errorCode.value = e.message;
     } else {
       throw e;

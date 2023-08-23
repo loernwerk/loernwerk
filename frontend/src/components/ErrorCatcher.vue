@@ -28,7 +28,6 @@ onErrorCaptured((err, instance, info) => {
   errormessages.value.push({ index: index, errorMessage: err.message });
   const tbr = index;
   index++;
-  console.log(errormessages.value);
   console.log('this needed to be displayed, err:' + err + ' info: ' + info);
   setTimeout(() => {
     const i = errormessages.value.indexOf({
