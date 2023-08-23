@@ -3,7 +3,11 @@
   <div class="relative">
     <div class="absolute bottom-0 right-0 w-40">
       <ul class="list-image-none">
-        <li v-for="pair of errormessages.reverse()" :key="pair.index">
+        <li
+          v-for="pair of errormessages.reverse()"
+          :key="pair.index"
+          class="p-1"
+        >
           <Toast :message="pair.errorMessage" :time="errortimedisplayed" />
         </li>
       </ul>

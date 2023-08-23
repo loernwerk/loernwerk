@@ -1,11 +1,11 @@
 <template>
-  <ContainerComponent class="bg-red-700">
+  <ContainerComponent class="bg-red-500 border-red-700">
     <div class="text-white text-center">
       {{ message }}
     </div>
     <div class="h-2 w-full bg-red-400">
       <div
-        class="h-2 bg-red-900 p-0.5 text-center text-xs font-medium leading-none text-white"
+        class="h-2 bg-red-600 p-0.5 text-center text-xs font-medium leading-none text-white"
         :style="{ width: timeperc + '%' }"
       ></div>
     </div>
