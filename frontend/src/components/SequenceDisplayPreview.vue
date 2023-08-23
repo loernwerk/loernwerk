@@ -82,7 +82,6 @@
 import ButtonComponent from './ButtonComponent.vue';
 import { ISequence } from '../../../model/sequence/ISequence';
 import ContainerComponent from './ContainerComponent.vue';
-import { router } from '../router';
 import PopupComponent from './PopupComponent.vue';
 import { PropType, computed, ref } from 'vue';
 import TabbedContainer from './TabbedContainer.vue';
@@ -93,6 +92,7 @@ import TagSequencePopupTab from './sequenceOverviewPopUpTabs/TagSequencePopupTab
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
+import { useRouter } from 'vue-router';
 
 library.add(faEllipsis);
 
@@ -122,6 +122,7 @@ const emits = defineEmits([
 ]);
 
 const popupOpen = ref(false);
+const router = useRouter();
 
 const tabNames = computed(() => {
   return [

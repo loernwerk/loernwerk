@@ -66,7 +66,6 @@ import AccountCreationContainer from '../components/admin/AccountCreationContain
 import AccountSequenceContainer from '../components/admin/AccountSequenceContainer.vue';
 import { ISequence } from '../../../model/sequence/ISequence';
 import { SequenceRestInterface } from '../restInterfaces/SequenceRestInterface';
-import { router } from '../router';
 import ButtonComponent from '../components/ButtonComponent.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -76,8 +75,10 @@ import ConfigEditor from '../components/admin/ConfigEditor.vue';
 import { ConfigRestInterface } from '../restInterfaces/ConfigRestInterface';
 import { ConfigKey } from '../../../model/configuration/ConfigKey';
 import ContainerComponent from '../components/ContainerComponent.vue';
+import { useRouter } from 'vue-router';
 
 library.add(faGear);
+const router = useRouter();
 
 const showConfigEditor = ref(false);
 const configs = ref({});

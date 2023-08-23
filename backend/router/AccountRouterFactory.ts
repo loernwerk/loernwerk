@@ -156,7 +156,7 @@ export class AccountRouterFactory extends RouterFactory {
             if (req.query.id !== undefined) {
                 id = parseInt(req.query.id as string);
                 if (req.session.isAdmin !== true) {
-                    res.status(403);
+                    res.sendStatus(403);
                     return;
                 }
             }
