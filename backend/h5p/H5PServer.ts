@@ -10,6 +10,7 @@ import CachedKeyValueStorage from '@lumieducation/h5p-server/build/src/implement
 import axios from 'axios';
 import { access } from 'fs/promises';
 import decompress from 'decompress';
+import { H5PPermissionSystem } from './H5PPermissionSystem';
 
 const DIRECTORY_EDITOR = 'h5p/editor';
 const DIRECTORY_CORE = 'h5p/core';
@@ -28,6 +29,7 @@ export class H5PServer {
     private player: H5PPlayer | null;
     private readonly contentStore: H5PContentStorage;
     private readonly libraryStore: H5PLibraryStorage;
+    private readonly permissionSystem: H5PPermissionSystem;
 
     /**
      * Creates a new instance of the H5PServer
@@ -36,6 +38,7 @@ export class H5PServer {
     private constructor() {
         this.contentStore = new H5PContentStorage();
         this.libraryStore = new H5PLibraryStorage();
+        this.permissionSystem = new H5PPermissionSystem();
         this.editor = null;
         this.player = null;
     }
@@ -63,23 +66,34 @@ export class H5PServer {
             config,
             this.libraryStore,
             this.contentStore,
-            new DirectoryTemporaryFileStorage('h5p/tmp')
+            new DirectoryTemporaryFileStorage('h5p/tmp'),
+            undefined,
+            undefined,
+            {
+                permissionSystem: this.permissionSystem,
+            }
         );
 
         this.player = new H5PPlayer(
             this.libraryStore,
             this.contentStore,
-            config
+            config,
+            undefined,
+            undefined,
+            undefined,
+            {
+                permissionSystem: this.permissionSystem,
+            }
         );
 
         // Clean up temporary files every 5 minutes, as suggested by h5p library
         setInterval(() => {
-            this.editor.temporaryFileManager.cleanUp();
+            this.editor?.temporaryFileManager.cleanUp();
         }, 1000 * 60 * 5);
 
         // Update content types every 12 hours, as suggested by h5p library
         setInterval(() => {
-            this.editor.contentTypeCache.updateIfNecessary();
+            this.editor?.contentTypeCache.updateIfNecessary();
         }, 1000 * 60 * 60 * 12);
 
         this.editor.setRenderer((model) => model);

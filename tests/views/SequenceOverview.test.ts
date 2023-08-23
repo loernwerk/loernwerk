@@ -4,6 +4,7 @@ import { flushPromises, mount } from '@vue/test-utils';
 import { beforeEach, vi } from 'vitest';
 import { SequenceRestInterface } from '../../frontend/src/restInterfaces/SequenceRestInterface';
 import { AccountRestInterface } from '../../frontend/src/restInterfaces/AccountRestInterface';
+import { ConfigRestInterface } from '../../frontend/src/restInterfaces/ConfigRestInterface';
 import ButtonComponentVue from '../../frontend/src/components/ButtonComponent.vue';
 
 describe('SequenceOverviewView', () => {
@@ -79,6 +80,9 @@ describe('SequenceOverviewView', () => {
 
         const getOwnAccount = vi.spyOn(AccountRestInterface, 'getOwnAccount');
         getOwnAccount.mockResolvedValueOnce({ id: 1 });
+
+        const getValue = vi.spyOn(ConfigRestInterface, 'getValue');
+        getValue.mockResolvedValueOnce(-1);
     });
 
     test('Display overview correctly', async () => {
@@ -171,6 +175,7 @@ describe('SequenceOverviewView', () => {
         //expect(wrapper.findComponent(PopupNewSequenceVue).exists()).toBe(false);
 
         wrapper.getComponent(ButtonComponentVue).vm.$emit('click');
+        await flushPromises();
 
         //expect(wrapper.findComponent(PopupNewSequenceVue).exists()).toBe(true);
     });

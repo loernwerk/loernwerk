@@ -1,6 +1,6 @@
 import { flushPromises, mount } from '@vue/test-utils';
 import { describe, test } from 'vitest';
-import LightDarkSwitch from '../../frontend/src/components/navBar/LightDarkSwitch.vue';
+import LightDarkSwitch from '../../../frontend/src/components/navBar/LightDarkSwitch.vue';
 
 describe('LightDarkSwitch', () => {
     test('Correctly display value - on', () => {

@@ -91,7 +91,10 @@ export class ConfigController {
         ).split(',');
         const index = codes.indexOf(code);
         codes.splice(index, 1);
-        this.setConfigEntry(ConfigKey.REGISTRATION_CODES, codes.join(','));
+        await this.setConfigEntry(
+            ConfigKey.REGISTRATION_CODES,
+            codes.join(',')
+        );
     }
 
     /**
@@ -104,6 +107,7 @@ export class ConfigController {
             [ConfigKey.REGISTRATION_TYPE, RegistrationType.CLOSED as unknown],
             [ConfigKey.REGISTRATION_CODES, ''],
             [ConfigKey.REGISTRATION_CODES_EXPIRES_AFTER_USE, true],
+            [ConfigKey.AUTODELETE_UNUSED_H5P, false],
         ]);
         for (const [key, value] of defaultValueMap) {
             const entry = await DBConfigEntry.findOneBy({ key: key });

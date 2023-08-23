@@ -1,7 +1,7 @@
 import { flushPromises, mount } from '@vue/test-utils';
 import { describe, test } from 'vitest';
-import ImageOptionTab from '../../frontend/src/components/sequenceEditOptionsTab/ImageOptionsTab.vue';
-import { ContentType } from '../../model/slide/content/Content';
+import ImageOptionTab from '../../../frontend/src/components/sequenceEditOptionsTab/ImageOptionsTab.vue';
+import { ContentType } from '../../../model/slide/content/Content';
 
 describe('ImageOptionTab', () => {
     test('Correct selected scale', async () => {

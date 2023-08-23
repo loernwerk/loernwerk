@@ -1,10 +1,10 @@
 import { mount } from '@vue/test-utils';
 import { describe, test } from 'vitest';
-import SlideDisplayFactory from '../../frontend/src/components/contentDisplay/SlideDisplayFactory.vue';
-import { LayoutSlot, LayoutType } from '../../model/slide/layout/Layout';
-import { ContentType } from '../../model/slide/content/Content';
-import ContentDisplayFactoryVue from '../../frontend/src/components/contentDisplay/ContentDisplayFactory.vue';
-import { EmbedContent } from '../../model/slide/content/EmbedContent';
+import SlideDisplayFactory from '../../../frontend/src/components/contentDisplay/SlideDisplayFactory.vue';
+import { LayoutSlot, LayoutType } from '../../../model/slide/layout/Layout';
+import { ContentType } from '../../../model/slide/content/Content';
+import ContentDisplayFactoryVue from '../../../frontend/src/components/contentDisplay/ContentDisplayFactory.vue';
+import { EmbedContent } from '../../../model/slide/content/EmbedContent';
 
 describe('SlideDisplayFactory', () => {
     test('Correct background', async () => {
@@ -26,7 +26,7 @@ describe('SlideDisplayFactory', () => {
             wrapper
                 .find('div.aspect-video.h-full.p-5.rounded-md')
                 .attributes('style')
-        ).toBe('background-color: #00FF00;');
+        ).toBe('background-color: rgb(0, 255, 0);');
     });
     test('Correct Layout.Titlepage', async () => {
         const wrapper = mount(SlideDisplayFactory, {

@@ -18,14 +18,16 @@
     "test": "npm run test:unit && npm run test:component && npm run test:e2e",
     "test:unit": "jest",
     "test:component": "vitest",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:e2e:prepare-db": "node -r \"fs\" -e \"fs.copyFileSync('./tests/e2e/test.db', './tests/e2e/test_run.db');\"",
+    "test:load": "ts-node --project tsconfig.node.json tests/loadtests.ts"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/vue-fontawesome": "^3.0.3",
     "@lumieducation/h5p-express": "^9.2.2",
-    "@lumieducation/h5p-server": "^9.2.1",
+    "@lumieducation/h5p-server": "^9.3.0",
     "@lumieducation/h5p-webcomponents": "^9.2.2",
     "@types/jest": "^29.5.3",
     "@vue/test-utils": "^2.4.1",
@@ -76,8 +78,8 @@
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-jsdoc": "^46.3.0",
     "eslint-plugin-vue": "^9.15.1",
-    "happy-dom": "^10.5.2",
     "husky": "^8.0.0",
+    "jsdom": "^22.1.0",
     "lint-staged": "^13.2.2",
     "postcss": "^8.4.24",
     "prettier": "^2.8.8",

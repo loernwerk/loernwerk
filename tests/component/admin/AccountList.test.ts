@@ -1,8 +1,8 @@
 import { mount } from '@vue/test-utils';
 import { describe, test } from 'vitest';
-import AccountList from '../../frontend/src/components/admin/AccountList.vue';
-import ButtonComponentVue from '../../frontend/src/components/ButtonComponent.vue';
-import { findComponentByText } from './TestUtilities';
+import AccountList from '../../../frontend/src/components/admin/AccountList.vue';
+import ButtonComponentVue from '../../../frontend/src/components/ButtonComponent.vue';
+import { findComponentByText } from '../TestUtilities';
 
 describe('AccountList', () => {
     test('Click "Create new user" button', async () => {
@@ -38,6 +38,7 @@ describe('AccountList', () => {
         await wrapper.find('input').setValue('a');
         expect(wrapper.html()).toContain('Richard Hamming');
         expect(wrapper.html()).toContain('David Huffman');
+        expect(wrapper.html()).not.toContain('Tim Bernes-Lee');
     });
 
     test('Select user from list', async () => {
