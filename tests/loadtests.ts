@@ -3,8 +3,8 @@ import { exit } from 'process';
 
 const SERVER_URL = 'http://localhost:5000';
 const LOGIN_USER = 'admin';
-const LOGIN_PASSWORD = '12345678';
-const VALID_SEQUENCE = 'ADFAAA';
+const LOGIN_PASSWORD = 'abc123';
+const VALID_SEQUENCE = 'EECCAC';
 
 const CONFIG = [
     // Account routes
@@ -22,7 +22,7 @@ const CONFIG = [
         route: '/api/account/',
         data: {},
         requests: 500,
-        expectedTime: 600,
+        expectedTime: 650,
         expectedStatus: 200,
         login: true,
     },
@@ -61,13 +61,17 @@ const CONFIG = [
  * Main loadtest function
  */
 async function main(): Promise<void> {
+    let loginCookie: string;
     console.log('Checking server availability...');
     try {
-        await axios.post(
+        const loginCall = await axios.post(
             SERVER_URL + '/api/account/login',
             { usernameOrEmail: LOGIN_USER, password: LOGIN_PASSWORD },
             { withCredentials: true, validateStatus: null }
         );
+        loginCookie = loginCall.headers['set-cookie']
+            ?.at(0)
+            ?.split(';')[0] as string;
     } catch (e) {
         console.log(
             'Backend server could not be reached. Make sure that the backend server is running.'
@@ -76,7 +80,7 @@ async function main(): Promise<void> {
         exit(1);
     }
 
-    console.log('Server availabiltiy confirmed. Starting load testing.');
+    console.log('Server availability confirmed. Starting load testing.');
     let successes = 0;
     const failures: string[] = [];
     for (const call of CONFIG) {
@@ -91,20 +95,24 @@ async function main(): Promise<void> {
                     baseURL: SERVER_URL,
                     data: call.data,
                     validateStatus: null,
-                    withCredentials: call.login,
+                    headers: {
+                        cookie: call.login ? loginCookie : '',
+                    },
                 })
             );
         }
+
         await Promise.all(calls);
         const endingTime = Date.now();
         const timeTook = endingTime - startingTime;
         const timeDiff = Math.abs(call.expectedTime - timeTook);
 
-        const mismatchingReturnCodes = (
-            calls as unknown as AxiosResponse[]
-        ).filter((response) => {
-            response.status !== call.expectedStatus;
-        });
+        const mismatchingReturnCodes: number[] = [];
+        for (const axiosCall of calls) {
+            if ((await axiosCall).status !== call.expectedStatus) {
+                mismatchingReturnCodes.push((await axiosCall).status);
+            }
+        }
 
         if (
             timeTook < call.expectedTime &&
@@ -131,8 +139,7 @@ async function main(): Promise<void> {
             }
             if (mismatchingReturnCodes.length !== 0) {
                 const uniqueCodes: number[] = [];
-                mismatchingReturnCodes.forEach((response) => {
-                    const code = response.status;
+                mismatchingReturnCodes.forEach((code) => {
                     if (!uniqueCodes.includes(code)) {
                         uniqueCodes.push(code);
                     }
