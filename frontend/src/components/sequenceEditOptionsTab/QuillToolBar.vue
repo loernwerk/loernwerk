@@ -17,12 +17,12 @@
       </select>
 
       <span class="flex space-x-1 items-center">
-        <ButtonComponent @click="showColorPicker = !showColorPicker">
+        <button class="ql-color interactable w-fit">
           <FontAwesomeIcon :icon="['fas', 'palette']" />
-        </ButtonComponent>
+        </button>
         <span
-          class="space-x-1 interactable !flex-row w-fit !h-fit"
-          :class="{ hidden: !showColorPicker }"
+          class="space-x-1 interactable !flex-row w-fit !h-fit hidden"
+          id="color-picker"
         >
           <button
             v-for="color in colors"
@@ -46,7 +46,7 @@
       </select>
     </span>
 
-    <span class="flex space-x-2">
+    <span class="flex space-x-2 active-indicator">
       <button class="ql-bold interactable h-fit">
         <FontAwesomeIcon :icon="['fas', 'bold']" />
       </button>
@@ -58,7 +58,7 @@
       </button>
     </span>
 
-    <span class="flex space-x-2">
+    <span class="flex space-x-2 active-indicator">
       <button class="ql-align interactable h-fit" value="left" type="button">
         <FontAwesomeIcon :icon="['fas', 'align-left']" />
       </button>
@@ -92,7 +92,6 @@ import {
   defaultTextSize,
   defaultFontFamily,
 } from '../contentDisplay/DesignOptions';
-import ButtonComponent from '../ButtonComponent.vue';
 
 library.add(
   faBold,
@@ -114,7 +113,6 @@ defineProps({
   },
 });
 
-const showColorPicker = ref(false);
 const root: Ref<HTMLElement | null> = ref(null);
 
 onMounted(() => {
@@ -128,3 +126,9 @@ onMounted(() => {
     ?.toggleAttribute('selected', true);
 });
 </script>
+
+<style scoped lang="postcss">
+.active-indicator > .ql-active {
+  @apply border-interactable-border-dark !bg-interactable-selected-light dark:border-interactable-border-light dark:!bg-interactable-selected-dark;
+}
+</style>

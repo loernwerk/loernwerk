@@ -1,7 +1,7 @@
 <!-- View for users to log in -->
 <template>
   <div class="w-full">
-    <img src="../assets/Logo.png" class="w-1/3 mx-auto" />
+    <img src="../assets/Logo.webp" class="w-1/3 mx-auto" />
     <ContainerComponent
       class="w-1/2 mx-auto my-auto h-fit"
       v-if="!registrationFormVisible"

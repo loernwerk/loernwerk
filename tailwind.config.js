@@ -20,14 +20,14 @@ export default {
                     }
                   },
                 backgorund: {
-                    light: 'hsl(0, 0%, 97%)',
+                    light: 'hsl(0, 0%, 93%)',
                     dark: 'hsl(180, 80%, 3%)'
                 },
                 container: {
                     light: 'hsl(0, 0%, 98%)',
                     dark: 'hsl(200, 20%, 13%)',
                     border: {
-                      light: 'hsl(0, 0%, 80%)',
+                      light: 'hsl(0, 0%, 75%)',
                       dark: 'hsl(0, 0%, 25%)'
                     }
                   },
@@ -35,7 +35,7 @@ export default {
                     light: 'hsl(0, 0%, 100%)',
                     dark: 'hsl(180, 30%, 18%)',
                     border: {
-                      light: 'hsl(0, 0%, 75%)',
+                      light: 'hsl(0, 0%, 70%)',
                       dark: 'hsl(0, 0%, 30%)'
                     },
                     selected: {

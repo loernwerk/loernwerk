@@ -1,7 +1,7 @@
 <!-- View for a finished sequence -->
 <template>
   <div class="flex flex-col w-full">
-    <img src="../assets/Logo.png" class="w-1/2 mx-auto" />
+    <img src="../assets/Logo.webp" class="w-1/2 mx-auto" />
     <div class="text-center text-2xl">
       {{ $t('finished.youDidIt') }}<br />
       {{ $t('finished.done', { name: sequence.name }) }}

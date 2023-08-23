@@ -11,6 +11,7 @@ const messages = {
     view: 'Ansehen',
     notAvailable: '{object} nicht verfügbar',
     next: 'Weiter',
+    back: 'Zurück',
     slide: 'Seite',
     reloadPage: 'Bitte die Seite neu laden',
     create: '{object} erstellen',
@@ -112,6 +113,7 @@ const messages = {
       overviewTitle: 'Erstellter H5P-Inhalt',
       usedSequences: 'Verwendete Sequenzen',
     },
+    looseContentWarning: 'Dies löscht den vorherigen Inhalt des Feldes',
   },
   en: {
     search: 'Search',
@@ -123,6 +125,7 @@ const messages = {
     view: 'View',
     notAvailable: '{object} not available',
     next: 'Next',
+    back: 'Back',
     slide: 'Slide | Slides',
     reloadPage: 'Please reload the page',
     create: 'Create {object}',
@@ -223,6 +226,7 @@ const messages = {
       overviewTitle: 'Created H5P-Content',
       usedSequences: 'Used Sequences',
     },
+    looseContentWarning: 'This will delete the previous content of the field',
   },
 };
 
