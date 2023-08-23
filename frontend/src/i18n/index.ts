@@ -143,6 +143,8 @@ const messages = {
         'Benutzer hat keine Rechte für diese Sequenz',
       [LoernwerkErrorMessages.SLIDE_NOT_FOUND]: 'Slide nicht gefunden',
       [LoernwerkErrorMessages.UNKNOWN_LANGUAGE]: 'Unbekannte Sprache',
+      [LoernwerkErrorMessages.USERNAME_PASSWORD_INCORRECT]:
+        'Benutzername oder Passwort falsch',
     },
   },
   en: {
@@ -283,6 +285,8 @@ const messages = {
         'User is not privileged for this sequence',
       [LoernwerkErrorMessages.SLIDE_NOT_FOUND]: 'Slide not found',
       [LoernwerkErrorMessages.UNKNOWN_LANGUAGE]: 'Unknown language',
+      [LoernwerkErrorMessages.USERNAME_PASSWORD_INCORRECT]:
+        'Username or password incorrect',
     },
   },
 };

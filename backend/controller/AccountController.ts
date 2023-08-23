@@ -105,7 +105,7 @@ export class AccountController {
             );
         } else if (users.length === 0) {
             throw new LoernwerkError(
-                LoernwerkErrorMessages.USER_NOT_FOUND,
+                LoernwerkErrorMessages.USERNAME_PASSWORD_INCORRECT,
                 LoernwerkErrorCodes.NOT_FOUND
             );
         } else {
@@ -114,7 +114,7 @@ export class AccountController {
                 return founduser;
             }
             throw new LoernwerkError(
-                LoernwerkErrorMessages.USER_NOT_FOUND,
+                LoernwerkErrorMessages.USERNAME_PASSWORD_INCORRECT,
                 LoernwerkErrorCodes.NOT_FOUND
             );
         }
