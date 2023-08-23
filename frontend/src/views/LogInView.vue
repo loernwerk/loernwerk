@@ -16,22 +16,26 @@
               {{ $t('account.name') }}/{{ $t('account.mail') }}:
             </td>
             <td class="w-full p-1">
-              <TextInputComponent
-                :disabled="disableInputShowSpinner"
-                :placeHolder="`${$t('account.name')}/${$t('account.mail')}`"
-                v-model="mailField"
-              />
+              <form @submit.prevent="checkLogIn()">
+                <TextInputComponent
+                  :disabled="disableInputShowSpinner"
+                  :placeHolder="`${$t('account.name')}/${$t('account.mail')}`"
+                  v-model="mailField"
+                />
+              </form>
             </td>
           </tr>
           <tr>
             <td class="p-1">{{ $t('account.password') }}:</td>
             <td class="w-full p-1">
-              <TextInputComponent
-                :disabled="disableInputShowSpinner"
-                :hidden="true"
-                :placeHolder="$t('account.password')"
-                v-model="passwordField"
-              />
+              <form @submit.prevent="checkLogIn()">
+                <TextInputComponent
+                  :disabled="disableInputShowSpinner"
+                  :hidden="true"
+                  :placeHolder="$t('account.password')"
+                  v-model="passwordField"
+                />
+              </form>
             </td>
           </tr>
         </table>

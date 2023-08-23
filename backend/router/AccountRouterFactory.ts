@@ -65,7 +65,7 @@ export class AccountRouterFactory extends RouterFactory {
                             return;
                         }
                         case RegistrationType.INVITATION: {
-                            const code = req.body.code?.toString();
+                            const code = req.body.registrationCode?.toString();
                             if (
                                 code === undefined ||
                                 !(await ConfigController.isValidInviteCode(
