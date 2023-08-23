@@ -55,6 +55,7 @@ const router = useRouter();
  * Create a new sequence with given name
  */
 async function newSequence(): Promise<void> {
+  if (nameField.value === '') return;
   error.value = false;
   disableInputShowSpinner.value = true;
   try {

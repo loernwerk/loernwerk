@@ -32,6 +32,12 @@ export class SequenceController {
         name: string,
         userId: number
     ): Promise<ISequence> {
+        if (name === '') {
+            throw new LoernwerkError(
+                'Invalid sequence title',
+                LoernwerkErrorCodes.INVALID_PARAMETER
+            );
+        }
         if (!(await this.isValidUser(userId))) {
             throw new LoernwerkError(
                 'user not found',
