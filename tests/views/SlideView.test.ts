@@ -4,7 +4,7 @@ import { SequenceRestInterface } from '../../frontend/src/restInterfaces/Sequenc
 import ButtonComponent from '../../frontend/src/components/ButtonComponent.vue';
 import { flushPromises, mount } from '@vue/test-utils';
 import { describe, test, vi } from 'vitest';
-import { routerMock } from './router_mock.setup';
+import { routerMock } from '../component/router_mock.setup';
 import { LayoutType } from '../../model/slide/layout/Layout';
 
 describe('SlideView', () => {
@@ -32,6 +32,16 @@ describe('SlideView', () => {
             tags: [],
             slideCount: 1,
         });
+        const getSlide = vi.spyOn(SequenceRestInterface, 'getSlide');
+        getSlide.mockResolvedValueOnce({
+            layout: LayoutType.TITLEPAGE,
+            content: {},
+            backgroundColor: 'test',
+            sequenceCode: '0',
+            order: 0,
+            id: 12391,
+        });
+
         const wrapper = mount(SuspenseSlideView, {
             props: {
                 code: '123456',
@@ -123,6 +133,11 @@ describe('SlideView', () => {
             props: {
                 code: '123456',
             },
+            global: {
+                stubs: {
+                    SlideDisplayFactory: true,
+                },
+            },
         });
 
         await flushPromises();
@@ -134,6 +149,7 @@ describe('SlideView', () => {
         expect(getSlide).toBeCalledWith('123456', 0);
 
         await wrapper.getComponent(ButtonComponent).vm.$emit('click');
+        await flushPromises();
 
         expect(routerMock.push).toBeCalledTimes(1);
     });

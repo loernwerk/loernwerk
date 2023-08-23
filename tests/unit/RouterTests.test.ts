@@ -532,7 +532,7 @@ describe('Sequencerouter tests', () => {
         expect(getSeqFn).toBeCalledTimes(1);
         expect(getSeqFn).toBeCalledWith(testSequence.code);
         expect(saveSeqFn).toBeCalledTimes(1);
-        expect(saveSeqFn).toBeCalledWith(testSequence);
+        expect(saveSeqFn).toBeCalledWith(testSequence, testSequence.authorId);
         expect(responseToolkit.sendStatus).toBeCalledWith(204);
     });
 
@@ -577,7 +577,10 @@ describe('Sequencerouter tests', () => {
         expect(getSeqFn).toBeCalledTimes(1);
         expect(getSeqFn).toBeCalledWith(testSequence.code);
         expect(delSeqFn).toBeCalledTimes(1);
-        expect(delSeqFn).toBeCalledWith(testSequence.code);
+        expect(delSeqFn).toBeCalledWith(
+            testSequence.code,
+            testSequence.authorId
+        );
         expect(responseToolkit.sendStatus).toBeCalledWith(204);
     });
 
@@ -752,7 +755,7 @@ describe('Sequencerouter tests', () => {
             'getCertificatePDF'
         );
 
-        seqWithSlide.mockResolvedValue(new Buffer('test'));
+        seqWithSlide.mockResolvedValue(Buffer.from('test'));
 
         const responseToolkit = await handleRouter(sequenceRouter, {
             url: '/' + testSequence.code + '/view/certificate',
@@ -764,7 +767,7 @@ describe('Sequencerouter tests', () => {
         expect(seqWithSlide).toBeCalledTimes(1);
         expect(seqWithSlide).toBeCalledWith(testSequence.code, 'de');
         expect(responseToolkit.status).toBeCalledWith(200);
-        expect(responseToolkit.send).toBeCalledWith(new Buffer('test'));
+        expect(responseToolkit.send).toBeCalledWith(Buffer.from('test'));
     });
 });
 

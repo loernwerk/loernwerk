@@ -1,10 +1,15 @@
-import NavigationBarItem from '../../frontend/src/components/navBar/NavigationBarItem.vue';
-import { RouterLinkStub, mount, shallowMount } from '@vue/test-utils';
+import NavigationBarItem from '../../../frontend/src/components/navBar/NavigationBarItem.vue';
+import { mount } from '@vue/test-utils';
 
 describe('NavigationBarItem', () => {
     test('bold when active', () => {
         const wrapper = mount(NavigationBarItem, {
             props: { active: true },
+            global: {
+                stubs: {
+                    RouterLink: true,
+                },
+            },
         });
         expect(wrapper.get('div').classes()).toContain('font-bold');
     });
@@ -12,19 +17,25 @@ describe('NavigationBarItem', () => {
     test('not bold when not active', () => {
         const wrapper = mount(NavigationBarItem, {
             props: { active: false },
+            global: {
+                stubs: {
+                    RouterLink: true,
+                },
+            },
         });
         expect(wrapper.get('div').classes()).not.toContain('font-bold');
     });
 
     test('router to correct path', async () => {
-        const wrapper = shallowMount(NavigationBarItem, {
+        const wrapper = mount(NavigationBarItem, {
             props: { targetLink: '/test' },
-            stubs: {
-                RouterLink: RouterLinkStub,
+            global: {
+                stubs: {
+                    RouterLink: true,
+                },
             },
         });
 
-        console.log(wrapper.get('router-link').html());
-        expect(wrapper.get('router-link').html()).toContain('to="/test"');
+        expect(wrapper.get('router-link-stub').html()).toContain('to="/test"');
     });
 });

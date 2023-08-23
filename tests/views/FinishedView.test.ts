@@ -50,7 +50,11 @@ describe('FinishedView', () => {
             'getMetadataForStudent'
         );
         const getUrl = vi.spyOn(SequenceRestInterface, 'getUrlForCertificate');
-        const windowopen = vi.spyOn(window, 'open');
+        const windowopen = vi
+            .spyOn(window, 'open')
+            .mockImplementationOnce(() => {
+                return null;
+            });
 
         getMetadata.mockResolvedValueOnce({
             name: 'test',

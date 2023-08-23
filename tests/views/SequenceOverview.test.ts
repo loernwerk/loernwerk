@@ -6,6 +6,7 @@ import { SequenceRestInterface } from '../../frontend/src/restInterfaces/Sequenc
 import { AccountRestInterface } from '../../frontend/src/restInterfaces/AccountRestInterface';
 import { ConfigRestInterface } from '../../frontend/src/restInterfaces/ConfigRestInterface';
 import ButtonComponentVue from '../../frontend/src/components/ButtonComponent.vue';
+import PopupNewSequenceVue from '../../frontend/src/components/PopupNewSequence.vue';
 
 describe('SequenceOverviewView', () => {
     const SuspenseSequenceOverviewView = defineComponent({
@@ -172,11 +173,11 @@ describe('SequenceOverviewView', () => {
         });
         await flushPromises();
 
-        //expect(wrapper.findComponent(PopupNewSequenceVue).exists()).toBe(false);
+        expect(wrapper.findComponent(PopupNewSequenceVue).exists()).toBe(false);
 
         wrapper.getComponent(ButtonComponentVue).vm.$emit('click');
         await flushPromises();
 
-        //expect(wrapper.findComponent(PopupNewSequenceVue).exists()).toBe(true);
+        expect(wrapper.findComponent(PopupNewSequenceVue).exists()).toBe(true);
     });
 });

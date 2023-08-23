@@ -1,9 +1,9 @@
 import { flushPromises, mount } from '@vue/test-utils';
 import { describe, test, vi } from 'vitest';
-import DeleteSequencePopupTab from '../../frontend/src/components/sequenceOverviewPopUpTabs/DeleteSequencePopupTab.vue';
-import ButtonComponent from '../../frontend/src/components/ButtonComponent.vue';
-import { SequenceRestInterface } from '../../frontend/src/restInterfaces/SequenceRestInterface';
-import { i18nMock } from './translation_mock.setup';
+import DeleteSequencePopupTab from '../../../frontend/src/components/sequenceOverviewPopUpTabs/DeleteSequencePopupTab.vue';
+import ButtonComponent from '../../../frontend/src/components/ButtonComponent.vue';
+import { SequenceRestInterface } from '../../../frontend/src/restInterfaces/SequenceRestInterface';
+import { i18nMock } from '../translation_mock.setup';
 
 describe('DeleteSequencePopupTab', () => {
     test('correctly display value', () => {

@@ -1,6 +1,6 @@
-import EmbedOptionsTab from '../../frontend/src/components/sequenceEditOptionsTab/EmbedOptionsTab.vue';
+import EmbedOptionsTab from '../../../frontend/src/components/sequenceEditOptionsTab/EmbedOptionsTab.vue';
 import { flushPromises, mount } from '@vue/test-utils';
-import { EmbedContent } from '../../model/slide/content/EmbedContent';
+import { EmbedContent } from '../../../model/slide/content/EmbedContent';
 
 describe('EmbedOptionsTab', () => {
     test('correctly display value', () => {
