@@ -1,11 +1,6 @@
 import { test } from '@playwright/test';
 
 test('test', async ({ page, browserName }) => {
-    test.skip(
-        true,
-        'Due to the H5P content this test is not consistently executable'
-    );
-
     await page.goto('/');
     await page
         .locator('div')
@@ -40,7 +35,11 @@ test('test', async ({ page, browserName }) => {
         )
         .click();
 
-    await page.waitForTimeout(5000);
+    await page.waitForFunction(() => {
+        return !!document
+            .querySelector('iframe')
+            ?.contentDocument?.querySelector('#h5p-multichoice');
+    });
 
     await page
         .frameLocator('iframe')
@@ -51,7 +50,13 @@ test('test', async ({ page, browserName }) => {
         .getByRole('button', { name: 'Benutzen' })
         .click();
 
-    await page.waitForTimeout(5000);
+    await page.waitForFunction(() => {
+        return !!document
+            .querySelector('iframe')
+            ?.contentDocument?.querySelector(
+                '.h5peditor-form-manager-title.multichoice'
+            );
+    });
 
     // Fill in field for H5P Content
     await page
