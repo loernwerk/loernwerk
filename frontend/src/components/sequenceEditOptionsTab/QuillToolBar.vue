@@ -127,13 +127,8 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
+<style scoped lang="postcss">
 .active-indicator > .ql-active {
-  border-color: hsl(0, 0%, 30%);
-  background-color: hsl(0, 0%, 95%) !important;
-}
-.dark .active-indicator > .ql-active {
-  border-color: hsl(0, 0%, 70%);
-  background-color: hsl(180, 30%, 25%) !important;
+  @apply border-interactable-border-dark !bg-interactable-selected-light dark:border-interactable-border-light dark:!bg-interactable-selected-dark;
 }
 </style>
