@@ -1,6 +1,6 @@
-import { test } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
-test('test', async ({ page, browserName }) => {
+test('test', async ({ page, browserName, context }) => {
     await page.goto('/');
     await page
         .locator('div')
@@ -28,13 +28,11 @@ test('test', async ({ page, browserName }) => {
     await page.waitForTimeout(2000);
 
     await page.getByPlaceholder('Benutzername').click();
-    await page
-        .getByPlaceholder('Benutzername')
-        .fill(`TZ12-13-tobeedited-tobedeleted-${browserName}`);
+    await page.getByPlaceholder('Benutzername').fill(`TZ12-${browserName}`);
     await page.getByPlaceholder('E-Mail').click();
     await page
         .getByPlaceholder('E-Mail')
-        .fill(`TZ1213-${browserName}@kreativeemail.de`);
+        .fill(`TZ12-${browserName}@kreativeemail.de`);
     await page.getByPlaceholder('Passwort', { exact: true }).click();
     await page
         .getByPlaceholder('Passwort', { exact: true })
@@ -51,9 +49,27 @@ test('test', async ({ page, browserName }) => {
 
     // Check if user was saved
     /*expect(await page.innerHTML('body')).toContain(`TZ12-13-tobeedited-tobedeleted-${browserName}`); /* uncomment this when reload fixed */
-    //expect(await axios.get('http://localhost:5000/api/account?name=TZ12-13-tobeedited-tobedeleted-' + browserName, {withCredentials: true}).then(res => res.status)).toBe(200);
-
-    //expect(await axios.get(`http://localhost:5000/api/account?mail=TZ1213-${browserName}@kreativeemail.de`, {withCredentials: true}).then(res => res.status)).toBe(200);
+    const loernwerkCookie = (await context.cookies()).find(
+        (cookie) => cookie.name === 'loernwerk.session'
+    )?.value as string;
+    expect(
+        (
+            await fetch(
+                'http://localhost:5000/api/account?name=TZ12-' + browserName,
+                { headers: { cookie: 'loernwerk.session=' + loernwerkCookie } }
+            )
+        ).status
+    ).toBe(200);
+    expect(
+        (
+            await fetch(
+                'http://localhost:5000/api/account?mail=TZ12-' +
+                    browserName +
+                    '@kreativeemail.de',
+                { headers: { cookie: 'loernwerk.session=' + loernwerkCookie } }
+            )
+        ).status
+    ).toBe(200);
 });
 
 /**

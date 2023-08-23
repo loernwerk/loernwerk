@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { IUser } from '../../model/user/IUser';
 
 const browserAccountMap: Record<string, string> = {
     chromium: 'TZ7-1',
@@ -6,7 +7,7 @@ const browserAccountMap: Record<string, string> = {
     webkit: 'TZ7-3',
 };
 
-test('test', async ({ page, browserName }) => {
+test('test', async ({ page, browserName, context }) => {
     await page.goto('/');
     await page
         .locator('div')
@@ -56,4 +57,16 @@ test('test', async ({ page, browserName }) => {
         .click();
 
     expect(page.getByText('Benutzer gespeichert')).toBeDefined();
+
+    const loernwerkCookie = (await context.cookies()).find(
+        (cookie) => cookie.name === 'loernwerk.session'
+    )?.value as string;
+    const account = await fetch(
+        'http://localhost:5000/api/account' + browserName,
+        { headers: { cookie: 'loernwerk.session=' + loernwerkCookie } }
+    );
+    expect(account.status).toBe(200);
+    const accountJson = (await account.json()) as IUser;
+    expect(accountJson.name).toBe(`lehrkraft-${browserName}`);
+    expect(accountJson.mail).toBe(`lehrkraft-${browserName}@loernwerk.de`);
 });

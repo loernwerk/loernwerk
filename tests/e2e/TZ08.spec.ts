@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
+import { ISequence } from '../../model/sequence/ISequence';
 
-test('test', async ({ page }) => {
+test('test', async ({ page, context }) => {
     await page.goto('/');
     await page
         .locator('div')
@@ -33,6 +34,17 @@ test('test', async ({ page }) => {
 
     // Expect tag to be on sequence
     expect(page.getByText('Tag123')).toBeDefined();
+    const loernwerkCookie = (await context.cookies()).find(
+        (cookie) => cookie.name === 'loernwerk.session'
+    )?.value as string;
+    let sequences = await fetch('http://localhost:5000/api/sequence/list', {
+        headers: { cookie: 'loernwerk.session=' + loernwerkCookie },
+    });
+    expect(sequences.status).toBe(200);
+    let sequencesJson = (await sequences.json()) as ISequence[];
+    expect(sequencesJson.some((value) => value.tags.includes('Tag123'))).toBe(
+        true
+    );
 
     // Search for tag and remove it
     const searchBar = page.getByPlaceholder('Suche...');
@@ -51,4 +63,12 @@ test('test', async ({ page }) => {
 
     // Expect tag to be removed from sequence
     expect(await page.innerHTML('body')).not.toContain('Tag123');
+    sequences = await fetch('http://localhost:5000/api/sequence/list', {
+        headers: { cookie: 'loernwerk.session=' + loernwerkCookie },
+    });
+    expect(sequences.status).toBe(200);
+    sequencesJson = (await sequences.json()) as ISequence[];
+    expect(sequencesJson.some((value) => value.tags.includes('Tag123'))).toBe(
+        false
+    );
 });
