@@ -18,7 +18,7 @@ test('TZ02', async ({ page }) => {
     await page.getByText('Anmelden', { exact: true }).click();
     await responsePromise;
     expect(await page.locator('div').allInnerTexts()).toContain(
-        'Falscher Benutzername/E-Mail oder Passwort'
+        'Benutzername oder Passwort falsch'
     );
     expect(page).toHaveURL(/.*login/);
 
