@@ -1,4 +1,7 @@
 import { test, expect } from '@playwright/test';
+import axios from 'axios';
+import { ISlide } from '../../model/slide/ISlide';
+import { ImageContent } from '../../model/slide/content/ImageContent';
 
 test('TZ03', async ({ page }) => {
     await page.goto('./');
@@ -43,4 +46,9 @@ test('TZ03', async ({ page }) => {
             .filter({ hasText: /^Link der Sequenz:$/ })
             .getByRole('textbox')
     ).toBeVisible();
+
+    const contents = (
+        await axios.get('http://localhost:5000/api/sequence/CCBDAC/view/0')
+    ).data as ISlide;
+    expect((contents.content[1] as ImageContent).scale).toBe('0.4');
 });

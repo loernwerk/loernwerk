@@ -1,4 +1,6 @@
 import { test, expect } from '@playwright/test';
+import axios from 'axios';
+import { IUser } from '../../model/user/IUser';
 
 test('TZ13', async ({ page, browserName, context }) => {
     await context.clearCookies();
@@ -32,4 +34,14 @@ test('TZ13', async ({ page, browserName, context }) => {
             .first()
             .allInnerTexts()
     ).not.toContain(username);
+
+    const loernwerkCookie = (await context.cookies()).find(
+        (cookie) => cookie.name === 'loernwerk.session'
+    )?.value as string;
+    const users = (
+        await axios.get('http://localhost:5000/api/account/list', {
+            headers: { cookie: 'loernwerk.session=' + loernwerkCookie },
+        })
+    ).data as IUser[];
+    expect(users.some((value) => value.name === username)).toBeFalsy();
 });

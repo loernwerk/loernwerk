@@ -1,4 +1,7 @@
 import { test, expect } from '@playwright/test';
+import { ISlide } from '../../model/slide/ISlide';
+import { TextContent } from '../../model/slide/content/TextContent';
+import axios from 'axios';
 
 test('TZ02', async ({ page }) => {
     await page.goto('./');
@@ -54,4 +57,18 @@ test('TZ02', async ({ page }) => {
     await page.getByRole('heading', { name: 'Seite' }).nth(1).click();
     await page.getByText('Speichern').click();
     await page.waitForURL(/.*overview/);
+
+    const contents = (
+        await axios.get('http://localhost:5000/api/sequence/CDDAEF/view/0')
+    ).data as ISlide;
+    expect((contents.content[1] as TextContent).delta).toEqual({
+        ops: [
+            { insert: 'Einen kurzen Satz\n\n\n\n' },
+            {
+                insert: 'In anderer Schriftart',
+                attributes: { font: 'Times New Roman' },
+            },
+            { insert: '\n' },
+        ],
+    });
 });
