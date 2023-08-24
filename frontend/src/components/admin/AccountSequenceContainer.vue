@@ -13,11 +13,7 @@
             <ButtonComponent @click="showSequence(sequence.code)">
               {{ $t('show') }}
             </ButtonComponent>
-            <div class="flex-grow text-error">
-              <div v-if="showError">
-                {{ $t('failed', { object: $t('delete') }) }}
-              </div>
-            </div>
+            <div class="flex-grow"></div>
             <ButtonComponent @click="deleteSequence(sequence.code)">
               {{ $t('delete') }}
             </ButtonComponent>
@@ -62,8 +58,9 @@ async function deleteSequence(code: string): Promise<void> {
   try {
     await SequenceRestInterface.deleteSequence(code);
     emit('delete');
-  } catch {
+  } catch (e) {
     showError.value = true;
+    throw e;
   }
 }
 </script>

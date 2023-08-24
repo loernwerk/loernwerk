@@ -25,8 +25,8 @@ export class SequenceRouterFactory extends RouterFactory {
                         req.session.userId as number
                     );
                     res.status(201).json({ code: sequence.code });
-                } catch {
-                    res.sendStatus(400);
+                } catch (e) {
+                    res.send(400).json(e.message);
                 }
             }
         );
@@ -50,8 +50,8 @@ export class SequenceRouterFactory extends RouterFactory {
                         res.sendStatus(403);
                         return;
                     }
-                } catch {
-                    res.sendStatus(404);
+                } catch (e) {
+                    res.send(404).json(e.message);
                 }
 
                 try {
@@ -60,8 +60,8 @@ export class SequenceRouterFactory extends RouterFactory {
                         req.session.userId as number
                     );
                     res.sendStatus(204);
-                } catch {
-                    res.sendStatus(400);
+                } catch (e) {
+                    res.send(400).json(e.message);
                 }
             }
         );
@@ -83,8 +83,8 @@ export class SequenceRouterFactory extends RouterFactory {
                         res.sendStatus(403);
                         return;
                     }
-                } catch {
-                    res.sendStatus(404);
+                } catch (e) {
+                    res.send(404).json(e.message);
                     return;
                 }
 
@@ -94,8 +94,8 @@ export class SequenceRouterFactory extends RouterFactory {
                         req.session.userId as number
                     );
                     res.sendStatus(204);
-                } catch {
-                    res.sendStatus(400);
+                } catch (e) {
+                    res.send(400).json(e.message);
                 }
             }
         );
@@ -120,8 +120,8 @@ export class SequenceRouterFactory extends RouterFactory {
                     parseInt(req.params.id)
                 );
                 res.status(200).json(sequences);
-            } catch {
-                res.sendStatus(404);
+            } catch (e) {
+                res.send(404).json(e.message);
             }
         });
 
@@ -142,8 +142,8 @@ export class SequenceRouterFactory extends RouterFactory {
                     return;
                 }
                 res.status(200).json(sequence);
-            } catch {
-                res.sendStatus(404);
+            } catch (e) {
+                res.send(404).status(e.message);
             }
         });
 
@@ -159,8 +159,8 @@ export class SequenceRouterFactory extends RouterFactory {
                     slideCount: sequence.slideCount,
                     code: sequence.code,
                 });
-            } catch {
-                res.sendStatus(404);
+            } catch (e) {
+                res.send(404).json(e.message);
             }
         });
 
@@ -188,8 +188,8 @@ export class SequenceRouterFactory extends RouterFactory {
                     `attachment;filename=${filename}`
                 );
                 res.status(200).send(pdf);
-            } catch {
-                res.sendStatus(404);
+            } catch (e) {
+                res.send(404).json(e.message);
             }
         });
 
@@ -200,8 +200,8 @@ export class SequenceRouterFactory extends RouterFactory {
                     parseInt(req.params.slide)
                 );
                 res.status(200).json(slide);
-            } catch {
-                res.sendStatus(404);
+            } catch (e) {
+                res.send(404).json(e.message);
             }
         });
 

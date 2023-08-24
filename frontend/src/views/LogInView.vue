@@ -53,7 +53,7 @@
           </div>
           <div class="flex-grow text-center">
             <div class="text-error" v-if="displayError">
-              {{ $t('account.wrongLoginData') }}
+              {{ $t('error.' + errorCode) }}
             </div>
             <div class="text-success" v-if="accountCreatedMessage">
               {{ $t('created', { object: $t('user') }) }}
@@ -99,6 +99,7 @@ import { ConfigKey } from '../../../model/configuration/ConfigKey';
 import { RegistrationType } from '../../../model/configuration/RegistrationType';
 import { useRouter } from 'vue-router';
 
+const errorCode = ref('');
 const router = useRouter();
 const mailField = ref('');
 const passwordField = ref('');
@@ -143,18 +144,23 @@ async function checkLogIn(): Promise<void> {
   disableInputShowSpinner.value = true;
   displayError.value = false;
   accountCreatedMessage.value = false;
-  const success = await AccountRestInterface.verifyLogin(
-    mailField.value,
-    passwordField.value,
-    keepLoggedIn.value
-  );
-
-  if (success) {
+  try {
+    await AccountRestInterface.tryLogin(
+      mailField.value,
+      passwordField.value,
+      keepLoggedIn.value
+    );
     await router.push({ name: 'Overview' });
-  } else {
+  } catch (e) {
     displayError.value = true;
+    if (e instanceof Error) {
+      errorCode.value = e.message;
+    } else {
+      throw e;
+    }
+  } finally {
+    disableInputShowSpinner.value = false;
   }
-  disableInputShowSpinner.value = false;
 }
 
 /**

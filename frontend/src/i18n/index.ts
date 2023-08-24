@@ -1,4 +1,5 @@
 import { createI18n } from 'vue-i18n';
+import { LoernwerkErrorMessages } from '../../../model/loernwerkError';
 
 const messages = {
   de: {
@@ -113,6 +114,39 @@ const messages = {
       overviewTitle: 'Erstellter H5P-Inhalt',
       usedSequences: 'Verwendete Sequenzen',
     },
+    error: {
+      [LoernwerkErrorMessages.AMBIGUOUS_USER_DETAILS]:
+        'Benutzername und E-Mail sind bereits vergeben',
+      [LoernwerkErrorMessages.INSUFFICENT_USER_DETAILS]:
+        'Benutzername, E-Mail und Password müssen angegeben werden',
+      [LoernwerkErrorMessages.MAIL_ALREADY_EXISTS]:
+        'E-Mail ist bereits vergeben',
+      [LoernwerkErrorMessages.MAIL_DOES_NOT_SATISFY_REQUIREMENTS]:
+        'E-Mail ungültig',
+      [LoernwerkErrorMessages.PASSWORD_DOES_NOT_SATISFY_REQUIREMENTS]:
+        'Passwort zu kurz',
+      [LoernwerkErrorMessages.USERNAME_ALREADY_EXISTS]:
+        'Benutzername ist bereits vergeben',
+      [LoernwerkErrorMessages.USERNAME_DOES_NOT_SATISFY_REQUIREMENTS]:
+        'Benutzername ungültig',
+      [LoernwerkErrorMessages.USER_NOT_FOUND]: 'Benutzer nicht gefunden',
+      [LoernwerkErrorMessages.KEY_NOT_FOUND]: 'Schlüssel nicht gefunden',
+      [LoernwerkErrorMessages.NO_MORE_SEQUENCES_CREATABLE]:
+        'Keine weiteren Lernsequenzen erstellbar',
+      [LoernwerkErrorMessages.SEQUENCE_NOT_FOUND]: 'Lernsequenz nicht gefunden',
+      [LoernwerkErrorMessages.NO_CODE_PROVIDED]: 'Kein Code angegeben',
+      [LoernwerkErrorMessages.SLIDE_LIMIT_REACHED]:
+        'Maximale Anzahl an Slides erreicht',
+      [LoernwerkErrorMessages.SEQUENCE_EMPTY]: 'Lernsequenz ist leer',
+      [LoernwerkErrorMessages.SHARED_USER_NOT_FOUND]:
+        'Geteilter Benutzer nicht gefunden',
+      [LoernwerkErrorMessages.USER_NOT_PRIVILEGED_FOR_SEQUENCE]:
+        'Benutzer hat keine Rechte für diese Sequenz',
+      [LoernwerkErrorMessages.SLIDE_NOT_FOUND]: 'Slide nicht gefunden',
+      [LoernwerkErrorMessages.UNKNOWN_LANGUAGE]: 'Unbekannte Sprache',
+      [LoernwerkErrorMessages.USERNAME_PASSWORD_INCORRECT]:
+        'Benutzername oder Passwort falsch',
+    },
     looseContentWarning: 'Dies löscht den vorherigen Inhalt des Feldes',
   },
   en: {
@@ -225,6 +259,37 @@ const messages = {
       usedBy: 'used by {object} sequences',
       overviewTitle: 'Created H5P-Content',
       usedSequences: 'Used Sequences',
+    },
+    error: {
+      [LoernwerkErrorMessages.AMBIGUOUS_USER_DETAILS]:
+        'Username and E-Mail are already taken',
+      [LoernwerkErrorMessages.INSUFFICENT_USER_DETAILS]:
+        'Username, E-Mail and Password must be provided',
+      [LoernwerkErrorMessages.MAIL_ALREADY_EXISTS]: 'E-Mail is already taken',
+      [LoernwerkErrorMessages.MAIL_DOES_NOT_SATISFY_REQUIREMENTS]:
+        'E-Mail is invalid',
+      [LoernwerkErrorMessages.PASSWORD_DOES_NOT_SATISFY_REQUIREMENTS]:
+        'Password is too short',
+      [LoernwerkErrorMessages.USERNAME_ALREADY_EXISTS]:
+        'Username is already taken',
+      [LoernwerkErrorMessages.USERNAME_DOES_NOT_SATISFY_REQUIREMENTS]:
+        'Username is invalid',
+      [LoernwerkErrorMessages.USER_NOT_FOUND]: 'User not found',
+      [LoernwerkErrorMessages.KEY_NOT_FOUND]: 'Key not found',
+      [LoernwerkErrorMessages.NO_MORE_SEQUENCES_CREATABLE]:
+        'No more sequences creatable',
+      [LoernwerkErrorMessages.SEQUENCE_NOT_FOUND]: 'Sequence not found',
+      [LoernwerkErrorMessages.NO_CODE_PROVIDED]: 'No code provided',
+      [LoernwerkErrorMessages.SLIDE_LIMIT_REACHED]:
+        'Maximum number of slides reached',
+      [LoernwerkErrorMessages.SEQUENCE_EMPTY]: 'Sequence is empty',
+      [LoernwerkErrorMessages.SHARED_USER_NOT_FOUND]: 'Shared user not found',
+      [LoernwerkErrorMessages.USER_NOT_PRIVILEGED_FOR_SEQUENCE]:
+        'User is not privileged for this sequence',
+      [LoernwerkErrorMessages.SLIDE_NOT_FOUND]: 'Slide not found',
+      [LoernwerkErrorMessages.UNKNOWN_LANGUAGE]: 'Unknown language',
+      [LoernwerkErrorMessages.USERNAME_PASSWORD_INCORRECT]:
+        'Username or password incorrect',
     },
     looseContentWarning: 'This will delete the previous content of the field',
   },
