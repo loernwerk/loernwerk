@@ -19,19 +19,12 @@
         />
       </div>
     </div>
-    <ButtonComponent
-      @click="$emit('save')"
-      :loading="props.disableButton"
-      class="h-fit"
-      >{{ $t('save') }}</ButtonComponent
-    >
   </div>
 </template>
 
 <script setup lang="ts">
 import { PropType, ref, watch } from 'vue';
 import { ISlide } from '../../../../model/slide/ISlide';
-import ButtonComponent from '../ButtonComponent.vue';
 import TextInputComponent from '../TextInputComponent.vue';
 import { ISequence } from '../../../../model/sequence/ISequence';
 
@@ -70,10 +63,6 @@ const emits = defineEmits([
    * @param sequence The updated sequence
    */
   'update-sequence',
-  /**
-   * Emitted when the save button has been clicked
-   */
-  'save',
 ]);
 const sequenceName = ref(props.sequence.name);
 watch(sequenceName, () => updateSequenceName(sequenceName.value));

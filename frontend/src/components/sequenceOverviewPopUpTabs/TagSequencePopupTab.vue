@@ -1,12 +1,14 @@
 <template>
   <div class="mt-4 space-y-2 flex flex-col">
     <h1>{{ $t('sequence.tagIntro') }}</h1>
-    <TextInputComponent
-      class="my-2 grow"
-      :placeHolder="$t('sequence.tags')"
-      v-model="tagsField"
-    >
-    </TextInputComponent>
+    <form @submit.prevent="confimChanges()">
+      <TextInputComponent
+        class="my-2 grow"
+        :placeHolder="$t('sequence.tags')"
+        v-model="tagsField"
+      >
+      </TextInputComponent>
+    </form>
     <div class="flex flex-row">
       <div class="flex-grow text-error">
         <div v-if="error">

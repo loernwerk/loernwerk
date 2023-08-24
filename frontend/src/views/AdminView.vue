@@ -20,7 +20,7 @@
             class="w-2/3 pl-1 pr-1"
             :showadminview="true"
             :user="selectedUser"
-            @delete="refresh()"
+            @change="refresh()"
           />
           <AccountSequenceContainer
             :sequences="sequencesOfUser"

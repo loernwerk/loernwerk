@@ -1,12 +1,14 @@
 <template>
   <div class="mt-4">
-    <TextInputComponent
-      class="mb-2 mt-4"
-      v-model="userInfoField"
-      :place-holder="$t('sequence.teacherName')"
-      :class="{ 'border-red-600': showRedBorder }"
-    >
-    </TextInputComponent>
+    <form @submit.prevent="confirmSharing()">
+      <TextInputComponent
+        class="mb-2 mt-4"
+        v-model="userInfoField"
+        :place-holder="$t('sequence.teacherName')"
+        :class="{ 'border-red-600': showRedBorder }"
+      >
+      </TextInputComponent>
+    </form>
     <div class="flex flex-row space-x-2">
       <select class="interactable" v-model="setWriteAccess">
         <option :value="false">{{ $t('sequence.readAccess') }}</option>

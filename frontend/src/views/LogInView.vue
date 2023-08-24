@@ -1,7 +1,7 @@
 <!-- View for users to log in -->
 <template>
   <div class="w-full">
-    <img src="../assets/Logo.png" class="w-1/3 mx-auto" />
+    <img src="../assets/Logo.webp" class="w-1/3 mx-auto" />
     <ContainerComponent
       class="w-1/2 mx-auto my-auto h-fit"
       v-if="!registrationFormVisible"
@@ -16,22 +16,26 @@
               {{ $t('account.name') }}/{{ $t('account.mail') }}:
             </td>
             <td class="w-full p-1">
-              <TextInputComponent
-                :disabled="disableInputShowSpinner"
-                :placeHolder="`${$t('account.name')}/${$t('account.mail')}`"
-                v-model="mailField"
-              />
+              <form @submit.prevent="checkLogIn()">
+                <TextInputComponent
+                  :disabled="disableInputShowSpinner"
+                  :placeHolder="`${$t('account.name')}/${$t('account.mail')}`"
+                  v-model="mailField"
+                />
+              </form>
             </td>
           </tr>
           <tr>
             <td class="p-1">{{ $t('account.password') }}:</td>
             <td class="w-full p-1">
-              <TextInputComponent
-                :disabled="disableInputShowSpinner"
-                :hidden="true"
-                :placeHolder="$t('account.password')"
-                v-model="passwordField"
-              />
+              <form @submit.prevent="checkLogIn()">
+                <TextInputComponent
+                  :disabled="disableInputShowSpinner"
+                  :hidden="true"
+                  :placeHolder="$t('account.password')"
+                  v-model="passwordField"
+                />
+              </form>
             </td>
           </tr>
         </table>
@@ -49,7 +53,7 @@
           </div>
           <div class="flex-grow text-center">
             <div class="text-error" v-if="displayError">
-              {{ $t('account.wrongLoginData') }}
+              {{ $t('error.' + errorCode) }}
             </div>
             <div class="text-success" v-if="accountCreatedMessage">
               {{ $t('created', { object: $t('user') }) }}
@@ -95,6 +99,7 @@ import { ConfigKey } from '../../../model/configuration/ConfigKey';
 import { RegistrationType } from '../../../model/configuration/RegistrationType';
 import { useRouter } from 'vue-router';
 
+const errorCode = ref('');
 const router = useRouter();
 const mailField = ref('');
 const passwordField = ref('');
@@ -139,18 +144,23 @@ async function checkLogIn(): Promise<void> {
   disableInputShowSpinner.value = true;
   displayError.value = false;
   accountCreatedMessage.value = false;
-  const success = await AccountRestInterface.verifyLogin(
-    mailField.value,
-    passwordField.value,
-    keepLoggedIn.value
-  );
-
-  if (success) {
+  try {
+    await AccountRestInterface.tryLogin(
+      mailField.value,
+      passwordField.value,
+      keepLoggedIn.value
+    );
     await router.push({ name: 'Overview' });
-  } else {
+  } catch (e) {
     displayError.value = true;
+    if (e instanceof Error) {
+      errorCode.value = e.message;
+    } else {
+      throw e;
+    }
+  } finally {
+    disableInputShowSpinner.value = false;
   }
-  disableInputShowSpinner.value = false;
 }
 
 /**

@@ -12,65 +12,75 @@
           <tr>
             <td class="p-1">{{ $t('account.name') }}:</td>
             <td class="p-1 w-2/3">
-              <TextInputComponent
-                :disabled="disableInputShowSpinner"
-                :place-holder="$t('account.name')"
-                :max-length="128"
-                v-model="nameField"
-              />
+              <form @submit.prevent="createUser()">
+                <TextInputComponent
+                  :disabled="disableInputShowSpinner"
+                  :place-holder="$t('account.name')"
+                  :max-length="128"
+                  v-model="nameField"
+                />
+              </form>
             </td>
           </tr>
           <tr>
             <td class="p-1">{{ $t('account.mail') }}:</td>
             <td class="p-1">
-              <TextInputComponent
-                :disabled="disableInputShowSpinner"
-                :place-holder="$t('account.mail')"
-                :max-length="320"
-                v-model="mailField"
-              />
+              <form @submit.prevent="createUser()">
+                <TextInputComponent
+                  :disabled="disableInputShowSpinner"
+                  :place-holder="$t('account.mail')"
+                  :max-length="320"
+                  v-model="mailField"
+                />
+              </form>
             </td>
           </tr>
           <tr>
             <td class="p-1">{{ $t('account.password') }}:</td>
             <td class="p-1">
-              <TextInputComponent
-                :disabled="disableInputShowSpinner"
-                :hidden="true"
-                :place-holder="$t('account.password')"
-                :max-length="128"
-                v-model="pwField"
-              />
+              <form @submit.prevent="createUser()">
+                <TextInputComponent
+                  :disabled="disableInputShowSpinner"
+                  :hidden="true"
+                  :place-holder="$t('account.password')"
+                  :max-length="128"
+                  v-model="pwField"
+                />
+              </form>
             </td>
           </tr>
           <tr>
             <td class="p-1">{{ $t('account.passwordRepeat') }}:</td>
             <td class="p-1">
-              <TextInputComponent
-                :disabled="disableInputShowSpinner"
-                :hidden="true"
-                :place-holder="$t('account.passwordRepeat')"
-                :max-length="128"
-                v-model="pwFieldControl"
-              />
+              <form @submit.prevent="createUser()">
+                <TextInputComponent
+                  :disabled="disableInputShowSpinner"
+                  :hidden="true"
+                  :place-holder="$t('account.passwordRepeat')"
+                  :max-length="128"
+                  v-model="pwFieldControl"
+                />
+              </form>
             </td>
           </tr>
           <tr v-if="requiresInviteCode">
             <td class="p-1">{{ $t('account.inviteCode') }}:</td>
             <td class="p-1">
-              <TextInputComponent
-                :disabled="disableInputShowSpinner"
-                :place-holder="$t('account.inviteCode')"
-                :max-length="128"
-                v-model="inviteCode"
-              />
+              <form @submit.prevent="createUser()">
+                <TextInputComponent
+                  :disabled="disableInputShowSpinner"
+                  :place-holder="$t('account.inviteCode')"
+                  :max-length="128"
+                  v-model="inviteCode"
+                />
+              </form>
             </td>
           </tr>
         </table>
         <div class="flex items-center pt-4">
           <div class="flex-grow text-center">
             <div class="text-error" v-if="displayError">
-              {{ $t('invalidInput') }}
+              {{ $t('error.' + errorCode) }}
             </div>
             <div class="text-success" v-if="displaySuccess">
               {{ $t('created', { object: $t('user') }) }}
@@ -110,6 +120,7 @@ const props = defineProps({
   },
 });
 
+const errorCode = ref('');
 const nameField = ref('');
 const mailField = ref('');
 const pwField = ref('');
@@ -151,6 +162,7 @@ async function createUser(): Promise<void> {
     emit('create');
   } catch (e) {
     displayError.value = true;
+    errorCode.value = e instanceof Error ? e.message : 'unkown';
   }
   disableInputShowSpinner.value = false;
 }

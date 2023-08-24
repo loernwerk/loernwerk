@@ -14,21 +14,16 @@ export class AccountRestInterface extends BaseRestInterface {
    * @param stayLoggedIn the option to stay logged in
    * @returns true if login was successful
    */
-  public static async verifyLogin(
+  public static async tryLogin(
     usernameOrEmail: string,
     password: string,
     stayLoggedIn: boolean
-  ): Promise<boolean> {
-    try {
-      await BaseRestInterface.post<boolean>(`${this.account_path}login`, {
-        usernameOrEmail,
-        password,
-        stayLoggedIn,
-      });
-      return true;
-    } catch (e) {
-      return false;
-    }
+  ): Promise<void> {
+    await BaseRestInterface.post<boolean>(`${this.account_path}login`, {
+      usernameOrEmail,
+      password,
+      stayLoggedIn,
+    });
   }
 
   /**

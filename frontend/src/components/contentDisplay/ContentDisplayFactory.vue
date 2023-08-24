@@ -1,7 +1,13 @@
 <!-- Visualizes a content object. -->
 <template>
   <div class="h-full p-3 relative overflow-hidden">
-    <div class="h-full" :class="{ 'border-1': editMode }">
+    <div
+      class="h-full"
+      :class="{
+        'border-1': editMode && !editing,
+        'border-2 border-tabselector': editMode && editing,
+      }"
+    >
       <div class="h-full" v-if="content">
         <EmbedDisplay
           v-if="content.contentType === ContentType.EMBED"
@@ -85,6 +91,14 @@ const props = defineProps({
   layoutSlot: {
     type: Number as PropType<LayoutSlot>,
     required: true,
+  },
+  /**
+   * Whether the content is being edited
+   */
+  editing: {
+    type: Boolean,
+    required: false,
+    default: false,
   },
 });
 

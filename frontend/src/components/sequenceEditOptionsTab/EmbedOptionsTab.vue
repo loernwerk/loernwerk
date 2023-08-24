@@ -38,12 +38,42 @@ const emits = defineEmits([
 const url = ref(content.value.url);
 
 /**
+ * Checks whether an inputted URL is valid with or without an additional https:// prefix.
+ * Uses the inbuilt URL constructor.
+ *
+ * @param url Url to check
+ * @returns The valid url as a string, if it's valid, or false otherwise
+ */
+function isValidUrl(url: string): string | false {
+  // trying the url without prefix
+  try {
+    new URL(url);
+    return url;
+  } catch {
+    // do nothing
+  }
+
+  // trying the url with https prefix
+  try {
+    new URL(`https://${url}`);
+    return `https://${url}`;
+  } catch {
+    // do nothing
+  }
+
+  return false;
+}
+
+/**
  * Updates the content
  * @param url The new url
  */
 watch(url, () => {
-  content.value.url = url.value;
-  emits('update-content', content.value);
+  const validUrl = isValidUrl(url.value);
+  if (validUrl !== false) {
+    content.value.url = validUrl;
+    emits('update-content', content.value);
+  }
 });
 
 watch(

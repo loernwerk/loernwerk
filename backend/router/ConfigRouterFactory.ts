@@ -26,8 +26,8 @@ export class ConfigRouterFactory extends RouterFactory {
                         req.body.value
                     );
                     res.sendStatus(204);
-                } catch {
-                    res.sendStatus(404);
+                } catch (e) {
+                    res.send(404).json(e.message);
                 }
             }
         );
@@ -51,8 +51,8 @@ export class ConfigRouterFactory extends RouterFactory {
                     req.params.key as ConfigKey
                 );
                 res.status(200).json({ value });
-            } catch {
-                res.sendStatus(404);
+            } catch (e) {
+                res.send(404).json(e.message);
             }
         });
 

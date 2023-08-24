@@ -12,47 +12,55 @@
           <tr>
             <td class="p-1">{{ $t('account.name') }}:</td>
             <td class="p-1 w-2/3">
-              <TextInputComponent
-                :disabled="disableInputShowSpinner || deleted"
-                :place-holder="$t('account.name')"
-                :max-length="128"
-                v-model="nameField"
-              />
+              <form @submit.prevent="updateInformation()">
+                <TextInputComponent
+                  :disabled="disableInputShowSpinner || deleted"
+                  :place-holder="$t('account.name')"
+                  :max-length="128"
+                  v-model="nameField"
+                />
+              </form>
             </td>
           </tr>
           <tr>
             <td class="p-1">{{ $t('account.mail') }}:</td>
             <td class="p-1">
-              <TextInputComponent
-                :disabled="disableInputShowSpinner || deleted"
-                :place-holder="$t('account.mail')"
-                :max-length="320"
-                v-model="mailField"
-              />
+              <form @submit.prevent="updateInformation()">
+                <TextInputComponent
+                  :disabled="disableInputShowSpinner || deleted"
+                  :place-holder="$t('account.mail')"
+                  :max-length="320"
+                  v-model="mailField"
+                />
+              </form>
             </td>
           </tr>
           <tr>
             <td class="p-1">{{ $t('account.password') }}:</td>
             <td class="p-1">
-              <TextInputComponent
-                :disabled="disableInputShowSpinner || deleted"
-                :hidden="true"
-                :place-holder="$t('account.password')"
-                :max-length="128"
-                v-model="pwField"
-              />
+              <form @submit.prevent="updateInformation()">
+                <TextInputComponent
+                  :disabled="disableInputShowSpinner || deleted"
+                  :hidden="true"
+                  :place-holder="$t('account.password')"
+                  :max-length="128"
+                  v-model="pwField"
+                />
+              </form>
             </td>
           </tr>
           <tr>
             <td class="p-1">{{ $t('account.passwordRepeat') }}:</td>
             <td class="p-1">
-              <TextInputComponent
-                :disabled="disableInputShowSpinner || deleted"
-                :hidden="true"
-                :place-holder="$t('account.passwordRepeat')"
-                :max-length="128"
-                v-model="pwFieldControl"
-              />
+              <form @submit.prevent="updateInformation()">
+                <TextInputComponent
+                  :disabled="disableInputShowSpinner || deleted"
+                  :hidden="true"
+                  :place-holder="$t('account.passwordRepeat')"
+                  :max-length="128"
+                  v-model="pwFieldControl"
+                />
+              </form>
             </td>
           </tr>
           <tr v-if="showadminview">
@@ -83,7 +91,7 @@
           </ButtonComponent>
           <div class="flex-grow text-center">
             <div class="text-error" v-if="displayError">
-              {{ $t('invalidInput') }}
+              {{ $t('error.' + errorCode) }}
             </div>
             <div class="text-success" v-if="displaySuccess">
               {{ $t('saved', { object: $t('user') }) }}
@@ -140,8 +148,9 @@ const props = defineProps({
     required: true,
   },
 });
-const emit = defineEmits(['delete']);
+const emit = defineEmits(['change']);
 
+const errorCode = ref('');
 const nameField = ref(props.user.name);
 const mailField = ref(props.user.mail);
 const pwField = ref('');
@@ -184,7 +193,7 @@ async function updateInformation(): Promise<void> {
     return;
   }
 
-  if (pwField.value !== '') {
+  if (pwField.value !== '' || pwFieldControl.value !== '') {
     if (pwField.value === pwFieldControl.value) {
       updateUser.password = pwField.value;
     } else {
@@ -201,8 +210,10 @@ async function updateInformation(): Promise<void> {
     displaySuccess.value = true;
   } catch (e) {
     displayError.value = true;
+    errorCode.value = e instanceof Error ? e.message : 'unkonwn';
   }
   disableInputShowSpinner.value = false;
+  emit('change');
 }
 /**
  * deletes a account
@@ -216,7 +227,7 @@ async function deleteAccount(): Promise<void> {
   await AccountRestInterface.deleteAccount(props.user.id as number);
   disableInputShowSpinner.value = false;
   deleted.value = true;
-  emit('delete');
+  emit('change');
 }
 /**
  * reseting this component
