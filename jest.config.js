@@ -10,5 +10,14 @@ module.exports = {
         tsconfig: 'tsconfig.node.json',
       }
     ]
-  }
+  },
+  coverageProvider: 'v8',
+  coverageReporters: ['text', 'html'],
+  coverageDirectory: 'coverage/jest',
+  collectCoverageFrom: [
+    '**/backend/controller/*.ts',
+    '**/backend/router/*.ts',
+    '!**/backend/router/H5PRouterFactory.ts',
+    '**/frontend/src/factories/*.ts'
+  ]
 };

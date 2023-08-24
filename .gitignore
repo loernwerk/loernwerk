@@ -33,3 +33,4 @@ loernwerk.db
 /playwright-report/
 /playwright/.cache/
 /tests/e2e/test_run.db
+coverage

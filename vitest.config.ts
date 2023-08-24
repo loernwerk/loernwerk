@@ -9,5 +9,14 @@ export default defineConfig({
         globals: true,
         environment: 'jsdom',
         watch: false,
+        coverage: {
+            reportsDirectory: './coverage/vitest',
+            reporter: ['text', 'html'],
+            include: [
+                '**/frontend/src/components/**/*.{ts,vue}',
+                '**/frontend/src/views/**/*.{ts,vue}',
+                '**/frontend/src/restInterfaces/**/*.ts',
+            ]
+        }
     },
 });
