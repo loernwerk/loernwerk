@@ -1,7 +1,7 @@
 <template>
   <div class="mt-4 space-y-2 flex flex-col">
     <h1>{{ $t('sequence.tagIntro') }}</h1>
-    <form @submit.prevent="confimChanges()">
+    <form @submit.prevent="confirmChanges()">
       <TextInputComponent
         class="my-2 grow"
         :placeHolder="$t('sequence.tags')"
