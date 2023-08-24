@@ -1,6 +1,10 @@
 import { AccountRestInterface } from '../../../frontend/src/restInterfaces/AccountRestInterface';
 import { vi } from 'vitest';
 import axios from 'axios';
+import {
+    LoernwerkError,
+    LoernwerkErrorCodes,
+} from '../../../model/loernwerkError';
 
 describe('AccountRestInterface', () => {
     beforeAll(() => {
@@ -8,27 +12,23 @@ describe('AccountRestInterface', () => {
     });
 
     test('login', async () => {
-        axios.post = vi.fn().mockResolvedValue({ data: {} });
-        const result = await AccountRestInterface.verifyLogin(
-            'test',
-            'test',
-            false
-        );
+        axios.post = vi.fn().mockResolvedValue({ data: true });
+        await AccountRestInterface.tryLogin('test', 'test', false);
 
         expect(axios.post).toBeCalledWith(
             'http://localhost:5000/api/account/login',
             { usernameOrEmail: 'test', password: 'test', stayLoggedIn: false },
             { withCredentials: true }
         );
-        expect(result).toBe(true);
     });
 
     test('wrong login', async () => {
         axios.post = vi.fn().mockRejectedValue({});
-        const result = await AccountRestInterface.verifyLogin(
-            'test',
-            'test',
-            false
+
+        expect(
+            AccountRestInterface.tryLogin('test', 'test', false)
+        ).rejects.toStrictEqual(
+            new LoernwerkError('', LoernwerkErrorCodes.UNKNOWN)
         );
 
         expect(axios.post).toBeCalledWith(
@@ -36,7 +36,6 @@ describe('AccountRestInterface', () => {
             { usernameOrEmail: 'test', password: 'test', stayLoggedIn: false },
             { withCredentials: true }
         );
-        expect(result).toBe(false);
     });
 
     test('logout', async () => {

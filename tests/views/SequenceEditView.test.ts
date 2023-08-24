@@ -302,7 +302,9 @@ describe('SequenceEditView', () => {
                 slot: LayoutSlot.HEADER,
                 emit: { ops: [{ insert: 'New line\n' }] },
             });
-        wrapper.findComponent({ name: 'SlideOptionsTab' }).vm.$emit('save');
+        await wrapper
+            .findComponent({ name: 'ButtonComponent' })
+            .vm.$emit('click');
         await flushPromises();
 
         const sequence = wrapper.findComponent(SequenceEditView).vm.sequence;

@@ -130,6 +130,7 @@ import ButtonComponent from './ButtonComponent.vue';
 import ContainerComponent from './ContainerComponent.vue';
 import { IUser, UserClass } from '../../../model/user/IUser';
 import { AccountRestInterface } from '../restInterfaces/AccountRestInterface';
+import { LoernwerkErrorMessages } from '../../../model/loernwerkError';
 
 const props = defineProps({
   /**
@@ -189,6 +190,7 @@ async function updateInformation(): Promise<void> {
     updateUser.mail = mailField.value;
   } else {
     displayError.value = true;
+    errorCode.value = LoernwerkErrorMessages.MAIL_DOES_NOT_SATISFY_REQUIREMENTS;
     disableInputShowSpinner.value = false;
     return;
   }
@@ -198,6 +200,8 @@ async function updateInformation(): Promise<void> {
       updateUser.password = pwField.value;
     } else {
       displayError.value = true;
+      errorCode.value =
+        LoernwerkErrorMessages.PASSWORD_DOES_NOT_SATISFY_REQUIREMENTS;
       disableInputShowSpinner.value = false;
       return;
     }
@@ -210,7 +214,7 @@ async function updateInformation(): Promise<void> {
     displaySuccess.value = true;
   } catch (e) {
     displayError.value = true;
-    errorCode.value = e instanceof Error ? e.message : 'unkonwn';
+    errorCode.value = e instanceof Error ? e.message : 'unknown';
   }
   disableInputShowSpinner.value = false;
   emit('change');

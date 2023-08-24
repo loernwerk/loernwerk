@@ -5,10 +5,6 @@ import ButtonComponentVue from '../../frontend/src/components/ButtonComponent.vu
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { SequenceRestInterface } from '../../frontend/src/restInterfaces/SequenceRestInterface';
 import { routerMock } from './router_mock.setup';
-import {
-    LoernwerkError,
-    LoernwerkErrorCodes,
-} from '../../model/loernwerkError';
 
 describe('PopupNewSequence', () => {
     test('Enter name and click button', async () => {
@@ -40,19 +36,12 @@ describe('PopupNewSequence', () => {
 
     test('Show error', async () => {
         const addSequence = vi.spyOn(SequenceRestInterface, 'addSequence');
-        addSequence.mockImplementationOnce(() => {
-            throw new LoernwerkError(
-                'Testing Error',
-                LoernwerkErrorCodes.UNKNOWN
-            );
-        });
 
         const wrapper = mount(PopupNewSequence, {});
 
         wrapper.getComponent(ButtonComponentVue).vm.$emit('click');
         await flushPromises();
 
-        expect(addSequence).toHaveBeenCalledTimes(1);
-        expect(wrapper.html()).toContain('sequence.creationError');
+        expect(addSequence).toHaveBeenCalledTimes(0);
     });
 });

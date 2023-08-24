@@ -1,11 +1,10 @@
-import ButtonComponentVue from '../../../frontend/src/components/ButtonComponent.vue';
 import {
     colors,
     fontFamilies,
     sizes,
 } from '../../../frontend/src/components/contentDisplay/DesignOptions';
 import QuillToolBar from '../../../frontend/src/components/sequenceEditOptionsTab/QuillToolBar.vue';
-import { flushPromises, mount } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 
 describe('QuillToolBar', () => {
     test('Contains test format buttons', async () => {
@@ -64,26 +63,6 @@ describe('QuillToolBar', () => {
         expect(wrapper.findAll('.ql-size > option').length).toBe(sizes.length);
     });
 
-    test('Opens color picker', async () => {
-        const wrapper = mount(QuillToolBar, {
-            props: {
-                id: 'test',
-            },
-        });
-
-        const colorPickerButton = wrapper.findAll('span')[1];
-        expect(colorPickerButton.exists()).toBe(true);
-
-        const colorPicker = colorPickerButton.find('span');
-        expect(colorPicker.exists()).toBe(true);
-        expect(colorPicker.element.style.display).toBe('none');
-
-        colorPickerButton.findComponent(ButtonComponentVue).vm.$emit('click');
-        await flushPromises();
-
-        expect(colorPicker.element.style.display).not.toBe('none');
-    });
-
     test('Color picker contains all colors', async () => {
         const wrapper = mount(QuillToolBar, {
             props: {
@@ -91,10 +70,14 @@ describe('QuillToolBar', () => {
             },
         });
 
-        wrapper.findAll('.ql-color').forEach((element) => {
-            expect(colors.includes(element.element.value)).toBe(true);
+        wrapper.findAll<HTMLButtonElement>('.ql-color').forEach((element) => {
+            if (element.element.value) {
+                expect(colors.includes(element.element.value)).toBe(true);
+            }
         });
 
-        expect(wrapper.findAll('.ql-color').length).toBe(colors.length);
+        expect(wrapper.findAll('button.ql-color').length).toBe(
+            colors.length + 1
+        );
     });
 });

@@ -38,6 +38,11 @@ describe('ContentDisplayFactory', () => {
                 editMode: true,
                 layoutSlot: 1,
             },
+            global: {
+                stubs: {
+                    TextDisplay: true,
+                },
+            },
         });
         expect(wrapper.findComponent(TextDisplay).exists()).toBeTruthy();
     });

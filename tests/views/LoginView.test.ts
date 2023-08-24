@@ -23,7 +23,7 @@ describe('LoginView', () => {
     test('Correct login', async () => {
         const getValue = vi.spyOn(ConfigRestInterface, 'getValue');
         const getOwnAccount = vi.spyOn(AccountRestInterface, 'getOwnAccount');
-        const verifyLogin = vi.spyOn(AccountRestInterface, 'verifyLogin');
+        const verifyLogin = vi.spyOn(AccountRestInterface, 'tryLogin');
         getValue.mockResolvedValueOnce(RegistrationType.CLOSED);
         getOwnAccount.mockImplementationOnce(() => {
             throw new LoernwerkError(
@@ -31,7 +31,7 @@ describe('LoginView', () => {
                 LoernwerkErrorCodes.UNKNOWN
             );
         });
-        verifyLogin.mockResolvedValueOnce(true);
+        verifyLogin.mockResolvedValueOnce(undefined);
 
         const wrapper = mount(SuspenseLogInView);
         await flushPromises();
@@ -61,7 +61,7 @@ describe('LoginView', () => {
     test('Incorrect login', async () => {
         const getValue = vi.spyOn(ConfigRestInterface, 'getValue');
         const getOwnAccount = vi.spyOn(AccountRestInterface, 'getOwnAccount');
-        const verifyLogin = vi.spyOn(AccountRestInterface, 'verifyLogin');
+        const verifyLogin = vi.spyOn(AccountRestInterface, 'tryLogin');
         getValue.mockResolvedValueOnce(RegistrationType.CLOSED);
         getOwnAccount.mockImplementationOnce(() => {
             throw new LoernwerkError(
@@ -69,7 +69,12 @@ describe('LoginView', () => {
                 LoernwerkErrorCodes.UNKNOWN
             );
         });
-        verifyLogin.mockResolvedValueOnce(false);
+        verifyLogin.mockImplementationOnce(() => {
+            throw new LoernwerkError(
+                'Testing error',
+                LoernwerkErrorCodes.UNKNOWN
+            );
+        });
 
         const wrapper = mount(SuspenseLogInView);
         await flushPromises();
@@ -93,7 +98,7 @@ describe('LoginView', () => {
             false
         );
         expect(routerMock.push).toBeCalledTimes(0);
-        expect(wrapper.html()).toContain('account.wrongLoginData');
+        expect(wrapper.html()).toContain('error.Testing error');
     });
 
     test('Redirect after already being logged in', async () => {

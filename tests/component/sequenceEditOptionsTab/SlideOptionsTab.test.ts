@@ -1,7 +1,6 @@
 import { flushPromises, mount } from '@vue/test-utils';
-import SlideOptionsTab from '../../frontend/src/components/sequenceEditOptionsTab/SlideOptionsTab.vue';
-import TextInputComponent from '../../frontend/src/components/TextInputComponent.vue';
-import ButtonComponent from '../../frontend/src/components/ButtonComponent.vue';
+import SlideOptionsTab from '../../../frontend/src/components/sequenceEditOptionsTab/SlideOptionsTab.vue';
+import TextInputComponent from '../../../frontend/src/components/TextInputComponent.vue';
 
 describe('SlideOptionsTab', () => {
     test('correctly display value', () => {
@@ -67,30 +66,5 @@ describe('SlideOptionsTab', () => {
         testslide.backgroundColor = newval;
         expect(wrapper.emitted()['update-slide']).toBeTruthy();
         expect(wrapper.emitted()['update-slide']).toEqual([[testslide]]);
-    });
-
-    test('saveButton', async () => {
-        const testseq = {
-            name: 'test',
-        };
-
-        const testslide = {
-            name: 'test',
-            backgroundColor: 'ABCDEF',
-        };
-
-        const wrapper = mount(SlideOptionsTab, {
-            props: {
-                sequence: testseq,
-                slide: testslide,
-                disableButton: false,
-            },
-        });
-
-        await wrapper.getComponent(ButtonComponent).vm.$emit('click');
-
-        await flushPromises();
-
-        expect(wrapper.emitted().save).toBeTruthy();
     });
 });

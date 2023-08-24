@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { ISlide } from '../../model/slide/ISlide';
 import axios from 'axios';
 
-test('test', async ({ page, browserName }) => {
+test('TZ05', async ({ page, browserName }) => {
     await page.goto('/');
     await page
         .locator('div')

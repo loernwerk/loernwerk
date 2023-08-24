@@ -20,7 +20,7 @@ describe('EmbedOptionsTab', () => {
         await flushPromises();
         const emitted = wrapper.emitted('update-content') as string[][];
         expect((emitted[0][0] as unknown as EmbedContent).url).toBe(
-            'piped.video/123'
+            'https://piped.video/123'
         );
     });
 });

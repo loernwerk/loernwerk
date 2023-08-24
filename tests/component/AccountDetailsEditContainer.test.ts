@@ -8,6 +8,7 @@ import { findComponentByText } from './TestUtilities';
 import {
     LoernwerkError,
     LoernwerkErrorCodes,
+    LoernwerkErrorMessages,
 } from '../../model/loernwerkError';
 
 describe('AccountDetailsEditContainer', () => {
@@ -134,7 +135,9 @@ describe('AccountDetailsEditContainer', () => {
         await flushPromises();
 
         expect(updateAccount).toBeCalledTimes(0);
-        expect(wrapper.html()).toContain('invalidInput');
+        expect(wrapper.html()).toContain(
+            'error.' + LoernwerkErrorMessages.MAIL_DOES_NOT_SATISFY_REQUIREMENTS
+        );
     });
 
     test('Incorrect user update - password mismatch', async () => {
@@ -169,16 +172,16 @@ describe('AccountDetailsEditContainer', () => {
         await flushPromises();
 
         expect(updateAccount).toBeCalledTimes(0);
-        expect(wrapper.html()).toContain('invalidInput');
+        expect(wrapper.html()).toContain(
+            'error.' +
+                LoernwerkErrorMessages.PASSWORD_DOES_NOT_SATISFY_REQUIREMENTS
+        );
     });
 
     test('Incorrect user update - reject from server', async () => {
         const updateAccount = vi.spyOn(AccountRestInterface, 'updateAccount');
         updateAccount.mockImplementationOnce(() => {
-            throw new LoernwerkError(
-                'Testing Error',
-                LoernwerkErrorCodes.UNKNOWN
-            );
+            throw new LoernwerkError('error', LoernwerkErrorCodes.UNKNOWN);
         });
         const wrapper = mount(AccountDetailsEditContainer, {
             props: {
@@ -210,7 +213,7 @@ describe('AccountDetailsEditContainer', () => {
         await flushPromises();
 
         expect(updateAccount).toBeCalledTimes(1);
-        expect(wrapper.html()).toContain('invalidInput');
+        expect(wrapper.html()).toContain('error.error');
     });
 
     test('Delete account', async () => {

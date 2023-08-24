@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { ISequence } from '../../model/sequence/ISequence';
 import axios from 'axios';
 
-test('test', async ({ page, context }) => {
+test('TZ08', async ({ page, context }) => {
     await page.goto('/');
     await page
         .locator('div')

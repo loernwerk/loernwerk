@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import axios from 'axios';
 
-test('test', async ({ page, browserName, context }) => {
+test('TZ12', async ({ page, browserName, context }) => {
     await page.goto('/');
     await page
         .locator('div')

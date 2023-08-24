@@ -5,6 +5,7 @@ import { DBUser } from '../../model/user/DBUser';
 import {
     LoernwerkError,
     LoernwerkErrorCodes,
+    LoernwerkErrorMessages,
 } from '../../model/loernwerkError';
 import bcrypt from 'bcrypt';
 import { DBSequence } from '../../model/sequence/DBSequence';
@@ -120,7 +121,7 @@ describe('AccountController Tests', () => {
             AccountController.createNewAccount(doubledName)
         ).rejects.toThrow(
             new LoernwerkError(
-                'username already exists',
+                LoernwerkErrorMessages.USERNAME_ALREADY_EXISTS,
                 LoernwerkErrorCodes.ALREADY_EXISTS
             )
         );
@@ -131,7 +132,7 @@ describe('AccountController Tests', () => {
             AccountController.createNewAccount(insufficientDetails)
         ).rejects.toThrow(
             new LoernwerkError(
-                'Insufficent User Details',
+                LoernwerkErrorMessages.INSUFFICENT_USER_DETAILS,
                 LoernwerkErrorCodes.INSUFFICENT_INFORMATION
             )
         );
@@ -142,7 +143,7 @@ describe('AccountController Tests', () => {
             AccountController.createNewAccount(illegalDefaultAdmin)
         ).rejects.toThrow(
             new LoernwerkError(
-                'Given information do not satisfy the requirements',
+                LoernwerkErrorMessages.MAIL_DOES_NOT_SATISFY_REQUIREMENTS,
                 LoernwerkErrorCodes.BAD_REQUEST
             )
         );
@@ -170,7 +171,7 @@ describe('AccountController Tests', () => {
             )
         ).rejects.toThrow(
             new LoernwerkError(
-                'Mail/Name not matching an existing User',
+                LoernwerkErrorMessages.USERNAME_PASSWORD_INCORRECT,
                 LoernwerkErrorCodes.NOT_FOUND
             )
         );
@@ -182,7 +183,7 @@ describe('AccountController Tests', () => {
             AccountController.tryLogin(mockUser[0].name, 'wrongPassword')
         ).rejects.toThrow(
             new LoernwerkError(
-                'Incorrect Password',
+                LoernwerkErrorMessages.USERNAME_PASSWORD_INCORRECT,
                 LoernwerkErrorCodes.NOT_FOUND
             )
         );
@@ -211,7 +212,7 @@ describe('AccountController Tests', () => {
             AccountController.getAccountById(correctUser.id)
         ).rejects.toThrow(
             new LoernwerkError(
-                'No existing User with given ID',
+                LoernwerkErrorMessages.USER_NOT_FOUND,
                 LoernwerkErrorCodes.NOT_FOUND
             )
         );
@@ -236,7 +237,7 @@ describe('AccountController Tests', () => {
             SequenceController.getSequenceByCode('CODE66')
         ).rejects.toThrow(
             new LoernwerkError(
-                'No matching sequence',
+                LoernwerkErrorMessages.SEQUENCE_NOT_FOUND,
                 LoernwerkErrorCodes.NOT_FOUND
             )
         );
@@ -244,7 +245,7 @@ describe('AccountController Tests', () => {
             AccountController.getAccountById(931943)
         ).rejects.toThrow(
             new LoernwerkError(
-                'No existing User with given ID',
+                LoernwerkErrorMessages.USER_NOT_FOUND,
                 LoernwerkErrorCodes.NOT_FOUND
             )
         );
@@ -260,7 +261,7 @@ describe('AccountController Tests', () => {
             AccountController.deleteAccount(66666)
         ).rejects.toThrow(
             new LoernwerkError(
-                'No existing User with given ID',
+                LoernwerkErrorMessages.USER_NOT_FOUND,
                 LoernwerkErrorCodes.NOT_FOUND
             )
         );
@@ -299,7 +300,7 @@ describe('AccountController Tests', () => {
             AccountController.saveAccount(iUser)
         ).rejects.toThrow(
             new LoernwerkError(
-                'No such existing User',
+                LoernwerkErrorMessages.USER_NOT_FOUND,
                 LoernwerkErrorCodes.NOT_FOUND
             )
         );

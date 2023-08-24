@@ -129,7 +129,7 @@ describe('Accountrouter tests', () => {
 
         expect(loginFn).toBeCalledTimes(1);
         expect(loginFn).toBeCalledWith('test', 'test');
-        expect(responseToolkit.sendStatus).toBeCalledWith(400);
+        expect(responseToolkit.status).toBeCalledWith(400);
     });
 
     test('login', async () => {

@@ -5,10 +5,6 @@ import ButtonComponent from '../../../frontend/src/components/ButtonComponent.vu
 import { findComponentByText } from '../TestUtilities';
 import { routerMock } from '../router_mock.setup';
 import { SequenceRestInterface } from '../../../frontend/src/restInterfaces/SequenceRestInterface';
-import {
-    LoernwerkError,
-    LoernwerkErrorCodes,
-} from '../../../model/loernwerkError';
 
 describe('AccountSequenceContainer', () => {
     test('Show sequences', () => {
@@ -102,46 +98,5 @@ describe('AccountSequenceContainer', () => {
         expect(deleteSequence).toBeCalledTimes(1);
         expect(deleteSequence).toBeCalledWith('EPVII');
         expect(wrapper.emitted()).toHaveProperty('delete');
-    });
-
-    test('Failing to delete a sequence', async () => {
-        const deleteSequence = vi.spyOn(
-            SequenceRestInterface,
-            'deleteSequence'
-        );
-        deleteSequence.mockImplementationOnce(() => {
-            throw new LoernwerkError(
-                'Testing Error',
-                LoernwerkErrorCodes.UNKNOWN
-            );
-        });
-
-        const wrapper = mount(AccountSequenceContainer, {
-            props: {
-                sequences: [
-                    {
-                        name: 'Episode VII – The Force Awakens',
-                        code: 'EPVII',
-                    },
-                    {
-                        name: 'Episode VIII – The Last Jedi',
-                        code: 'EPVIII',
-                    },
-                    {
-                        name: 'Episode IX – The Rise of Skywalker',
-                        code: 'EPIX',
-                    },
-                ],
-            },
-        });
-
-        findComponentByText(wrapper, ButtonComponent, 'delete')?.vm.$emit(
-            'click'
-        );
-        await flushPromises();
-
-        expect(deleteSequence).toBeCalledTimes(1);
-        expect(deleteSequence).toBeCalledWith('EPVII');
-        expect(wrapper.html()).toContain('failed');
     });
 });

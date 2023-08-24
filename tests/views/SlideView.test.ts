@@ -6,6 +6,7 @@ import { flushPromises, mount } from '@vue/test-utils';
 import { describe, test, vi } from 'vitest';
 import { routerMock } from '../component/router_mock.setup';
 import { LayoutType } from '../../model/slide/layout/Layout';
+import { findComponentByText } from '../component/TestUtilities';
 
 describe('SlideView', () => {
     const SuspenseSlideView = defineComponent({
@@ -148,7 +149,9 @@ describe('SlideView', () => {
         expect(getSlide).toBeCalledTimes(1);
         expect(getSlide).toBeCalledWith('123456', 0);
 
-        await wrapper.getComponent(ButtonComponent).vm.$emit('click');
+        findComponentByText(wrapper, ButtonComponent, 'next')?.vm.$emit(
+            'click'
+        );
         await flushPromises();
 
         expect(routerMock.push).toBeCalledTimes(1);

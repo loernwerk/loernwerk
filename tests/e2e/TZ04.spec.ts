@@ -5,7 +5,7 @@ import { ISlide } from '../../model/slide/ISlide';
 import { ContentType } from '../../model/slide/content/Content';
 import { H5PContent } from '../../model/slide/content/H5PContent';
 
-test('test', async ({ page, browserName, context }) => {
+test('TZ04', async ({ page, browserName, context }) => {
     await page.goto('/');
     await page
         .locator('div')

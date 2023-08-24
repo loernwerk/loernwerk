@@ -8,7 +8,7 @@ const browserAccountMap: Record<string, string> = {
     webkit: 'TZ7-3',
 };
 
-test('test', async ({ page, browserName, context }) => {
+test('TZ07', async ({ page, browserName, context }) => {
     await page.goto('/');
     await page
         .locator('div')
