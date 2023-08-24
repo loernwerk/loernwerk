@@ -1,6 +1,11 @@
-import { test } from '@playwright/test';
+import { test, expect } from '@playwright/test';
+import axios from 'axios';
+import { ISequence } from '../../model/sequence/ISequence';
+import { ISlide } from '../../model/slide/ISlide';
+import { ContentType } from '../../model/slide/content/Content';
+import { H5PContent } from '../../model/slide/content/H5PContent';
 
-test('test', async ({ page, browserName }) => {
+test('test', async ({ page, browserName, context }) => {
     await page.goto('/');
     await page
         .locator('div')
@@ -81,5 +86,26 @@ test('test', async ({ page, browserName }) => {
         .click();
     await page.waitForURL('/overview');
 
-    // Todo: somehow check if sequence was saved and has H5P Content
+    // Gett all sequences and find code of created sequence
+    const loernwerkCookie = (await context.cookies()).find(
+        (cookie) => cookie.name === 'loernwerk.session'
+    )?.value as string;
+    const sequences = await axios.get(
+        'http://localhost:5000/api/sequence/list',
+        {
+            headers: { cookie: 'loernwerk.session=' + loernwerkCookie },
+        }
+    );
+    const sequencesJson = sequences.data as ISequence[];
+    const sequenceCode = sequencesJson.find(
+        (value) => value.name === `TZ4 - ${browserName}`
+    )?.code;
+
+    const editedSlide = (await axios
+        .get(`http://localhost:5000/api/sequence/${sequenceCode}/view/0`)
+        .then((res) => res.data)) as ISlide;
+    expect(editedSlide).toBeDefined();
+
+    expect(editedSlide.content[1]?.contentType).toBe(ContentType.H5P);
+    expect((editedSlide.content[1] as H5PContent).h5pContentId).toBeDefined();
 });

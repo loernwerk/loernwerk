@@ -38,11 +38,11 @@ test('test', async ({ page, context }) => {
     const loernwerkCookie = (await context.cookies()).find(
         (cookie) => cookie.name === 'loernwerk.session'
     )?.value as string;
-    let sequences = await fetch('http://localhost:5000/api/sequence/list', {
+    let sequences = await axios.get('http://localhost:5000/api/sequence/list', {
         headers: { cookie: 'loernwerk.session=' + loernwerkCookie },
     });
     expect(sequences.status).toBe(200);
-    let sequencesJson = (await sequences.json()) as ISequence[];
+    let sequencesJson = sequences.data as ISequence[];
     expect(sequencesJson.some((value) => value.tags.includes('Tag123'))).toBe(
         true
     );
