@@ -18,6 +18,8 @@ test('test', async ({ page, browserName, context }) => {
         .nth(2)
         .click();
 
+    await page.waitForTimeout(5000);
+
     // Go to Admin screen
     await page.getByRole('link', { name: 'Admin' }).click();
 

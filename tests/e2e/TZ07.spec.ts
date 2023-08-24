@@ -30,6 +30,8 @@ test('test', async ({ page, browserName, context }) => {
 
     await page.waitForURL('/overview');
 
+    await page.waitForTimeout(5000);
+
     await page.locator('svg').nth(2).click();
 
     await page.waitForURL('/account');
