@@ -149,6 +149,64 @@ describe('AccountController Tests', () => {
         );
     });
 
+    it('create user but mail already exists', async () => {
+        await expect(
+            AccountController.createNewAccount({
+                name: 'Magnus Smurf',
+                mail: 'magnus@carlsen.de',
+                password: 'VerySecure',
+            })
+        ).rejects.toThrowError(LoernwerkErrorMessages.MAIL_ALREADY_EXISTS);
+    });
+
+    it('create user with empty name', async () => {
+        await expect(
+            AccountController.createNewAccount({
+                name: '',
+                mail: 'empty@carlsen.de',
+                password: 'VerySecure',
+            })
+        ).rejects.toThrowError(
+            LoernwerkErrorMessages.USERNAME_DOES_NOT_SATISFY_REQUIREMENTS
+        );
+    });
+
+    it('create user with empty mail', async () => {
+        await expect(
+            AccountController.createNewAccount({
+                name: 'Magnus Smurf',
+                mail: '',
+                password: 'VerySecure',
+            })
+        ).rejects.toThrowError(
+            LoernwerkErrorMessages.MAIL_DOES_NOT_SATISFY_REQUIREMENTS
+        );
+    });
+
+    it('create user with admin in name', async () => {
+        await expect(
+            AccountController.createNewAccount({
+                name: 'Admin Carlson',
+                mail: 'goat@carlsen.de',
+                password: 'VerySecure',
+            })
+        ).rejects.toThrowError(
+            LoernwerkErrorMessages.USERNAME_DOES_NOT_SATISFY_REQUIREMENTS
+        );
+    });
+
+    it('create user with too short password', async () => {
+        await expect(
+            AccountController.createNewAccount({
+                name: 'Magnus Smurf',
+                mail: 'smurf@carlsen.de',
+                password: 'short',
+            })
+        ).rejects.toThrowError(
+            LoernwerkErrorMessages.PASSWORD_DOES_NOT_SATISFY_REQUIREMENTS
+        );
+    });
+
     //tryLogin function
     it('correct login by email', async () => {
         const mockUser = await DBUser.findBy({ name: 'magnus' });
@@ -285,13 +343,47 @@ describe('AccountController Tests', () => {
         expect(allAdminAccounts[0].type).toEqual(UserClass.ADMIN);
     });
 
+    //getAccountByUsername function
+    it('valid gets account by username', async () => {
+        const user = await DBUser.findOneByOrFail({ name: 'magnus' });
+        const queriedUser = await AccountController.getAccountByUsername(
+            'magnus'
+        );
+        expect(queriedUser).toEqual(user);
+    });
+
+    it('invalid gets account by username', async () => {
+        await expect(
+            AccountController.getAccountByUsername('USERNAME DOESNT EXIST')
+        ).rejects.toThrowError(LoernwerkErrorMessages.USER_NOT_FOUND);
+    });
+
+    //getAccountByEmail function
+    it('valid gets account by mail', async () => {
+        const user = await DBUser.findOneByOrFail({
+            mail: 'magnus@carlsen.de',
+        });
+        const queriedUser = await AccountController.getAccountByEmail(
+            'magnus@carlsen.de'
+        );
+        expect(queriedUser).toEqual(user);
+    });
+
+    it('invalid gets account by mail', async () => {
+        await expect(
+            AccountController.getAccountByEmail('MAIL DOESNT EXIST')
+        ).rejects.toThrowError(LoernwerkErrorMessages.USER_NOT_FOUND);
+    });
+
     //saveAccount function
     it('valid account changes', async () => {
         const user = await DBUser.findBy({ name: 'magnus' });
         user[0].name = 'mugnus';
+        user[0].mail = 'mungus@carlson.de';
         await AccountController.saveAccount(user[0]);
         const newUser = await DBUser.findBy({ id: 12345 });
         expect(newUser[0]).toHaveProperty('name', 'mugnus');
+        expect(newUser[0]).toHaveProperty('mail', 'mungus@carlson.de');
     });
     it('try to change non-existent account', async () => {
         const iUser = correctUser;
@@ -303,6 +395,36 @@ describe('AccountController Tests', () => {
                 LoernwerkErrorMessages.USER_NOT_FOUND,
                 LoernwerkErrorCodes.NOT_FOUND
             )
+        );
+    });
+
+    it('try to save account with invalid username', async () => {
+        const userToChange = await DBUser.findOneByOrFail({ id: 12345 });
+        userToChange.name = '';
+        await expect(
+            AccountController.saveAccount(userToChange)
+        ).rejects.toThrowError(
+            LoernwerkErrorMessages.USERNAME_DOES_NOT_SATISFY_REQUIREMENTS
+        );
+    });
+
+    it('try to save account with invalid mail', async () => {
+        const userToChange = await DBUser.findOneByOrFail({ id: 12345 });
+        userToChange.mail = '';
+        await expect(
+            AccountController.saveAccount(userToChange)
+        ).rejects.toThrowError(
+            LoernwerkErrorMessages.MAIL_DOES_NOT_SATISFY_REQUIREMENTS
+        );
+    });
+
+    it('try to save account with too short password', async () => {
+        const userToChange = await DBUser.findOneByOrFail({ id: 12345 });
+        userToChange.password = '123';
+        await expect(
+            AccountController.saveAccount(userToChange)
+        ).rejects.toThrowError(
+            LoernwerkErrorMessages.PASSWORD_DOES_NOT_SATISFY_REQUIREMENTS
         );
     });
 });
