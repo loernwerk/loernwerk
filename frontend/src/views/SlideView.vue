@@ -16,7 +16,21 @@
         </div>
       </div>
       <div class="mt-4 flex items-center flex-shrink-0">
-        <div class="w-full mr-4">
+        <div class="relative">
+          <div
+            class="absolute w-full h-full text-center bg-gray-300 bg-opacity-70 rounded-md z-10"
+            v-if="disableBackButton"
+            :class="{ 'cursor-not-allowed': disableBackButton }"
+          ></div>
+          <ButtonComponent
+            class="w-fit"
+            :loading="displaySpinner"
+            @click="previousSlideToExecute()"
+          >
+            {{ $t('back') }}
+          </ButtonComponent>
+        </div>
+        <div class="w-full mx-4">
           <ProgressBar :percentage="percentage"> </ProgressBar>
         </div>
         <ButtonComponent
@@ -53,6 +67,7 @@ const props = defineProps({
 
 const router = useRouter();
 const displaySpinner = ref(false);
+const disableBackButton = ref(true);
 const percentage = ref(0);
 const slide: Ref<ISlide | null> = ref(null);
 const index = ref(0);
@@ -63,24 +78,15 @@ try {
   sequence = await SequenceRestInterface.getMetadataForStudent(
     props.sequenceCode
   );
-  await nextSlideToExecute();
+  await displaySlide();
 } catch {
   router.push({ name: 'Main' });
 }
 
 /**
- * Get next slide for execution
+ * Displays current slide given by index
  */
-async function nextSlideToExecute(): Promise<void> {
-  displaySpinner.value = true;
-
-  if (index.value == sequence.slideCount) {
-    await router.push({
-      name: 'Finished',
-      params: { sequenceCode: sequence.code },
-    });
-    return;
-  }
+async function displaySlide(): Promise<void> {
   try {
     slide.value = await SequenceRestInterface.getSlide(
       sequence.code as string,
@@ -90,8 +96,48 @@ async function nextSlideToExecute(): Promise<void> {
     error.value = true;
   }
 
+  if (index.value <= 0) {
+    disableBackButton.value = true;
+  } else {
+    disableBackButton.value = false;
+  }
+
   percentage.value = index.value / (sequence.slideCount as number);
+}
+
+/**
+ * Get next slide for execution
+ */
+async function nextSlideToExecute(): Promise<void> {
+  displaySpinner.value = true;
+
+  if (index.value + 1 == sequence.slideCount) {
+    await router.push({
+      name: 'Finished',
+      params: { sequenceCode: sequence.code },
+    });
+    return;
+  }
+
   index.value = index.value + 1;
+  displaySlide();
+  displaySpinner.value = false;
+}
+
+/**
+ * Get previous slide for execution
+ */
+async function previousSlideToExecute(): Promise<void> {
+  displaySpinner.value = true;
+
+  if (disableBackButton.value) {
+    displaySpinner.value = false;
+    return;
+  }
+
+  index.value = index.value - 1;
+  displaySlide();
+
   displaySpinner.value = false;
 }
 </script>

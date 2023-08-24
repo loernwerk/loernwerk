@@ -1,7 +1,7 @@
 <!-- View for entering code for sequence execution or redirect to login view -->
 <template>
   <div class="flex flex-col w-full">
-    <img src="../assets/Logo.png" class="w-1/3 mx-auto" />
+    <img src="../assets/Logo.webp" class="w-1/3 mx-auto" />
     <ContainerComponent class="mx-auto space-y-2 px-10 py-3">
       <template #Header>
         <h1 class="text-3xl text-center">{{ $t('main.enterCode') }}:</h1>

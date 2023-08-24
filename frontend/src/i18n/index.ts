@@ -12,6 +12,7 @@ const messages = {
     view: 'Ansehen',
     notAvailable: '{object} nicht verfügbar',
     next: 'Weiter',
+    back: 'Zurück',
     slide: 'Seite',
     reloadPage: 'Bitte die Seite neu laden',
     create: '{object} erstellen',
@@ -146,6 +147,7 @@ const messages = {
       [LoernwerkErrorMessages.USERNAME_PASSWORD_INCORRECT]:
         'Benutzername oder Passwort falsch',
     },
+    looseContentWarning: 'Dies löscht den vorherigen Inhalt des Feldes',
   },
   en: {
     search: 'Search',
@@ -157,6 +159,7 @@ const messages = {
     view: 'View',
     notAvailable: '{object} not available',
     next: 'Next',
+    back: 'Back',
     slide: 'Slide | Slides',
     reloadPage: 'Please reload the page',
     create: 'Create {object}',
@@ -288,6 +291,7 @@ const messages = {
       [LoernwerkErrorMessages.USERNAME_PASSWORD_INCORRECT]:
         'Username or password incorrect',
     },
+    looseContentWarning: 'This will delete the previous content of the field',
   },
 };
 

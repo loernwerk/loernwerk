@@ -8,12 +8,14 @@
       </template>
       <template #default>
         <div class="space-y-2">
-          <TextInputComponent
-            class="w-full"
-            :disabled="disableInputShowSpinner"
-            :placeHolder="$t('sequence.name')"
-            v-model="nameField"
-          />
+          <form @submit.prevent="newSequence()">
+            <TextInputComponent
+              class="w-full"
+              :disabled="disableInputShowSpinner"
+              :placeHolder="$t('sequence.name')"
+              v-model="nameField"
+            />
+          </form>
           <ButtonComponent
             class="w-fit float-right"
             :loading="disableInputShowSpinner"
@@ -52,6 +54,7 @@ const router = useRouter();
  * Create a new sequence with given name
  */
 async function newSequence(): Promise<void> {
+  if (nameField.value === '') return;
   error.value = false;
   disableInputShowSpinner.value = true;
   try {

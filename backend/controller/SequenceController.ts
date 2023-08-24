@@ -33,6 +33,12 @@ export class SequenceController {
         name: string,
         userId: number
     ): Promise<ISequence> {
+        if (name === '') {
+            throw new LoernwerkError(
+                'Invalid sequence title',
+                LoernwerkErrorCodes.INVALID_PARAMETER
+            );
+        }
         if (!(await this.isValidUser(userId))) {
             throw new LoernwerkError(
                 LoernwerkErrorMessages.USER_NOT_FOUND,
@@ -587,7 +593,7 @@ export class SequenceController {
             h5pContentId: In(usedH5PIds),
         });
         for (const h5pId of usedH5PIds) {
-            if (usedByEntries.some((entry) => entry.h5pContentId === h5pId)) {
+            if (!usedByEntries.some((entry) => entry.h5pContentId === h5pId)) {
                 // We need to create a new entry
                 const newEntry = new DBH5PContentUsedBy();
                 newEntry.h5pContentId = h5pId;

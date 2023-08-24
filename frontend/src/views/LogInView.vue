@@ -1,7 +1,7 @@
 <!-- View for users to log in -->
 <template>
   <div class="w-full">
-    <img src="../assets/Logo.png" class="w-1/3 mx-auto" />
+    <img src="../assets/Logo.webp" class="w-1/3 mx-auto" />
     <ContainerComponent
       class="w-1/2 mx-auto my-auto h-fit"
       v-if="!registrationFormVisible"
@@ -16,22 +16,26 @@
               {{ $t('account.name') }}/{{ $t('account.mail') }}:
             </td>
             <td class="w-full p-1">
-              <TextInputComponent
-                :disabled="disableInputShowSpinner"
-                :placeHolder="`${$t('account.name')}/${$t('account.mail')}`"
-                v-model="mailField"
-              />
+              <form @submit.prevent="checkLogIn()">
+                <TextInputComponent
+                  :disabled="disableInputShowSpinner"
+                  :placeHolder="`${$t('account.name')}/${$t('account.mail')}`"
+                  v-model="mailField"
+                />
+              </form>
             </td>
           </tr>
           <tr>
             <td class="p-1">{{ $t('account.password') }}:</td>
             <td class="w-full p-1">
-              <TextInputComponent
-                :disabled="disableInputShowSpinner"
-                :hidden="true"
-                :placeHolder="$t('account.password')"
-                v-model="passwordField"
-              />
+              <form @submit.prevent="checkLogIn()">
+                <TextInputComponent
+                  :disabled="disableInputShowSpinner"
+                  :hidden="true"
+                  :placeHolder="$t('account.password')"
+                  v-model="passwordField"
+                />
+              </form>
             </td>
           </tr>
         </table>
