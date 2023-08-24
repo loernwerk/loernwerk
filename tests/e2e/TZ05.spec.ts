@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { ISlide } from '../../model/slide/ISlide';
+import axios from 'axios';
 
 test('test', async ({ page, browserName }) => {
     await page.goto('/');
@@ -45,9 +46,9 @@ test('test', async ({ page, browserName }) => {
     await page.waitForURL('/overview');
 
     // Check if sequence was saved with new url
-    const editedSlide = (await fetch(
-        'http://localhost:5000/api/sequence/FCBEEB/view/0'
-    ).then((res) => res.json())) as ISlide;
+    const editedSlide = (await axios
+        .get('http://localhost:5000/api/sequence/FCBEEB/view/0')
+        .then((res) => res.data)) as ISlide;
     expect(editedSlide).toBeDefined();
 
     expect(editedSlide.content[1].url).toBe(

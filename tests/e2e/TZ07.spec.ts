@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { IUser } from '../../model/user/IUser';
+import axios from 'axios';
 
 const browserAccountMap: Record<string, string> = {
     chromium: 'TZ7-1',
@@ -50,23 +51,27 @@ test('test', async ({ page, browserName, context }) => {
     await page
         .getByPlaceholder('Passwort wiederholen')
         .fill('${browsername}-12345');
+
+    const responsePromise = page.waitForResponse(
+        'http://localhost:5000/api/account/'
+    );
     await page
         .locator('div')
         .filter({ hasText: /^Speichern$/ })
         .nth(2)
         .click();
+    await responsePromise;
 
     expect(page.getByText('Benutzer gespeichert')).toBeDefined();
 
     const loernwerkCookie = (await context.cookies()).find(
         (cookie) => cookie.name === 'loernwerk.session'
     )?.value as string;
-    const account = await fetch(
-        'http://localhost:5000/api/account' + browserName,
-        { headers: { cookie: 'loernwerk.session=' + loernwerkCookie } }
-    );
+    const account = await axios.get('http://localhost:5000/api/account/', {
+        headers: { cookie: 'loernwerk.session=' + loernwerkCookie },
+    });
     expect(account.status).toBe(200);
-    const accountJson = (await account.json()) as IUser;
+    const accountJson = account.data as IUser;
     expect(accountJson.name).toBe(`lehrkraft-${browserName}`);
     expect(accountJson.mail).toBe(`lehrkraft-${browserName}@loernwerk.de`);
 });

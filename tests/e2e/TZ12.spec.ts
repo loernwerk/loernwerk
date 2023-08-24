@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import axios from 'axios';
 
 test('test', async ({ page, browserName, context }) => {
     await page.goto('/');
@@ -41,11 +42,16 @@ test('test', async ({ page, browserName, context }) => {
     await page
         .getByPlaceholder('Passwort wiederholen')
         .fill(rightPad(browserName, 6));
+
+    const responsePromise = page.waitForResponse(
+        'http://localhost:5000/api/account/'
+    );
     await page
         .locator('div')
         .filter({ hasText: /^Speichern$/ })
         .nth(2)
         .click();
+    await responsePromise;
 
     // Check if user was saved
     /*expect(await page.innerHTML('body')).toContain(`TZ12-13-tobeedited-tobedeleted-${browserName}`); /* uncomment this when reload fixed */
@@ -54,16 +60,16 @@ test('test', async ({ page, browserName, context }) => {
     )?.value as string;
     expect(
         (
-            await fetch(
-                'http://localhost:5000/api/account?name=TZ12-' + browserName,
+            await axios.get(
+                'http://localhost:5000/api/account/?name=TZ12-' + browserName,
                 { headers: { cookie: 'loernwerk.session=' + loernwerkCookie } }
             )
         ).status
     ).toBe(200);
     expect(
         (
-            await fetch(
-                'http://localhost:5000/api/account?mail=TZ12-' +
+            await axios.get(
+                'http://localhost:5000/api/account/?mail=TZ12-' +
                     browserName +
                     '@kreativeemail.de',
                 { headers: { cookie: 'loernwerk.session=' + loernwerkCookie } }

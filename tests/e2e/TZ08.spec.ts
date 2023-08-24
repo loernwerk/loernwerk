@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { ISequence } from '../../model/sequence/ISequence';
+import axios from 'axios';
 
 test('test', async ({ page, context }) => {
     await page.goto('/');
@@ -63,11 +64,11 @@ test('test', async ({ page, context }) => {
 
     // Expect tag to be removed from sequence
     expect(await page.innerHTML('body')).not.toContain('Tag123');
-    sequences = await fetch('http://localhost:5000/api/sequence/list', {
+    sequences = await axios.get('http://localhost:5000/api/sequence/list', {
         headers: { cookie: 'loernwerk.session=' + loernwerkCookie },
     });
     expect(sequences.status).toBe(200);
-    sequencesJson = (await sequences.json()) as ISequence[];
+    sequencesJson = sequences.data as ISequence[];
     expect(sequencesJson.some((value) => value.tags.includes('Tag123'))).toBe(
         false
     );
