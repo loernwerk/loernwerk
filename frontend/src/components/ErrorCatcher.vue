@@ -1,7 +1,7 @@
 <template>
   <slot></slot>
   <div class="relative">
-    <div class="absolute bottom-0 right-0 w-40">
+    <div class="absolute bottom-0 right-0 w-80">
       <ul class="list-image-none">
         <li
           v-for="pair of errormessages.reverse()"
@@ -24,15 +24,14 @@ interface ErrorIndexPair {
 }
 
 const errormessages: Ref<Array<ErrorIndexPair>> = ref([]);
-const errortimedisplayed = 3000;
+const errortimedisplayed = 6000;
 let index = 0;
 
-onErrorCaptured((err, instance, info) => {
+onErrorCaptured((err, instance) => {
   void instance;
   errormessages.value.push({ index: index, errorMessage: err.message });
   const tbr = index;
   index++;
-  console.log('this needed to be displayed, err:' + err + ' info: ' + info);
   setTimeout(() => {
     const i = errormessages.value.indexOf({
       index: tbr,

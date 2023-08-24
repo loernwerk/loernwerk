@@ -27,6 +27,7 @@ const props = defineProps({
 });
 const time = ref(props.time);
 const timeperc = ref(100);
+
 countDownTimer();
 
 /**
@@ -35,10 +36,10 @@ countDownTimer();
 function countDownTimer(): void {
   if (time.value > 0) {
     setTimeout(() => {
-      time.value -= 30;
+      time.value -= 16;
       timeperc.value = (time.value / props.time) * 100;
       countDownTimer();
-    }, 20);
+    }, 10);
   }
 }
 </script>
