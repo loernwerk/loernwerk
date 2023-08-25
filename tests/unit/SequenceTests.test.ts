@@ -1,15 +1,17 @@
 import { DataSource } from 'typeorm';
-import { DBSequence } from '../model/sequence/DBSequence';
-import { DBUser } from '../model/user/DBUser';
-import { UserClass } from '../model/user/IUser';
+import { DBSequence } from '../../model/sequence/DBSequence';
+import { DBUser } from '../../model/user/DBUser';
+import { UserClass } from '../../model/user/IUser';
 import bcrypt from 'bcrypt';
-import { SequenceController } from '../backend/controller/SequenceController';
-import { DBSlide } from '../model/slide/DBSlide';
-import { LayoutType } from '../model/slide/layout/Layout';
-import { ISequenceWithSlides } from '../model/sequence/ISequenceWithSlides';
-import { DBH5PContent } from '../model/h5p/DBH5PContent';
-import { DBConfigEntry } from '../model/configuration/DBConfigEntry';
-import { ConfigController } from '../backend/controller/ConfigController';
+import { SequenceController } from '../../backend/controller/SequenceController';
+import { DBSlide } from '../../model/slide/DBSlide';
+import { LayoutType } from '../../model/slide/layout/Layout';
+import { ISequenceWithSlides } from '../../model/sequence/ISequenceWithSlides';
+import { DBH5PContent, DBH5PContentUsedBy } from '../../model/h5p/DBH5PContent';
+import { DBConfigEntry } from '../../model/configuration/DBConfigEntry';
+import { ConfigController } from '../../backend/controller/ConfigController';
+import { LoernwerkErrorMessages } from '../../model/loernwerkError';
+import { ISlide } from '../../model/slide/ISlide';
 
 let mockDb;
 beforeAll(async () => {
@@ -17,7 +19,14 @@ beforeAll(async () => {
         type: 'sqlite',
         database: ':memory:',
         dropSchema: true,
-        entities: [DBUser, DBSequence, DBSlide, DBH5PContent, DBConfigEntry],
+        entities: [
+            DBUser,
+            DBSequence,
+            DBSlide,
+            DBH5PContent,
+            DBConfigEntry,
+            DBH5PContentUsedBy,
+        ],
         synchronize: true,
         logging: false,
     });
@@ -74,6 +83,18 @@ describe('SequenceController Tests', () => {
         expect(sequencesByUser.length).toEqual(2);
     });
 
+    it('create sequence with empty title', async () => {
+        await expect(
+            SequenceController.createNewSequence('', 931943)
+        ).rejects.toThrowError('Invalid sequence title');
+    });
+
+    it('create sequence with invalid author', async () => {
+        await expect(
+            SequenceController.createNewSequence('aaaa', -1)
+        ).rejects.toThrowError(LoernwerkErrorMessages.USER_NOT_FOUND);
+    });
+
     //getSequenceByCode function
     it('get existing sequence by ID', async () => {
         const sequenceToGet = await DBSequence.findBy({ name: 'Sequence66' });
@@ -82,6 +103,7 @@ describe('SequenceController Tests', () => {
         );
         expect(sequence).toBeInstanceOf(DBSequence);
     });
+
     //getSequenceWithSlides function
     it('returns existing sequence and its slides', async () => {
         const testSlide = await DBSlide.findBy({ sequenceCode: 'CODE66' });
@@ -93,15 +115,68 @@ describe('SequenceController Tests', () => {
         expect(seqWithSlides.slides[0]).toEqual(testSlide[0]);
     });
 
+    it('get nonexistant sequence', async () => {
+        await expect(
+            SequenceController.getSequenceWithSlides('NONEXISTANT')
+        ).rejects.toThrowError(LoernwerkErrorMessages.SEQUENCE_NOT_FOUND);
+    });
+
     //saveSequence function
     it('returns existing sequence and its slides with changes', async () => {
         const sequenceChanges: Partial<ISequenceWithSlides> = {
             name: 'changed',
             code: 'CODE66',
         };
-        await SequenceController.saveSequence(sequenceChanges);
+        await SequenceController.saveSequence(sequenceChanges, 931943);
         const sequenceChanged = await DBSequence.findBy({ code: 'CODE66' });
         expect(sequenceChanged[0].name).toEqual('changed');
+    });
+
+    it('saveSequence without sequence code', async () => {
+        await expect(
+            SequenceController.saveSequence({}, -1)
+        ).rejects.toThrowError(LoernwerkErrorMessages.NO_CODE_PROVIDED);
+    });
+
+    it('saveSequence with invalid sequence code', async () => {
+        await expect(
+            SequenceController.saveSequence({ code: 'INVALID' }, -1)
+        ).rejects.toThrowError(LoernwerkErrorMessages.SEQUENCE_NOT_FOUND);
+    });
+
+    it('more complex sequence saving', async () => {
+        const slide: ISlide = {
+            id: 0,
+            order: 0,
+            backgroundColor: '#ffffff',
+            content: {},
+            layout: LayoutType.TITLEPAGE,
+            sequenceCode: 'CODE66',
+        };
+        const testSlide = await DBSlide.findOneByOrFail({
+            id: 10404,
+            sequenceCode: 'CODE66',
+        });
+        const sequenceChanges: Partial<ISequenceWithSlides> = {
+            code: 'CODE66',
+            writeAccess: [2351951],
+            slides: [slide, testSlide],
+            tags: ['Some Interesting Tags'],
+        };
+
+        await SequenceController.saveSequence(sequenceChanges, 931943);
+        const sequenceChanged = await DBSequence.findOneByOrFail({
+            code: 'CODE66',
+        });
+        const slideAdded = await DBSlide.findOneByOrFail({
+            id: 0,
+            sequenceCode: 'CODE66',
+        });
+        const addedUser = await DBUser.findOneByOrFail({ id: 2351951 });
+        expect(sequenceChanged.writeAccess).toEqual([2351951]);
+        expect(sequenceChanged.tags).toEqual(['Some Interesting Tags']);
+        expect(slideAdded).toEqual(slide);
+        expect(addedUser.sharedSequencesWriteAccess).toContain('CODE66');
     });
 
     //getSequencesOfUser function
@@ -111,10 +186,13 @@ describe('SequenceController Tests', () => {
         expect(sequences[0].code).toEqual('CODE66');
     });
 
-    /**
-     * getSharedSequencesOfUser function
-     * NOTE: If you have read and write access set, then the sequence is returned twice. Intended?
-     */
+    it('try to get sequences from nonexistant user', async () => {
+        await expect(
+            SequenceController.getSequencesOfUser(-1)
+        ).rejects.toThrowError(LoernwerkErrorMessages.USER_NOT_FOUND);
+    });
+
+    //getSharedSequencesOfUser function
     it('try to get sequences that are shared with a user', async () => {
         const sequences = await SequenceController.getSharedSequencesOfUser(
             2351951
@@ -122,6 +200,12 @@ describe('SequenceController Tests', () => {
         expect(sequences[0].code).toEqual('CODE66');
         expect(sequences[1].code).toEqual('CODE66');
         expect(sequences[0].authorId).toEqual(931943);
+    });
+
+    it('try to get shared sequences of a nonexistant user', async () => {
+        await expect(
+            SequenceController.getSharedSequencesOfUser(-1)
+        ).rejects.toThrowError(LoernwerkErrorMessages.USER_NOT_FOUND);
     });
 
     /**
@@ -135,8 +219,14 @@ describe('SequenceController Tests', () => {
         expect(reduced.readAccess === undefined).toEqual(true);
         expect(reduced.name).toEqual('changed');
         expect(reduced.authorId).toEqual(931943);
-        expect(reduced.slideCount).toEqual(1);
+        expect(reduced.slideCount).toEqual(2);
         expect(reduced.code).toEqual('CODE66');
+    });
+
+    it('try to get sequence for execution which doesnt exist', async () => {
+        await expect(
+            SequenceController.getSequenceForExecution('NONEXISTANT')
+        ).rejects.toThrowError(LoernwerkErrorMessages.SEQUENCE_NOT_FOUND);
     });
 
     //getSequenceSlideByCode function
@@ -149,20 +239,38 @@ describe('SequenceController Tests', () => {
         expect(slide.id).toEqual(10404);
     });
 
+    it('try to get nonexistant slide', async () => {
+        await expect(
+            SequenceController.getSequenceSlideByCode('NONEXISTANT', -1)
+        ).rejects.toThrowError(LoernwerkErrorMessages.SLIDE_NOT_FOUND);
+    });
+
     //getCertificatePDF function
     it('try to get certificate pdf for sequence', async () => {
         const pdf = await SequenceController.getCertificatePDF('CODE66');
         expect(pdf).toBeInstanceOf(Buffer);
     });
 
+    it('try to get certificate of nonexistant sequence', async () => {
+        await expect(
+            SequenceController.getCertificatePDF('NONEXISTANT')
+        ).rejects.toThrowError(LoernwerkErrorMessages.SEQUENCE_NOT_FOUND);
+    });
+
     //deleteSequence function
     it('try to delete sequence', async () => {
         const user = await DBUser.findBy({ name: 'anatoli' });
         const sequence = await DBSequence.findBy({ code: 'CODE66' });
-        await SequenceController.deleteSequence(sequence[0].code);
+        await SequenceController.deleteSequence(sequence[0].code, 931943);
         const userSequences = await SequenceController.getSequencesOfUser(
             user[0].id
         );
         expect(userSequences.length).toEqual(0);
+    });
+
+    it('try to delete nonexistant sequence', async () => {
+        await expect(
+            SequenceController.deleteSequence('NONEXISTANT', -1)
+        ).rejects.toThrowError(LoernwerkErrorMessages.SEQUENCE_NOT_FOUND);
     });
 });

@@ -29,3 +29,8 @@ build
 
 dev.db
 loernwerk.db
+/test-results/
+/playwright-report/
+/playwright/.cache/
+/tests/e2e/test_run.db
+coverage

@@ -13,3 +13,8 @@ tailwind.config.js
 *.md
 /h5p/
 jest.config.js
+playwright.config.ts
+vitest.config.ts
+playwright-report
+test-results
+playwright/.cache

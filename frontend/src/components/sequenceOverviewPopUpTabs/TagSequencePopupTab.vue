@@ -1,7 +1,7 @@
 <template>
   <div class="mt-4 space-y-2 flex flex-col">
     <h1>{{ $t('sequence.tagIntro') }}</h1>
-    <form @submit.prevent="confimChanges()">
+    <form @submit.prevent="confirmChanges()">
       <TextInputComponent
         class="my-2 grow"
         :placeHolder="$t('sequence.tags')"
@@ -17,7 +17,7 @@
       </div>
       <ButtonComponent
         class="w-fit float-right"
-        @click="confimChanges"
+        @click="confirmChanges()"
         :loading="loading"
         >{{ $t('save') }}</ButtonComponent
       >
@@ -57,7 +57,7 @@ const loading = ref(false);
 /**
  * Save inputted tags
  */
-async function confimChanges(): Promise<void> {
+async function confirmChanges(): Promise<void> {
   error.value = false;
   loading.value = true;
   const tags = tagsField.value

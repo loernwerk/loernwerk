@@ -92,7 +92,10 @@ export class ConfigController {
         ).split(',');
         const index = codes.indexOf(code);
         codes.splice(index, 1);
-        this.setConfigEntry(ConfigKey.REGISTRATION_CODES, codes.join(','));
+        await this.setConfigEntry(
+            ConfigKey.REGISTRATION_CODES,
+            codes.join(',')
+        );
     }
 
     /**
