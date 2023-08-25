@@ -56,7 +56,9 @@ test('TZ12', async ({ page, browserName, context }) => {
     await responsePromise;
 
     // Check if user was saved
-    /*expect(await page.innerHTML('body')).toContain(`TZ12-13-tobeedited-tobedeleted-${browserName}`); /* uncomment this when reload fixed */
+    expect(await page.innerHTML('body')).toContain(
+        `TZ12-13-tobeedited-tobedeleted-${browserName}`
+    );
     const loernwerkCookie = (await context.cookies()).find(
         (cookie) => cookie.name === 'loernwerk.session'
     )?.value as string;
