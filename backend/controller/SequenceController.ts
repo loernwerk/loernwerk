@@ -35,7 +35,7 @@ export class SequenceController {
     ): Promise<ISequence> {
         if (name === '') {
             throw new LoernwerkError(
-                'Invalid sequence title',
+                LoernwerkErrorMessages.INVALID_SEQUENCE_NAME,
                 LoernwerkErrorCodes.INVALID_PARAMETER
             );
         }

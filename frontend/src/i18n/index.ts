@@ -146,6 +146,7 @@ const messages = {
       [LoernwerkErrorMessages.UNKNOWN_LANGUAGE]: 'Unbekannte Sprache',
       [LoernwerkErrorMessages.USERNAME_PASSWORD_INCORRECT]:
         'Benutzername oder Passwort falsch',
+      [LoernwerkErrorMessages.INVALID_SEQUENCE_NAME]: 'Ungültiger Sequenzname',
     },
     looseContentWarning: 'Dies löscht den vorherigen Inhalt des Feldes',
   },
@@ -290,6 +291,7 @@ const messages = {
       [LoernwerkErrorMessages.UNKNOWN_LANGUAGE]: 'Unknown language',
       [LoernwerkErrorMessages.USERNAME_PASSWORD_INCORRECT]:
         'Username or password incorrect',
+      [LoernwerkErrorMessages.INVALID_SEQUENCE_NAME]: 'Invalid sequence name',
     },
     looseContentWarning: 'This will delete the previous content of the field',
   },

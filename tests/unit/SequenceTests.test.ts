@@ -86,7 +86,7 @@ describe('SequenceController Tests', () => {
     it('create sequence with empty title', async () => {
         await expect(
             SequenceController.createNewSequence('', 931943)
-        ).rejects.toThrowError('Invalid sequence title');
+        ).rejects.toThrowError(LoernwerkErrorMessages.INVALID_SEQUENCE_NAME);
     });
 
     it('create sequence with invalid author', async () => {
