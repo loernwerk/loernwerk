@@ -53,7 +53,7 @@ export class SequenceController {
             select: { code: true },
         });
         if (
-            userSequenceLimit > 0 &&
+            userSequenceLimit >= 0 &&
             sequencesOfUser.length >= userSequenceLimit
         ) {
             throw new LoernwerkError(
