@@ -13,7 +13,7 @@ describe('ToastComponent', () => {
             },
         });
 
-        expect(wrapper.find('div').text()).toEqual('Message');
+        expect(wrapper.find('div').text()).toEqual('error.Message');
         expect(wrapper.find('.text-xs').attributes('style')).toEqual(
             'width: 100%;'
         );
