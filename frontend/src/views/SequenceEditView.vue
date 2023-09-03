@@ -325,10 +325,7 @@ function deleteSlide(index: number): void {
   if (sequence.value.slides.length == 1) {
     return;
   }
-  if (
-    index === sequence.value.slides.length - 1 &&
-    index === selectedSlideIndex.value
-  ) {
+  if (index === sequence.value.slides.length - 1) {
     selectedSlideIndex.value -= 1;
   }
   sequence.value.slides.splice(index, 1);
