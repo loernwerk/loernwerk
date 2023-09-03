@@ -26,7 +26,7 @@ export class SequenceRouterFactory extends RouterFactory {
                     );
                     res.status(201).json({ code: sequence.code });
                 } catch (e) {
-                    res.send(400).json(e.message);
+                    res.status(400).send(e.message);
                 }
             }
         );
@@ -51,7 +51,7 @@ export class SequenceRouterFactory extends RouterFactory {
                         return;
                     }
                 } catch (e) {
-                    res.send(404).json(e.message);
+                    res.status(404).send(e.message);
                 }
 
                 try {
@@ -61,7 +61,7 @@ export class SequenceRouterFactory extends RouterFactory {
                     );
                     res.sendStatus(204);
                 } catch (e) {
-                    res.send(400).json(e.message);
+                    res.status(400).send(e.message);
                 }
             }
         );
@@ -84,7 +84,7 @@ export class SequenceRouterFactory extends RouterFactory {
                         return;
                     }
                 } catch (e) {
-                    res.send(404).json(e.message);
+                    res.status(404).send(e.message);
                     return;
                 }
 
@@ -95,7 +95,7 @@ export class SequenceRouterFactory extends RouterFactory {
                     );
                     res.sendStatus(204);
                 } catch (e) {
-                    res.send(400).json(e.message);
+                    res.status(400).send(e.message);
                 }
             }
         );
@@ -121,7 +121,7 @@ export class SequenceRouterFactory extends RouterFactory {
                 );
                 res.status(200).json(sequences);
             } catch (e) {
-                res.send(404).json(e.message);
+                res.status(404).send(e.message);
             }
         });
 
@@ -143,7 +143,7 @@ export class SequenceRouterFactory extends RouterFactory {
                 }
                 res.status(200).json(sequence);
             } catch (e) {
-                res.send(404).status(e.message);
+                res.status(404).send(e.message);
             }
         });
 
@@ -160,7 +160,7 @@ export class SequenceRouterFactory extends RouterFactory {
                     code: sequence.code,
                 });
             } catch (e) {
-                res.send(404).json(e.message);
+                res.status(404).send(e.message);
             }
         });
 
@@ -189,7 +189,7 @@ export class SequenceRouterFactory extends RouterFactory {
                 );
                 res.status(200).send(pdf);
             } catch (e) {
-                res.send(404).json(e.message);
+                res.status(404).send(e.message);
             }
         });
 
@@ -201,7 +201,7 @@ export class SequenceRouterFactory extends RouterFactory {
                 );
                 res.status(200).json(slide);
             } catch (e) {
-                res.send(404).json(e.message);
+                res.status(404).send(e.message);
             }
         });
 

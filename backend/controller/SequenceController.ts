@@ -53,7 +53,7 @@ export class SequenceController {
             select: { code: true },
         });
         if (
-            userSequenceLimit > 0 &&
+            userSequenceLimit >= 0 &&
             sequencesOfUser.length >= userSequenceLimit
         ) {
             throw new LoernwerkError(
@@ -588,12 +588,18 @@ export class SequenceController {
             }
         }
 
+        // Only use unique H5P ids
+        usedH5PIds = usedH5PIds.filter(
+            (id, idx) => usedH5PIds.indexOf(id) === idx
+        );
+
         const usedByEntries = await DBH5PContentUsedBy.findBy({
             sequenceCode: sequence,
             h5pContentId: In(usedH5PIds),
         });
+
         for (const h5pId of usedH5PIds) {
-            if (!usedByEntries.some((entry) => entry.h5pContentId === h5pId)) {
+            if (!usedByEntries.some((entry) => entry.h5pContentId == h5pId)) {
                 // We need to create a new entry
                 const newEntry = new DBH5PContentUsedBy();
                 newEntry.h5pContentId = h5pId;

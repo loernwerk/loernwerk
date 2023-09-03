@@ -1,7 +1,7 @@
 <template>
   <ContainerComponent class="bg-red-500 border-red-700">
     <div class="text-white text-center">
-      {{ message }}
+      {{ $t('error.' + message) }}
     </div>
     <div class="h-2 w-full bg-red-400">
       <div
@@ -28,18 +28,8 @@ const props = defineProps({
 const time = ref(props.time);
 const timeperc = ref(100);
 
-countDownTimer();
-
-/**
- * Counts down the timer.
- */
-function countDownTimer(): void {
-  if (time.value > 0) {
-    setTimeout(() => {
-      time.value -= 16;
-      timeperc.value = (time.value / props.time) * 100;
-      countDownTimer();
-    }, 10);
-  }
-}
+setInterval(() => {
+  time.value -= 10;
+  timeperc.value = (time.value / props.time) * 100;
+}, 10);
 </script>

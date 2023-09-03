@@ -26,19 +26,35 @@ interface ErrorIndexPair {
 const errormessages: Ref<Array<ErrorIndexPair>> = ref([]);
 const errortimedisplayed = 6000;
 let index = 0;
+let errorsCaptured = 0;
 
-onErrorCaptured((err, instance) => {
-  void instance;
-  errormessages.value.push({ index: index, errorMessage: err.message });
+setInterval(() => {
+  errorsCaptured = 0;
+}, 6000);
+
+onErrorCaptured((err) => {
+  if (errorsCaptured > 99) {
+    return;
+  }
+  errorsCaptured++;
+  displayToast(err.message);
+  return false;
+});
+
+/**
+ * creates a new toast
+ * @param msg the message to display
+ */
+function displayToast(msg: string): void {
+  errormessages.value.push({ index: index, errorMessage: msg });
   const tbr = index;
   index++;
   setTimeout(() => {
     const i = errormessages.value.indexOf({
       index: tbr,
-      errorMessage: err.message,
+      errorMessage: msg,
     });
     errormessages.value.splice(i, 1);
   }, errortimedisplayed);
-  return false;
-});
+}
 </script>

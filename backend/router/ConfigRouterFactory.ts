@@ -27,7 +27,7 @@ export class ConfigRouterFactory extends RouterFactory {
                     );
                     res.sendStatus(204);
                 } catch (e) {
-                    res.send(404).json(e.message);
+                    res.status(404).send(e.message);
                 }
             }
         );
@@ -52,7 +52,7 @@ export class ConfigRouterFactory extends RouterFactory {
                 );
                 res.status(200).json({ value });
             } catch (e) {
-                res.send(404).json(e.message);
+                res.status(404).send(e.message);
             }
         });
 
